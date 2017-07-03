@@ -1,0 +1,33 @@
+@model NetSteps.Data.Entities.Address
+@section head {
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("ul.lr li:odd").addClass("Alt");
+        });
+
+        function displayAddresses(response) {
+            if (response.result === undefined || response.result) {
+                window.location = '@Href("~/Account")';
+            }
+            else
+                showMessage(response.message, true);
+        }
+
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+    @(Model.AddressID == 0 ? Html.Term("NewShippingProfile", "New Shipping Profile") : Html.Term("EditShippingProfile", "Edit Shipping Profile"))
+}
+@{ 
+    Model.AddressTypeID = 2; 
+}
+@Html.Partial("_AddressValidation")
+@Html.Partial("AddressModalCustom", Model)
+@Html.Partial("BillingShippingModal", ViewData)

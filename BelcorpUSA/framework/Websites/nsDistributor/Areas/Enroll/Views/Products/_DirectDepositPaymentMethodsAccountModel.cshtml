@@ -1,0 +1,261 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.DirectDepositPaymentMethodsAccountModel
+@{ var accountNumber = Model.ProfileNumber;
+   var marketID = Model.MarketID;
+   var countryID = SmallCollectionCache.Instance.Markets.GetById(marketID).GetDefaultCountryID();}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#bankPhoneAccount@(accountNumber)').phone({ areaCodeId: 'txtBankPhoneAreaCodeAccount@(accountNumber)', firstThreeId: 'txtBankPhoneFirstThreeAccount@(accountNumber)', lastFourId: 'txtBankPhoneLastFourAccount@(accountNumber)', customFormat: "{0}&nbsp;-&nbsp;{1}&nbsp;-&nbsp;{2}", customWidth: { areaCodeIdWidth: 60, firstThreeIdWidth: 60, lastFourIdWidth: 75} });
+        $('#bankPhoneAccount@(accountNumber)').phone('setPhone', '@Model.EFTProfile.BankPhone'.replace(/\D/g, ''));
+
+        $('#txtBankAddressLine1Account@(accountNumber)').watermark('Line 1');
+        $('#txtBankAddressLine2Account@(accountNumber)').watermark('Line 2');
+        $('#txtBankAddressLine3Account@(accountNumber)').watermark('Line 3');
+        var total = 0;
+        $('.percentToDeposit').numeric().each(function () {
+            if (!isNaN($(this).val()))
+                total += parseFloat($(this).val());
+        });
+        if ('@(accountNumber)' == 1 && total == 0) {
+            $('#percentToDepositLabelAccount@(accountNumber)').val('100');
+        }
+
+        $('#chkEnabledAccount@(accountNumber)').click();
+
+        $('#chkEnabledAccount@(accountNumber)').click(function () {
+            $('#txtNameAccount@(accountNumber),#txtRoutingNumberAccount@(accountNumber),#txtAccountNumberAccount@(accountNumber)')[$(this).is(':checked') ? 'addClass' : 'removeClass']('required').clearError();
+        });
+
+        $('#chkEnabledAccount@(accountNumber)').click(function () {
+            if ($('#chkEnabledAccount@(accountNumber)').is(':checked')) {
+                $('#tblDirectDepositAccount@(accountNumber)').find('input, textarea, button, select').removeAttr("disabled");
+            }
+            else {
+                $('#tblDirectDepositAccount@(accountNumber)').find('input, textarea, button, select').attr('disabled', 'disabled');
+            }
+        });
+
+
+        $("#accountTypeAccount1").width(240);
+        $("#accountTypeAccount2").width(240);
+
+        //if ($('#chkIsSameShippingAddressTrue').is(':checked')) {
+
+        //        $('input.eftCheckEnabled').each(function () {
+        //            checkUseEftEnabled($(this).attr('id'));
+        //        });
+
+    });
+</script>
+@{
+    var dropDownText = @Html.Term("PleaseEnteraValidZip", "Please enter a valid zip");
+    var attrs = new Dictionary<string, object>();
+    var bankAddress = Model.EFTProfile.AddressId > 0 ? Address.Load(Model.EFTProfile.AddressId) : new Address();
+    if (bankAddress.CountryID == 0)
+    {
+        bankAddress.CountryID = 1;
+    }
+
+    var enabled = Model.EFTProfile.IsEnabled;
+    var selectList = new[] { new SelectListItem { Text = string.Format("-- {0} --", dropDownText), Value = string.Empty } }.AsEnumerable();
+}
+@*<h4 class="UI-secBg pad5 brdrYYNN ModTitle">
+    <!-- TEST -->
+    Account
+    @(accountNumber):
+</h4>*@ @*<div class=@string.Format("postalcodelookup-container{0}", accountNumber)*@
+<div class="pad5 brdr1 brdrNNYY postalcodelookup-container divDirectDepositAccount" 
+     data-postalcodelookup-url="@Model.LookupUrl" 
+     data-postalcodelookup-regex="^(\d{9}|\d{5})"
+     data-postalcodelookup-countryid="@bankAddress.CountryID"
+     data-postalcodelookup-city="@bankAddress.City.ToPascalCase()"
+     data-postalcodelookup-stateid="@(bankAddress.StateProvinceID ?? 0)"
+     data-postalcodelookup-dropdowntext="-- @dropDownText --"
+     data-postalcodelookup-validateNumber="true">
+    <input id="EFTDisbursementProfileID@(accountNumber)" type="hidden" class="clsEFTDisbursementProfileID" value="@Model.EFTProfile.DisbursementProfileId" name="EFTDisbursementProfileID@(accountNumber)" />
+    <table cellspacing="0" cellpadding="0" class="DataGrid EFTAccount" border="0">
+        <tr>
+            <td align="left" style="width: 350px;">
+                <b>Account @(accountNumber)</b> <span class="marginEnabledDirectDeposit">
+                    @Html.Term("Enabled")
+                    <input id="chkEnabledAccount@(accountNumber)" class="eftCheckEnabled clsEnabledAccount" type="checkbox" @Html.Raw(enabled ? "checked=\"checked\"" : "") />
+                </span>
+            </td>
+        </tr>
+    </table>
+    <table id="tblDirectDepositAccount@(accountNumber)" cellspacing="0" cellpadding="0" class="DataGrid EFTAccount" border="0">
+        @*<tr>
+            <td align="left" style="width: 350px;">
+                <b>Account @(accountNumber)</b> <span class="marginEnabledDirectDeposit">
+                    @Html.Term("Enabled")
+                    <input id="chkEnabledAccount@(accountNumber)" class="eftCheckEnabled" type="checkbox" @Html.Raw(enabled ? "checked=\"checked\"" : "") />
+                </span>
+            </td>
+        </tr>*@
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("NameOnAccount", "Name on Account"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="txtNameAccount@(accountNumber)" class="clsNameAccount" size="30px" type="text" value="@Model.EFTProfile.NameOnAccount"  name="@Html.Term("NameRequiredForAccountNumber", "Name is required for account ")@accountNumber" />
+                <span id="spntxtNameAccount@(accountNumber)" style="display:none" class="clsspntxtNameAccount">Name on Account is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("RoutingTransitNumber", "Routing/Transit #"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="txtRoutingNumberAccount@(accountNumber)" class="clsRoutingNumberAccount" size="30px" type="text" value="@Model.EFTProfile.RoutingNumber" maxlength="9"  name="@Html.Term("RoutingNumberRequiredForAccountNumber", "Routing Number is required for account ")@accountNumber" />
+                <span id="spntxtRoutingNumberAccount@(accountNumber)" style="display:none" class="clsspntxtRoutingNumberAccount">Routing/Transit # is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("BankAccountNumber", "Account #"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="txtAccountNumberAccount@(accountNumber)" class="clsAccountNumberAccount" size="30px" type="text" value="@Model.EFTProfile.AccountNumber"  name="@Html.Term("AccountNumberRequiredForAccountNumber", "Account Number is required for account ")@accountNumber" />
+                <span id="spntxtAccountNumberAccount@(accountNumber)" style="display:none" class="clsspntxtAccountNumberAccount">Account # is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("BankName", "Bank Name"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="txtBankNameAccount@(accountNumber)" class="clsBankNameAccount" size="30px" type="text" value="@Model.EFTProfile.BankName"   name="@Html.Term("BankNameRequiredForAccountNumber", "Bank Name is required for account ")@accountNumber"/>
+                <span id="spntxtBankNameAccount@(accountNumber)" style="display:none" class="clsspntxtBankNameAccount">Bank Name is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankPhone", "Bank Phone"):
+            </td>
+        </tr>
+        <tr>
+            <td  id="bankPhoneAccount@(accountNumber)" class="clsbankPhoneAccount">
+                @*<input id="txtBankPhoneAccount@(accountNumber)" type="text" />*@
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                
+                @Html.Term("BankAddress", "Bank Address"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="bankAddressAddress1_@(accountNumber)" class="clsbankAddressAddress1" size="30px" type="text" value="@bankAddress.Address1"   name="@Html.Term("Address1RequiredForAccountNumber", "Address Line 1 is required for account ")@accountNumber"/>
+                <span id="spnbankAddressAddress1_@(accountNumber)" style="display:none" class="clsspnbankAddressAddress1_">Bank Address is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                @Html.Term("Enrollment_Products_DirectDepositPaymentMethods_BankAddressLine2", "Bank Address Line 2"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="bankAddressAddress2_@(accountNumber)" class="clsbankAddressAddress2" size="30px" type="text" value="@bankAddress.Address2" />
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                @Html.Term("Enrollment_Products_DirectDepositPaymentMethods_BankAddressLine3", "Bank Address Line 3"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="bankAddressAddress3_@(accountNumber)" class="clsbankAddressAddress3" size="30px" type="text" value="@bankAddress.Address3" />
+            </td>
+        </tr>
+        <tr>
+            <td>               
+                @Html.Term("Enrollment_Products_DirectDepositPaymentMethods_BankZipCode", "Bank ZIP Code"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="bankAddressAddressControl@(accountNumber)">
+                    <input id="txtBankZipAccount@(accountNumber)" maxlength="5" size="30px" type="text" value="@bankAddress.PostalCode" class="postalcodelookup-postalcode profileZip PostalCode clsBankZipAccount" name="@Html.Term("PostalCodeRequiredForAccountNumber", "Postal Code is required for account ")@accountNumber"/>
+                    <span id="spntxtBankZipAccount@(accountNumber)" style="display:none" class="clsspntxtBankZipAccount">Bank ZIP Code is required.</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankCity", "Bank City"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @*<input type="text" id="bankAddressCity@(accountNumber)" size="30px" value="@(bankAddress.City ?? "")" name="@Html.Term("CityRequiredForAccountNumber", "City is required for account ")@accountNumber" />*@
+                <select id="bankAddressCity@(accountNumber)" class="postalcodelookup-city clsbankAddressCity" name="@Html.Term("CityRequiredForAccountNumber", "City is required for account ")@accountNumber">
+                    @if (@bankAddress.City.IsNullOrEmpty())
+                    {
+                        <option value="@bankAddress.City">@bankAddress.City</option>
+                    }
+                </select>
+                <span id="spnbankAddressCity@(accountNumber)" style="display:none" class="clsspnbankAddressCity">Bank City is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankState", "Bank State"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @*<input type="text" id="bankAddressState@(accountNumber)" size="30px" value="@(bankAddress.State ?? "")" name="@Html.Term("StateRequiredForAccountNumber", "State is required for account ")@accountNumber" />
+                <input type="hidden" id="bankAddress@(accountNumber)Country" value="@countryID" />*@
+                <select id="bankAddressState@(accountNumber)" class="postalcodelookup-state clsbankAddressState" name="@Html.Term("StateRequiredForAccountNumber", "State is required for account ")@accountNumber">
+                    @if (@bankAddress.State.IsNullOrEmpty())
+                    {
+                        <option value="@bankAddress.StateProvinceID">@bankAddress.State</option>
+                    }
+                </select>
+                <span id="spnbankAddressState@(accountNumber)" style="display:none" class="clsspnbankAddressState">Bank State is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("AccountType", "Account Type"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select id="accountTypeAccount@(accountNumber)" class="clsaccountTypeAccount">
+                    <option @Html.Raw(Model.EFTProfile.BankAccountTypeId == (int)NetSteps.Data.Entities.Constants.BankAccountTypeEnum.Checking ? "selected=\"selected\"" : "")>@Html.Term("Checking")</option>
+                    <option @Html.Raw(Model.EFTProfile.BankAccountTypeId == (int)NetSteps.Data.Entities.Constants.BankAccountTypeEnum.Savings ? "selected=\"selected\"" : "")>@Html.Term("Savings")</option>
+                </select>
+                <span id="spnaccountTypeAccount@(accountNumber)" style="display:none" class="clsspnaccountTypeAccount">Account Type is required.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="requiredMarker">*</span>
+                @Html.Term("PercentToDeposit", "% to Deposit"):
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>
+                    <input id="percentToDepositAccount@(accountNumber)" maxlength="6" size="30px" type="text" class="percentToDeposit clspercentToDepositAccount" value="@(Model.EFTProfile.Percentage * 100)" />%</span>
+                    <span id="spnpercentToDepositAccount@(accountNumber)" style="display:none" class="clsspnpercentToDepositAccount">% to Deposit is required.</span>
+            </td>
+        </tr>
+    </table>
+</div>

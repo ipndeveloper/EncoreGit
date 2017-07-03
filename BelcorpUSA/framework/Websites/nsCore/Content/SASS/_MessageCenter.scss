@@ -1,0 +1,43 @@
+﻿#messageCenterModal {
+	background:#F5FFDF;
+	opacity:.98;
+	color:#6DB33F;
+	font-weight:bold;
+	font-size:1.25em;
+	position:fixed;
+	z-index:99999;
+	top:0;
+	left:0;
+	width:100%;
+	text-align:center;
+	display: none;
+
+	#messageCenter {
+		div {
+			padding:em(10);
+		}
+	}
+	&.thisIsNowAnErrorMessage, div.thisIsNowAnErrorMessage {
+		background:#FFFBCF;
+		color:#FF0831;
+	}
+	&.thisIsNowANotificationMessage, div.thisIsNowANotificationMessage {
+		background:#FFFBCF;
+		color:Black;
+	}
+}
+#messageCenter {
+	.icon-check:before {
+		color:#6DB33F;
+	}
+	.icon-exclamation.thisIsNowAnErrorMessage:before {
+		color:#FF0831;
+	}
+	.icon-exclamation.thisIsNowANotificationMessage:before {
+		color:#ffb900;
+	}
+	.icon-x.CustomExitIcon:before {
+		font-size:em(22, 20);
+		cursor:pointer;
+	}
+}

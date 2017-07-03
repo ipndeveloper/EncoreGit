@@ -1,0 +1,32 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/GeneralLedger/Views/Shared/GeneralLedger.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+
+<%if (Request.Url.LocalPath == "/GeneralLedger/PaymentTicketsReport/BrowseTickets/")
+  { %>
+
+	<script type="text/javascript">
+	    $(function () {
+	        $(".SectionNav ul li:first a").addClass("selected");
+	    });
+	</script>
+<%} %>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+            <ul class="SectionLinks">
+				<%= Html.SelectedLink("~/GeneralLedger/PaymentTicketsReport/BrowseTickets", Html.Term("BrowseTickets", "Browse Tickets"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>

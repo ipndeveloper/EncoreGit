@@ -1,0 +1,32 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.EnrollmentTypeModel
+
+<div class="UI-lightBg enrollCTA newDistrib">
+    <h2>
+        @Model.FormTitle
+    </h2>
+	<a id="btnShowLogin"></a>
+    @using (Html.BeginFormWithHtmlAttributes(new { upgrade = Model.ShowUpgradeLink, Model.AccountTypeID }, new { data_submit_showloading = "[data-click-submit]" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Resume)
+        @Html.HiddenFor(m => m.AccountTypeID)
+        if (Model.ShowLoginLink)
+        {
+            <a href="javascript:void(0);" data-click-click="#btnShowLogin">
+                <span>@Model.LoginText</span>
+            </a>
+        }
+        if (Model.ShowUpgradeLink)
+        {
+            <a href="@Model.UpgradeUrl">
+                <span>@Model.UpgradeText</span>
+            </a>
+        }
+        @Html.Partial("CultureFormModel", Model.CultureForm)
+        <p class="FormSubmit">
+            <a id="btnEnrollDistributor" name="btnEnrollDistributor" class="Button btnEnrollDistributor" href="javascript:void(0);" data-click-submit="parent">
+                <span>@Html.Term("Enrollment_Landing_SubmitButtonLabel", "Enroll Now!")</span>
+            </a>
+        </p>
+    }
+</div>

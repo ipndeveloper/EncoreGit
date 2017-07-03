@@ -1,0 +1,68 @@
+@using DistributorBackOffice.Models
+@model NetSteps.Data.Entities.Business.OrderSearchParameters
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+            $('.SavedReports .@ViewData["SelectedReport"]').addClass("current");
+            $('.PageTitle h1').html($('.SavedReports .@ViewData["SelectedReport"] a').text() || '@Html.Term("SavedReports", "Saved Reports")');
+
+            $.post('@Href("~/Orders/OrderHistory/GetOrdersCount")', null, function (response) {
+                if (response.result) {
+                    $('#allOrdersCount').html('(' + response.allOrdersCount + ')');
+                    $('#last30DaysOrdersCount').html('(' + response.last30DaysOrdersCount + ')');
+                    $('#retailOrdersCount').html('(' + response.retailOrdersCount + ')');
+                    $('#pcOrdersCount').html('(' + response.pcOrdersCount + ')');
+                }
+                else {
+                    showMessage('@Html.Term("Error"): ' + response.message, true);
+                    return false;
+                }
+            });
+
+        });
+	
+    </script>
+
+}
+@section breadcrumb {
+}
+@section title {
+    @Html.Term("OrderHistory", "Order History")
+}
+@section rail {
+    <div class="SavedReports">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title  UI-btn">
+                @Html.Term("SavedReports", "Saved Reports")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                <li class="NA"><a href="@Href("~/Orders/OrderHistory")">
+                   <span class="FL"> @Html.Term("AllOrders", "All Orders")</span>
+                    <span id="allOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                <li class="Last30Days"><a href="@Href("~/Orders/OrderHistory", new { startDate = DateTime.Now.AddDays(-30).ToShortDateString(), endDate = DateTime.Now.EndOfDay().ToShortDateString() })">
+                    <span class="FL">@Html.Term("Last30Days", "Last 30 Days")</span>
+                    <span id="last30DaysOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                <li class="@Constants.OrderType.OnlineOrder.ToInt().ToString()"><a href="@Href("~/Orders/OrderHistory", new { type = Constants.OrderType.OnlineOrder.ToInt().ToString() })">
+                    <span class="FL">@Html.Term("OnlineOrders", "Online Orders")</span>
+                    <span id="retailOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                @*<li class="@Constants.OrderType.PC.ToInt().ToString()"><a href="@Href("~/Orders/OrderHistory", new { type = Constants.OrderType.PC.ToInt().ToString() })">
+                    <span class="FL">@Html.Term("PCOrders", "PC Orders")</span>
+                    <span id="pcOrdersCount" class="FR"></span></a></li>*@
+                    <li class="@Constants.OrderType.OnlineOrder.ToInt().ToString()"><a href="@Href("~/Orders/PaymentTickets")">
+                    <span class="FL">@Html.Term("PaymentTickets", "Payment Tickets")</span>
+                    <span id="paymentTyckets" class="FR"></span>
+                    <span class="clr"></span></a></li>
+            </ul>
+        </div>
+    </div>
+}
+@{
+    ViewBag.AddOrderHistoryFilters = true;
+    ViewBag.SearchParams = Model;
+    Html.RenderPartial("OrdersOverview", new OrdersOverviewModel());
+}

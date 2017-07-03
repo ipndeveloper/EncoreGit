@@ -1,0 +1,29 @@
+﻿@model nsCore.Areas.Accounts.Models.Shared.AutoshipOverviewModel
+
+<li>
+    <div class="clr">
+        <span class="FL">
+		@if (Model.IsTemplateEditable)
+		{
+            @Html.ActionLink(Model.TemplateOrderNumber, "EditAutoship", "Autoships", new { id = Model.AutoshipOrderID }, null)
+		}
+		else
+		{
+			@Model.TemplateOrderNumber
+		}
+        </span>
+        <span class="ml10 FL" style='color:@(Model.Active ? "green" : "red")'>
+            @Model.StatusText
+        </span>
+        <span class="FR">
+		@if(Model.IsTemplateEditable){
+            @Html.ActionLink(Html.Term("Edit"), "EditAutoship", "Autoships", new { id = Model.AutoshipOrderID }, null)
+            @:|
+		}
+            @Html.ActionLink(Html.Term("ViewOrders", "View Orders"), "View", "Autoships", new { id = Model.AutoshipOrderID }, null)
+        </span>
+    </div>
+    <div class="clr ml10">
+        @Model.ItemsText
+    </div>
+</li>

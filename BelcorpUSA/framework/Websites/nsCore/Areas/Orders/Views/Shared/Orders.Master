@@ -1,0 +1,40 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">
+    <%= Html.SubTab("~/Orders/Browse", Html.Term("BrowseOrders", "Browse Orders")) %>
+	<%= Html.SubTab("~/Orders/Shipping", Html.Term("ShipOrders", "Ship Orders")) %>
+    <%= Html.SubTab("~/Orders/Autoships", Html.Term("AutoshipRunOverview", "Autoship Run Overview")) %>
+	<%= Html.SubTab("~/Orders/PendingConfirm", Html.Term("PendingConfirm", "Pending Confirm"))%>
+    <li class="pipe">&nbsp;</li> 
+	<%= Html.SelectedLink("~/Orders/OrderEntry/NewOrder", Html.Term("StartOrder", "Start a New Order"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "Orders-Order Entry") %>
+
+			
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<asp:ContentPlaceHolder ID="YellowWidget" runat="server">
+
+					<% Html.RenderPartial("YellowWidget"); %>
+				</asp:ContentPlaceHolder>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server" />
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+				<td>
+				<%--<% Html.RenderPartial("Notes"); %>--%>
+			    </td>
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+    
+</asp:Content>

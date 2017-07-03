@@ -1,0 +1,39 @@
+﻿<div id="Previous" class="UI-cycle-icon news-icon-arrowUp"></div>
+<div id="NewsRoller" class="overflow FR">
+    <div id="NewsList">
+        @{var news = ViewBag.News as IEnumerable<News>;}
+        @for (int i = 0; i < Math.Ceiling(news.Count() / (double)3); i++)
+        {
+            <div class="slide overflow">
+                @foreach (var n in news.Skip(i * 3).Take(3))
+                {
+                    <p class="truncate">
+                        <span class="newsDate">
+                            @n.StartDate.ToString("MMM", BaseController.CurrentCulture)
+                            @n.StartDate.Day.ToString(BaseController.CurrentCulture),
+                            @n.StartDate.Year.ToString(BaseController.CurrentCulture)
+                        </span>
+                        <a id="Article-@n.NewsID" href="@Url.Resolve("~/News/Article", n.NewsID)" class="block" title="@Html.Raw(n.HtmlSection.ProductionContentForDisplay(BaseController.CurrentSite).GetTitle())">@Html.Raw(n.HtmlSection.ProductionContentForDisplay(BaseController.CurrentSite).GetTitle())</a>
+                    </p>
+                }
+            </div>
+        }
+    </div>
+</div>
+<div id="Next" class="UI-cycle-icon news-icon-arrowDown"></div>
+<span class="clr"></span>
+
+@section extraScripts{
+<script type="text/javascript" src="@Url.Content("~/Resource/Scripts/jquery.cycle.all.min.js")"></script>
+<script type="text/javascript" language="javascript">
+    $(function () {
+        $('.truncate a').each(function (index) {
+            var substr = $(this).text();
+
+            if (substr.length > 79) {
+                $(this).text(substr.substring(0, 72) + '...');
+            }
+        });
+    });
+</script>
+}

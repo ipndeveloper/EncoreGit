@@ -1,0 +1,27 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="FrameworkAg.RichTextHighlight"
+	d:DesignWidth="640" d:DesignHeight="480">
+
+    <Grid x:Name="LayoutRoot">
+        <Rectangle Fill="#FFF4F4F5" Stroke="Black"/>
+        <TextBox x:Name="uxHighlightText" Height="25" VerticalAlignment="Top" Margin="10" TextChanged="uxHighlightText_TextChanged" />
+        <Grid Margin="10,39,10,8">
+            <RichTextBox  x:Name="uxText">
+                <Paragraph>
+                    <Run Text="RichTextBox asdf asd asd asdasd"/>
+                </Paragraph>
+                <Paragraph Foreground="Yellow">
+
+                    <Run Text="RichTextBox asdf asd asd asdasd"/>
+                </Paragraph>
+            </RichTextBox>
+            <Canvas IsHitTestVisible="False" x:Name="highlightCanvas">
+            </Canvas>
+        </Grid>
+    </Grid>
+</UserControl>

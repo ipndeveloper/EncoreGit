@@ -1,0 +1,350 @@
+﻿@model SupportTicketsBE
+@{
+    ViewBag.Title = "CreateTicket";
+}
+@section head {
+    <script type="text/javascript">
+
+    /*
+        $(function () {
+            $('#btnNext').click(function () {
+
+                var isSubmitting = $('#hidIsSubmitting').val();
+
+                if (isSubmitting == 'true') {
+                    return false;
+                }
+
+                if (!$('#ticketTable').checkRequiredFields()) {
+                    return false;
+                }
+                //                if ($('#hdnMotiveID').val() == '')
+                //                { return false; }
+
+                if ($('#ddlMotive') == null) {
+                    return false;
+                } else {
+                    if ($('#ddlMotive').val() == "-1") { return false; }
+                }
+
+                if ($('#hdnLevelID').val() == "-1") { return false; }
+
+
+                var data = {};
+
+                data['ticket.AccountID'] = $('#hdnAccountID').val();
+                data['ticket.Title'] = $('#txtTitle').val();
+                data['ticket.Description'] = $('#txtDescription').val();
+                data['ticket.AssignedUserID'] = $('#hdnUserAsigID').val();
+                data['ticket.SupportTicketPriorityID'] = 1;// $('#ddlPriority').val();
+                data['ticket.SupportTicketStatusID'] = $('#ddlStatus').val();
+                data['ticket.IsVisibleToOwner'] = true; // $('#chkIsVisibleToWorkStation').prop('checked');
+                //                data['ticket.CreatedByUserID'] = $('#txtDescription').val();
+                //                data['ticket.ModifiedByUserID'] = $('#txtDescription').val();
+                //                data['ticket.DateCreatedUTC'] = $('#txtDescription').val();
+                //                data['ticket.DateLastModifiedUTC'] = $('#txtDescription').val();
+                data['ticket.SupportLevelID'] = $('#hdnLevelID').val();
+                data['ticket.DateCloseUTC'] = $('#txtDescription').val();
+                data['ticket.SupportMotiveID'] = $('#ddlMotive').val();
+
+
+                // supportTicketsProperty
+                var cant = $('#hdnCanProperties').val();
+
+
+                $(".qq-upload-file").each(function (index) {
+                    data['supportTicketsFiles[' + index + '].FilePath'] = $(this).text();
+                });
+
+                for (var i = 0; i < cant; i++) {
+                    //data['supportTicketsProperty['+i+'].SupportTicketID'] = '';  se genera despues de grabar el ticket
+                    data['supportTicketsProperty[' + i + '].SupportMotivePropertyTypeID'] = $('#hdnvalor' + i).val();
+                    if ($('#hdnList_Text' + i).val() == 'List')
+                        data['supportTicketsProperty[' + i + '].SupportTicketsPropertyValueID'] = $('#valor' + i).val();
+                    else
+                        data['supportTicketsProperty[' + i + '].PropertyValue'] = $('#valor' + i).val();
+                }
+
+                // supportTicketGestion
+                data['supportTicketGestion.UserID'] = $('#hdnLevelID').val();
+                data['supportTicketGestion.Description'] = ""; // $('#txtSolution').val();
+                //             data['supportTicketGestion.DateCreatedUTC'] = $('#hdnMotiveID').val();
+                data['supportTicketGestion.SupportTicketStatusID'] = $('#ddlStatus').val();
+                data['supportTicketGestion.isInternal'] = $('#chkIsInternal').prop('checked');
+
+
+                $('#hidIsSubmitting').val('true');
+
+                $.post('/Support/CreateTicket/', data, function (response) {
+                    $('#hidIsSubmitting').val('false');
+                    if (response.result) {
+                        window.location = '@Href("~/Support/Index")';
+                    } else {
+                        showMessage('@Html.Term("TheTicketCouldNotBeSaved", "The ticket could not be saved"): ' + response.message, true);
+                        return false;
+                    }
+
+                });
+
+            });
+
+        });         
+
+        */
+    </script>
+     <script type="text/javascript">
+         var SeleccionadoSupportMotiveID = 0;
+         var SeleccionadoSupportLevelID = 0;
+         var ControlesError = {};
+         var listaEliminar = [];
+
+         function validarControError() {
+
+             for (var key in ControlesError) {
+                 return true;
+
+             }
+             return false;
+         }
+         function Guardar() {
+             var isValid = true;
+             var LstSupportTicketsProperty = ObtenerSupportTicketsProperty();
+             if (SeleccionadoSupportMotiveID == 0) {
+                 showMessage('@Html.Term("NotSelectedSupportMotive", "Not selected a support motive ")', true);
+                 isValid = false;
+             }
+             if (validarControError()) {
+                 isValid = false;
+             }
+             var txtTitle = $('#txtTitle');
+             var titleRequired = '@Html.Term("TitleTicketBackoficceRequired", "Title is required")';
+             var txtDescription = $('#txtDescription');
+             var DescriptionRequired = '@Html.Term("DescriptionTicketBackoficceRequired", "Description is required")';
+
+             if ($.trim(txtTitle.val()) == "") {
+                 txtTitle.showError(titleRequired);
+                 isValid = false;
+             } else {
+                 txtTitle.clearError();
+             }
+             if ($.trim(txtDescription.val()) == "") {
+                 txtDescription.showError(DescriptionRequired);
+                 isValid = false;
+             } else {
+                 txtDescription.clearError();
+             }
+             if (!isValid) {
+                 return false;
+             }
+
+             var url = '/Support/Save';
+
+             var t = $(this);
+             showLoading(t);
+
+
+             if (!isValid) {
+                 return false;
+             }
+             var objSupportTicketGestionBE =
+                 {
+                     Descripction: $("#txtSolucion").val()
+                 };
+
+             var odata = JSON.stringify(
+               {
+                   accountID: 0,
+                   title: txtTitle.val(),
+                   description: txtDescription.val(),
+                   supportTicketCategoryID: 0,
+                   supportTicketPriorityID: 0,
+                   supportTicketStatusID: 0,
+                   assignedUserID: 0,
+                   isVisibleToOwner: true,
+                   oldTicketStatusID: 0,
+                   lstSupportTicketsPropertyBE: LstSupportTicketsProperty,
+                   lstSupportTicketsFilesBE: [],
+                   SupportLevelID: SeleccionadoSupportLevelID,
+                   SupportMotiveID: SeleccionadoSupportMotiveID,
+                   ListaEliminarSupportTicketsFiles: listaEliminar,
+                   objSupportTicketGestionBE: objSupportTicketGestionBE
+               });
+
+             $.ajax({
+                 data: odata,
+                 url: url,
+                 dataType: "json",
+                 type: "POST",
+                 contentType: "application/json",
+                 success: function (response) {
+                  var resultado=response;
+                  if (resultado) {
+                      window.location = '/Support/CreateTicket/' + resultado.SupportTicketID;
+                 }
+                     showMessage(response.message || '@Html.Term("SavedSuccessfully", "Saved successfully!")', !response.result);
+                
+                
+                 },
+                 error: function (error) {
+                 }
+             });
+         }
+         function GuardarFormulario() {
+             $("#GuardarArchivo").submit();
+         }
+
+         function ObtenerSupportTicketsProperty() {
+             var LstSupportTicketsProperty = new Array();
+             var objSupportTicketsProperty = null;
+             $("#selectItems div.FRow").each(function () {
+                 objSupportTicketsProperty = new Object()
+
+                 var ErrorMessaje = '@Html.JavascriptTerm("FieldIsrequired", "Field is required")';
+                 var Control = null;
+
+                 if ($(this).find("select").length == 0) {
+                     Control = $(this).find("input:text")
+                 }
+
+                 if ($(this).find("input:text").length == 0) {
+                     Control = $(this).find("select");
+                 }
+
+                 if (Control.length == 0) {
+                     Control = $(this).find("textarea");
+                 }
+
+                 var Required = Control[0].getAttribute("required");
+                 var DataType = Control.attr("DataType");
+                 var SupportMotivePropertyTypeID = Control.attr("SupportMotivePropertyTypeID")
+                 var SupportTicketsPropertyID = Control.attr("SupportTicketsPropertyID")
+                 var value = null;
+                 value = Control.val();
+
+                 var SupportMotivePropertyValueID = 0;
+                 var PropertyValue = "";
+                 var SupportTicketsPropertyValueID = 0;
+
+                 objSupportTicketsProperty.SupportMotivePropertyTypeID = SupportMotivePropertyTypeID;
+                 objSupportTicketsProperty.SupportTicketsPropertyID = SupportTicketsPropertyID;
+
+                 objSupportTicketsProperty.SupportTicketID = 0;
+
+                 if (Required == 1) {
+                     if (value == 0 || $.trim(value) == "") {
+                         Control.showError(ErrorMessaje);
+                         ControlesError[Control.attr("id")] = Control.attr("id");
+                     } else {
+                         Control.clearError();
+                         delete ControlesError[Control.attr("id")]
+                     }
+                 } else {
+                     Control.clearError();
+                     delete ControlesError[Control.attr("id")]
+                 }
+                 switch (DataType) {
+                     case "List":
+                         objSupportTicketsProperty.SupportTicketsPropertyValueID = value;
+                         objSupportTicketsProperty.PropertyValue = "";
+                         break;
+                     default:
+                         objSupportTicketsProperty.PropertyValue = value;
+                         objSupportTicketsProperty.SupportTicketsPropertyValueID = 0;
+                         break;
+                 }
+                 LstSupportTicketsProperty.push(objSupportTicketsProperty);
+
+             });
+             return LstSupportTicketsProperty;
+
+
+         }
+
+         $(function () {
+             $('#btnNext').click(function () {
+                 GuardarFormulario();
+             });
+
+             $('#GuardarArchivo').ajaxForm({
+                 beforeSend: function () {
+                 },
+                 uploadProgress: function (event, position, total, percentComplete) {
+                 },
+                 success: function () {
+                 },
+                 complete: function (xhr) {
+                     Guardar();
+                 }
+             });
+
+             //             $("#txtSolucion").autogrow({ vertical: true, horizontal: false });
+             //             $("#txtSolucion").keyup();
+
+             //             $("#txtDescription").autogrow({ vertical: true, horizontal: false });
+             //             $("#txtDescription").keyup();
+
+
+         });
+
+    </script>
+}
+@section breadcrumb {
+}
+@section title {
+    @Html.Term("SubmitNewTicket", "Submit a New Ticket")
+}
+@*@using (Html.BeginForm())
+{ *@
+     <div id="ticketTable">
+        @Html.ValidationSummary(true)
+        @Html.Partial("_SupportTicketView", Model)
+    </div> 
+
+    @if(Model.SupportTicketID==0){
+    <div style="text-align: center;" class="clr center PageSaveButtons">
+        <a class="Button FormSubmit btnSubmitTicket" id="btnNext" href="javascript:void(0);">
+            <span>@Html.Term("SubmitYourTicket", "Submit Your Ticket")</span> </a><span class="ClearAll">
+            </span>
+    </div>
+    }
+    <input type='hidden' id='hidIsSubmitting' value='false' />
+@*}*@
+
+
+@*<div class="FormContainer">
+    <div class="FRow">
+        <div class="FLabel">
+            <label for="">@Html.Term("PrimaryCategory", "Primary Category")</label>
+        </div>
+        <div class="FInput">
+            <select name="" id="" class="">
+                <option value="">-- Please select a category --</option>
+            </select>
+        </div>
+        <br />
+    </div>
+
+    <div class="FRow">
+        <div class="FLabel">
+            <label for="">@Html.Term("Title")</label>
+        </div>
+        <div class="FInput">
+            <input type="text" class="fullWidth ticketTitle" />
+        </div>
+        <br />
+    </div>
+
+    <div class="FRow">
+        <div class="FLabel">
+            <label for="">@Html.Term("Description")</label>
+        </div>
+        <div class="FInput">
+            <textarea class="fullWidth ticketDescription"></textarea>
+        </div>
+        <br />
+    </div>
+
+   <div style="text-align: center;" class="clr center PageSaveButtons">
+   <a  class="Button FormSubmit btnSubmitTicket" id="btnNext" href="javascript:void(0);"><span>@Html.Term("SubmitYourTicket","Submit Your Ticket")</span></a> <span class="ClearAll"></span>
+    </div>
+</div>*@ 

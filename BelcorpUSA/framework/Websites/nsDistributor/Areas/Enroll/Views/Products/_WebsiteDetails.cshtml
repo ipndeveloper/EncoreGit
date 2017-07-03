@@ -1,0 +1,10 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.WebsiteModel
+
+@if (!String.IsNullOrWhiteSpace(Model.Subdomain) && !String.IsNullOrWhiteSpace(Model.Domain))
+{ 
+@string.Format("http://{0}.{1}", Model.Subdomain, Model.Domain)
+}
+else
+{ 
+	@Html.Term("N/A")
+}

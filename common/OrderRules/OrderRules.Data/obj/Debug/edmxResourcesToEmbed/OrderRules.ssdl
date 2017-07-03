@@ -1,0 +1,520 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OrderRulesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="OrderRulesModelStoreContainer">
+    <EntitySet Name="Rules" EntityType="OrderRulesModel.Store.Rules" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleStatuses" EntityType="OrderRulesModel.Store.RuleStatuses" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationAccountListItems" EntityType="OrderRulesModel.Store.RuleValidationAccountListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationAccountLists" EntityType="OrderRulesModel.Store.RuleValidationAccountLists" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationAccountTypeListItems" EntityType="OrderRulesModel.Store.RuleValidationAccountTypeListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationAccountTypeLists" EntityType="OrderRulesModel.Store.RuleValidationAccountTypeLists" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" EntityType="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationCustomerPriceTypeTotalRanges" EntityType="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationCustomerPriceTypeTotalRangesKeys" EntityType="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRangesKeys" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationCustomerSubtotalRangeCurrencyAmounts" EntityType="OrderRulesModel.Store.RuleValidationCustomerSubtotalRangeCurrencyAmounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationCustomerSubtotalRanges" EntityType="OrderRulesModel.Store.RuleValidationCustomerSubtotalRanges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationOrderTypeListItems" EntityType="OrderRulesModel.Store.RuleValidationOrderTypeListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationOrderTypeLists" EntityType="OrderRulesModel.Store.RuleValidationOrderTypeLists" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationProductListItems" EntityType="OrderRulesModel.Store.RuleValidationProductListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationProductLists" EntityType="OrderRulesModel.Store.RuleValidationProductLists" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationProductTypeListItems" EntityType="OrderRulesModel.Store.RuleValidationProductTypeListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationProductTypeLists" EntityType="OrderRulesModel.Store.RuleValidationProductTypeLists" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidations" EntityType="OrderRulesModel.Store.RuleValidations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationStoreFrontListItems" EntityType="OrderRulesModel.Store.RuleValidationStoreFrontListItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RuleValidationStoreFrontLists" EntityType="OrderRulesModel.Store.RuleValidationStoreFrontLists" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Rules_RuleStatuses" Association="OrderRulesModel.Store.FK_Rules_RuleStatuses">
+      <End Role="RuleStatuses" EntitySet="RuleStatuses" />
+      <End Role="Rules" EntitySet="Rules" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationAccountListItems_RuleValidationAccountLists" Association="OrderRulesModel.Store.FK_RuleValidationAccountListItems_RuleValidationAccountLists">
+      <End Role="RuleValidationAccountLists" EntitySet="RuleValidationAccountLists" />
+      <End Role="RuleValidationAccountListItems" EntitySet="RuleValidationAccountListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationAccountLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationAccountLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationAccountLists" EntitySet="RuleValidationAccountLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationAccountTypeListItems_RuleValidationAccountTypeLists" Association="OrderRulesModel.Store.FK_RuleValidationAccountTypeListItems_RuleValidationAccountTypeLists">
+      <End Role="RuleValidationAccountTypeLists" EntitySet="RuleValidationAccountTypeLists" />
+      <End Role="RuleValidationAccountTypeListItems" EntitySet="RuleValidationAccountTypeListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationAccountTypeLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationAccountTypeLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationAccountTypeLists" EntitySet="RuleValidationAccountTypeLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts_RuleValidationCustomerPriceTypeTotalRanges" Association="OrderRulesModel.Store.FK_RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts_RuleValidationCustomerPriceTypeTotalRanges">
+      <End Role="RuleValidationCustomerPriceTypeTotalRanges" EntitySet="RuleValidationCustomerPriceTypeTotalRanges" />
+      <End Role="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" EntitySet="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationCustomerPriceTypeTotalRanges_RuleValidationCustomerPriceTypeTotalRangesKeys" Association="OrderRulesModel.Store.FK_RuleValidationCustomerPriceTypeTotalRanges_RuleValidationCustomerPriceTypeTotalRangesKeys">
+      <End Role="RuleValidationCustomerPriceTypeTotalRangesKeys" EntitySet="RuleValidationCustomerPriceTypeTotalRangesKeys" />
+      <End Role="RuleValidationCustomerPriceTypeTotalRanges" EntitySet="RuleValidationCustomerPriceTypeTotalRanges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationCustomerPriceTypeTotalRangesKeys_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationCustomerPriceTypeTotalRangesKeys_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationCustomerPriceTypeTotalRangesKeys" EntitySet="RuleValidationCustomerPriceTypeTotalRangesKeys" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationCustomerSubtotalRangeCurrencyAmounts_RuleValidationCustomerSubtotalRanges" Association="OrderRulesModel.Store.FK_RuleValidationCustomerSubtotalRangeCurrencyAmounts_RuleValidationCustomerSubtotalRanges">
+      <End Role="RuleValidationCustomerSubtotalRanges" EntitySet="RuleValidationCustomerSubtotalRanges" />
+      <End Role="RuleValidationCustomerSubtotalRangeCurrencyAmounts" EntitySet="RuleValidationCustomerSubtotalRangeCurrencyAmounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationCustomerSubtotalRanges_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationCustomerSubtotalRanges_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationCustomerSubtotalRanges" EntitySet="RuleValidationCustomerSubtotalRanges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationOrderTypeListItems_RuleValidationOrderTypeLists" Association="OrderRulesModel.Store.FK_RuleValidationOrderTypeListItems_RuleValidationOrderTypeLists">
+      <End Role="RuleValidationOrderTypeLists" EntitySet="RuleValidationOrderTypeLists" />
+      <End Role="RuleValidationOrderTypeListItems" EntitySet="RuleValidationOrderTypeListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationOrderTypeLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationOrderTypeLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationOrderTypeLists" EntitySet="RuleValidationOrderTypeLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationProductListItems_RuleValidationProductLists" Association="OrderRulesModel.Store.FK_RuleValidationProductListItems_RuleValidationProductLists">
+      <End Role="RuleValidationProductLists" EntitySet="RuleValidationProductLists" />
+      <End Role="RuleValidationProductListItems" EntitySet="RuleValidationProductListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationProductLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationProductLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationProductLists" EntitySet="RuleValidationProductLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationProductTypeListItems_RuleValidationProductTypeLists" Association="OrderRulesModel.Store.FK_RuleValidationProductTypeListItems_RuleValidationProductTypeLists">
+      <End Role="RuleValidationProductTypeLists" EntitySet="RuleValidationProductTypeLists" />
+      <End Role="RuleValidationProductTypeListItems" EntitySet="RuleValidationProductTypeListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationProductTypeLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationProductTypeLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationProductTypeLists" EntitySet="RuleValidationProductTypeLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidations_Rules" Association="OrderRulesModel.Store.FK_RuleValidations_Rules">
+      <End Role="Rules" EntitySet="Rules" />
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationStoreFrontListItems_RuleValidationStoreFrontLists" Association="OrderRulesModel.Store.FK_RuleValidationStoreFrontListItems_RuleValidationStoreFrontLists">
+      <End Role="RuleValidationStoreFrontLists" EntitySet="RuleValidationStoreFrontLists" />
+      <End Role="RuleValidationStoreFrontListItems" EntitySet="RuleValidationStoreFrontListItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RuleValidationStoreFrontLists_RuleValidations" Association="OrderRulesModel.Store.FK_RuleValidationStoreFrontLists_RuleValidations">
+      <End Role="RuleValidations" EntitySet="RuleValidations" />
+      <End Role="RuleValidationStoreFrontLists" EntitySet="RuleValidationStoreFrontLists" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Rules">
+    <Key>
+      <PropertyRef Name="RuleID" />
+    </Key>
+    <Property Name="RuleID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="StartDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="500" />
+    <Property Name="TermName" Type="nvarchar" MaxLength="800" />
+    <Property Name="RuleStatus" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleStatuses">
+    <Key>
+      <PropertyRef Name="RuleStatusID" />
+    </Key>
+    <Property Name="RuleStatusID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="RuleValidationAccountListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationAccountListItemID" />
+    </Key>
+    <Property Name="RuleValidationAccountListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="AccountID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationAccountLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationAccountTypeListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationAccountTypeListItemID" />
+    </Key>
+    <Property Name="RuleValidationAccountTypeListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="AccountTypeID" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationAccountTypeLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts">
+    <Key>
+      <PropertyRef Name="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmountID" />
+    </Key>
+    <Property Name="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationCustomerPriceTypeTotalRangeID" Type="int" />
+    <Property Name="MinimumAmount" Type="money" />
+    <Property Name="MaximumAmount" Type="money" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationCustomerPriceTypeTotalRanges">
+    <Key>
+      <PropertyRef Name="RuleValidationCustomerPriceTypeTotalRangeID" />
+    </Key>
+    <Property Name="RuleValidationCustomerPriceTypeTotalRangeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="ProductPriceTypeID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationCustomerPriceTypeTotalRangesKeys">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationCustomerSubtotalRangeCurrencyAmounts">
+    <Key>
+      <PropertyRef Name="RuleValidationCustomerSubtotalRangeCurrencyAmountID" />
+    </Key>
+    <Property Name="RuleValidationCustomerSubtotalRangeCurrencyAmountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="MinimumAmount" Type="money" />
+    <Property Name="MaximumAmount" Type="money" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationCustomerSubtotalRanges">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationOrderTypeListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationOrderTypeListItemID" />
+    </Key>
+    <Property Name="RuleValidationOrderTypeListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="OrderTypeID" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationOrderTypeLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationProductListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationProductListItemID" />
+    </Key>
+    <Property Name="RuleValidationProductListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="ProductID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationProductLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationProductTypeListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationProductTypeListItemID" />
+    </Key>
+    <Property Name="RuleValidationProductTypeListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="ProductTypeID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationProductTypeLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidations">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationStoreFrontListItems">
+    <Key>
+      <PropertyRef Name="RuleValidationStoreFrontListItemID" />
+    </Key>
+    <Property Name="RuleValidationStoreFrontListItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="RuleValidationID" Type="int" />
+    <Property Name="StoreFrontID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RuleValidationStoreFrontLists">
+    <Key>
+      <PropertyRef Name="RuleValidationID" />
+    </Key>
+    <Property Name="RuleValidationID" Type="int" Nullable="false" />
+    <Property Name="IsIncludeList" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Rules_RuleStatuses">
+    <End Role="RuleStatuses" Type="OrderRulesModel.Store.RuleStatuses" Multiplicity="1" />
+    <End Role="Rules" Type="OrderRulesModel.Store.Rules" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleStatuses">
+        <PropertyRef Name="RuleStatusID" />
+      </Principal>
+      <Dependent Role="Rules">
+        <PropertyRef Name="RuleStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationAccountListItems_RuleValidationAccountLists">
+    <End Role="RuleValidationAccountLists" Type="OrderRulesModel.Store.RuleValidationAccountLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationAccountListItems" Type="OrderRulesModel.Store.RuleValidationAccountListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationAccountLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationAccountListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationAccountLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationAccountLists" Type="OrderRulesModel.Store.RuleValidationAccountLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationAccountLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationAccountTypeListItems_RuleValidationAccountTypeLists">
+    <End Role="RuleValidationAccountTypeLists" Type="OrderRulesModel.Store.RuleValidationAccountTypeLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationAccountTypeListItems" Type="OrderRulesModel.Store.RuleValidationAccountTypeListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationAccountTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationAccountTypeListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationAccountTypeLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationAccountTypeLists" Type="OrderRulesModel.Store.RuleValidationAccountTypeLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationAccountTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts_RuleValidationCustomerPriceTypeTotalRanges">
+    <End Role="RuleValidationCustomerPriceTypeTotalRanges" Type="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRanges" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" Type="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationCustomerPriceTypeTotalRanges">
+        <PropertyRef Name="RuleValidationCustomerPriceTypeTotalRangeID" />
+      </Principal>
+      <Dependent Role="RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts">
+        <PropertyRef Name="RuleValidationCustomerPriceTypeTotalRangeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationCustomerPriceTypeTotalRanges_RuleValidationCustomerPriceTypeTotalRangesKeys">
+    <End Role="RuleValidationCustomerPriceTypeTotalRangesKeys" Type="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRangesKeys" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationCustomerPriceTypeTotalRanges" Type="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRanges" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationCustomerPriceTypeTotalRangesKeys">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationCustomerPriceTypeTotalRanges">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationCustomerPriceTypeTotalRangesKeys_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationCustomerPriceTypeTotalRangesKeys" Type="OrderRulesModel.Store.RuleValidationCustomerPriceTypeTotalRangesKeys" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationCustomerPriceTypeTotalRangesKeys">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationCustomerSubtotalRangeCurrencyAmounts_RuleValidationCustomerSubtotalRanges">
+    <End Role="RuleValidationCustomerSubtotalRanges" Type="OrderRulesModel.Store.RuleValidationCustomerSubtotalRanges" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationCustomerSubtotalRangeCurrencyAmounts" Type="OrderRulesModel.Store.RuleValidationCustomerSubtotalRangeCurrencyAmounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationCustomerSubtotalRanges">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationCustomerSubtotalRangeCurrencyAmounts">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationCustomerSubtotalRanges_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationCustomerSubtotalRanges" Type="OrderRulesModel.Store.RuleValidationCustomerSubtotalRanges" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationCustomerSubtotalRanges">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationOrderTypeListItems_RuleValidationOrderTypeLists">
+    <End Role="RuleValidationOrderTypeLists" Type="OrderRulesModel.Store.RuleValidationOrderTypeLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationOrderTypeListItems" Type="OrderRulesModel.Store.RuleValidationOrderTypeListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationOrderTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationOrderTypeListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationOrderTypeLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationOrderTypeLists" Type="OrderRulesModel.Store.RuleValidationOrderTypeLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationOrderTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationProductListItems_RuleValidationProductLists">
+    <End Role="RuleValidationProductLists" Type="OrderRulesModel.Store.RuleValidationProductLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationProductListItems" Type="OrderRulesModel.Store.RuleValidationProductListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationProductLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationProductListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationProductLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationProductLists" Type="OrderRulesModel.Store.RuleValidationProductLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationProductLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationProductTypeListItems_RuleValidationProductTypeLists">
+    <End Role="RuleValidationProductTypeLists" Type="OrderRulesModel.Store.RuleValidationProductTypeLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationProductTypeListItems" Type="OrderRulesModel.Store.RuleValidationProductTypeListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationProductTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationProductTypeListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationProductTypeLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationProductTypeLists" Type="OrderRulesModel.Store.RuleValidationProductTypeLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationProductTypeLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidations_Rules">
+    <End Role="Rules" Type="OrderRulesModel.Store.Rules" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rules">
+        <PropertyRef Name="RuleID" />
+      </Principal>
+      <Dependent Role="RuleValidations">
+        <PropertyRef Name="RuleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationStoreFrontListItems_RuleValidationStoreFrontLists">
+    <End Role="RuleValidationStoreFrontLists" Type="OrderRulesModel.Store.RuleValidationStoreFrontLists" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationStoreFrontListItems" Type="OrderRulesModel.Store.RuleValidationStoreFrontListItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidationStoreFrontLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationStoreFrontListItems">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RuleValidationStoreFrontLists_RuleValidations">
+    <End Role="RuleValidations" Type="OrderRulesModel.Store.RuleValidations" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RuleValidationStoreFrontLists" Type="OrderRulesModel.Store.RuleValidationStoreFrontLists" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="RuleValidations">
+        <PropertyRef Name="RuleValidationID" />
+      </Principal>
+      <Dependent Role="RuleValidationStoreFrontLists">
+        <PropertyRef Name="RuleValidationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

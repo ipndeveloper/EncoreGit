@@ -1,0 +1,1 @@
+%~dp0..\.build\NetSteps\Transmogrifier\SqlTransmogrifier.exe -s %~dp0Deployments -td %~dp0 -c FRAMEWORK -b true -t Template2 -coredb EncoreCore -commdb EncoreCommissions -maildb EncoreMail

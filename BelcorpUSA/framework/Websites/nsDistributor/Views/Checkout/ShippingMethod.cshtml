@@ -1,0 +1,91 @@
+@model System.Collections.Generic.IEnumerable<NetSteps.Data.Entities.Business.ShippingMethodWithRate>
+@{
+    ViewBag.Title = "Shipping Method";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () { 
+            $('#btnNext').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Url.Resolve("~/Checkout/ChooseShippingMethod")', { shippingMethodId: $('input[name="shippingMethod"]:checked').val() }, function (response) {
+                    if (response.result) {
+                        window.location = '@Url.Resolve("~/Checkout/Billing")';
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            $(".shipMethodList li:first").addClass("UI-lightBg");
+            $(".shipMethodRadio").focus(function () {
+                $(".shipMethodList li").removeClass("UI-lightBg");
+                $(this).parents().eq(1).addClass("UI-lightBg");
+            });
+
+        });
+		//]]>
+    </script>
+}
+<div class="pageTitle">
+    <h1>@Html.Term("ShippingMethodTitle", "Shipping Method")</h1>
+</div>
+<div class="UI-mainBg pad5 brdrAll shipMethodInstruction">
+    <h2>
+        @Html.Term("ShippingMethodInstruction", "Choose a shipping method")
+    </h2>
+</div>
+<div class="brdr brdrAll pad10 shipMethodList">
+    <ul class="inlineNav">
+        @if (Model.Count() > 0)
+        {
+            var orderCustomer = CoreContext.CurrentOrder.OrderCustomers[0];
+
+            foreach (var shippingMethod in Model)
+            {            
+				var postAdjustmentShippingMethodAmount = orderCustomer.GetShippingAmountAfterAdjustment(shippingMethod.ShippingAmount);
+            <li class="pad10 brdrAll">
+                <div class="FL shipMethodSelect">
+                    <input id="shippingMethod-@shippingMethod.ShippingMethodID" type="radio" class="shipMethodRadio" name="shippingMethod" value="@shippingMethod.ShippingMethodID" @Html.Raw((int)ViewData["ShippingMethodID"] == shippingMethod.ShippingMethodID ? "checked=\"checked\"" : "") />
+                </div>
+                <label for="shippingMethod-@shippingMethod.ShippingMethodID" class="FL shipMethodLabel">
+                    <b>
+                            @shippingMethod.DisplayName</b><br />
+                        @if (orderCustomer.ShippingAdjustmentAmount != 0)
+                        {
+                            <span class="shipMethodPrice originalPrice strikethrough">@(shippingMethod.ShippingAmount.ToString(CoreContext.CurrentOrder.CurrencyID))</span>
+                            <span class="shipMethodPrice discountPrice">@(postAdjustmentShippingMethodAmount.ToString(CoreContext.CurrentOrder.CurrencyID))</span>
+                        }
+                        else
+	                    {
+                            <span class="shipMethodPrice originalPrice">@(shippingMethod.ShippingAmount.ToString(CoreContext.CurrentOrder.CurrencyID))</span>;
+                        }
+                </label>
+            </li>            
+            }
+        }
+        else if (ViewBag.Products != null)
+        {
+            @Html.Partial("_ProductShippingExceptionModal")
+        }
+        else
+        {
+            @Html.Term("NoAvaliableShipingMethods", "No available shipping methods, try changing your shipping address, updating your order subtotal or call customer service.");
+        }
+    </ul>
+    <span class="clr"></span>
+</div>
+<div class="FormSubmit">
+    @if (Model.Count() > 0)
+    {
+        <a href="javascript:void(0);" id="btnNext" class="Button btnContinue btnSelectShipMethod">
+			<span>@Html.Term("ShipMethodNextButton", "Continue")</span></a><span class="clr"></span>
+    }
+    else
+    { 
+        <a href="/Checkout/Shipping" class="Button btnContinue btnSelectShipMethod"><span>@Html.Term("EditShippingAddress", "Edit Shipping Address")</span></a>
+    }
+</div>
+<span class="clr"></span>
+@Html.Partial("MessageCenter")

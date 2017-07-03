@@ -1,0 +1,144 @@
+﻿  
+@*Seccion Shipping Methods*@ 
+<h5 class="UI-mainBg pad5 brdrYYNN">
+        @Html.Term("ShipMethod", "Ship Method")
+</h5>
+<div class="pad10 UI-lightBg brdrNNYY orderTotals">
+     <div class="clr mt10">
+        <ul id="shippingMethods" class="listNav flatList">
+             @{
+                 
+                 var order = Session["Order"] as Order;
+                 int selectedShippingMethod = order.GetDefaultShipment() == null ? 0 : order.GetDefaultShipment().ShippingMethodID ?? 0;
+                 var shippingMethodWithRates = ViewData["ShippingMethods"] as IEnumerable<ShippingMethodWithRate>;
+                 var shipmentAdjustmentAmount = order.OrderCustomers[0].ShippingAdjustmentAmount;
+              }
+              @if (shippingMethodWithRates != null && shippingMethodWithRates.Any())
+              {
+                  foreach (ShippingMethodWithRate shippingMethod in shippingMethodWithRates.OrderBy(sm => sm.ShippingAmount))
+                  {
+                    <li class="AddressProfile">
+                        <input id="shippingMethod@(shippingMethod.ShippingMethodID)" type="radio" name="shippingMethod"
+                                class="Radio" value="@shippingMethod.ShippingMethodID" @Html.Raw(shippingMethod.ShippingMethodID == selectedShippingMethod ? "checked=\"checked\"" : "") />
+                        <label for="shippingMethod@(shippingMethod.ShippingMethodID)">
+                            @*<b>@shippingMethod.Name</b>*@
+                            <b>@Html.Term("Shipping","Frete")</b>
+                            @if (shipmentAdjustmentAmount != 0)
+                            {
+                                <span class="shipMethodPrice originalPrice strikethrough">@(shippingMethod.ShippingAmount.ToString(order.CurrencyID))</span>
+                                <span class="shipMethodPrice discountPrice">@((order.OrderCustomers[0].GetShippingAmountAfterAdjustment(shippingMethod.ShippingAmount)).ToString(order.CurrencyID))</span>
+                            }
+                            else
+                            {
+                                <span class="shipMethodPrice originalPrice">@(shippingMethod.ShippingAmount.ToString(order.CurrencyID))</span>;
+                            }
+                        </label>
+                    </li>
+                  }
+              }
+              else
+              {
+                  <li class="AddressProfile">
+                        @Html.Term("NoShippingRatesAvailable", "No shipping rates available. Please enter a shipping address if one is not yet added to order.")
+                  </li>
+              }
+        </ul>  
+         <h5>@Html.Term("DateEstimated", "Date Estimated"):
+        <label id="lblDateEstimated" >@Convert.ToString(Session["DateEstimated"])</label> </h5>    
+    </div> 
+    <br />
+    <h5 class="UI-mainBg pad5 brdrYYNN">
+        @Html.Term("BillingInformation", "Billing Information")
+    </h5>
+     <div class="pad10 UI-lightBg brdrNNYY orderTotals">
+        @*derecha FR splitCol *@
+        <div id="paymentMethodsBlock" class="FL splitCol">
+            @Html.Partial("_PaymentMethods")
+        </div>
+        <div id="paymentsGridContainer" class="FR splitCol">
+            @Html.Partial("_OEPaymentsGrid")
+        </div>
+        
+    <div class="clr mt10">
+        <h5 class="UI-mainBg pad5 brdrYYNN">
+            @Html.Term("Totals", "Totals")
+        </h5>
+        <div class="pad10 UI-lightBg brdrNNYY orderTotals">
+            <table width="100%">
+                <tr id="totalBar">
+                    <td colspan="2" style="text-align: right; white-space: nowrap">
+                        <div class="FL Loading" id="TotalsLoad">
+                        </div>
+                        @Html.Term("Subtotal", "Subtotal"):<br />
+
+                        @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+                        @Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                                                 }
+                                }
+                                @*CS.05MAY2016.Fin.Muestra CV*@
+
+
+                        @Html.Term("Tax", "Tax"):<br />
+                        @Html.Term("Shipping"):<br />
+                        @Html.Term("Handling"):<br />
+                        <b>@Html.Term("OrderTotal", "Order Total"):</b>
+                    </td>
+                    <td>
+                     <span   class="isSubtotalModified">@order.Subtotal.ToString(order.CurrencyID)</span>                         
+                        <br />
+
+                         @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+                        <span class="commissionableTotal" id="spCommissionableTotal">
+                            @order.CommissionableTotal.ToString(order.CurrencyID); 
+                            </span>
+                        <br />
+                                }
+                                }
+                                @*CS.05MAY2016.Fin.Muestra CV*@
+
+                        <span class="taxTotal">
+                            @((order.TaxAmountTotalOverride != null) ? order.TaxAmountTotalOverride.ToString(order.CurrencyID) : order.TaxAmountTotal.ToString(order.CurrencyID))</span>
+                        <br />
+                        <span class="shippingTotal">
+                            @((order.ShippingTotalOverride != null) ? order.ShippingTotalOverride.ToString(order.CurrencyID) : order.ShippingTotal.ToString(order.CurrencyID))
+                        </span>
+                        <br />
+                        <span class="handlingTotal">
+                            @order.HandlingTotal.ToString(order.CurrencyID) </span>
+                        <br />
+                        <b><span class="grandTotal">
+                            @order.GrandTotal.ToString(order.CurrencyID)</span></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">
+                        @Html.Term("PaymentsMade", "Payments Made"):<br />
+                        @Html.Term("BalanceDue", "Balance Due"):
+                    </td>
+                    <td>
+                        @{
+                            decimal paymentsTotal = order.PaymentTotal ?? 0;
+                         }
+                        <b class="paymentTotal">
+                            @paymentsTotal.ToString(order.CurrencyID)</b><br />
+                       
+                        <b style="color: @(order.Balance  < 0 ? "Red" : "Green")" class="balanceDue">
+                            @order.Balance.ToString(order.CurrencyID).Replace("-", "")
+                        </b>
+
+                        
+                    </td>
+                </tr>
+            </table>
+            <span class="clr"></span>
+        </div>
+    </div>
+    </div>
+</div>

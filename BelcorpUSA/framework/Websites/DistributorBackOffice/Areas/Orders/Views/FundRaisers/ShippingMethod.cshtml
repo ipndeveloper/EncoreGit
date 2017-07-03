@@ -1,0 +1,109 @@
+﻿@model Party
+@{
+    ViewBag.Title = Html.Term("ShippingMethod", "Shipping Method");
+}
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            $('#btnNext1, #btnNext2').click(function () {
+                var t = $('#btnNext1, #btnNext2'), data = { partyShippingMethod: $('#partyShippingMethod input:checked').val() };
+                showLoading(t);
+                $('#directShipGuests div.shipMethodList').each(function (i) {
+                    data['guests[' + i + '].Key'] = $('.orderCustomerId', this).val();
+                    data['guests[' + i + '].Value'] = $('input.shipMethodRadio:checked', this).val();
+                });
+                $.post('@Href("~/Orders/Fundraisers/SetShippingMethod")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Orders/Fundraisers/Payments")';
+                    }
+                    else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            var lastProduct,
+                static = true,
+				originalTop = $('#Follow').position().top,
+                width = $('#Follow').width();
+            $(window).scroll(function () {
+                if (static && originalTop < $(window).scrollTop()) {
+                    static = false;
+                    $('#Follow').css({ position: 'fixed', top: '0px', width: width + 'px' });
+                } else if (!static && originalTop > $(window).scrollTop()) {
+                    static = true;
+                    $('#Follow').css({ position: 'static', top: '' });
+                }
+            });
+        });
+    </script>
+}
+@section title{
+    @Html.Term("ShippingMethod", "Shipping Method")
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Fundraisers")">@Html.Term("Fundraiser", "Fundraiser")</a> &gt; <a href="@Href("~/Orders/Fundraisers/Cart")">@Html.Term("Cart")</a> &gt; @Html.Term("ShippingMethod", "Shipping Method")
+}
+@section rail {
+     <div id="Follow">
+    
+        @Html.Partial("PartySummary")
+         <div class="center pad10">
+             @if (ViewBag.Products == null)
+             {
+                <a href="javascript:void(0);" id="btnNext1" class="Button FormSubmit"><span>@Html.Term("Continue") ></span></a>
+             }
+         </div>
+    </div>
+}
+<div class="pad5">
+    <div class="brdrAll">
+        <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+            <span class="FL">@Html.Term("FundraiserShippingMethod", "Fundraiser Shipping Method")</span>
+            <span class="clr"></span>
+        </div>
+        <div id="partyShippingMethod" class="brdrNNYY brdr1 pad5">
+            <div class="brdr brdrAll pad10 shipMethodList">
+                <ul class="inlineNav">
+                    @{bool first = true;
+                      OrderShipment shipment = Model.Order.GetDefaultShipment();
+                      int? currentShippingMethodID = null;
+                      if (shipment != null)
+                      {
+                          currentShippingMethodID = shipment.ShippingMethodID;
+                          first = false;
+                      }
+                    }
+                    @if (ViewBag.Products == null)
+                    {
+                        foreach (ShippingMethodWithRate shippingMethod in ViewBag.ShippingMethods)
+                        {
+                            <li class="pad10 brdrAll">
+                                <div class="FL shipMethodSelect">
+                                    <input id="shippingMethod-@shippingMethod.ShippingMethodID" type="radio" class="shipMethodRadio" name="shippingMethod" value="@shippingMethod.ShippingMethodID" @Html.Raw(shippingMethod.ShippingMethodID == currentShippingMethodID.Value || first ? "checked=\"checked\"" : "") />
+                                </div>
+                                <label for="shippingMethod-@shippingMethod.ShippingMethodID" class="FL shipMethodLabel">
+                                    <span class="shipMethodDisplayName">@shippingMethod.DisplayName</span> <span class="shipMethodPrice">@(shippingMethod.ShippingAmount.ToString((int)ViewBag.CurrencyID))</span>
+                                </label>
+                            </li>
+                            first = false;
+                        }
+                    }
+                </ul>
+                <span class="clr"></span>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.Products == null)
+{
+    <div class="clr center PageSaveButtons" style="text-align: center; width: auto;">
+        <a href="javascript:void(0);" id="btnNext2" class="Button FormSubmit" style="float: none;
+                                                                        margin: auto;"><span>@Html.Term("Continue") ></span></a> <span class="ClearAll">
+                                                                                                                                 </span>
+    </div>
+} else
+{
+    @Html.Partial("_ProductShippingExceptionModal")
+}
+

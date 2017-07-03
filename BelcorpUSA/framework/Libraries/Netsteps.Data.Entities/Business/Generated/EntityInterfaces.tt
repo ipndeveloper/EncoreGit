@@ -1,0 +1,626 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core.dll" #> 
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ assembly name="VSLangProj" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Security.Policy" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="VSLangProj" #>
+<#@ output extension=".Generated.cs" #>
+<#
+	// The name of the current project.
+	var projectName = "NetSteps.Data.Entities";
+
+	// An array of one or more regex patterns to determine which project references to search for interface types.
+	// For now, anything that starts with "NetSteps." and ends with ".Common".
+	var referenceNamePatterns = new[]
+	{
+		@"NetSteps(\.\w*)*\.Common"
+	};
+
+	// Two dictionaries (Core, Mail) that map interfaces to entity types.
+	// These will need to be updated as entities are added/removed.
+	var coreInterfaceEntities = new Dictionary<string, string>
+	{
+		{ "NetSteps.Accounts.Common.Models.IAccount", "Account" },
+		{ "NetSteps.Accounts.Common.Models.IAccountContactTag", "AccountContactTag" },
+		{ "NetSteps.Accounts.Common.Models.IAccountGlobalSearchData", "AccountGlobalSearchData" },
+		{ "NetSteps.Accounts.Common.Models.IAccountLanguage", "AccountLanguage" },
+		{ "NetSteps.Accounts.Common.Models.IAccountListValue", "AccountListValue" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPaymentMethod", "AccountPaymentMethod" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPhone", "AccountPhone" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPolicy", "AccountPolicy" },
+		{ "NetSteps.Accounts.Common.Models.IAccountProperty", "AccountProperty" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPropertyType", "AccountPropertyType" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPropertyValue", "AccountPropertyValue" },
+		{ "NetSteps.Accounts.Common.Models.IAccountPublicContactInfo", "AccountPublicContactInfo" },
+		{ "NetSteps.Accounts.Common.Models.IAccountReport", "AccountReport" },
+		{ "NetSteps.Accounts.Common.Models.IAccountReportType", "AccountReportType" },
+		{ "NetSteps.Accounts.Common.Models.IAccountSource", "AccountSource" },
+		{ "NetSteps.Accounts.Common.Models.IAccountSponsor", "AccountSponsor" },
+		{ "NetSteps.Accounts.Common.Models.IAccountSponsorType", "AccountSponsorType" },
+		{ "NetSteps.Accounts.Common.Models.IAccountStatus", "AccountStatus" },
+		{ "NetSteps.Accounts.Common.Models.IAccountStatusChangeReason", "AccountStatusChangeReason" },
+		{ "NetSteps.Accounts.Common.Models.IAccountTag", "AccountTag" },
+		{ "NetSteps.Accounts.Common.Models.IAccountType", "AccountType" },
+		{ "NetSteps.Accounts.Common.Models.ICommissions_AccountTitles_View", "Commissions_AccountTitles_View" },
+		{ "NetSteps.Accounts.Common.Models.ICorporateUser", "CorporateUser" },
+		{ "NetSteps.Accounts.Common.Models.IEmailSignature", "EmailSignature" },
+		{ "NetSteps.Accounts.Common.Models.IFunction", "Function" },
+		{ "NetSteps.Accounts.Common.Models.IGender", "Gender" },
+		{ "NetSteps.Accounts.Common.Models.IListValueType", "ListValueType" },
+		{ "NetSteps.Accounts.Common.Models.IPolicy", "Policy" },
+		{ "NetSteps.Accounts.Common.Models.IRole", "Role" },
+		{ "NetSteps.Accounts.Common.Models.IRoleType", "RoleType" },
+		{ "NetSteps.Accounts.Common.Models.IUser", "User" },
+		{ "NetSteps.Accounts.Common.Models.IUserFunctionOverride", "UserFunctionOverride" },
+		{ "NetSteps.Accounts.Common.Models.IUserStatus", "UserStatus" },
+		{ "NetSteps.Accounts.Common.Models.IUserType", "UserType" },
+		//{ "NetSteps.Accounts.Common.Models.IvCommissionableAccount", "vCommissionableAccount" },
+		{ "NetSteps.Addresses.Common.Models.IAddress", "Address" },
+		{ "NetSteps.Addresses.Common.Models.IAddressProperty", "AddressProperty" },
+		{ "NetSteps.Addresses.Common.Models.IAddressPropertyType", "AddressPropertyType" },
+		{ "NetSteps.Addresses.Common.Models.IAddressType", "AddressType" },
+		{ "NetSteps.Addresses.Common.Models.IPhoneType", "PhoneType" },
+		{ "NetSteps.Addresses.Common.Models.IPickupPoint", "PickupPoint" },
+		{ "NetSteps.Addresses.Common.Models.IStateProvince", "StateProvince" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditChangeType", "AuditChangeType" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditLog", "AuditLog" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditLogRow", "AuditLogRow" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditMachineName", "AuditMachineName" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditSqlUserName", "AuditSqlUserName" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditTable", "AuditTable" },
+		{ "NetSteps.Diagnostics.Auditing.Common.Models.IAuditTableColumn", "AuditTableColumn" },
+		{ "NetSteps.Common.Models.IApplication", "Application" },
+		{ "NetSteps.Common.Models.IApplicationRunningInstance", "ApplicationRunningInstance" },
+		{ "NetSteps.Common.Models.ICategory", "Category" },
+		{ "NetSteps.Common.Models.ICategoryTranslation", "CategoryTranslation" },
+		{ "NetSteps.Common.Models.ICategoryType", "CategoryType" },
+		{ "NetSteps.Common.Models.INote", "Note" },
+		{ "NetSteps.Common.Models.INoteType", "NoteType" },
+		{ "NetSteps.Communication.Common.Models.IAccountDevice", "AccountDevice" },
+		{ "NetSteps.Communication.Common.Models.IAccountEmailLog", "AccountEmailLog" },
+		{ "NetSteps.Communication.Common.Models.IAlertCampaignAction", "AlertCampaignAction" },
+		{ "NetSteps.Communication.Common.Models.IAlertPriority", "AlertPriority" },
+		{ "NetSteps.Communication.Common.Models.IAlertTemplate", "AlertTemplate" },
+		{ "NetSteps.Communication.Common.Models.IAlertTemplateTranslation", "AlertTemplateTranslation" },
+		{ "NetSteps.Communication.Common.Models.IAutoresponder", "Autoresponder" },
+		{ "NetSteps.Communication.Common.Models.IAutoresponderMessage", "AutoresponderMessage" },
+		{ "NetSteps.Communication.Common.Models.IAutoresponderMessageToken", "AutoresponderMessageToken" },
+		{ "NetSteps.Communication.Common.Models.IAutoresponderTranslation", "AutoresponderTranslation" },
+		{ "NetSteps.Communication.Common.Models.IAutoresponderType", "AutoresponderType" },
+		{ "NetSteps.Communication.Common.Models.ICampaign", "Campaign" },
+		{ "NetSteps.Communication.Common.Models.ICampaignAction", "CampaignAction" },
+		{ "NetSteps.Communication.Common.Models.ICampaignActionQueueHistory", "CampaignActionQueueHistory" },
+		{ "NetSteps.Communication.Common.Models.ICampaignActionQueueItem", "CampaignActionQueueItem" },
+		{ "NetSteps.Communication.Common.Models.ICampaignActionTokenValue", "CampaignActionTokenValue" },
+		{ "NetSteps.Communication.Common.Models.ICampaignActionType", "CampaignActionType" },
+		{ "NetSteps.Communication.Common.Models.ICampaignEmail", "CampaignEmail" },
+		{ "NetSteps.Communication.Common.Models.ICampaignOptOut", "CampaignOptOut" },
+		{ "NetSteps.Communication.Common.Models.ICampaignSubscriber", "CampaignSubscriber" },
+		{ "NetSteps.Communication.Common.Models.ICampaignType", "CampaignType" },
+		{ "NetSteps.Communication.Common.Models.IDeviceNotification", "DeviceNotification" },
+		{ "NetSteps.Communication.Common.Models.IDeviceType", "DeviceType" },
+		{ "NetSteps.Communication.Common.Models.IDistributionList", "DistributionList" },
+		{ "NetSteps.Communication.Common.Models.IDistributionListType", "DistributionListType" },
+		{ "NetSteps.Communication.Common.Models.IDistributionSubscriber", "DistributionSubscriber" },
+		{ "NetSteps.Communication.Common.Models.IDomainEventQueueItem", "DomainEventQueueItem" },
+		{ "NetSteps.Communication.Common.Models.IDomainEventType", "DomainEventType" },
+		{ "NetSteps.Communication.Common.Models.IDomainEventTypeCategory", "DomainEventTypeCategory" },
+		{ "NetSteps.Communication.Common.Models.IEmailBodyTextType", "EmailBodyTextType" },
+		{ "NetSteps.Communication.Common.Models.IEmailCampaignAction", "EmailCampaignAction" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplate", "EmailTemplate" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplateAttribute", "EmailTemplateAttribute" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplateAttributeConnection", "EmailTemplateAttributeConnection" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplateToken", "EmailTemplateToken" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplateTranslation", "EmailTemplateTranslation" },
+		{ "NetSteps.Communication.Common.Models.IEmailTemplateType", "EmailTemplateType" },
+		{ "NetSteps.Communication.Common.Models.IEmailType", "EmailType" },
+		{ "NetSteps.Communication.Common.Models.IEventContext", "EventContext" },
+		{ "NetSteps.Communication.Common.Models.IMailAccount", "MailAccount" },
+		{ "NetSteps.Communication.Common.Models.IMailDomain", "MailDomain" },
+		{ "NetSteps.Communication.Common.Models.INewsletter", "Newsletter" },
+		{ "NetSteps.Communication.Common.Models.INewsletterTrackingStatistic", "NewsletterTrackingStatistic" },
+		{ "NetSteps.Communication.Common.Models.IOptOut", "OptOut" },
+		{ "NetSteps.Communication.Common.Models.IOptOutType", "OptOutType" },
+		{ "NetSteps.Communication.Common.Models.IQueueItemPriority", "QueueItemPriority" },
+		{ "NetSteps.Communication.Common.Models.IQueueItemStatus", "QueueItemStatus" },
+		{ "NetSteps.Communication.Common.Models.ISupportTicket", "SupportTicket" },
+		{ "NetSteps.Communication.Common.Models.ISupportTicketCategory", "SupportTicketCategory" },
+		{ "NetSteps.Communication.Common.Models.ISupportTicketPriority", "SupportTicketPriority" },
+		{ "NetSteps.Communication.Common.Models.ISupportTicketStatus", "SupportTicketStatus" },
+		{ "NetSteps.Communication.Common.Models.ITimeUnitType", "TimeUnitType" },
+		{ "NetSteps.Communication.Common.Models.IToken", "Token" },
+		{ "NetSteps.Content.Common.Models.IDescriptionTranslation", "DescriptionTranslation" },
+		{ "NetSteps.Content.Common.Models.IFileResource", "FileResource" },
+		{ "NetSteps.Content.Common.Models.IFileResourceProperty", "FileResourceProperty" },
+		{ "NetSteps.Content.Common.Models.IFileResourcePropertyType", "FileResourcePropertyType" },
+		{ "NetSteps.Content.Common.Models.IFileResourceType", "FileResourceType" },
+		{ "NetSteps.Content.Common.Models.IHtmlContent", "HtmlContent" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentAccountStatus", "HtmlContentAccountStatus" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentEditorType", "HtmlContentEditorType" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentHistory", "HtmlContentHistory" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentStatus", "HtmlContentStatus" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentWorkflow", "HtmlContentWorkflow" },
+		{ "NetSteps.Content.Common.Models.IHtmlContentWorkflowType", "HtmlContentWorkflowType" },
+		{ "NetSteps.Content.Common.Models.IHtmlElement", "HtmlElement" },
+		{ "NetSteps.Content.Common.Models.IHtmlElementType", "HtmlElementType" },
+		{ "NetSteps.Content.Common.Models.IHtmlInputType", "HtmlInputType" },
+		{ "NetSteps.Content.Common.Models.IHtmlSection", "HtmlSection" },
+		{ "NetSteps.Content.Common.Models.IHtmlSectionChoice", "HtmlSectionChoice" },
+		{ "NetSteps.Content.Common.Models.IHtmlSectionContent", "HtmlSectionContent" },
+		{ "NetSteps.Content.Common.Models.IHtmlSectionEditType", "HtmlSectionEditType" },
+		{ "NetSteps.Content.Common.Models.ILayout", "Layout" },
+		{ "NetSteps.Content.Common.Models.ILocalizedKind", "LocalizedKind" },
+		{ "NetSteps.Content.Common.Models.INavigation", "Navigation" },
+		{ "NetSteps.Content.Common.Models.INavigationTranslation", "NavigationTranslation" },
+		{ "NetSteps.Content.Common.Models.INavigationType", "NavigationType" },
+		{ "NetSteps.Content.Common.Models.IPage", "Page" },
+		{ "NetSteps.Content.Common.Models.IPageTranslation", "PageTranslation" },
+		{ "NetSteps.Content.Common.Models.IPageType", "PageType" },
+		{ "NetSteps.Content.Common.Models.IProxyLink", "ProxyLink" },
+		{ "NetSteps.Content.Common.Models.ISiteWidget", "SiteWidget" },
+		{ "NetSteps.Content.Common.Models.ITermTranslation", "TermTranslation" },
+		{ "NetSteps.Content.Common.Models.IUserSiteWidget", "UserSiteWidget" },
+		{ "NetSteps.Content.Common.Models.IWidget", "Widget" },
+		{ "NetSteps.Locale.Common.Models.ICountry", "Country" },
+		{ "NetSteps.Locale.Common.Models.ICurrency", "Currency" },
+		{ "NetSteps.Locale.Common.Models.ILanguage", "Language" },
+		{ "NetSteps.Locale.Common.Models.IMarket", "Market" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IApplicationUsageLog", "ApplicationUsageLog" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IErrorLog", "ErrorLog" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IStatistic", "Statistic" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IStatisticType", "StatisticType" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IStatisticValue", "StatisticValue" },
+		{ "NetSteps.Diagnostics.Logging.Common.Models.IStatisticValueType", "StatisticValueType" },
+		{ "NetSteps.Logistics.Common.Models.ILogisticsProvider", "LogisticsProvider" },
+		{ "NetSteps.Logistics.Common.Models.IShippingMethod", "ShippingMethod" },
+		{ "NetSteps.Logistics.Common.Models.IShippingOrderType", "ShippingOrderType" },
+		{ "NetSteps.Logistics.Common.Models.IShippingRate", "ShippingRate" },
+		{ "NetSteps.Logistics.Common.Models.IShippingRateGroup", "ShippingRateGroup" },
+		{ "NetSteps.Logistics.Common.Models.IShippingRateType", "ShippingRateType" },
+		{ "NetSteps.Logistics.Common.Models.IShippingRegion", "ShippingRegion" },
+		{ "NetSteps.Logistics.Common.Models.IWarehouse", "Warehouse" },
+		{ "NetSteps.Logistics.Common.Models.IWarehouseProduct", "WarehouseProduct" },
+		{ "NetSteps.Marketing.Common.Models.IArchive", "Archive" },
+		{ "NetSteps.Marketing.Common.Models.IArchiveType", "ArchiveType" },
+		{ "NetSteps.Marketing.Common.Models.ICalendarEvent", "CalendarEvent" },
+		{ "NetSteps.Marketing.Common.Models.ICalendarEventAttribute", "CalendarEventAttribute" },
+		{ "NetSteps.Marketing.Common.Models.INews", "News" },
+		{ "NetSteps.Marketing.Common.Models.INewsType", "NewsType" },
+		{ "NetSteps.Marketing.Common.Models.INewsTypeLanguageSort", "NewsTypeLanguageSort" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipBatch", "AutoshipBatch" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipLog", "AutoshipLog" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipOrder", "AutoshipOrder" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipSchedule", "AutoshipSchedule" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipScheduleDay", "AutoshipScheduleDay" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipScheduleProduct", "AutoshipScheduleProduct" },
+		{ "NetSteps.Orders.Common.Models.IAutoshipScheduleType", "AutoshipScheduleType" },
+		{ "NetSteps.Orders.Common.Models.IHostessRewardRule", "HostessRewardRule" },
+		{ "NetSteps.Orders.Common.Models.IHostessRewardRuleType", "HostessRewardRuleType" },
+		{ "NetSteps.Orders.Common.Models.IHostessRewardType", "HostessRewardType" },
+		{ "NetSteps.Orders.Common.Models.IIntervalType", "IntervalType" },
+		{ "NetSteps.Orders.Common.Models.IOrder", "Order" },
+		{ "NetSteps.Orders.Common.Models.IOrderAdjustment", "OrderAdjustment" },
+		{ "NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification", "OrderAdjustmentOrderLineModification" },
+		{ "NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification", "OrderAdjustmentOrderModification" },
+		{ "NetSteps.Orders.Common.Models.IOrderCustomer", "OrderCustomer" },
+		{ "NetSteps.Orders.Common.Models.IOrderCustomerType", "OrderCustomerType" },
+		{ "NetSteps.Orders.Common.Models.IOrderItem", "OrderItem" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemMessage", "OrderItemMessage" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind", "OrderItemMessageDisplayKind" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemParentType", "OrderItemParentType" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemPrice", "OrderItemPrice" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemProperty", "OrderItemProperty" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemPropertyType", "OrderItemPropertyType" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemPropertyValue", "OrderItemPropertyValue" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemReplacement", "OrderItemReplacement" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemReturn", "OrderItemReturn" },
+		{ "NetSteps.Orders.Common.Models.IOrderItemType", "OrderItemType" },
+		{ "NetSteps.Orders.Common.Models.IOrderPayment", "OrderPayment" },
+		{ "NetSteps.Orders.Common.Models.IOrderPaymentResult", "OrderPaymentResult" },
+		{ "NetSteps.Orders.Common.Models.IOrderPaymentStatus", "OrderPaymentStatus" },
+		{ "NetSteps.Orders.Common.Models.IOrderShipment", "OrderShipment" },
+		{ "NetSteps.Orders.Common.Models.IOrderShipmentPackage", "OrderShipmentPackage" },
+		{ "NetSteps.Orders.Common.Models.IOrderShipmentPackageItem", "OrderShipmentPackageItem" },
+		{ "NetSteps.Orders.Common.Models.IOrderShipmentsLog", "OrderShipmentsLog" },
+		{ "NetSteps.Orders.Common.Models.IOrderShipmentStatus", "OrderShipmentStatus" },
+		{ "NetSteps.Orders.Common.Models.IOrderStatus", "OrderStatus" },
+		{ "NetSteps.Orders.Common.Models.IOrderType", "OrderType" },
+		{ "NetSteps.Orders.Common.Models.IParty", "Party" },
+		{ "NetSteps.Orders.Common.Models.IPartyGuest", "PartyGuest" },
+		{ "NetSteps.Orders.Common.Models.IPartyRsvp", "PartyRsvp" },
+		{ "NetSteps.Orders.Common.Models.IPublicationChannel", "PublicationChannel" },
+		{ "NetSteps.Orders.Common.Models.IRedemption", "Redemption" },
+		{ "NetSteps.Orders.Common.Models.IRedemptionMethod", "RedemptionMethod" },
+		{ "NetSteps.Orders.Common.Models.IReplacementReason", "ReplacementReason" },
+		{ "NetSteps.Orders.Common.Models.IReturnReason", "ReturnReason" },
+		{ "NetSteps.Orders.Common.Models.IReturnType", "ReturnType" },
+		{ "NetSteps.Payments.Common.Models.IBankAccountType", "BankAccountType" },
+		{ "NetSteps.Payments.Common.Models.ICreditCardType", "CreditCardType" },
+		{ "NetSteps.Payments.Common.Models.IGiftCard", "GiftCard" },
+		{ "NetSteps.Payments.Common.Models.IPaymentGateway", "PaymentGateway" },
+		{ "NetSteps.Payments.Common.Models.IPaymentOrderType", "PaymentOrderType" },
+		{ "NetSteps.Payments.Common.Models.IPaymentType", "PaymentType" },
+		{ "NetSteps.Products.Common.Models.IAccountPriceType", "AccountPriceType" },
+		{ "NetSteps.Products.Common.Models.IBrand", "Brand" },
+		{ "NetSteps.Products.Common.Models.ICatalog", "Catalog" },
+		{ "NetSteps.Products.Common.Models.ICatalogItem", "CatalogItem" },
+		{ "NetSteps.Products.Common.Models.ICatalogType", "CatalogType" },
+		{ "NetSteps.Products.Common.Models.IDynamicKit", "DynamicKit" },
+		{ "NetSteps.Products.Common.Models.IDynamicKitGroup", "DynamicKitGroup" },
+		{ "NetSteps.Products.Common.Models.IDynamicKitGroupRule", "DynamicKitGroupRule" },
+		{ "NetSteps.Products.Common.Models.IDynamicKitPricingType", "DynamicKitPricingType" },
+		{ "NetSteps.Products.Common.Models.IMarketStoreFront", "MarketStoreFront" },
+		{ "NetSteps.Products.Common.Models.IMerchant", "Merchant" },
+		{ "NetSteps.Products.Common.Models.IPriceRelationshipType", "PriceRelationshipType" },
+		{ "NetSteps.Products.Common.Models.IProduct", "Product" },
+		{ "NetSteps.Products.Common.Models.IProductBackOrderBehavior", "ProductBackOrderBehavior" },
+		{ "NetSteps.Products.Common.Models.IProductBase", "ProductBase" },
+		{ "NetSteps.Products.Common.Models.IProductBaseProperty", "ProductBaseProperty" },
+		{ "NetSteps.Products.Common.Models.IProductBasePropertyValue", "ProductBasePropertyValue" },
+		{ "NetSteps.Products.Common.Models.IProductFile", "ProductFile" },
+		{ "NetSteps.Products.Common.Models.IProductFileType", "ProductFileType" },
+		{ "NetSteps.Products.Common.Models.IProductMerchantLocationCache", "ProductMerchantLocationCache" },
+		{ "NetSteps.Products.Common.Models.IProductPrice", "ProductPrice" },
+		{ "NetSteps.Products.Common.Models.IProductPriceType", "ProductPriceType" },
+		{ "NetSteps.Products.Common.Models.IProductProperty", "ProductProperty" },
+		{ "NetSteps.Products.Common.Models.IProductPropertyType", "ProductPropertyType" },
+		{ "NetSteps.Products.Common.Models.IProductPropertyTypeRelation", "ProductPropertyTypeRelation" },
+		{ "NetSteps.Products.Common.Models.IProductPropertyValue", "ProductPropertyValue" },
+		{ "NetSteps.Products.Common.Models.IProductRelation", "ProductRelation" },
+		{ "NetSteps.Products.Common.Models.IProductRelationsType", "ProductRelationsType" },
+		{ "NetSteps.Products.Common.Models.IProductType", "ProductType" },
+		{ "NetSteps.Products.Common.Models.IProductVariantInfo", "ProductVariantInfo" },
+		{ "NetSteps.Products.Common.Models.IStoreFront", "StoreFront" },
+		{ "NetSteps.Products.Common.Models.ITestimonial", "Testimonial" },
+		{ "NetSteps.Sites.Common.Models.ISite", "Site" },
+		{ "NetSteps.Sites.Common.Models.ISiteSetting", "SiteSetting" },
+		{ "NetSteps.Sites.Common.Models.ISiteSettingItem", "SiteSettingItem" },
+		{ "NetSteps.Sites.Common.Models.ISiteSettingValue", "SiteSettingValue" },
+		{ "NetSteps.Sites.Common.Models.ISiteStatus", "SiteStatus" },
+		{ "NetSteps.Sites.Common.Models.ISiteStatusChangeReason", "SiteStatusChangeReason" },
+		{ "NetSteps.Sites.Common.Models.ISiteType", "SiteType" },
+		{ "NetSteps.Sites.Common.Models.ISiteUrl", "SiteUrl" },
+		{ "NetSteps.Sites.Common.Models.IUrlRedirect", "UrlRedirect" },
+		{ "NetSteps.Taxes.Common.Models.IAddressTaxOverride", "AddressTaxOverride" },
+		{ "NetSteps.Taxes.Common.Models.ITaxCache", "TaxCache" },
+		{ "NetSteps.Taxes.Common.Models.ITaxCacheOverride", "TaxCacheOverride" },
+		{ "NetSteps.Taxes.Common.Models.ITaxCategory", "TaxCategory" },
+		{ "NetSteps.Taxes.Common.Models.ITaxDataSource", "TaxDataSource" },
+	};
+
+	var mailInterfaceEntities = new Dictionary<string, string>
+	{
+		{ "NetSteps.Communication.Mail.Common.Models.IAddressType", "AddressType" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailAttachment", "MailAttachment" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailFolderType", "MailFolderType" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessage", "MailMessage" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageAttachment", "MailMessageAttachment" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageGroup", "MailMessageGroup" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageGroupAddress", "MailMessageGroupAddress" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageGroupStatusAudit", "MailMessageGroupStatusAudit" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessagePriority", "MailMessagePriority" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageRecipientEvent", "MailMessageRecipientEvent" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageRecipientEventType", "MailMessageRecipientEventType" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMailMessageType", "MailMessageType" },
+		{ "NetSteps.Communication.Mail.Common.Models.IMessageGroupStatus", "MessageGroupStatus" },
+		{ "NetSteps.Communication.Mail.Common.Models.IRecipientStatus", "RecipientStatus" },
+		{ "NetSteps.Communication.Mail.Common.Models.IRecipientType", "RecipientType" },
+		{ "NetSteps.Communication.Mail.Common.Models.ISitesAccount", "SitesAccount" },
+		{ "NetSteps.Communication.Mail.Common.Models.ISitesCampaignSubscriber", "SitesCampaignSubscriber" },
+	};
+
+	// Load the interfaces from all matching reference assemblies.
+	var interfaceTypes = GetInterfaceTypes(
+		GetMatchingReferencePaths(projectName, referenceNamePatterns)
+	)
+	.ToArray();
+
+	var pluralizer = PluralizationService.CreateService(System.Globalization.CultureInfo.CurrentCulture);
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated from a template.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using NetSteps.Encore.Core.IoC;
+<#
+	WriteNamespace(
+		"NetSteps.Data.Entities",
+		coreInterfaceEntities,
+		interfaceTypes,
+		pluralizer
+	);
+	
+	WriteNamespace(
+		"NetSteps.Data.Entities.Mail",
+		mailInterfaceEntities,
+		interfaceTypes,
+		pluralizer
+	);
+#>
+<#+
+	void WriteNamespace(
+		string ns,
+		IDictionary<string, string> interfaceEntities,
+		IEnumerable<Type> interfaceTypes,
+		PluralizationService pluralizer)
+	{
+		WriteLine("");
+		WriteLine("namespace {0}", ns);
+		WriteLine("{");
+		PushIndent("\t");
+
+		foreach(var interfaceEntity in interfaceEntities.OrderBy(x => x.Value))
+		{
+			var entityName = interfaceEntity.Value;
+			var interfaceName = interfaceEntity.Key;
+			var interfaceType = interfaceTypes.FirstOrDefault(x => x.FullName == interfaceName);
+			if (interfaceType == null)
+			{
+				throw new Exception(
+					string.Format("Cannot find interface '{0}' for entity '{1}'. Check EntityInterfaces.tt and ensure project references are correct.",
+						interfaceName,
+						entityName
+					)
+				);
+			}
+			var singularProperties = GetSingularProperties(interfaceType);
+			var collectionProperties = GetCollectionProperties(interfaceType);
+
+			WriteEntity(
+				entityName,
+				interfaceName,
+				singularProperties,
+				collectionProperties,
+				interfaceEntities,
+				pluralizer
+			);
+		}
+
+		PopIndent();
+		WriteLine("}");
+	}
+
+	void WriteEntity(
+		string entityName,
+		string interfaceName,
+		IEnumerable<PropertyInfo> singularProperties,
+		IEnumerable<PropertyInfo> collectionProperties,
+		IDictionary<string, string> interfaceEntities,
+		PluralizationService pluralizer)
+	{
+		WriteLine("[ContainerRegister(typeof({0}), RegistrationBehaviors.Default, ScopeBehavior = ScopeBehavior.InstancePerRequest)]", interfaceName);
+		WriteLine("public partial class {0} : {1}", entityName, interfaceName);
+		WriteLine("{");
+		PushIndent("\t");
+
+		if(singularProperties.Any())
+		{
+			WriteLine("#region Singular Navigation Properties");
+			
+			foreach(var p in singularProperties)
+			{
+				var propertyName = p.Name;
+				var propertyInterfaceName = p.PropertyType.FullName;
+				var propertyEntityName = interfaceEntities[propertyInterfaceName];
+
+				WriteSingularProperty(
+					interfaceName,
+					propertyName,
+					propertyInterfaceName,
+					propertyEntityName
+				);
+			}
+
+			WriteLine("#endregion");
+			WriteLine("");
+		}
+
+		if(collectionProperties.Any())
+		{
+			WriteLine("#region Collection Navigation Properties");
+			
+			foreach(var p in collectionProperties)
+			{
+				var propertyName = p.Name;
+				var propertySingularName = Singularize(propertyName, pluralizer);
+				var propertyInterfaceName = p.PropertyType.GetGenericArguments().First().FullName;
+				var propertyEntityName = interfaceEntities[propertyInterfaceName];
+
+				WriteCollectionProperty(
+					interfaceName,
+					propertyName,
+					propertySingularName,
+					propertyInterfaceName,
+					propertyEntityName
+				);
+			}
+
+			WriteLine("#endregion");
+		}
+
+		PopIndent();
+		WriteLine("}");
+		WriteLine("");
+	}
+
+	void WriteSingularProperty(
+		string interfaceName,
+		string propertyName,
+		string propertyInterfaceName,
+		string propertyEntityName)
+	{
+		WriteLine("{0} {1}.{2}", propertyInterfaceName, interfaceName, propertyName);
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("get {{ return {0}; }}", propertyName);
+		WriteLine("set {{ {0} = ({1})value; }}", propertyName, propertyEntityName);
+		PopIndent();
+		WriteLine("}");
+		WriteLine("");
+	}
+
+	void WriteCollectionProperty(
+		string interfaceName,
+		string propertyName,
+		string propertySingularName,
+		string propertyInterfaceName,
+		string propertyEntityName)
+	{
+		WriteLine("IEnumerable<{0}> {1}.{2}", propertyInterfaceName, interfaceName, propertyName);
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("get {{ return {0}.Cast<{1}>(); }}", propertyName, propertyInterfaceName);
+		PopIndent();
+		WriteLine("}");
+		WriteLine("");
+
+		WriteLine("void {0}.Add{1}({2} item)", interfaceName, propertySingularName, propertyInterfaceName);
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("{0}.Add(({1})item);", propertyName, propertyEntityName);
+		PopIndent();
+		WriteLine("}");
+		WriteLine("");
+
+		WriteLine("void {0}.Remove{1}({2} item)", interfaceName, propertySingularName, propertyInterfaceName);
+		WriteLine("{");
+		PushIndent("\t");
+		WriteLine("{0}.Remove(({1})item);", propertyName, propertyEntityName);
+		PopIndent();
+		WriteLine("}");
+		WriteLine("");
+	}
+
+	IEnumerable<string> GetMatchingReferencePaths(string projectName, IEnumerable<string> referenceNamePatterns)
+	{
+		var referenceNameRegexes = referenceNamePatterns
+			.Select(p => new Regex(p, RegexOptions.IgnoreCase))
+			.ToArray();
+		
+		return GetProjectReferences(projectName)
+			.Where(r => referenceNameRegexes.Any(x => x.IsMatch(r.Name)))
+			.Select(r => r.Path);
+	}
+
+	IEnumerable<VSLangProj.Reference> GetProjectReferences(string projectName)
+	{
+		foreach(VSLangProj.Reference reference in ((VSProject)GetProject(projectName).Object).References)
+		{
+			yield return reference;
+		}		
+	}
+
+	Project GetProject(string projectName)
+	{
+		return GetAllProjects(GetSolution())
+			.FirstOrDefault(p => p.Name == projectName);
+	}
+
+	Solution GetSolution()
+	{
+		return ((DTE)((IServiceProvider)this.Host).GetService(typeof(DTE))).Solution;
+	}
+
+	IEnumerable<Project> GetAllProjects(Solution solution)
+	{
+		foreach(Project rootProject in solution.Projects)
+		{
+			foreach(Project innerProject in UnwrapProject(rootProject))
+			{
+				yield return innerProject;
+			}
+		}
+	}
+
+	IEnumerable<Project> UnwrapProject(Project project)
+	{
+		if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+		{
+			foreach(ProjectItem projectItem in project.ProjectItems)
+			{
+				Project subProject = projectItem.SubProject;
+				if (subProject != null)
+				{
+					foreach(Project innerProject in UnwrapProject(subProject))
+					{
+						yield return innerProject;
+					}
+				}
+			}
+		}
+		else
+		{
+			yield return project;
+		}
+	}
+
+	IEnumerable<Type> GetInterfaceTypes(IEnumerable<string> assemblyPaths)
+	{
+		return assemblyPaths
+			.SelectMany(p => GetLoadableTypes(Assembly.LoadFrom(p))
+				.Where(t => t.IsInterface)
+			);
+	}
+
+	IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+	{
+		try
+		{
+			return assembly.GetTypes();
+		}
+		catch (ReflectionTypeLoadException e)
+		{
+			return e.Types.Where(t => t != null);
+		}
+	}
+
+	IEnumerable<PropertyInfo> GetSingularProperties(Type type)
+	{
+		return type.GetMembers()
+			.Where(m => m.MemberType == MemberTypes.Property)
+			.Cast<PropertyInfo>()
+			.Where(p => p.PropertyType.IsInterface)
+			.Where(p => !p.PropertyType.IsGenericType);
+	}
+
+	IEnumerable<PropertyInfo> GetCollectionProperties(Type type)
+	{
+		return type.GetMembers()
+			.Where(m => m.MemberType == MemberTypes.Property)
+			.Cast<PropertyInfo>()
+			.Where(p => p.PropertyType.IsInterface)
+			.Where(p => p.PropertyType.IsGenericType);
+	}
+
+	string Singularize(string value, PluralizationService pluralizer)
+	{
+		// PluralizationService doesn't correctly singularize the word "caches".
+		if (value.EndsWith("Caches"))
+		{
+			return value.Substring(0, value.Length - 1);
+		}
+
+		return pluralizer.Singularize(value);
+	}
+#>

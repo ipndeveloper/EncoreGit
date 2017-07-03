@@ -1,0 +1,12 @@
+﻿<div class="Language">
+	@{
+		Site currentSite = (Site)ViewData["CurrentSite"];
+		Site baseSite = currentSite == null || currentSite.IsBase ? currentSite : SiteCache.GetSiteByID(currentSite.BaseSiteID.ToInt());
+		var languages = baseSite == null ? SmallCollectionCache.Instance.Languages.Where(l => l.Active) : baseSite.Languages.Where(l => l.Active);
+	}
+	@foreach (var language in languages)
+	{
+		<a href="javascript:void(0);" onclick="javascript:setLanguage(@(language.LanguageID));" @Html.Raw(language.LanguageID == CoreContext.CurrentLanguageID ? "selected" : "")>
+			@language.GetTerm(language.LanguageID)</a>
+	}
+</div>

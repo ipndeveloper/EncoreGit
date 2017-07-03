@@ -1,0 +1,186 @@
+﻿@model IEnumerable<OrderItem>
+           
+@using System.Collections.Generic;
+@using NetSteps.Data.Common.Entities;
+@using NetSteps.Data.Entities.Extensions
+@using NetSteps.Data.Common.Services
+@using NetSteps.Encore.Core.IoC
+
+@{
+	var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+	var orderItemMessagesDictionary = ViewBag.OrderItemMessagesDictionary as IDictionary<Guid, IList<string>>;
+}
+
+@foreach (var orderItem in Model.OrderByDescending(oi => oi.OrderItemTypeID))
+{
+	decimal commissionableTotal = (orderItem.CommissionableTotalOverride != null) ? orderItem.CommissionableTotalOverride.ToDecimal() : orderItem.CommissionableTotal.ToDecimal();
+	var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+
+	IList<string> orderItemMessages = null;
+	if (orderItemMessagesDictionary != null)
+	{
+		orderItemMessagesDictionary.TryGetValue(orderItem.Guid, out orderItemMessages);
+	}
+
+	string trClass = string.Empty;
+
+	if (product.IsDynamicKit())
+	{
+		trClass = "DynamicKit";
+	}
+
+	if (orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct)
+	{
+		trClass = string.Format("{0} {1}", trClass, "ExclusiveProductsRow").Trim();
+	}
+
+	if (orderItem.HasChanges)
+	{
+		trClass = string.Format("{0} {1}", trClass, "partyPendingItem").Trim();
+	}
+    
+	<tr id="@("oi" + orderItem.Guid.ToString("N"))" @(Html.Raw(!string.IsNullOrWhiteSpace(trClass) ? string.Format("class=\"{0}\"", trClass) : ""))>
+		<td class="icon-24" valign="top">
+			@if (!orderItem.IsHostReward)
+			{
+				<a href="javascript:void(0);" class="UI-icon icon-x RemoveOrderItem" title="@Html.Term("RemoveItemFromCart", "Remove item from cart")">
+					<input type="hidden" value="@orderItem.Guid.ToString("N")" class="orderItemGuid" />
+					<input type="hidden" value="@orderItem.OrderCustomer.Guid.ToString("N")" class="orderCustomerId" />
+				</a>
+				<input type="hidden" value="@product.ProductID" class="productId" />
+			}
+		</td>
+		<td valign="top">
+			@orderItem.SKU
+		</td>
+		<td >
+			@if (product.IsDynamicKit())
+			{ 
+				<a href="@Url.Content("~/Orders/Party/BundlePackItems?productId=" + product.ProductID + "&bundleGuid=" + orderItem.Guid.ToString("N") + "&orderCustomerId=" + orderItem.OrderCustomer.Guid.ToString("N"))">
+					@Html.Raw((orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? String.Format("<span class=\"ExclusiveProductsIndicator\">{0}</span>", Html.Term("ExclusiveProductsIndicator", "*")) : ""))
+					@product.Translations.Name()</a>
+			}
+			else
+			{
+				@Html.Raw((orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? String.Format("<span class=\"ExclusiveProductsIndicator\">{0}</span> ", Html.Term("ExclusiveProductsIndicator", "*")) : ""))@product.Translations.Name()    
+			}
+			<br />
+			@if (orderItemMessages != null && orderItemMessages.Any())
+			{			
+				<div>
+					@foreach (var orderItemMessage in orderItemMessages)
+					{
+						<span class="block">@orderItemMessage</span>
+					}
+				</div>
+			}
+			
+			@Html.Partial("_DisplayOrderAdjustmentDescription", orderItem)
+
+			@if (product.IsDynamicKit() || product.IsStaticKit())
+			{
+				if (product.IsDynamicKit())
+				{
+					int requiredItemsInBundleCount = product.DynamicKits[0].DynamicKitGroups.Sum(g => g.MinimumProductCount);
+					if (orderItem.ChildOrderItems.Sum(oi => oi.Quantity) == requiredItemsInBundleCount)
+					{
+						<span class="UI-icon icon-bundle-full"></span>
+					}
+					else
+					{
+						<span class="UI-icon icon-bundle-add"></span>
+					}
+				}
+				<div class="bundlePackItemList">
+					<table cellspacing="0" width="100%">
+						<tbody>
+							<tr>
+								<th>
+								</th>
+								<th>
+									@Html.Term("MaterialCode")
+								</th>
+								<th>
+									@Html.Term("Description")
+								</th>
+								<th>
+									@Html.Term("Quantity")
+								</th>
+							</tr>
+							@foreach (OrderItem childItem in orderItem.ChildOrderItems)
+							{
+								Product childProduct = inventory.GetProduct(childItem.ProductID.Value);
+								<tr>
+									<td>
+										<span class="UI-icon icon-bundle-arrow"></span>
+									</td>
+									<td class="KitSKU">
+										@childItem.SKU
+									</td>
+									<td>
+										@childProduct.Translations.Name()
+									</td>
+									<td>
+										@childItem.Quantity
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+		</td>
+		<td>
+			@{
+				var preAdjustmentPriceValue = orderItem.GetPreAdjustmentPrice(orderItem.ProductPriceTypeID.Value);
+				var adjustedPriceValue = orderItem.GetAdjustedPrice(orderItem.ProductPriceTypeID.Value);
+			}
+			@if (preAdjustmentPriceValue != adjustedPriceValue && adjustedPriceValue > 0)
+			{
+				<span class="block price originalPrice strikethrough">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+				<span class="block price discountPrice">@adjustedPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+			}
+			else
+			{
+				<span class="price originalPrice">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span> 
+			}
+		</td>
+		<td style="text-align: center;">
+			@if (product.IsDynamicKit())
+			{
+				<input type="hidden" class="quantity" value="@orderItem.Quantity" />@orderItem.Quantity
+			}
+			else
+			{
+				<input type="text" class="quantity" value="@orderItem.Quantity" style="width: 50px;" />
+			}
+		</td>
+		<td>
+			@{
+				var adjustedPriceCommissionableTotal = orderItem.GetAdjustedPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+				var preAdjustmentPriceCommissionableTotal = orderItem.GetPreAdjustmentPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+
+				if (adjustedPriceCommissionableTotal != preAdjustmentPriceCommissionableTotal)
+				{
+					<span class="block price originalPrice strikethrough">@((preAdjustmentPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+					<span class="block price discountPrice">@((adjustedPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+				}
+				else
+				{
+					<span class="price originalPrice">@((preAdjustmentPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+				}
+			}
+		</td>
+		<td>
+			@if (preAdjustmentPriceValue != adjustedPriceValue)
+			{
+				<span class="block price originalPrice strikethrough">@((preAdjustmentPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+				<span class="block price discountPrice">@((adjustedPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+			}
+			else
+			{
+				<span class="price originalPrice">@((preAdjustmentPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+			}
+		</td>
+	</tr>
+}

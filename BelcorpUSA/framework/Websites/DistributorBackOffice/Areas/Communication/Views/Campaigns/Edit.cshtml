@@ -1,0 +1,140 @@
+﻿@model NetSteps.Data.Entities.Campaign
+@{
+    ViewBag.Title = "Edit Campaign";
+}
+@section head{
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/scrollable.css")" />
+
+    <script src="@Url.Content("~/Resource/Scripts/jquery.tools.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#emails').scrollable();
+
+            $('#txtAccountSearch').jsonSuggest('@Href("~/Orders/Party/SearchAccounts")', { minCharacters: 3, ajaxResults: true, onSelect: function (item) {
+                $.post('@Href("~/Communication/Campaigns/AddSubscriber")', { campaignId: '@Model.CampaignID', accountId: item.id }, function (response) {
+                    if (response.result) {
+                        $('#subscriberContainer').append('<div class="Subscriber"><strong class="FL">' + item.text.match(/([^\(]+)\(/)[1] + '</strong><span class="FR">Progress: 0 / @Model.CampaignEmails.Count</span><span class="clr"></span></div>');
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+                $('#txtAccountSearch').val('').focus();
+            }
+            });
+
+            if (!$('#distributorContent').length) {
+                $('#btnSave').hide();
+            }
+
+            $('#btnSave').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Href("~/Communication/Campaigns/Save")', { emailTemplateId: $('#emailTemplateId').val(), content: $('#distributorContent').val() }, function (response) {
+                    hideLoading(t);
+                    showMessage(response.message || '@Html.Term("SavedSuccessfully", "Saved successfully!")', !response.result);
+                });
+            });
+
+            $('#emails span.titlecontent').click(function () {
+                $('#emails span.titlecontent.active').removeClass('active');
+                $(this).addClass('active');
+                var emailTemplateId = $(this).parent().find('.emailTemplateId').val();
+                $('#emailTemplateId').val(emailTemplateId);
+                $('#emailTemplateLoading').show();
+                $('#emailTemplatePreview').hide().attr('src', '@Href("~/Communication/Campaigns/EmailTemplatePreview/")' + emailTemplateId);
+            });
+
+            var width = $('#emailsContainer').width(),
+					itemWidth = $('#emails .item:first').find('span.titlecontent').outerWidth(true),
+					numOfItems = Math.floor(width / itemWidth);
+
+            while ($('#emails > .items > .item').length) {
+                $('#emails > .items > .item:lt(' + numOfItems + ')').wrapAll('<div class="itemGroup"></div>');
+            }
+
+            $('#emailTemplatePreview').load(function () {
+                $('#emailTemplateLoading').hide();
+                $(this).show().css('height', $(this).contents().height() + 'px');
+
+                $('#btnSave')[$('#distributorContent', $(this).contents()).length ? 'show' : 'hide']();
+            }).triggerHandler('load');
+        });
+    </script>
+
+}
+@section title{
+Edit Campaign
+}
+<div class="CampaignEmailSlider brdr1 brdrAll">
+    <div class="UI-bg UI-header WidgetTitle brdrAll">
+        <span class="pad5">
+            @Html.Term("Emails")</span>
+    </div>
+    <div class="FL SlideControl Left">
+        <a class="prev browse left disabled"></a>
+    </div>
+    <div id="emailsContainer" class="FL Inner">
+        <div class="EditContainer">
+            <div class="scrollable" id="emails">
+                <div class="items">
+                    @{var first = true;}
+                    @foreach (CampaignEmail email in Model.CampaignEmails)
+                    {
+                        @*<div class="item">
+                            <span class="clr titlecontent@(first ? " active" : "")"><span class="block usage pad2 UI-lightBg">(@Html.Term("XDays", "{0} days", email.WaitTimeInDays)) </span>
+                                @email.EmailName</span>
+                            <input type="hidden" class="emailTemplateId" value="@email.EmailTemplateID" />
+                        </div>*@
+                                                                           first = false;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="FR SlideControl Right">
+        <a class="next browse right"></a>
+    </div>
+    <span class="clr"></span>
+</div>
+<span class="clr"></span>
+<div class="SideColumn Subscribers FL splitCol40 mr10">
+    <div class="Widget brALL">
+        <div class="UI-mainBg pad5 brdrAll">
+            <span>@Html.Term("Subscribers")</span>
+        </div>
+        <div id="subscriberContainer" class="Inner">
+            <div class="pad5 UI-lightBg mr10 ml10">
+                <label>@Html.Term("AddNewSubscriber", "Add New Subscriber"):</label><br />
+                <input type="text" class="TextInput emailToTextBox" id="txtAccountSearch" value="" />
+                <span class="clr"></span>
+            </div>
+            <ul class="flatList listNav">
+                @{var rand = new Random();}
+                @foreach (var subscriber in Model.CampaignSubscribers.Where(s => s.AddedByAccountID == CoreContext.CurrentAccount.AccountID))
+                {
+                    var account = ((List<AccountSlimSearchData>)ViewBag.Accounts).First(a => a.AccountID == subscriber.AccountID);
+                    <li class="Subscriber"><strong class="FL">@account.FullName</strong> <span class="FR">Progress: @rand.Next(0, Model.CampaignEmails.Count + 1) / @Model.CampaignEmails.Count
+                    </span><span class="clr"></span></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="ContentColumn FR splitCol60">
+    <div class="ContentEditForm">
+        <div class="UI-mainBg pad5 brdrAll">
+            <span>Email Preview:</span>
+        </div>
+        <input type="hidden" id="emailTemplateId" value="@ViewBag.EmailTemplateID" />
+        <img id="emailTemplateLoading" src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="" />
+        <iframe id="emailTemplatePreview" src="@Href("~/Communication/Campaigns/EmailTemplatePreview", ViewBag.EmailTemplateID)" style="width:100%;border:0;"></iframe>
+    </div>
+    <div class="ContentSavingOptions">
+        <p class="">
+            <a href="javascript:void(0);" class="Button Primary" id="btnSave"><span>
+                @Html.Term("Save")</span></a>
+        </p>
+        <span class="clr"></span>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@model nsCore.Areas.Accounts.Models.Shared.AutoshipScheduleOverviewModel
+
+<span class="FL bold">
+    @Model.Title
+</span>
+@if (Model.Active && Model.IsEnrollable)
+{
+    <span class="FR">
+        @Html.ActionLink(Html.Term("New"), "New", "Autoships", new { id = Model.AccountID, autoshipScheduleID = Model.AutoshipScheduleID }, null)
+    </span>
+}
+<span class="clr"></span>
+@if (Model.AutoshipOverviews != null && Model.AutoshipOverviews.Any())
+{
+    <ul>
+        @Html.DisplayFor(m => m.AutoshipOverviews )
+    </ul>
+}
+<hr />

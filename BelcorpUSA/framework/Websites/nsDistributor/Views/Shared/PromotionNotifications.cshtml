@@ -1,0 +1,15 @@
+﻿<div class="UI-lightBg pad5 promoNotifications" data-bind="visible: ApplicablePromotions().length > 0">
+	<span class="bold promoNotificationTerm">@Html.Term("ShoppingCart_YouQualifiedFor", "Congratulations! You qualified for the following promotions:")</span>
+	<div class="pad5 ml10" data-bind="foreach: ApplicablePromotions">
+		<div class="promoNotification">
+			<!-- ko text: Description -->
+			<!-- /ko -->
+			<!-- ko if: Available() && StepID() && $parent.showSelectGiftLink() -->
+			<a class="bold selectGift" href="javascript:void(0);" data-bind="attr: { 'stepId' : StepID }">@Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>
+			<!-- /ko -->
+			<!-- ko if: !Available() -->
+			<span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promoItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+			<!-- /ko -->
+		</div>
+	</div>
+</div>

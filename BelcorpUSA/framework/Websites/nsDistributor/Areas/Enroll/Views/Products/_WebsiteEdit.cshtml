@@ -1,0 +1,81 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.WebsiteModel
+<script type="text/javascript">
+	$(function () {
+		var form = $('#WebsiteForm');
+		var subdomain = $('#Subdomain', form);
+		var domain = $('#Domain', form);
+		var pwsUrl = $('#pwsUrl', form);
+		var btnCheckUrlAvailability = $('#btnCheckUrlAvailability', form);
+		var url = '@Url.Action("CheckUrlAvailability")';
+		var showLoading = $('.icon-refresh', form);
+		var availableMessage = $('#availableMessage', form);
+		var notAvailableMessage = $('#notAvailableMessage', form);
+
+		subdomain.keyup(function () {
+			pwsUrl
+				.html('http://' + subdomain.val() + '.' + domain.val())
+				.removeClass('available notAvailable');
+
+			availableMessage.add(notAvailableMessage).hide();
+		});
+
+		btnCheckUrlAvailability.click(function () {
+			NS.post({
+				url: url,
+				data: { subdomain: subdomain.val() },
+				showLoading: showLoading,
+				success: function (data) {
+					var isAvailable = data.available === true;
+
+					pwsUrl
+						.toggleClass('available', isAvailable)
+						.toggleClass('notAvailable', !isAvailable);
+
+					availableMessage.toggle(isAvailable);
+					notAvailableMessage.toggle(!isAvailable);
+				}
+			});
+		});
+	});
+</script>
+@using (Html.BeginFormWithHtmlAttributes(new { id = "WebsiteForm", data_submit_showloading = "[data-click-submit]" }))
+{
+	@Html.ValidationSummary(true)
+	@Html.HiddenFor(m => m.Domain)
+	@Html.HiddenFor(m => m.Skippable)
+	
+	<div class="FormContainer">
+		<h2>@Html.Term("Enrollment_AccountInfo_Website_Title", "Select a prefix you would like to use for your FREE Personal Website!")</h2>
+		<div>
+			<div class="GridFilters brdrAll pwsDomainManager">
+				<div class="FilterSet">
+					<div class="FL mr10 pwsPrefixInputWrapper">
+						@Html.LabelFor(m => m.Subdomain):
+						@Html.TextBoxFor(m => m.Subdomain)
+						@Html.ValidationMessageFor(m => m.Subdomain)
+					</div>
+					<div class="FL availabilityLinkWrapper">
+						<a id="btnCheckUrlAvailability" class="FL UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-refresh"></span><span>@Html.Term("CheckAvailability", "Check availability")</span> </a>
+					</div>
+					<span class="clr"></span>
+				</div>
+				<div class="mt10 pwsAvailabilityHelpText">
+					<div class="FL mr10 bold pwsHelpText">@Html.Term("Enrollment_AccountInfo_Website_Preview", "This is what your PWS URL will be"):</div>
+					<div class="FL">
+						<span id="pwsUrl">@string.Format("http://{0}.{1}", Model.Subdomain, Model.Domain)</span> <span id="availableMessage" class="available" style="display: none"><b>(@Html.Term("Available", "Available"))</b></span> <span id="notAvailableMessage" class="notAvailable" style="display: none"><b>(@Html.Term("NotAvailable", "Not available"))</b></span>
+					</div>
+					<span class="clr"></span>
+				</div>
+				@*<div class="mt10 UI-cmsWrap block">
+					@ViewData["Enrollment_AccountInfo_Website_BottomContent"]
+				</div>*@ <span class="clr"></span>
+			</div>
+		</div>
+	</div>
+	<span class="ClearAll"></span>
+
+	<p class="FormSubmit enrollSectionBtns">
+		<a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent"><span>@Html.Term("Next")</span> </a>
+	</p>
+	@Html.AntiForgeryToken()
+}

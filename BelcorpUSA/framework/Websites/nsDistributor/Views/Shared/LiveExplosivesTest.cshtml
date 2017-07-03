@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>LiveExplosivesTest</title>
+    <script type="text/javascript" src="/Scripts/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // setup async exception handling
+            $(document).ajaxComplete(function (e, request, settings) {
+                var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+                if (isErrorPage) {
+                    window.location = '/Error/';
+                }
+            });
+
+    @{
+            if (Request.QueryString.AllKeys.Contains("AsyncExplosivesTest"))
+            {
+                @: $.post('AsyncExplosivesTest', function() { return false; });
+            }
+    }
+        });
+    </script>
+</head>
+<body>
+    <div>
+        @{
+            if (!Request.QueryString.AllKeys.Contains("AsyncExplosivesTest"))
+            {
+                throw new Exception("Oh Noes...BOOM!"); 
+            }
+        }
+    </div>
+</body>
+</html>

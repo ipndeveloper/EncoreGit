@@ -1,0 +1,138 @@
+﻿<script type="text/javascript">
+        $(function () {
+           
+            $('#txtEmail, #txtFirstName, #txtLastName').change(function () {
+                $('#accountId').val('');
+            });
+
+            $('#txtEmail').change(function () {
+                if (!/^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/.test($('#txtEmail').val())) {
+                    $('#txtEmail').showError('@Html.JavascriptTerm("InvalidEmail", "Please enter a valid email address.")');
+                    return false;
+                } else {
+                    $('#txtEmail').clearError();
+                }
+            });
+
+            $('#btnSubmitHost').click(function () {
+                
+                if (!$('#ContentColumn').checkRequiredFields()) {
+                    return false;
+                }
+                
+				if (!/^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/.test($('#txtEmail').val())) {
+                    $('#txtEmail').showError('@Html.JavascriptTerm("InvalidEmail", "Please enter a valid email address.")');
+                    return false;
+                }
+                else {
+                    $('#txtEmail').clearError();
+                }
+
+                $('#ContentColumn input').filter(function () { return !!$(this).data('watermark'); }).each(function () {
+                    if ($(this).val() == $(this).data('watermark')) {
+                        $(this).val('');
+                    }
+                });
+                
+                var p = $(this);
+                showLoading(p);
+
+                ns.addressEditors['newHostAddress'].getAddress(function(hostAddress) {
+
+                    var data = {
+                        'AccountID': $('#accountId').val(),
+                        'FirstName': $('#txtFirstName').val(),
+                        'LastName': $('#txtLastName').val(),
+                        'Email': $('#txtEmail').val(),
+                        'PhoneNumber': $('#phone').phone('getPhone'),
+                        'AddressNew': hostAddress
+                    };
+
+
+                    $.ajax({
+                        url: '@Href("~/Orders/Party/HostEntry")', 
+                        data: data, 
+                        success: function (response) {
+                            if (response.result) {
+                                window.location = '@Url.Action("PartyEntry", "Party")' + '?' + $.param({ hostAccountId: response.hostAccountId, partyId: @(ViewBag.PartyId ?? 0) });
+                            } else {
+                                showMessage(response.message, true);
+                            }
+                        },
+                        error: function (errorDetail)
+                        {
+                            showMessage(errorDetail.message, true);
+                        },
+                        complete: function(complete)
+                        {
+                            hideLoading(p);
+                        }
+                    });
+                });
+                    
+
+
+                
+            });
+
+            $('#txtFirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")');
+            $('#txtLastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+
+            $('#phone').phone().phone('setPhone', '');
+            var tabindex = 1;
+            $('input,select').each(function() {
+                if (this.type != "hidden") {
+                    var $input = $(this);
+                    $input.attr("tabindex", tabindex);
+                    tabindex++;
+                }
+            });
+        });
+        
+</script>
+<div id="ContentColumn" class="pad10">
+    <div class="FL splitCol40">
+        <div class="FormTable">
+            <div class="FormRow">
+                <label for="txtFirstName">
+                    <span class="req">*</span>@Html.Term("HostName", "Host Name"):</label>
+                <div class="data">
+                    <input id="txtFirstName" type="text" class="required firstNameField" name="@Html.Term("FirstNameReqiured", "First Name is required.")" value=""/>
+                    <input id="txtLastName" type="text" class="required lastNameField" name="@Html.Term("LastNameRequired", "Last Name is required.")" value=""  />
+                    <input type="hidden" id="accountId" value="@(Model != null ? Model.AccountID : string.Empty)" />
+                </div>
+                <br />
+            </div>
+            <div class="FormRow">
+                <label for="txtEmail">
+                    <span class="req">*</span>@Html.Term("Email"):</label>
+                <div class="data">
+                    <input id="txtEmail" type="text" value="" class="required" name="@Html.Term("EmailRequired", "Email is required.")" />
+                </div>
+                <br />
+            </div>
+            <div class="FormRow">
+                <label for="txtAreaCode">
+                    @Html.Term("PhoneNumber", "Phone Number"):</label>
+                <div class="data" id="phone">
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="FL splitCol60">
+        @Html.Partial("Addresses/AddressEntry", new NetSteps.Addresses.UI.Mvc.Models.AddressEntrySettings()
+        {
+            MarketID = CoreContext.CurrentAccount.MarketID,
+            ClientHtmlID = "newHostAddress",
+            ClientJsObjID = "newHostAddress",
+            AddressModel = Model != null ? Model.AddressNew : null
+        })
+        
+        <div id="hostAddressContainer">
+        </div>
+    </div>
+    <div class="clr PageSaveButtons hostInfoSave">
+    <input type="text" id="btnSubmitHost" class="Button" value="@Html.Term("Continue", "Continue")"/>
+    </div>
+</div>

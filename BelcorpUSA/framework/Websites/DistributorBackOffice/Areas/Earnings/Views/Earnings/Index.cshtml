@@ -1,0 +1,528 @@
+﻿@using DistributorBackOffice.Controllers;
+
+@model DistributorBackOffice.Areas.Earnings.Models.PeriodEarningsModel
+           
+@section head
+{
+	<script type="text/javascript">
+	    var CodeBonus = "";
+	    function SetearCodigoBonus(value) {
+	        CodeBonus = value;
+	    };
+
+	    function formatMoney(value) {
+	        return '$' + value.toFixed(2);
+	    };
+
+	    $(function () {
+	        $('#periodSelect').change(function () {
+	            window.location.href = '@Href("~/Earnings/")' + this.value;
+	        });
+
+	        var d = new Date();
+	        if (d.getDate() <= 5) {
+	            $("#reminder").append('<h4 class="earningsHeader">' + 'El importe de los calculos y comisiones está sujeto a validación \
+                los primeros 5 días hábiles de cada mes. <br><br>Reminder: Commissions are subject to verification during the first 5 \
+                business days of the month' + '</h4>');
+	        }
+
+
+	        //POpUP
+	        //	        $('.bonusType').click(function () {
+	        //	            var modalDom = $("#modalContentReport");
+	        //	            //TODO: usar Helpter para generar URL
+	        //	            $("#TitleModal").html(""); //vaciar titulo
+	        //	            var title = $(this).text(); //obtener nuevo titulo
+	        //	            showLoading(modalDom);
+
+	        //	            $('#noteModal').jqm({ modal: true, overlay: 90, overlayClass: 'HModalOverlay' }).jqmShow();
+	        //	            $.get('@("../Earnings/GetBonusDetail")', { periodId: $("#periodSelect").val(), bonusCode: $(this).attr('code') },
+	        //                 function (response) {
+	        //                     if (response.result) {
+	        //                         $("#TitleModal").html(title);
+	        //                         hideLoading(modalDom);
+	        //                         modalDom.html(response.data);
+	        //                     } else {
+	        //                         showMessage(response.message, true);
+	        //                     }
+	        //                 });
+	        //             });
+
+	        
+	        $('.earningsBABonusLabel').click(function () {
+	            if ($(this).attr('id') != '') {
+	                var modalDom = $("#modalContentReport");
+	                //TODO: usar Helpter para generar URL
+	                $("#TitleModal").html(""); //vaciar titulo
+	                var title = $(this).text(); //obtener nuevo titulo
+	                showLoading(modalDom);
+
+	                $('#noteModal').jqm({ modal: true, overlay: 0, overlayClass: 'HModalOverlay' }).jqmShow();
+	                //$.get('@Href("~/Earnings/GetBonusDetail")', { periodId: $("#periodSelect").val(), bonusCode: $(this).attr('id') },
+	                $.get('@Href("~/Earnings/GetBonusDetail")', { periodId: $("#periodSelect").val(), bonusCode: CodeBonus },
+                 function (response) {
+                     if (response.result) {
+                         $("#TitleModal").html(title);
+                         hideLoading(modalDom);
+                         modalDom.html(response.data);
+                     } else {
+                         showMessage(response.message, true);
+                     }
+                 });
+	            }
+
+	        }).each(function (i, obj) {
+	            if ($(this).attr('id') != '') {
+	                $(this).css('cursor', 'pointer')
+	            }
+	        });
+
+	        $('#DownloadLink').click(function () {
+	            window.open('@Href("~/Earnings/Download")' + "?periodId=" + $("#periodSelect").val(), '_blank');
+	            //location.href = $(this).attr("href") + "?periodId=" + $("#periodSelect").val();
+	        });
+
+	    });
+
+	    function cancelar() {
+	        $('#noteModal').jqmHide();
+	    }
+    </script>
+    
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jqModal.css")" />
+       <style type="text/css">
+            table.tableModal tr:first-child{
+                background-color: #f1f1f1;
+                font-weight: bold;
+            }
+        
+            .tableModal tr th{
+                border: 1px solid gray;
+            }
+            .tableModal tr td{
+                border: 1px solid gray;
+            }
+            table.tableModal {
+                border: 1px solid gray;
+                border-collapse: collapse;
+            }
+            .tableModal tr td:first-child{
+                padding-left: 1rem;    
+            }
+            .tableModal tr th{
+                padding: 0px 1rem;    
+            }
+
+            .tableModal tr td{
+                padding: 0px 0px 0px 1rem;    
+            }
+            
+            span.earningsBABonusLabel:hover {
+                background-color: lightblue;
+            }
+        </style>
+}
+@section title
+{
+	@Html.Term("Earnings", "Performance Dashboard")
+}
+@section breadcrumb
+{
+	<a href="@Href("~/Performance")">@Html.Term("BreadCrumbLabel_Performance", "Performance")</a>
+}
+@if (Model != null && string.IsNullOrEmpty(Model.ErrorMessage))
+{ 
+	<div class="earningsPeriodSelectorContainer">
+		<span class="earningsPeriodLabel">@Html.Term("Period"):</span>@Html.DropDownList("periodSelect", Model.AccountQuickFacts.Periods.Select(p => new SelectListItem() { Selected = (p == Model.PeriodId), Value = p.ToString(), Text = String.Format("{0}-{1:D2}", p / 100, p % 100) }))
+	</div>
+	<h3 class="earningsHeader">@Model.CompanyAddress.FirstName @Model.CompanyAddress.LastName @Html.Term("CommissionsStatement", "Commissions Statement") @Model.PeriodStartDate.ToString("d MMM yyyy") &#8211; @Model.PeriodEndDate.ToString("d MMM yyyy")</h3>
+	<h4 class="earningsCompanyHeader">@Model.CompanyAddress.FirstName @Model.CompanyAddress.LastName</h4>
+    <div id="reminder"></div>
+    /*CGI(CMR)-22/10/2014-Inicio*/
+    /*<div class="earningsCompanyAddressContainer">
+		<span class="earningsCompanyName">@Model.CompanyAddress.FirstName @Model.CompanyAddress.LastName</span> <span class="earningsCompanyAddress1">@Model.CompanyAddress.Address1</span> <span class="earningsCompanyAddress2">@Model.CompanyAddress.Address2</span> <span class="earningsCompanyCityStatePostal">@Model.CompanyAddress.City, @Model.CompanyAddress.StateProvinceAbbreviation @Model.CompanyAddress.PostalCode</span> <span class="earningsCompanyPhone">Phone: @Model.CompanyAddress.PhoneNumber</span>
+	</div>*/
+    /*CGI(CMR)-22/10/2014-Fin*/
+    
+    <div style="position:relative;">    
+	<div class="earningsBAContainer">
+		<div class="FL earningBALeftContainer">
+			<div class="earningsBAInfoContainer">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								@*<span class="earningsBAInfoLabel">@Html.Term("DistributorID", "Beauty Advisor ID"):</span>*@
+                                <span class="earningsBAInfoLabel">@Html.Term("DistributorID", "Distributor #"):</span> @*CGI(CMR)-23/10/2014*@
+							</td>
+							<td>
+                            
+                             @{
+    string AccountNumber = string.Empty;
+    string CareerTitle = string.Empty;
+    string PaidAsTitle = string.Empty;
+    string AccountName = string.Empty;
+    string Address = string.Empty;
+    string State = string.Empty;
+    string City = string.Empty;
+    string PostalCode = string.Empty;
+
+    if (Model.EarningReportBasics.Any())
+    {
+        AccountNumber = @Model.EarningReportBasics.FirstOrDefault().AccountNumber!=null?@Model.EarningReportBasics.FirstOrDefault().AccountNumber:"";
+        CareerTitle = @Model.EarningReportBasics.FirstOrDefault().CareerTitle!=null?@Model.EarningReportBasics.FirstOrDefault().CareerTitle:"";
+        PaidAsTitle = @Model.EarningReportBasics.FirstOrDefault().PaidAsTitle!=null?@Model.EarningReportBasics.FirstOrDefault().PaidAsTitle:"";
+        AccountName = @Model.EarningReportBasics.FirstOrDefault().AccountName!=null?@Model.EarningReportBasics.FirstOrDefault().AccountName:"";
+        Address = @Model.EarningReportBasics.FirstOrDefault().Address!=null?@Model.EarningReportBasics.FirstOrDefault().Address:"";
+        State = @Model.EarningReportBasics.FirstOrDefault().State!=null?@Model.EarningReportBasics.FirstOrDefault().State:"";
+        City = @Model.EarningReportBasics.FirstOrDefault().City!=null?@Model.EarningReportBasics.FirstOrDefault().City:"";
+        PostalCode = @Model.EarningReportBasics.FirstOrDefault().PostalCode!=null?@Model.EarningReportBasics.FirstOrDefault().PostalCode:"";
+    }
+                                }
+
+								<span class="earningsBAInfoData">@AccountNumber</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								@*<span class="earningsBAInfoLabel">@Html.Term("CareerTitle"):</span>*@
+                                <span class="earningsBAInfoLabel">@Html.Term("CareerTitle", "Rank"):</span> @*CGI(CMR)-23/10/2014*@
+							</td>
+							<td>
+                            @{
+    @*int? careerTitle = Model.Earnings.Any() ? Model.Earnings.FirstOrDefault().CareerTitle : 0;
+    string paidAsTitle = Model.Earnings.Any() ? Model.Earnings.FirstOrDefault().PaidAsTitle : string.Empty;*@
+                                }
+                                <span class="earningsBAInfoData">@CareerTitle</span>
+								@*<span class="earningsBAInfoData">@Model.AccountQuickFacts.CareerTitle</span>*@
+							</td>
+						</tr>
+						<tr>
+							<td>
+								@*<span class="earningsBAInfoLabel">@Html.Term("PaidAsTitle"):</span>*@
+                                <span class="earningsBAInfoLabel">@Html.Term("PaidAsTitle", "Paid Rank"):</span> @*CGI(CMR)-23/10/2014*@
+							</td>
+							<td>
+								@*<span class="earningsBAInfoData">@Model.AccountQuickFacts.PaidAsTitle</span>*@
+                                <span class="earningsBAInfoData">@PaidAsTitle</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								@*<span class="earningsBAInfoLabel">@Html.Term("DateEnrolled"):</span>*@
+                                <span class="earningsBAInfoLabel">@Html.Term("DateEnrolled", "Join Date"):</span> @*CGI(CMR)-23/10/2014*@
+							</td>
+							<td>
+								<span class="earningsBAInfoData">
+                                    @{
+                                            if (Model.EarningReportBasics.Any())
+                                            {
+                                                if (@Model.EarningReportBasics.FirstOrDefault().EnrollmentDate != null)
+                                                {
+                                                    if (@Model.EarningReportBasics.FirstOrDefault().EnrollmentDate.ToString("d MMM yyyy").IndexOf("1900")<0)
+                                                    {
+                                                       @Model.EarningReportBasics.FirstOrDefault().EnrollmentDate.ToString("d MMM yyyy");
+                                                   }
+                                                }
+                                            }
+                                     }
+                                </span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="earningsBAAddressContainer">
+				@*<span class="earningsBAName">@Model.AccountAddress.FirstName @Model.AccountAddress.LastName</span>*@
+                <span class="earningsBAName">@AccountName</span>
+                @*<span class="earningsBAAddress1">@Address</span> *@
+                @*<span class="earningsBAAddress2">@Model.AccountAddress.Address2</span> *@
+                @*<span class="earningsBACityStatePostal">@City, @State @PostalCode</span>*@
+			</div>
+		</div>
+		<div class="FR earningsBARightContainer">
+			<table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th style="width:100px;">@Html.Term("CommissionableVolume", "Base Total de Valor de Bonificação")</th>
+                        <th style="width:100px;">@Html.Term("%Comision/Bono", "% de Bonificação")</th>
+                        <th style="width:100px;">@Html.Term("Comisión/Bono", "Bonificação")</th>
+                        <th style="width:100px;">@Html.Term("Comisión/Bono mes anterior", "Bônus Campanha Anterior")</th>
+                    </tr>
+                </thead>
+				<tbody>
+					@{
+                                            if (Model.Earnings != null && Model.EarningsTotals.Any())
+                                            {
+                                                var iTName = "";
+                                                var iTBonusValue = "";
+                                                var iTBonusValueAnt = "";
+
+                                                foreach (var item in Model.EarningsTotals.OrderBy(x => @Html.Term(x.Name)).ToList())
+                                                {
+            <tr>
+            @if (item.Name == "Total")
+            {
+                iTName = @Html.Term(item.Name);
+                iTBonusValue = @item.BonusValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()));
+                iTBonusValueAnt = @item.BonusValueAnt.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()));
+                
+             @*<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" onclick="SetearCodigoBonus('@item.Name');"><strong>@Html.Term(item.Name):</strong></a></span> </td>
+                @*<td> <span class="earningsBABonusLabel" code="@item.BonusCode">@Html.Term(item.Name):</span> </td>*@
+			    @*<td style="text-align:right"> <span class="earningsBABonusData"><strong>@item.CV.ToMoneyString()</strong></span> </td>
+                <td style="text-align:right"> <span class="earningsBABonusData"><strong>@item.Percentage.ToPercentageString()</strong></span> </td>*@
+             @*   <td></td>
+                <td></td>
+                <td style="text-align: right;"> <span class="earningsBABonusData"><strong>@item.BonusValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()))</strong></span> </td>
+				<td style="text-align: right;"> <span class="earningsBABonusData"><strong>@item.BonusValueAnt.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()))</strong></span> </td>
+                <td></td>*@
+            }
+            else
+            {
+                <td><span class="earningsBABonusLabel"><a href="#" class="bonusType" onclick="SetearCodigoBonus('@item.Name');">@Html.Term(item.Name):</a></span> </td>
+                @*<td> <span class="earningsBABonusLabel" code="@item.BonusCode">@Html.Term(item.Name):</span> </td>*@
+			    <td style="text-align:right"> <span class="earningsBABonusData">@item.CV.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()))</span> </td>
+                <td style="text-align:right"> <span class="earningsBABonusData">@item.Percentage.ToPercentageString()</span> </td>
+                <td style="text-align: right;"> <span class="earningsBABonusData">@item.BonusValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()))</span> </td>
+                
+				<td style="text-align: right;"> <span class="earningsBABonusData">@item.BonusValueAnt.ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString()))</span> </td>
+                <td></td>
+            }
+			     
+		    </tr>
+         @*
+
+
+						<tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Level1Code">@Html.Term(item.Level1Term):</a></span> </td>
+							<td> <span class="earningsBABonusData">@item.Level1CV.ToMoneyString()</span> </td>
+                            <td> <span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Level1CBPer)</span> </td>
+                            <td> <span class="earningsBABonusData">@item.Level1CB.ToMoneyString()</span> </td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Level2Code">@Html.Term(item.Level2Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Level2CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Level2CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Level2CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Level3Code">@Html.Term(item.Level3Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Level3CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Level3CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Level3CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Level4Code">@Html.Term(item.Level4Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Level4CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Level4CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Level4CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation1Title7Code">@Html.Term(item.Generation1Title7Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation1Title7CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation1Title7CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation1Title7CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation2Title7Code">@Html.Term(item.Generation2Title7Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation2Title7CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation2Title7CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation2Title7CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation3Title7Code">@Html.Term(item.Generation3Title7Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation3Title7CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation3Title7CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation3Title7CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation4Title7Code">@Html.Term(item.Generation4Title7Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation4Title7CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation4Title7CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation4Title7CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation5Title7Code">@Html.Term(item.Generation5Title7Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation5Title7CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation5Title7CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation5Title7CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="item.Generation1Title10Code">@Html.Term(item.Generation1Title10Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation1Title10CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation1Title10CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation1Title10CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.Generation2Title10Code">@Html.Term(item.Generation2Title10Term):</a></span></td>
+							<td><span class="earningsBABonusData">@item.Generation2Title10CV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.Generation2Title10CBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.Generation2Title10CB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.TurboInfinityBonusCode">@Html.Term(item.TurboInfinityBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.TurboInfinityBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.TurboInfinityBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.TurboInfinityBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.FastStartBonusCode">@Html.Term(item.FastStartBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.FastStartBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.FastStartBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.FastStartBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                         <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.CoachingBonusCode">@Html.Term(item.CoachingBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.CoachingBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.CoachingBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.CoachingBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.TeamBuildingBonusCode">@Html.Term(item.TeamBuildingBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.TeamBuildingBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.TeamBuildingBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.TeamBuildingBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.AdvancementBonusCode">@Html.Term(item.AdvancementBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.AdvancementBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.AdvancementBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.AdvancementBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.MatchingAdvacementBonusCode">@Html.Term(item.MatchingAdvacementBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.MatchingAdvacementBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.MatchingAdvacementBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.MatchingAdvacementBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.ConsistencyBonusCode">@Html.Term(item.ConsistencyBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.ConsistencyBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.ConsistencyBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.ConsistencyBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+							<td><span class="earningsBABonusLabel"><a href="#" class="bonusType" code="@item.RetailProfitBonusCode">@Html.Term(item.RetailProfitBonusTerm):</a></span></td>
+							<td><span class="earningsBABonusData">@item.RetailProfitBonusCV.ToMoneyString()</span></td>
+                            <td><span class="earningsBABonusData">@PerformanceExtensions.GetPercentageOnly(item.RetailProfitBonusCBPer)</span></td>
+                            <td><span class="earningsBABonusData">@item.RetailProfitBonusCB.ToMoneyString()</span></td>
+                            <td></td>
+						</tr>
+                        <tr>
+                            
+							<td>
+								<span class="earningsBABonusTotalLabel">@Html.Term("Total", "Total"):</span>
+							</td>
+                            <td>
+                                <span class="earningsBABonusTotalData">@item.TotalCV.ToMoneyString()</span>
+                            </td>
+                            <td></td>
+							<td>
+								<span class="earningsBABonusTotalData">@item.TotalCB.ToMoneyString()</span>
+							</td>
+                            <td></td>
+						</tr>
+                        *@
+                                                }
+        
+        <tr>
+            <td>
+                <span class="earningsBABonusLabell"><strong>@iTName:</strong></span>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td style="text-align: right;">
+                <span class="earningsBABonusDataa"><strong>@iTBonusValue</strong></span>
+            </td>
+            <td style="text-align: right;">
+                <span class="earningsBABonusDataa"><strong>@iTBonusValueAnt</strong></span>
+            </td>
+            <td>
+            </td>
+        </tr>
+                                            }
+                                            else
+                                            { 
+						<tr>
+							<td>
+								<span class="earningsBABonusLabel">&nbsp;</span>
+							</td>
+							<td>
+								<span class="earningsBABonusData">&nbsp;</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="earningsBABonusTotalLabel">@Html.Term("Total", "Total"):</span>
+							</td>
+							<td>
+								<span class="earningsBABonusTotalData">@((0m).ToString("C", System.Globalization.CultureInfo.GetCultureInfo(@ViewData["language"].ToString())))</span>
+							</td>
+						</tr>	
+                                            }
+					}
+                    
+                    
+				</tbody>
+			</table>
+            <div style="float:left; position: absolute; left: 0; margin-top:10px; @*margin-left: -30%;*@">
+                <br /> <br /> <br /><br />
+                <a id ="DownloadLink" class="Button"><span>Download</span></a>
+            </div>
+		</div>       
+	</div>
+    </div>
+        
+                                            //PopUP
+     <div id="noteModal" class="jqmWindow LModal" style="left: 55%;">
+        <div class="mContent">
+            <div style="margin: 8px;">
+                <strong style="font-size: medium; color:Red;"  id="TitleModal">Observacion</strong>
+            </div>            
+            <div id="noteErrors">
+            </div>
+            <div class="FormStyle2" id="modalContentReport">
+               
+            </div>
+            <br />
+            <p>
+             <a href="javascript:void(0);" class="Button LinkCancel jqmClose"
+                        onclick="cancelar()" id="btnCancelObservacion">
+                        @Html.Term("OK")</a>
+            </p>
+            <span class="ClearAll"></span>
+        </div>
+        <div class="PModal WaitWin">
+			<span>
+				@Html.Term("OneMomentPlease", "One moment please...")
+			</span>
+			<br />
+			<img src="@Href("~/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+		</div>
+    </div>
+}
+else
+{
+	<div class="earningsBAContainer"><span class="earningsBANoData">@Model.ErrorMessage</span></div> 
+}

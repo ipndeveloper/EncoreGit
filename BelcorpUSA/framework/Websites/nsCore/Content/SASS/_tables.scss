@@ -1,0 +1,242 @@
+﻿@import "_Base";
+table {
+	display: table;
+	border-collapse: collapse;
+}
+table.ModuleHolder {
+	margin: 0;
+	padding: 0;
+
+	td {
+		width: 33%;
+	}
+}
+table.ModuleHolder, table.SiteMap {
+	min-width: em(680);
+}
+table.SectionTable {
+	border-collapse:separate;
+	border-spacing:em(10);
+}
+table.CoreColumns {
+	width: 100%;
+	height:100%;
+}
+table.FormTable td {
+	padding: em(3 2 3 4);
+}
+table.Section {
+	border-bottom: em(1) dashed #C5C5C5;
+}
+td.FLabel {
+	width: em(150);
+	color: #58585A;
+	vertical-align: top;
+	font-weight: bold;
+}
+.InputTools {
+	text-transform: none;
+	font-weight: normal;
+}
+td.Disabled {
+	color: #c0c0c0;
+}
+td.CoreLeftNav {
+	display: table-cell;
+	width: em(220);
+	min-width:em(220);
+	text-align: left;
+	vertical-align: top;
+	padding: em(40 0 0 0);
+}
+body.FullPane td.CoreLeftNav {
+	width:em(25);
+	min-width:em(25);
+}
+table.DataGrid th, table.DataGrid td {
+	padding: .3em .2em .3em .4em;
+	border-right: em(1) solid $white_color;
+	text-align: left;
+	vertical-align: top;
+}
+td.CoreContent {
+	display: table-cell;
+	width: auto;
+	text-align: left;
+	vertical-align: top;
+	padding: em(1);
+}
+body.FullPane td.CoreContent {
+	padding-right:em(20);
+}
+td.CoreRightColumn {
+	padding: 1% 0 0 0;
+	width: 27%;
+	height:100%;
+	/*background: transparent url(../Images/notesbg.gif) repeat-y scroll 0px 20px; */
+}
+.GridColHead th {
+	background: darken($main_contrast_color,40%);
+	color: $white_color;
+	vertical-align: middle;
+}
+.SubGridHead {
+	background:#999;
+	padding:em(1);
+	color:$white_color;
+	width:em(100);
+	display:block;
+	float:left;
+	margin-right:.5em;
+	text-align:center;
+}
+.GridColHead th a {
+	color: $white_color;
+}
+.GridRowAlt {
+	background-color: $white_color;
+}
+/*.GridRowHover {background: #808080;color: #FFF;}*/
+tr {
+	background:rgba($white_color, 0); //required for Opera transition
+	@include transition(background-color, $transition_time / 1.5);
+
+	&.hover, &.GridRowHover {
+		background:#ECFFDF;
+		color:#000;
+		cursor:pointer;
+	}
+}
+.GridFilters td {
+	padding: em(1);
+	text-align: left;
+}
+td.Filter
+{
+	border-right: em(1) solid #c5c5c5;
+}
+/*** Tables in Modules **/
+.ModGrid td
+{
+	padding: em(2);
+}
+.ModGrid .GridColHead th
+{
+	@include Gradient(#f7f7f7, (#fff 5%) (#f7f7f7 60%) (#f3f3f3 100%));
+	color: #666;
+}
+.GridCheckBox
+{
+	width: em(25);
+	text-align: center;
+}
+.GridEdit
+{
+	width: em(50);
+}
+.GridPagination
+{
+	margin: em(10 0 10 0);
+	@include dotted-line(top);
+	padding-top: em(10);
+
+	span
+	{
+		display: inline-block;
+		margin: em(0 10);
+	}
+}
+.DetailsTag
+{
+	margin: em(0 0 5 0);
+
+	.Total td
+	{
+		font-weight: bold;
+		padding-top: em(10);
+	}
+
+	.Head td
+	{
+		padding-left: em(3);
+		border-right: em(1) solid $white_color;
+		background: #DFDFD1;
+	}
+}
+.GridTotalBar
+{
+	background-color: #EFF9FF;
+}
+
+/*****************************
+	 Commissions Run Stuff 
+/****************************/
+table.CommStatus
+{
+	margin: em(20 0 20 10);
+
+	td
+	{
+		font-size: em(12);
+		line-height: em(30, 12);
+		vertical-align: middle;
+		border-right: em(1, 12) dotted #c0c0c0;
+		padding: em(0 10, 12);
+	
+		&.StepStatus
+		{
+			width: em(40, 12);
+			text-align: center;
+		}
+	}
+	.Inactive td
+	{
+		color: #c0c0c0;
+	}
+}
+
+/******************************
+	Scrolling Tables 
+******************************/
+div.RecentOrders
+{
+	clear: both;
+	border-bottom: em(1) solid #c0c0c0;
+   
+}
+
+td.warehouseProduct input.numeric {
+	width:3.333em;
+}
+.SubGridHead {
+	font-size:em(9);
+	width:em(40, 9);
+}
+.QuantityAllocated {
+	display: inline-block;
+	width:em(40);
+	text-align:center;
+}
+
+.SkuMatrix td {
+	vertical-align:middle !important;
+	padding:em(5) !important;
+}
+.varSKU {
+	width:em(150);
+	background:$white_color;
+	color:#000 ;
+	text-align:center;
+	font-weight:bold;
+}
+.varSKUline td .varAttrThumb {
+	width:em(25);
+	height:em(25);
+	overflow:hidden;
+	float:right;
+
+	img {
+		width:100%;
+		max-width:100%;
+	}
+}

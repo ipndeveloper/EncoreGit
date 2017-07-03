@@ -1,0 +1,29 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.ShippingMethodModel
+<div>
+    @using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+    { 
+        <div class="mt10 mb20 kitShippingMethods">
+        @if (Model.ShippingRequired)
+        {
+            foreach (var shippingMethod in Model.ShippingMethods)
+            {
+                <label>
+                    <span>
+                        @Html.RadioButtonFor(m => m.SelectedShippingMethodID, shippingMethod.ShippingMethodID)
+                        @Html.Term(shippingMethod.Name) - @shippingMethod.ShippingAmount.ToString(Model.CurrencyID)
+                    </span>
+                </label><br />
+            }
+        }
+        else
+        {
+            <span>@Html.Term("NotApplicable", "N/A")</span>
+        }
+        </div>
+        <a id="btnContinue" name="btnContinue" href="javascript:void(0);" class="Button btnContinue kitShippingMethod" data-click-submit="parent">
+            <span>@Html.Term("Continue")</span>
+        </a>
+        @Html.ValidationSummary()
+        @Html.AntiForgeryToken()
+    }
+</div>

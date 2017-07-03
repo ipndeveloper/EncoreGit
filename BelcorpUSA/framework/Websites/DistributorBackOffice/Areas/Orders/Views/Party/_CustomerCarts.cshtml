@@ -1,0 +1,25 @@
+﻿@model NetSteps.Data.Entities.Party
+@for(int i = 0; i < Model.Order.OrderCustomers.Count; i++)
+{
+	var customer = Model.Order.OrderCustomers[i];
+
+	<div data-customercartindex="@i" data-bind="with: CustomerCarts()[@i]">
+		@if (NetSteps.Common.ApplicationContextCommon.Instance.UseDefaultBundling)
+		{
+			Dictionary<string, string> upSaleDictionary = ViewBag.DynamicKitUpSaleHTML;
+			var DynamicKitUpSaleHTML = upSaleDictionary[customer.Guid.ToString("N")];
+			// keep all of the existing data from ViewData, changing only the DynamicKitUpSaleHTML to its per-customer value
+			var newViewData = new ViewDataDictionary();
+			foreach (var key in ViewData.Keys)
+			{
+				newViewData.Add(key, ViewData[key]);
+			}
+			newViewData["DynamicKitUpSaleHTML"] = DynamicKitUpSaleHTML;
+			@Html.Partial("CustomerCart", customer, newViewData);
+		}
+		else
+		{
+			@Html.Partial("CustomerCart", customer)
+		}
+	</div>
+}

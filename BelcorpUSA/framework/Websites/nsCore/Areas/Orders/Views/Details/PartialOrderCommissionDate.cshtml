@@ -1,0 +1,19 @@
+﻿@model NetSteps.Data.Entities.Order
+
+<b>@Html.Term("CommissionDate", "Commission Date"):</b>
+<input class="TextInput DatePicker" type="text" id="commissionDate" value="@Model.CommissionDate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)" />
+
+
+<script type="text/javascript">
+
+    $(function ()
+    {
+        $("#commissionDate").datepicker('destroy').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(1900, 0, 1), yearRange: '-100:+100',
+            onSelect: function ()
+            {
+                $.post('@Href("~/Orders/Details/ChangeCommissionDate")', { orderNumber: $('#orderNumber').val(), commissionDate: $('#commissionDate').val() });
+            }
+        });
+    });
+
+</script>

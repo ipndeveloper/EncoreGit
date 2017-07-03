@@ -1,0 +1,337 @@
+@*@model dynamic*@
+
+@model DistributorBackOffice.Areas.Account.Models.Landing.AccountModel
+
+@{string baseUrl = "~/".ResolveUrl() + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";}
+@section head {
+    <script type="text/javascript">
+
+        $(function () {
+            $('ul.lr li:odd').addClass('Alt');
+
+            $('#shippingAddressModal').jqm({ modal: true, trigger: '#btnAddShippingAddress' });
+            $('#paymentMethodModal').jqm({ modal: true, trigger: '#btnAddPaymentMethod' });
+
+            //Dropdown for additional profiles
+            $('div.profileQuickTools li.parentNav').hoverIntent(function () {
+                $('div.dropDown', this).css({ 'width': $(this).outerWidth() }).fadeIn(200);
+                $(this).addClass('UI-lightBg brdrYYNN hovered');
+                $('span.UI-icon',this).addClass('icon-arrowDown-hover');
+            }, function () {
+                $('div.dropDown', this).fadeOut(500);
+                $('span.UI-icon', this).removeClass('icon-arrowDown-hover');
+                $(this).removeClass('UI-lightBg brdrYYNN hovered');
+            });
+
+        });
+
+        function displayAddresses(response) {
+            if (response.result) {
+                $('#editAddressModal').jqmHide();
+
+                var selectedItem, i, j;
+                var otherProfiles = '';
+                for (i = 0; i < response.addresses.length; i++) {
+
+                    if (!response.addresses[i].isDefault)
+                        otherProfiles += '<a href="javascript:void(0);" onclick="editAddressCustom(' + response.addresses[i].addressId + ');" class="overlay" title="' + response.addresses[i].Address1 + '">' + response.addresses[i].profileName + '</a><br />';
+                }
+                $('#otherShippingProfiles').html(otherProfiles);
+
+                $('#defaultShippingAddressContainer').html(response.defaultAddressHtml);
+            }
+            else
+                showMessage(response.message, true);
+        }
+
+        function editAddressCustom(addressId) {
+            $('#editAddressModal').jqm({
+                modal: false,
+                ajax: '@Href("~/Account/BillingShippingProfiles/AddressModalCustom")?addressId=' + addressId,
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt((h.w.height() + 500) / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }, onHide: function (h) {
+                    h.w.fadeOut('slow', function () {
+                        h.o.remove();
+                        $('#editAddressModal .mContent').empty();
+                    });
+                }
+            }).jqmShow();
+        }
+
+        function editPaymentMethodCustom(paymentMethodId) {
+            $('#editPaymentMethodModal').jqm({
+                modal: false,
+                ajax: '@Href("~/Account/BillingShippingProfiles/PaymentMethodModalCustom")?paymentMethodId=' + paymentMethodId,
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt((h.w.height() + 500) / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }, onHide: function (h) {
+                    h.w.fadeOut('slow', function () {
+                        h.o.remove();
+                        $('#editPaymentMethodModal .mContent').empty();
+                    });
+                }
+            }).jqmShow();
+        }
+
+        function displayPaymentMethods(response) {
+            if (response.result) {
+                $('#editPaymentMethodModal').jqmHide();
+
+                var selectedItem, i, j;
+                var otherProfiles = '';
+                for (i = 0; i < response.paymentMethods.length; i++) {
+
+                    if (!response.paymentMethods[i].isDefault)
+                        otherProfiles += '<a href="javascript:void(0);" onclick="editPaymentMethodCustom(' + response.paymentMethods[i].addressId + ');" class="overlay" title="' + response.paymentMethods[i].Address1 + '">' + response.paymentMethods[i].profileName + '</a><br />';
+                }
+                $('#otherBillingProfiles').html(otherProfiles);
+
+                $('#defaultPaymentMethodContainer').html(response.defaultPaymentMethodHtml);
+            }
+            else
+                showMessage(response.message, true);
+        }
+    </script>
+}
+@section breadcrumb {
+}
+@section title {
+    @Html.Term("AccountOverview", "Account Overview")
+}
+@{
+    var accountToEdit = Model.Account;
+    var mainAddress = accountToEdit.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Main);
+    var shippingAddress = accountToEdit.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);
+    if (mainAddress == default(Address))
+    {
+        mainAddress = new Address();
+        mainAddress.AddressTypeID = Constants.AddressType.Main.ToShort();
+        mainAddress.IsDefault = true;
+        mainAddress.CountryID = Constants.Country.UnitedStates.ToInt();
+    }
+}
+@if (TempData["ReturnSuccessMessage"] != null)
+{
+    <div id="ReturnSuccessMessage">
+        <div id="SuccessMessage">
+            <img alt="" src="@Href("~/Resource/Content/Images/accept-trans.png")" />&nbsp;@TempData["ReturnSuccessMessage"].ToString()</div>
+    </div>
+}
+<div class="accountLandingOverview">
+    <div class="UI-secBg brdrAll icon-24 GridUtility hide">
+        <a href="@Href("~/Account/Edit")" class="UI-icon-container" id="editAccountMainInfoLink" rel="#EditAccountInfo"><span class="UI-icon icon-edit"></span><span>@Html.Term("Edit")</span></a> <span class="clr"></span>
+    </div>
+    <div class="pad5 acctSnapShot">
+        <ul class="listNav flatList infoList">
+            @Html.Partial("_BodyLinksTop")  
+            <li>
+                <label class="bold FL">
+                    @Html.Term("lblSponsor", "Sponsor"):</label>
+                <div class="FL data">
+                    @string.Concat(Model.Sponsor.FirstName, " ", Model.Sponsor.LastName, " (", Model.Sponsor.AccountID, ")" ) 
+                    </br>
+                    @Model.Sponsor.EmailAddress
+                    </br>
+                    @Model.Sponsor.MainPhone
+                </div>
+                <span class="clr"></span>
+            </li>
+            <li>
+                <label class="bold FL">
+                    @Html.Term("PrimaryAddress", "Primary Address"):</label>
+                <div id="mainAddressContainer" class="FL data">
+                    @if (mainAddress == default(Address))
+                    {
+                        @Html.Term("N/A", "N/A")
+                    }
+                    else
+                    {
+                        @Html.Raw(mainAddress.ToDisplay())
+                    }
+                </div>
+                <span class="clr"></span></li>
+            <li>
+                <label class="bold FL">
+                    @Html.Term("Email"):</label>
+                <div id="emailDisplay" class="FL data">
+                    @accountToEdit.EmailAddress</div>
+                <span class="clr"></span></li>
+            <li>
+                <label class="bold FL">
+                    @Html.Term("DateOfBirth", "DOB"):</label>
+                <div id="birthdayDisplay" class="FL data">
+                    @accountToEdit.Birthday.ToShortDateStringDisplay()</div>
+                <span class="clr"></span></li>
+            <li>
+                <label class="bold FL">
+                    @Html.Term("Gender"):</label>
+                <div id="genderDisplay" class="FL data">
+
+                @if (accountToEdit.GenderID.ToInt() == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Male)
+                {
+                  @Html.Term("Male", "Male")                      
+                }
+                else if (accountToEdit.GenderID.ToInt() == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Female)
+                { 
+                   @Html.Term("Female", "Female")
+                }
+                else
+                {
+                    @Html.Term("N/A", "N/A")
+                }
+            
+                </div>
+                <span class="clr"></span></li>
+            <li>
+                <label class="bold FL">
+                    @Html.Term("Language"):</label>
+                <div id="languageDisplay" class="FL data">
+                    @SmallCollectionCache.Instance.Languages.GetById(accountToEdit.DefaultLanguageID).GetTerm()
+                </div>
+                <span class="clr"></span></li>
+            <!-- Phone numbers -->
+            @foreach (AccountPhone phone in accountToEdit.AccountPhones)
+            {
+                <li>
+                    <input type="hidden" class="phoneId" value="@phone.AccountPhoneID" />
+                    <label class="bold FL phone">
+                        @SmallCollectionCache.Instance.PhoneTypes.GetById(phone.PhoneTypeID).GetTerm():</label>
+                    <div class="FL data">
+                        @phone.PhoneNumber.FormatPhone(CoreContext.CurrentCultureInfo)</div>
+                    <span class="clr"></span></li>
+            }
+            @* <li>
+                <!-- site subscriptions will be modified to go in here -->
+            </li>*@
+            <li>
+                <!-- Shipping Profiles -->
+                <label class="bold FL">@Html.Term("DefaultShippingAddress", "Default Shipping Address"):</label>
+                <div class="FL data">
+                    <!-- display the default -->
+                    <div id="defaultShippingAddressContainer" class="FL mr10">
+                        @if (shippingAddress == default(Address))
+                        {
+                            @Html.Term("N/A", "N/A")
+                        }
+                        else
+                        {
+                            <a href="@Href("~/Account/BillingShippingProfiles/EditAddress", new { addressId = shippingAddress.AddressID })" title="@Html.Term("Edit")">@Html.Raw(shippingAddress.ToDisplay(false, true, true))</a>
+                        }
+                    </div>
+                    <!-- shipping profile quick tools -->
+                    <div class="FR pad5 brdrAll splitCol profileQuickTools">
+                    <ul class="flatList">
+                       <li>
+                        <a href="@Href("~/Account/BillingShippingProfiles/EditAddress")" class="block UI-icon-container Add AddProfile"><span class="FL ml10 mr10 UI-icon icon-plus"></span><span class="FL">@Html.Term("AddNewShippingProfile", "Add New Shipping Profile")</span><span class="clr"></span></a>
+                        </li>
+                        <li id="OtherShippingProfiles" class="parentNav">
+                        <a href="#" class="UI-icon-container label"><span class="FL ml10 mr10 UI-icon icon-arrowNext"></span><span class="FL">@Html.Term("AdditionalShippingProfiles", "Additional Shipping Profiles")</span><span class="clr"></span></a>
+                        <div class="UI-lightBg pad5 brdrAll clr dropDown ProfilesList">
+                            <ul id="otherShippingProfiles" class="flatList listNav">
+                                @{
+                                    var shippingAddresses = Model.Account.Addresses.Where(a => a.AddressTypeID == Constants.AddressType.Shipping.ToInt()).OrderByDescending(a => a.IsDefault).ThenBy(a => a.AddressID);
+                                    var firstShippingAddress = shippingAddresses.FirstOrDefault();
+                                }
+                                @foreach (Address eachShippingAddress in shippingAddresses)
+                                {
+                                    string profileName = eachShippingAddress.ProfileName + (eachShippingAddress.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                                    if (string.IsNullOrEmpty(profileName))
+                                    {
+                                        profileName = SmallCollectionCache.Instance.AddressTypes.GetById(eachShippingAddress.AddressTypeID).GetTerm();
+                                    }
+                                    <li><a href="@Href("~/Account/BillingShippingProfiles/EditAddress", new { addressId = eachShippingAddress.AddressID })" class="overlay@(eachShippingAddress.IsDefault ? " defaultProfile" : "")"
+					    title="@Html.Term("Edit") @eachShippingAddress.Address1">
+                                        @profileName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        </li>
+                        
+                    </ul>
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                <span class="clr"></span></li>
+            <li>
+                <!-- Billing Profiles -->
+                <label class="bold FL">
+                    @Html.Term("DefaultBillingAddress", "Default Billing Address"):</label>
+                <div class="FL data">
+                    <!-- display the default -->
+                    @{var paymentMethod = Model.Account.AccountPaymentMethods.FirstOrDefault(pm => pm.IsDefault);}
+                    <div id="defaultPaymentMethodContainer" class="FL Block DefaultProfile mr10">
+                        <!-- Default billing -->
+                        @if (paymentMethod == null)
+                        {
+                            paymentMethod = Model.Account.AccountPaymentMethods.FirstOrDefault();
+                        }
+                        @if (paymentMethod == null)
+                        {
+                            @Html.Term("N/A", "N/A")
+                        }
+                        else
+                        {
+                            <a href="@Href("~/Account/BillingShippingProfiles/EditPayment", new { paymentMethodId = paymentMethod.AccountPaymentMethodID })" >@Html.Raw((paymentMethod as IPayment).ToDisplay(IPaymentExtensions.DisplayTypes.Web, CoreContext.CurrentCultureInfo, false, true, true))</a>
+                        }
+                    </div>
+                    <!-- shipping profile quick tools -->
+                    <div class="FR pad5 brdrAll splitCol profileQuickTools">
+                     <ul class="flatList">
+                       <li>
+                        <a href="@Href("~/Account/BillingShippingProfiles/EditPayment")" class="block UI-icon-container Add AddProfile"><span class="FL ml10 mr10 UI-icon icon-plus"></span><span class="FL">@Html.Term("AddNewBillingProfile", "Add New Billing Profile")</span><span class="clr"></span></a>
+                       </li>
+                       <li id="OtherBillingProfiles" class="parentNav">
+                       <a href="#" class="UI-icon-container label"><span class="FL ml10 mr10 UI-icon icon-arrowNext"></span><span class="FL">@Html.Term("AdditionalBillingProfiles", "Additional Billing Profiles")</span><span class="clr"></span></a>
+                        <div class="UI-lightBg pad5 brdrAll clr dropDown ProfilesList">
+                            <ul id="otherBillingProfiles" class="flatList listNav ">
+                                @{var paymentMethods = Model.Account.AccountPaymentMethods.OrderByDescending(pm => pm.IsDefault);}
+                                @foreach (AccountPaymentMethod eachpaymentMethod in paymentMethods)
+                                {
+                                    string profileName = (eachpaymentMethod.BillingAddress != null) ? eachpaymentMethod.BillingAddress.ProfileName + (eachpaymentMethod.IsDefault ? " (" + Html.Term("default") + ")" : "") : eachpaymentMethod.ProfileName + (eachpaymentMethod.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                                    if (string.IsNullOrEmpty(profileName))
+                                    {
+                                        profileName = SmallCollectionCache.Instance.PaymentTypes.GetById(eachpaymentMethod.PaymentTypeID).GetTerm();
+                                    }
+                                    <li><a href="@Href("~/Account/BillingShippingProfiles/EditPayment", new { paymentMethodId = eachpaymentMethod.AccountPaymentMethodID })" 
+					class="overlay@(eachpaymentMethod.IsDefault ? " defaultProfile" : "")" title="@eachpaymentMethod.MaskedAccountNumber">
+                                        @profileName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        </li>
+                        </ul>
+                     
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                 <span class="clr"></span>
+            </li>
+        </ul>
+    </div>
+    <!--/ end "acctSnapShot container -->
+    <span class="clr"></span>
+</div>
+<!--/ end account landing overview container -->
+<h2>@Html.Term("Title-MyAccount-AutoshipmentsOverview", "Autoshipments and Subscriptions")</h2>
+<!-- Autoshipments -->
+<div class="clr pad5 brdrAll UI-lightBg">
+    <div class="Inner">
+     
+        @foreach (var model in Model.AutoshipOrders)
+        {
+            Html.RenderPartial("AutoshipModule", model);
+        }
+
+        <span class="clr"></span>
+    </div>
+</div>
+<!-- end Autoshipments -->
+<span class="clr"></span>
+@Html.Partial("BillingShippingModal", ViewData)

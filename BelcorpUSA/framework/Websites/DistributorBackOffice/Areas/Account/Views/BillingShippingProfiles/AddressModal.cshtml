@@ -1,0 +1,116 @@
+@model NetSteps.Data.Entities.Address
+<script type="text/javascript">
+    $(function () {
+        $('#shippingAddressPhone').phone().phone('setPhone', '@Model.PhoneNumber');
+        $('#btnSaveAddress').click(function () { 
+            var p = $(this); //.parent();
+            showLoading(p);
+            if ($('#shippingAddressControl').checkRequiredFields()) {
+                $('#shippingAddressControl input').each(function () {
+                    if ($(this).val() == $(this).attr('title')) {
+                        $(this).val('');
+                    }
+                });
+                ValidateAddress(p);
+                hideLoading(p);
+            }
+            else {
+                hideLoading(p);
+            }
+        });
+    });
+
+    function ValidateAddress(parent) {
+        // do address validation
+        var validation = abstractAddressValidation({
+            address1: $('#shippingAddressAddress1').val(),
+            address2: $('#shippingAddressAddress2').val(),
+            address3: $('#shippingAddressAddress3').val(),
+            //city: $("#shippingAddressCity :selected").text() == "" ? $("#shippingAddressCity").val() : $("#shippingAddressCity :selected").text(), // in case Country is not US, it is a simple text input
+            city: $("#shippingAddressCity").val() == "" ? $("#shippingAddressCity").val() : $("#shippingAddressCity").val(), // in case Country is not US, it is a simple text input
+            //state: $('#shippingAddressState :selected').val(),
+            state: $('#shippingAddressState').val(),
+            postalCode: $('#shippingAddressControl .PostalCode').fullVal(),
+            //country: $('#shippingAddressCountry :selected').data("countrycode")
+            country: $('#shippingAddressCountry').data("countrycode")
+        });
+
+        validation.init();
+        $(document).bind("validAddressFound", function (event, address) {
+            var p = parent;
+            showLoading(p);
+            $.post('@Url.Content("~/OrderEntry/ValidPostalCode")', {
+                PostalCode: address.postalCode
+            }, function (respo) {
+                if (respo.result) {
+                    $.post('@Url.Content("~/Account/BillingShippingProfiles/SaveAddress")', {
+                        addressId: '@Model.AddressID',
+                        profileName: $('#shippingAddressProfileName').val(),
+                        attention: $('#shippingAddressAttention').val(),
+                        address1: address.address1,
+                        address2: address.address2,
+                        address3: address.address3,
+                        PostalCode: address.postalCode,
+                        city: address.city,
+                        county: $('#shippingAddressCounty').val(),
+                        //state: address.state,
+                        state: $('#shippingAddressState').val(),
+                        countryId: $('#shippingAddressCountry').val(),
+                        phone: $('#shippingAddressPhone').length ? $('#shippingAddressPhone').phone('getPhone') : '',
+                        email: $('#shippingProfileEmail').length ? $('#shippingProfileEmail').val() : '',
+                        street: $('#shippingAddressStreet').val()
+                    }, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            if ($('#editAddressModal').length && $('#editAddressModal').is(':visible'))
+                                $('#editAddressModal').jqmHide();
+                            getAddresses();
+                        }
+                        else {
+                            hideLoading(p);
+                            showMessage(response.message, true);
+
+                        }
+                    });
+                } else { 
+                    hideLoading(p);
+                    showMessage('@Html.Term("DiferentPostalCode", "Diferent Postal Code")', true);
+                };
+            });
+        });
+    
+    }
+</script>
+<form action="#">
+<h2>
+    @(Model.AddressID == 0 ? Html.Term("AddaNewShippingAddress", "Add a new shipping address") : Html.Term("Edit") + ' ' + Model.Name)</h2>
+@Html.Partial("Address", new AddressModel()
+   {
+       Address = Model,
+       LanguageID = CoreContext.CurrentLanguageID,
+       ShowCountrySelect = true,
+       ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+       Prefix = "shippingAddress"
+   })
+@if (Model.AddressTypeID == 2 && NetSteps.Common.Configuration.ConfigurationManager.GetAppSetting("ShowShipToEmail", false))
+      { 
+        var prop = Model.AddressProperties.Where<NetSteps.Data.Entities.AddressProperty>((x) => x.AddressPropertyTypeID == Convert.ToInt32(NetSteps.Data.Entities.Constants.AddressPropertyType.EmailAddress)).FirstOrDefault(); 
+    <div class="FRow">
+        <div class="FLabel">
+            @Html.Label(Html.Term("Notification Email Address"))
+        </div>
+        <div class="FInput">
+            @Html.TextBox("shippingProfileEmail", prop == null ? "" : prop.PropertyValue)
+        </div>
+    </div>
+      }
+<br />
+<p class="FL">
+    <a id="btnSaveAddress" href="javascript:void(0);" class="Button BigBlue"><span>
+        @Html.Term("SaveAddress", "Save Address")</span></a>
+</p>
+<p class="FR">
+    <a href="javascript:void(0);" class="jqmClose"><span>
+        @Html.Term("Cancel")</span></a></p>
+<span class="clr"></span>
+</form>

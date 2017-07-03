@@ -1,0 +1,1120 @@
+@model NetSteps.Data.Entities.Order
+@{
+    ViewBag.Title = "Billing";
+}
+@section head{
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('input#txtGiftCertNumber').watermark('@Html.JavascriptTerm("Watermark_GiftCardInput", "Enter your gift card number here")');
+
+            //$('#billZipcode').numeric();
+
+            $('input[name="payment"]').click(function () {
+                var type = $(this).val();
+
+                $('li.paymentType').each(function () {
+                    var t = $(this);
+                    t[t.find('input.' + type).length ? 'show' : 'hide']();
+                });
+                if (!$('input[name="paymentType"]:checked').is(':visible')) {
+                    $('#rbCreditCard').click();
+                }
+
+            }).filter(':first').trigger('click');
+
+            $('input[name="paymentType"]').click(function () {
+                $('div.PaymentEntry').hide();
+                $('li.paymentType').removeClass('current');
+                $(this).closest('li.paymentType').addClass('current');
+                var id = $(this).attr('id').replace(/^rb/, '');
+                $('#' + id.substr(0, 1).toLowerCase() + id.substr(1) + 'Entry').show();
+
+                if ($('input[name="paymentType"]:checked').attr('id') === 'rbProfile') {
+                    var paymentType = $('#consultantProfiles .paymentMethod.defaultProfile').attr('data-paymenttype');
+                    $('#hidPaymentType').val(paymentType);
+                }
+                else {
+                    var paymentType = $('input[name="paymentType"]:checked');
+                    $('#hidPaymentType').val(paymentType.val());
+                }
+            });
+
+            $('#txtAmount').numeric();
+
+            $('#consultantProfiles .paymentMethod').live('click', function () {
+                $('#consultantProfiles .paymentMethod.defaultProfile').removeClass('defaultProfile bold current');
+                $(this).addClass('defaultProfile bold current');
+                $('#paymentMethodPreview').html($(this).next().html());
+                var paymentType = $(this).attr('data-paymenttype');
+                $('#hidPaymentType').val(paymentType);
+            });
+
+            $('#btnApplyPayment').click(function () {
+                if ($(this).hasClass('ButtonInactive')) {
+                    return false;
+                }
+                else {
+                    applyPayment($(this));
+                }
+            });
+
+            $('#btnNext').click(function () {
+                if ($(this).hasClass('ButtonInactive')) {
+                    return false;
+                }
+                else {
+                    showLoading($(this));
+                    window.location = '@Url.Resolve("~/Checkout/Confirmation")';
+                }
+            });
+
+            $('#saveAsNewProfile').click(function () {
+                if ($(this).is(":checked")) {
+                    $('#BlockIndent').css("padding-left","235px");
+                    $('#profileNameBilling').slideDown();
+                }
+                else {
+                    $('#BlockIndent').css("padding-left", "523px");
+                    $('#profileNameBilling').slideUp();      
+                }
+            });
+
+            $('#saveAsNewBankProfile').click(function () {
+                if ($(this).is(":checked")) {
+                    $('#txtBankProfileName').parent().parent().slideDown();
+                }
+                else {
+                    $('#txtBankProfileName').parent().parent().slideUp();
+                }
+            });
+
+            $('#txtGiftCertNumber').change(lookupGiftCardBalance);
+            $('#btnLookupGC').click(lookupGiftCardBalance);
+            $('#btnSaveExistingCCProfile').click(saveCCBillingProfile);
+            $('#btnSaveExistingBankProfile').click(saveBankBillingProfile);
+        });
+
+        function applyPayment(t) {
+            var complete = true, paymentType = $('input[name="paymentType"]:checked');
+
+            $('#applyPaymentColumn input').clearError();
+
+            var data = {
+                paymentType: paymentType.val(),
+                amount: parseFloat($('#txtAmount').val().replace(/[^\d\.]/g, ''))
+            };
+            alert(amount);
+            if (!data.amount) {
+                complete = false;
+                $('#txtAmount').showError('@Html.JavascriptTerm("PleaseEnterAnAmount", "Please enter an amount.")');
+            }
+
+            switch (paymentType.attr('id')) {
+                case 'rbProductCredit':
+                    if (data.amount > parseFloat('@ViewBag.ProductCreditBalance')) {
+                        complete = false;
+                        $('#txtAmount').showError('@Html.JavascriptTerm("NotEnoughProductCredit", "Not enough product credit.")');
+                    }
+                    break;
+                case 'rbGiftCert': data.accountNumber = $('#txtGiftCertNumber').val();
+                    if (!data.accountNumber) {
+                        complete = false;
+                        $('#txtGiftCertNumber').showError('@Html.JavascriptTerm("PleaseEnterGiftCertificateNumber", "Please enter the gift certificate number.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    break;
+                case 'rbEFT':
+                    data.bankName = $('#txtBankName').val();
+                    if (!data.bankName) {
+                        complete = false;
+                        $('#txtBankName').showError('@Html.JavascriptTerm("PleaseEnterBankName", "Please enter Bank Name.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.nameOnAccount = $('#txtNameOnAccount').val();
+                    if (!data.nameOnAccount) {
+                        complete = false;
+                        $('#txtNameOnAccount').showError('@Html.JavascriptTerm("PleaseEnterNameOnAccount", "Please enter the name on the Account.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.bankAccountNumber = $('#txtAccountNumber').val();
+                    if (!data.bankAccountNumber || !(data.bankAccountNumber > 0)) {
+                        complete = false;
+                        $('#txtAccountNumber').showError('@Html.JavascriptTerm("InvalidAccountNumber", "Invalid Account number.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    var verifyAccountNumber = $('#txtVerifyAccountNumber').val();
+                    if (!verifyAccountNumber || !(verifyAccountNumber > 0)) {
+                        complete = false;
+                        $('#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("InvalidVerifyAccountNumber", "Invalid Verify Account number.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+
+                    data.routingNumber = $('#txtRoutingNumber').val();
+                    if (!data.routingNumber || !(data.routingNumber > 0)) {
+                        complete = false;
+                        $('#txtRoutingNumber').showError('@Html.JavascriptTerm("InvalidRoutingNumber", "Invalid Routing number")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    var verifyRoutingNumber = $('#txtVerifyRoutingNumber').val();
+                    if (!verifyRoutingNumber || !(verifyRoutingNumber > 0)) {
+                        complete = false;
+                        $('#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("InvalidVerifyRoutingNumber", "Invalid Verify Routing number.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.BankAccountTypeID = $('#accountType').val();
+                    if (data.BankAccountTypeID == '@Html.Term("-ChooseAccountType-","-Choose Account Type-")') {
+                        complete = false;
+                        $('#accountType').showError('@Html.JavascriptTerm("PleaseChooseAccountType","Please choose an account type.")').change(function () {
+                            if ($('#accountType').val() != '-Choose Account Type-') {
+                                $('#accountType').clearError().unbind('change');
+                            }
+                        });
+                    }
+                    data.saveAsNewProfile = $('#saveAsNewBankProfile').is(':checked');
+                    if (data.saveAsNewProfile) {
+                        data.profileName = $('#txtBankProfileName').val();
+                        if (!data.profileName) {
+                            complete = false;
+                            $('#txtBankProfileName').showError('@Html.JavascriptTerm("PleaseEnterProfileName", "Please enter the name of your profile.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                    }
+                    if ($('#txtAccountNumber').val() != $('#txtVerifyAccountNumber').val()) {
+                        $('#txtAccountNumber,#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("AccountNumbersDoNotMatch", "Account Numbers do not match")').keyup(function () {
+                            if ($('#txtAccountNumber').val() == $('#txtVerifyAccountNumber').val())
+                                $('#txtAccountNumber,#txtVerifyAccountNumber').clearError();
+                        });
+                        $('#txtAccountNumber').focus();
+                        complete = false;
+                        return false;
+                    }
+
+                    if ($('#txtRoutingNumber').val() != $('#txtVerifyRoutingNumber').val()) {
+                        $('#txtRoutingNumber,#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("RoutingNumbersDoNotMatch", "Routing Numbers do not match") ').keyup(function () {
+                            if ($('#txtRoutingNumber').val() == $('#txtVerifyRoutingNumber').val())
+                                $('#txtRoutingNumber,#txtVerifyRoutingNumber').clearError();
+                        });
+                        $('#txtRoutingNumber').focus();
+
+                        complete = false;
+                        return false;
+                    }
+
+                    if (!$('#BankAccountCertCheckbox').is(':checked')) {
+                        complete = false;
+                        $('#BankAccountCertCheckbox').showError('@Html.JavascriptTerm("AccountCertCheckbox", "Account Certify Checkbox should be checked") ').keyup(function () {
+                            $('#BankAccountCertCheckbox').focus();
+                            return false;
+                        });
+                    }
+                    break;
+                case 'rbProfile':
+                    data.paymentMethodId = $('#consultantProfiles .paymentMethod.defaultProfile').attr('id').replace(/\D/g, '');
+                    break;
+                case 'rbCreditCard':
+                    data.nameOnCard = $('#txtNameOnCard').val();
+                    if (!data.nameOnCard) {
+                        complete = false;
+                        $('#txtNameOnCard').showError('@Html.JavascriptTerm("PleaseEnterNameOnCard", "Please enter the name on the card.")').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.accountNumber = $('#txtCCN').val();
+                    if (!data.accountNumber || !CreditCard.validate(data.accountNumber).isValid) {
+                        complete = false;
+                        $('#txtCCN').showError('@Html.JavascriptTerm("InvalidCCN", "Invalid credit card number.")').keyup(function () {
+                            if ($(this).val() && CreditCard.validate($(this).val()).isValid)
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.cvv = $('#txtCVV').val();
+                    if (!data.cvv || data.cvv.length < 3) {
+                        complete = false;
+                        $('#txtCVV').showError('@Html.JavascriptTerm("InvalidCVV", "Invalid CVV.")').keyup(function () {
+                            if ($(this).val() && $(this).val().length >= 3)
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.addressLine = $('#mainAddressAddress1').val();
+                    if (!data.addressLine) {
+                        complete = false;
+                        $('#mainAddressAddress1').showError('Please enter the address.').keyup(function () {
+                            if ($(this).val())
+                                $(this).clearError().unbind('keyup');
+                        });
+                    }
+                    data.expirationDate = $('#expMonth').val() + '/1/' + $('#expYear').val();
+                    var startOfThisMonth = new Date();
+                    startOfThisMonth = new Date(startOfThisMonth.getFullYear(), startOfThisMonth.getMonth(), 1);
+                    if (!data.expirationDate || new Date(data.expirationDate) < startOfThisMonth) {
+                        complete = false;
+                        $('#expYear').parent().showError('@Html.JavascriptTerm("InvalidExpirationDate", "Invalid expiration date.")');
+                        $('#expMonth,#expYear').change(function () {
+                            var expirationDate = new Date($('#expMonth').val() + '/1/' + $('#expYear').val());
+                            var startOfThisMonth = new Date();
+                            startOfThisMonth = new Date(startOfThisMonth.getFullYear(), startOfThisMonth.getMonth(), 1);
+                            if (expirationDate >= startOfThisMonth) {
+                                $('#expYear').parent().clearError();
+                                $('#expMonth,#expYear').unbind('change');
+                            }
+                        });
+                    }
+                    var postalCodeControl = $('.PostalCode');
+                    data.postalCode = postalCodeControl.fullVal();
+                    data.city = $('#mainAddressCity').val();
+                    data.state = $('#mainAddressState').text();
+                    if (!data.city || data.city == '-- Please enter a valid zip --' || !data.state || data.state == '-- Please enter a valid zip --') {
+                        complete = false;
+                        $('#mainAddressZip').showError();
+                        $('#mainAddressZipPlusFour').showError('Invalid postal code.').keyup(function () {
+                            if ($(this).val()) {
+                                $(this).clearError().unbind('keyup');
+                                $('#mainAddressZip').clearError();
+                                $('#mainAddressCity').clearError();
+                                $('#mainAddressState').clearError();
+                            }
+                        });
+                        $('#mainAddressCity').showError('Invalid city.');
+                        $('#mainAddressState').showError('Invalid state.');
+                    }
+                    data.saveAsNewProfile = $('#saveAsNewProfile').is(':checked');
+                    if (data.saveAsNewProfile) {
+                        data.profileName = $('#txtProfileName').val();
+                        if (!data.profileName) {
+                            complete = false;
+                            $('#txtProfileName').showError('@Html.JavascriptTerm("PleaseEnterProfileName", "Please enter the name of your profile.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                    }
+                    break;
+            }
+
+            if (complete) {
+
+                if (paymentType.attr('id') == "rbEFT" && !$('#BankAccountCertCheckbox').is(':checked')) {
+                    showMessage('@Html.Term("AccountCertCheckbox", "Account Certify Checkbox should be checked")', true);
+                    $('#BankAccountCertCheckbox').focus();
+                    return false;
+                }
+                else {
+                    showLoading(t);
+                    $.post('@Href("~/Checkout/ApplyPayment")', data, function (response) {
+                        hideLoading(t);
+                        if (response.result) {
+                            $('#txtGiftCertNumber,#txtNameOnCard,#txtCCN,#txtCVV,#txtAmount,#billZipcode,#txtNameOnAccount,#txtBankName,#txtAccountNumber,#txtRoutingNumber,#accountType,#txtVerifyAccountNumber,#txtVerifyRoutingNumber,#expYear,#txtProfileName,#mainAddressAddress1,#mainAddressZip,#mainAddressZipPlusFour').val('');
+                            $('#expMonth').val(new Date().getMonth() + 1);
+                            $('#saveAsNewProfile').removeAttr("checked");
+                            $('#mainAddressCity').find('option').remove().end().append('<option selected=\"selected\" value=\"\">-- Please enter a valid zip --</option>');
+                            $('#mainAddressState').find('option').remove().end().append('<option selected=\"selected\" value=\"\">-- Please enter a valid zip --</option>');
+                            $('#BlockIndent').css("padding-left", "523px");
+                            $('#profileNameBilling').slideUp(); 
+
+                            $('#GiftCardBalance').html('$0');
+                            updateTotals(response);
+                            $('#paymentsGrid').html(response.paymentsGrid);
+                            $('#profileEntry').html(response.billingProfilesGrid);
+                            if (data.paymentMethodId > 0) {
+                                $('#paymentMethod' + data.paymentMethodId).trigger('click');
+                            }
+                        }
+                        else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }             
+               
+            }
+        }
+
+        function removePayemnt(guidID)
+        {
+            var t = $('#rmPmt' + guidID);
+            showLoading(t);
+            $.post('@Href("~/Checkout/RemovePayment")', { paymentId: guidID }, function (response)
+            {
+                if (response.result) {
+                    updateTotals(response);
+                    $('#paymentsGrid').html(response.paymentsGrid);
+                }
+                else {
+                    hideLoading(t);
+                    showMessage(response.message, true);
+                }
+            });
+        }
+
+        function lookupGiftCardBalance()
+        {
+            showLoading($('#btnLookupGC'));
+            $.post('@Href("~/Checkout/LookupGiftCardBalance")', { giftCardCode: $('#txtGiftCertNumber').val() }, function (response)
+            {
+                hideMessage();
+                hideLoading($('#btnLookupGC'));
+                if (response.result && response.balance) {
+                    $('#GiftCardBalance').html(response.balance);
+                    $('#GiftCardBalance').addClass('available');
+                    $('#txtAmount').val(response.amountToApply);
+                }
+                else {
+                    $('#GiftCardBalance').html('$0');
+                    $('#GiftCardBalance').removeClass('available');
+                    if (response.message) {
+                        showMessage(response.message, true);
+                    }
+                }
+            });
+        }
+
+        function updateTotals(response)
+        {
+            var submitButton = $('#btnNext');
+            $('#balanceDue').text(response.totals.orderBalanceDue);
+            var balance = parseFloat(response.totals.orderBalanceDue.replace(/[^\d\.]/g, ''));
+            $('#txtAmount').val(response.totals.orderBalanceDue);
+            $('#productCreditBalance').text(response.productCreditBalance);
+            if (balance <= 0) {
+                $('div.BalanceDueContainer').addClass('BalanceCovered');
+                submitButton.removeClass('ButtonInactive');
+            }
+            else if (!submitButton.hasClass('ButtonInactive')) {
+                $('div.BalanceDueContainer').removeClass('BalanceCovered');
+                submitButton.addClass('ButtonInactive');
+            }
+                        
+            $.post('@Href("~/Checkout/GetBillingTotals")', null, function (response)
+            {
+                $('#totalsContainer').html(response);
+            });
+        }
+
+        function editCCBillingProfile(id) {
+            $.post('@Href("~/Checkout/LoadBillingProfileForEdit")', { accountPaymentMethodID: (id || 0) }, function (response)
+            {
+                if (response.result) {
+                    prepareCCBillingProfileEdit(response, id);
+                }
+                else {
+                    showMessage(response.message || '@(Html.Term("LoadingProfileFailed", "Loading your profile failed."))', true);
+                }
+            });
+        }
+
+        function prepareCCBillingProfileEdit(response, id) {
+            $('#txtCVV').parent().hide();
+            $('#txtProfileName').parent().show();
+            $('#BlockIndent').css("padding-left", "235px");
+            $('#BlockIndent').show();
+            $('#saveAsNewProfile').parent().hide();
+            $('#saveAsNewProfile').parent().next().css("padding-left", "523px");
+            $('#btnSaveExistingCCProfile').parent().show();
+            $('#billingProfileID').val(id);
+            $('#profileEntry').slideUp();
+            setTimeout("$('#creditCardEntry').slideDown()", 400);
+            $('[name="paymentType"],#txtAmount').attr('disabled', 'disabled');
+            $('#btnNext,#btnApplyPayment').addClass('ButtonInactive');
+
+            $('#txtNameOnCard').val(response.nameoncard);
+            $('#txtCCN').val(response.cardnum);
+            $('#expMonth').val(response.expmonth);
+            $('#expYear').val(response.expyear);
+            /*$('#billZipcode').val(response.zip);*/
+            $('#mainAddressAddress1').val(response.addresLine);
+            $('#mainAddressZip').val(!response.postalCode ? '' : response.postalCode.substr(0, 5));
+            $('#mainAddressZipPlusFour').val(!response.postalCode ?  '' : response.length < 6 ? '' : response.postalCode.substr(5, response.postalCode.length - 1));
+            $('#mainAddressCity').find('option').remove().end().append('<option selected=\"selected\" value=\"' + response.city + '\">' + response.city.trim() + '</option>');
+            $('#mainAddressState').find('option').remove().end().append('<option selected=\"selected\" value=\"' + response.state + '\">' + response.state.trim() + '</option>');
+            $('#txtProfileName').val(response.profileName);
+        }
+
+        function closeCCBillingProfileEdit() {
+            $('#saveAsNewProfile').removeAttr("checked");
+            $('#txtCVV').parent().show();
+            $('#txtProfileName').parent().hide();
+            $('#BlockIndent').css("padding-left", "523px");
+            $('#saveAsNewProfile').parent().show();
+            $('#saveAsNewProfile').parent().next().css("padding-left", "235px");
+            $('#btnSaveExistingCCProfile').parent().hide();
+            $('#billingProfileID').val('');
+            $('#creditCardEntry').slideUp();
+            setTimeout("$('#profileEntry').slideDown()", 400);
+            $('[name="paymentType"],#txtAmount').removeAttr('disabled');
+            $('#btnNext,#btnApplyPayment').removeClass('ButtonInactive');
+
+            $('#mainAddressAddress1').val('');
+            $('#mainAddressZip').val('');
+            $('#mainAddressZipPlusFour').val('');
+            $('#mainAddressCity').find('option').remove().end().append('<option selected=\"selected\" value=\"\">-- Please enter a valid zip --</option>');
+            $('#mainAddressState').find('option').remove().end().append('<option selected=\"selected\" value=\"\">-- Please enter a valid zip --</option>');
+            $('#txtCVV').val('');
+            $('#txtNameOnCard').val('');
+            $('#txtCCN').val('');
+            $('#expMonth').val('');
+            $('#expYear').val('');
+            $('#billZipcode').val('');
+            $('#txtProfileName').val('');
+        }
+
+        function saveCCBillingProfile() {
+            var id = $('#billingProfileID').val();
+            var complete = true;
+            var data = {};
+
+            data.nameOnCard = $('#txtNameOnCard').val();
+            if (!data.nameOnCard) {
+                complete = false;
+                $('#txtNameOnCard').showError('@Html.JavascriptTerm("PleaseEnterNameOnCard", "Please enter the name on the card.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.accountNumber = $('#txtCCN').val();
+            if (!data.accountNumber || !CreditCard.validate(data.accountNumber).isValid) {
+                complete = false;
+                $('#txtCCN').showError('@Html.JavascriptTerm("InvalidCCN", "Invalid credit card number.")').keyup(function () {
+                    if ($(this).val() && CreditCard.validate($(this).val()).isValid)
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.expirationDate = $('#expMonth').val() + '/1/' + $('#expYear').val();
+            var startOfThisMonth = new Date();
+            startOfThisMonth = new Date(startOfThisMonth.getFullYear(), startOfThisMonth.getMonth(), 1);
+            if (!data.expirationDate || new Date(data.expirationDate) < startOfThisMonth) {
+                complete = false;
+                $('#expYear').parent().showError('@Html.JavascriptTerm("InvalidExpirationDate", "Invalid expiration date.")');
+                $('#expMonth,#expYear').change(function () {
+                    var expirationDate = new Date($('#expMonth').val() + '/1/' + $('#expYear').val());
+                    var startOfThisMonth = new Date();
+                    startOfThisMonth = new Date(startOfThisMonth.getFullYear(), startOfThisMonth.getMonth(), 1);
+                    if (expirationDate >= startOfThisMonth) {
+                        $('#expYear').parent().clearError();
+                        $('#expMonth,#expYear').unbind('change');
+                    }
+                });
+            }
+            //jct
+            data.addressLine = $('#mainAddressAddress1').val();
+            if (!data.addressLine) {
+                complete = false;
+                $('#mainAddressAddress1').showError('Please enter the address.').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.profileName = $('#txtProfileName').val();
+            if (!data.profileName) {
+                complete = false;
+                $('#txtProfileName').showError('@Html.JavascriptTerm("PleaseEnterProfileName", "Please enter the name of your profile.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            var postalCodeControl = $('.PostalCode');
+            data.postalCode = postalCodeControl.fullVal();
+            data.city = $('#mainAddressCity').val();
+            data.state = $('#mainAddressState').text();
+            if (!data.city || data.city == '-- Please enter a valid zip --' || !data.state || data.state == '-- Please enter a valid zip --') {
+                complete = false;
+                $('#mainAddressZip').showError();
+                $('#mainAddressZipPlusFour').showError('Invalid postal code.').keyup(function () {
+                    if ($(this).val()) {
+                        $(this).clearError().unbind('keyup');
+                        $('#mainAddressZip').clearError();
+                        $('#mainAddressCity').clearError();
+                        $('#mainAddressState').clearError();
+                    }
+                });
+                $('#mainAddressCity').showError('Invalid city.');
+                $('#mainAddressState').showError('Invalid state.');
+            }
+            data.paymentMethodId = $('#billingProfileID').val();
+
+            if (complete) {
+                var t = $('#btnSaveExistingCCProfile');
+                showLoading(t);
+                $.post('@Href("~/Checkout/SaveCCBillingProfile")', data, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        closeCCBillingProfileEdit();
+                        $('#profileEntry').html(response.billingProfilesGrid);
+                        if (data.paymentMethodId > 0) {
+                            $('#paymentMethod' + data.paymentMethodId).trigger('click');
+                        }
+                    }
+                    else {
+                        showMessage(response.message || '@(Html.Term("SavingProfileFailed", "Saving your profile failed."))', true);
+                    }
+                });
+            }
+        }
+
+        function editBankBillingProfile(id) {
+            $.post('@Href("~/Checkout/LoadBillingProfileForEdit")', { accountPaymentMethodID: (id || 0) }, function (response) {
+                if (response.result) {
+                    prepareBankBillingProfileEdit(response, id);
+                }
+                else {
+                    showMessage(response.message || '@(Html.Term("LoadingProfileFailed", "Loading your profile failed."))', true);
+                }
+            });
+        }
+
+        function prepareBankBillingProfileEdit(response, id) {
+            $('#txtBankProfileName').parent().parent().show();
+            $('#divSaveAsNewBankProfile').hide();
+            $('#btnSaveExistingBankProfile').parent().show();
+            $('#billingProfileID').val(id);
+            $('#profileEntry').slideUp();
+            setTimeout("$('#eFTEntry').slideDown()", 400);
+            $('[name="paymentType"],#txtAmount').attr('disabled', 'disabled');
+            $('#btnNext,#btnApplyPayment').addClass('ButtonInactive');
+
+            $('#txtNameOnAccount').val(response.nameOnAccount);
+            $('#txtAccountNumber').val(response.bankNum);
+            $('#txtRoutingNumber').val(response.routingNum);
+            $('#accountType').val(response.actType);
+            $('#txtBankProfileName').val(response.profileName);
+            $('#txtBankName').val(response.bankName);
+        }
+
+        function closeBankBillingProfileEdit() {
+            $('#saveAsNewBankProfile').removeAttr("checked");
+            $('#txtBankProfileName').parent().parent().hide();
+            $('#divSaveAsNewBankProfile').show();
+            $('#btnSaveExistingBankProfile').parent().hide();
+            $('#billingProfileID').val('');
+            $('#eFTEntry').slideUp();
+            setTimeout("$('#profileEntry').slideDown()", 400);
+            $('[name="paymentType"],#txtAmount').removeAttr('disabled');
+            $('#btnNext,#btnApplyPayment').removeClass('ButtonInactive');
+
+            $('#txtNameOnAccount').val('');
+            $('#txtAccountNumber').val('');
+            $('#txtRoutingNumber').val('');
+            $('#accountType').val('');
+            $('#txtBankProfileName').val('');
+            $('#txtBankName').val('');
+            $('#txtVerifyAccountNumber').val('');
+            $('#txtVerifyRoutingNumber').val('');
+        }
+
+        function saveBankBillingProfile() {
+            var id = $('#billingProfileID').val();
+            var complete = true;
+            var data = {};
+
+            data.bankName = $('#txtBankName').val();
+            if (!data.bankName) {
+                complete = false;
+                $('#txtBankName').showError('@Html.JavascriptTerm("PleaseEnterBankName", "Please enter Bank Name.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.nameOnAccount = $('#txtNameOnAccount').val();
+            if (!data.nameOnAccount) {
+                complete = false;
+                $('#txtNameOnAccount').showError('@Html.JavascriptTerm("PleaseEnterNameOnAccount", "Please enter the name on the Account.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.bankAccountNumber = $('#txtAccountNumber').val();
+            if (!data.bankAccountNumber || !(data.bankAccountNumber > 0)) {
+                complete = false;
+                $('#txtAccountNumber').showError('@Html.JavascriptTerm("InvalidAccountNumber", "Invalid Account number.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            var verifyAccountNumber = $('#txtVerifyAccountNumber').val();
+            if (!verifyAccountNumber || !(verifyAccountNumber > 0)) {
+                complete = false;
+                $('#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("InvalidVerifyAccountNumber", "Invalid Verify Account number.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.routingNumber = $('#txtRoutingNumber').val();
+            if (!data.routingNumber || !(data.routingNumber > 0)) {
+                complete = false;
+                $('#txtRoutingNumber').showError('@Html.JavascriptTerm("InvalidRoutingNumber", "Invalid Routing number")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            var verifyRoutingNumber = $('#txtVerifyRoutingNumber').val();
+            if (!verifyRoutingNumber || !(verifyRoutingNumber > 0)) {
+                complete = false;
+                $('#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("InvalidVerifyRoutingNumber", "Invalid Verify Routing number.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }            
+
+            data.BankAccountTypeID = $('#accountType').val();
+            if (data.BankAccountTypeID == '@Html.Term("-ChooseAccountType-","-Choose Account Type-")') {
+                complete = false;
+                $('#accountType').showError('@Html.JavascriptTerm("PleaseChooseAccountType","Please choose an account type.")').change(function () {
+                    if ($('#accountType').val() != '-Choose Account Type-') {
+                        $('#accountType').clearError().unbind('change');
+                    }
+                });
+            }
+            data.profileName = $('#txtBankProfileName').val();
+            if (!data.profileName) {
+                complete = false;
+                $('#txtBankProfileName').showError('@Html.JavascriptTerm("PleaseEnterProfileName", "Please enter the name of your profile.")').keyup(function () {
+                    if ($(this).val())
+                        $(this).clearError().unbind('keyup');
+                });
+            }
+            data.paymentMethodId = $('#billingProfileID').val();
+
+            if ($('#txtAccountNumber').val() != $('#txtVerifyAccountNumber').val()) {
+                $('#txtAccountNumber,#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("AccountNumbersDoNotMatch", "Account Numbers do not match")').keyup(function () {
+                    if ($('#txtAccountNumber').val() == $('#txtVerifyAccountNumber').val())
+                        $('#txtAccountNumber,#txtVerifyAccountNumber').clearError();
+                });
+                $('#txtAccountNumber').focus();
+                complete = false;
+                return false;
+            }
+
+            if ($('#txtRoutingNumber').val() != $('#txtVerifyRoutingNumber').val()) {
+                $('#txtRoutingNumber,#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("RoutingNumbersDoNotMatch", "Routing Numbers do not match") ').keyup(function () {
+                    if ($('#txtRoutingNumber').val() == $('#txtVerifyRoutingNumber').val())
+                        $('#txtRoutingNumber,#txtVerifyRoutingNumber').clearError();
+                });
+                $('#txtRoutingNumber').focus();
+
+                complete = false;
+                return false;
+            }
+
+            if (complete) {
+                if (paymentType.attr('id') == "rbEFT" && !$('#BankAccountCertCheckbox').is(':checked')) {
+                    showMessage('@Html.Term("AccountCertCheckbox", "Account Certify Checkbox should be checked")', true);
+                    $('#BankAccountCertCheckbox').focus();
+                    return false;
+                }
+                else {
+                    var t = $('#btnSaveExistingBankProfile');
+                    showLoading(t);
+                    $.post('@Href("~/Checkout/SaveBankBillingProfile")', data, function (response) {
+                        hideLoading(t);
+                        if (response.result) {
+                            closeBankBillingProfileEdit();
+                            $('#profileEntry').html(response.billingProfilesGrid);
+                            if (data.paymentMethodId > 0) {
+                                $('#paymentMethod' + data.paymentMethodId).trigger('click');
+                            }
+                        }
+                        else {
+                            showMessage(response.message || '@(Html.Term("SavingProfileFailed", "Saving your profile failed."))', true);
+                        }
+                    });
+                }   
+            }
+        }
+
+
+    </script>
+    <script type="text/javascript">
+    //<![CDATA[
+        $(function () {
+            var ignoreKeys = [8, 9, 13, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 91, 92, 144];
+
+            $('#zip').keyup(function (e) {
+                var val = $(this).val();
+
+                $(this).clearError();
+                if (!new RegExp(/\d{5}/).test(val) && val.length == $(this).attr('maxlength')) {
+                    $(this).showError('Invalid zip code');
+                }
+
+                if (!ignoreKeys.contains(e.keyCode) && val.length == $(this).attr('maxlength') && !$(this).data('hasError')) {
+                    $('#zipPlusFour').focus();
+                }
+
+            });
+
+            $('#zipPlusFour').keyup(function (e) {
+                var val = $(this).val();
+
+                $(this).clearError();
+                if (!new RegExp(/\d{4}/).test(val) && val.length == $(this).attr('maxlength')) {
+                    $(this).showError('Invalid zip code');
+                }
+
+            });
+
+            var zipXHR, postalCodeControl = $('.PostalCode'), city = "", cityControl = $('.City'), state = '0', stateControl = $('.State'), county = '';
+            var postalCodeRegExp = /^(\d{9}|\d{5})/;
+            var lastZip;
+
+            function clearCityCountyStateControls() {
+                cityControl.add(stateControl).html('<option value=\"\">-- Please enter a valid zip --</option>');
+            }
+
+            function postalCodeLookup(zip) {
+                postalCodeControl.clearError();
+                if (!zipXHR) {
+                    $('.zipLoading').show();
+                    cityControl.add(stateControl).empty();
+                    zipXHR = $.getJSON('/Checkout/LookupZip', { countryId: $('#country').length ? $('#country').val() : '1', zip: zip }, function (results) {
+                        zipXHR = undefined;
+                        lastZip = zip;
+                        $('.zipLoading').hide();
+                        if (!results.length) {
+                            if (showMessage && results.message) {
+                                showMessage(results.message, true);
+                            }
+                            clearCityCountyStateControls();
+                        } else {
+                            for (var i = 0; i < results.length; i++) {
+                                if (!cityControl.contains(results[i].city.trim())) {
+                                    cityControl.append('<option' + (city && results[i].city == city ? ' selected=\"selected\"' : '') + ' value=\"' + results[i].city + '\">' + results[i].city.trim() + '</option>');
+                                }
+                                if (!stateControl.contains(results[i].state.trim())) {
+                                    stateControl.append('<option' + (state && results[i].stateId == state ? ' selected=\"selected\"' : '') + ' value=\"' + results[i].stateId + '\">' + results[i].state.trim() + '</option>');
+                                }
+                                cityControl.add(stateControl).clearError();
+                            }
+                        }
+                        if (window['postalCodeLookupComplete'] !== undefined)
+                            window['postalCodeLookupComplete']();
+                    });
+                }
+            }
+
+            postalCodeControl.keyup(function () {
+                if (postalCodeControl.length > 0 && postalCodeControl[0].value.length != 5) {
+                    clearCityCountyStateControls();
+                    lastZip = undefined;
+                    return;
+                }
+
+                var postalCodeMatches = postalCodeRegExp.exec(postalCodeControl.fullVal());
+                if (!postalCodeMatches) {
+                    lastZip = undefined;
+                    clearCityCountyStateControls();
+                    return;
+                }
+
+                // Check lastZip to avoid repeat lookups
+                if (lastZip === postalCodeMatches[0]) {
+                    return;
+                }
+
+                postalCodeLookup(postalCodeMatches[0]);
+            }).keyup();
+
+        });
+    //]]>
+    </script>
+}
+<h1>@Html.Term("Billing"):</h1>
+<p>
+    @Html.Term("InstructionText_ShoppingSplitPayments", "You can divide the balance of your order between multple forms of payment, or simply apply the entire balance to one credit card, billing profile, gift card, or product credit.  Choose your form of payment below, and enter the amount you wish to apply to that payment.")
+</p>
+@{  
+    var paymentMethods = CoreContext.CurrentAccount.AccountPaymentMethods;
+    var nonProfilePaymentMethods = CoreContext.CurrentAccount.GetNonProfilePaymentTypes(CoreContext.CurrentAccount, Model.OrderTypeID);
+    var canDoEFT = CoreContext.CurrentAccount.HasFunction(SmallCollectionCache.Instance.PaymentTypes.Where(p => p.PaymentTypeID == (int)Constants.PaymentType.EFT).FirstOrDefault().FunctionName);
+}
+<div id="applyPaymentColumn" class="FL splitCol60 mr10 brdrAll brdr1 paymentSection-Type">
+    <div class="UI-mainBg brdrYYNN sectionHeader">
+        <div class="pad10 bold">@Html.Term("SelectPaymentType", "Select a Payment Type")</div>
+    </div>
+    <input type="hidden" id="hidPaymentType" value="@Constants.PaymentType.CreditCard.ToInt()" />
+    <input type="hidden" id="billingProfileID" />
+    <div class="UI-lightBg paymentTypesWrap">
+        <ul class="inlineNav Tabber paymentsTabber">
+            <li class="paymentType current">
+                <label for="rbCreditCard" class="block">
+                    <input type="radio" name="paymentType" class="Party Customer" id="rbCreditCard" value="@Constants.PaymentType.CreditCard.ToInt()"
+                        checked="checked" />@Html.Term("CreditCard", "Credit Card")</label>
+            </li>
+            @{ if (nonProfilePaymentMethods.Any(pt => pt.PaymentTypeID == Constants.PaymentType.ProductCredit.ToInt()))
+               {
+                <li class="paymentType">
+                    <label for="rbProductCredit" class="block">
+                        <input type="radio" name="paymentType" class="Party" id="rbProductCredit" value="@Constants.PaymentType.ProductCredit.ToInt()" />@Html.Term("ProductCredit", "Product Credit")</label>
+                </li>
+               }
+               if (nonProfilePaymentMethods.Any(pt => pt.PaymentTypeID == Constants.PaymentType.GiftCard.ToInt()))
+               {
+                <li class="paymentType">
+                    <label for="rbGiftCert" class="block">
+                        <input type="radio" name="paymentType" class="Party" id="rbGiftCert" value="@Constants.PaymentType.GiftCard.ToInt()" />@Html.Term("GiftCard", "Gift Card")</label>
+                </li>
+               }}
+           @if (canDoEFT)
+           {
+        <li class="paymentType">
+                <label for="rbEFT" class="block">
+                    <input type="radio" name="paymentType" class="Party" id="rbEFT" value="@Constants.PaymentType.EFT.ToInt()" />@Html.Term("BankAccount", "Bank Account")</label>
+        </li>
+           }
+            @if (nonProfilePaymentMethods.Any())
+            {
+                @Html.Partial("_ClientSpecificPaymentTypes", nonProfilePaymentMethods)
+            }
+            <li class="paymentType">
+                <label for="rbProfile" class="block">
+                    <input type="radio" name="paymentType" class="Party" id="rbProfile" value="@Constants.PaymentType.CreditCard.ToInt()" />@Html.Term("MyProfiles", "My Profiles")</label>
+            </li>
+        </ul>
+        <span class="clr"></span>
+    </div>
+    <div id="productCreditEntry" class="PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <ul class="flatList listNav creditBalanceList">
+                <li class="pad10 center">
+					 	<label class="bold mr10">@Html.Term("ProductCreditBalance", "Product Credit Balance"):</label>
+					 	@{
+							var productCreditBalance = (decimal)ViewBag.ProductCreditBalance;
+							var colorStyle = "";
+							if (productCreditBalance < 0)
+							{
+								colorStyle = "style='color:red'";
+							}
+						}
+                    <span id="productCreditBalance" class="creditBalanceAmt" @Html.Raw(colorStyle)>
+                        @(productCreditBalance.ToString(Model.CurrencyID))</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="giftCertEntry" class="PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <ul class="flatList listNav creditBalanceList">
+                <li class="pad10 overflow center">
+                    <input type="text" id="txtGiftCertNumber" class="FL pad5 giftCardInput" />
+                    <a href="#" class="FL Button MinorButton lookupGC" id="btnLookupGC" title="@Html.Term("Lookup Gift Card Balance")">
+                        <span>@*<img  src="@Href("~/Resource/Content/Images/search.gif")" alt="@Html.Term("Lookup Gift Card Balance")"  style="height: 18px;" />*@
+                    @Html.Term("ButtonLabel_LookupGiftCardNo","Look-up Number")
+                        </span></a></li>
+                <li class="pad5 center ">
+                    <label class="bold">@Html.Term("GiftCardBalance", "Gift Card Balance"):</label>
+                    <span class="giftCardBalanceVal" id="GiftCardBalance">$0 </span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="profileEntry" class="PaymentEntry" style="display: none;">
+        @Html.Partial("BillingProfilesGrid", CoreContext.CurrentAccount)
+    </div>
+    <div id="creditCardEntry" class="PaymentEntry" style="width:100%">
+        <div class="FormContainer" style="width:100%">
+            <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol30">
+                    <label for="txtNameOnCard">@Html.Term("NameOnCard", "Name On Card"):</label>
+                    <input type="text" id="txtNameOnCard" class="pad2 fullWidth" />
+                </div>
+                 <div class="FL splitCol30" style="padding-left:235px;">
+                        <label for="txtCVV">@Html.Term("CVV"):</label><br />
+                    <input type="text" id="txtCVV" maxlength="4" class="pad2 ccvInput" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol30">
+                        <label for="txtCCN">@Html.Term("CreditCardNumber", "Credit Card #"):</label><br />
+                    <input type="text" id="txtCCN" maxlength="16" class="pad2 ccInput" />
+                </div>
+                <div class="FL splitCol30" style="padding-left:235px;">
+                <label for="mainAddressAddress1">Address Line:</label><br />
+				<input class="Address1 required pad2 fullWidth" id="mainAddressAddress1" maxlength="50" name="Address Line 1 is required." size="50" />
+                 </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FL mr10 splitCol30">
+                    <label for="expMonth">@Html.Term("ExpirationDate", "ExpirationDate"):</label><br />
+                    <div>
+                        <select id="expMonth" name="@Html.Term("ExpMonthIsRequired", "Exp Month is required.")" class="required">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" @Html.Raw(i == DateTime.Now.Month ? "selected=\"selected\"" : "")>
+                                    @i - @i.GetMonthName(CoreContext.CurrentCultureInfo)</option>
+                            }
+                        </select>
+                        <select id="expYear" name="@Html.Term("ExpYearIsRequired", "Exp Year is required.")" class="required">
+                            @for (int i = DateTime.Today.Year; i <= DateTime.Today.Year + 10; i++)
+                            {
+                                <option value="@i">
+                                    @i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="FL splitCol30" style="padding-left: 235px;">
+                <label for="mainAddressZip">Postal Code:</label><br />
+				<input class="PostalCode required" id="mainAddressZip" maxlength="5" name="Postal Code is required." size="5" />&nbsp;-&nbsp;
+				<input class="PostalCode" id="mainAddressZipPlusFour" maxlength="4" name="" size="4" /><img class="zipLoading" src="/Resource/Content/Images/Icons/loading-blue.gif" alt="" style="height:15px;display:none;" />
+                    @*<label for="billZipcode">@Html.Term("BillingZipcode", "Billing Zipcode"):</label>
+                    <br />
+                        <input type="text" id="billZipcode" maxlength="8" style="width: 100px;" />*@
+                </div>
+            </div>
+            <span class="clr"></span>
+            <div class="FRow mb10 mt10" id="divSaveAsNewProfile">
+                <div class="FL mr10 splitCol30">
+                    <input type="checkbox" id="saveAsNewProfile" />
+                    @Html.Term("Save as a new billing profile")
+                    <span class="clr"></span>
+                </div>
+                <div class="FL splitCol30" style="padding-left: 235px;">
+                    <label for="mainAddressCity">City:</label><br />
+                    <select class="City required" id="mainAddressCity" name="City is required."></select>
+                </div>
+            </div>
+                <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol30" id="profileNameBilling" style="display: none;">
+                        <label for="txtProfileName">@Html.Term("ProfileName", "Profile Name"):</label>
+                        <input type="text" id="txtProfileName" class="pad2 fullWidth" />
+                </div>
+                <div id="BlockIndent" class="FL splitCol30" style="padding-left: 523px;">
+                <label for="mainAddressState">State:</label><br />
+				<select class="State required" id="mainAddressState" name="State is required."></select>
+                <input type="hidden" id="country" value="1" name="country" />
+                </div>
+                    <span class="clr"></span>
+                </div>
+                <div class="FRow mt10" style="display: none;">
+                    <a href="javascript:void(0);" class="FL Button btnContinue mr10" onclick="closeCCBillingProfileEdit()"><span>@Html.Term("Cancel")</span></a>
+                    <a href="javascript:void(0);" id="btnSaveExistingCCProfile" class="FL Button btnContinue"><span>@Html.Term("SaveProfile", "Save Profile")</span></a>
+                </div>
+        </div>
+    </div>
+    <div id="eFTEntry" class="PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtBankName">@Html.Term("BankName", "Bank Name"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtBankName" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtNameOnAccount">@Html.Term("NameOnAccount", "Name On Account"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtNameOnAccount" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow eftAcctInfo">
+                <div class="FL mr10 splitCol70">
+                    <label for="txtRoutingNumber">@Html.Term("Routing#", "Routing #"):</label>
+                    <input type="text" id="txtRoutingNumber" maxlength="30" class="pad2 ccvInput" />
+                </div>
+                <div class="FL splitCol30">
+                    <label for="txtVerifyRoutingNumber">@Html.Term("VerifyRouting#", "Veirfy Routing #"):</label>
+                    <input type="text" id="txtVerifyRoutingNumber" maxlength="30" class="pad2 ccvInput" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow eftAcctInfo">
+                <div class="FL mr10 splitCol70">
+                    <label for="txtAccountNumber">@Html.Term("BankAccount#", "Bank Account #"):</label>
+                    <input type="text" id="txtAccountNumber" maxlength="30" class="pad2 ccInput" />
+                </div>
+                <div class="FL splitCol30">
+                    <label for="txtVerifyAccountNumber">@Html.Term("VerifyAccount#", "Verify Routing #"):</label><br />
+                    <input type="text" id="txtVerifyAccountNumber" maxlength="30" class="pad2 ccvInput" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FL mr10 splitCol70">
+                    <label for="accountType">@Html.Term("Account Type"):</label>
+                    <select id="accountType" class="required" name="@Html.Term("BankAccountTypeIsRequired", "Bank Account Type is required")">
+				        <option selected="selected">
+                            -Choose Account Type-
+                        </option>
+                        <option value="1">@Html.Term("Checking")</option>
+                        <option value="2">@Html.Term("Savings")</option>
+                    </select>
+                    <div class="FRow">
+                        <input type="checkbox" id="BankAccountCertCheckbox" />
+                        <label for="BankAccountCert" style="display:inline">
+                            @Html.Term("BankAccountCert", "I certify that I am the owner of the account")
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <span class="clr"></span>
+            <div class="FRow mt10" id="divSaveAsNewBankProfile">
+                <input type="checkbox" id="saveAsNewBankProfile" />
+                @Html.Term("Save as a new billing profile")
+                <span class="clr"></span>
+            </div>
+            <div class="FRow" style="display: none;">
+                <div class="FLabel">
+                    <label for="txtBankProfileName">@Html.Term("ProfileName", "Profile Name"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtBankProfileName" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow mt10" style="display: none;">
+                <a href="javascript:void(0);" class="FL Button btnContinue mr10" onclick="closeBankBillingProfileEdit()"><span>@Html.Term("Cancel")</span></a>
+                <a href="javascript:void(0);" id="btnSaveExistingBankProfile" class="FL Button btnContinue"><span>@Html.Term("SaveProfile", "Save Profile")</span></a>
+            </div>
+        </div>
+    </div>
+    <div class="UI-bg pad10 FormContainer applyPaymentBox">
+        <div class="UI-secBg center brdrAll pad5 mb10 amtApplyTitle">
+            <label for="txtAmount">@Html.Term("AmountToApply", "Amount to Apply"):</label>
+        </div>
+        <div class="applyPmtFrmWrap">
+            <div class="FL splitCol60">
+                <input type="text" id="txtAmount" class="pad5 fullWidth" value="@Model.Balance.AsymmetricRoundedNumber().ToString(Model.CurrencyID)" />
+            </div>
+            <div class="FR overflow splitCol30">
+                <a href="javascript:void(0);" id="btnApplyPayment" class="FR Button btnContinue applyPaymentBtn">
+                    <span>@Html.Term("ApplyPayment", "Apply Payment")</span></a>
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="FR brdr1 splitCol40">
+    <div id="paymentsGrid">
+        @Html.Partial("PaymentsGrid", Model)
+    </div>
+    <div id="totalsContainer">
+        @Html.Partial("_BillingTotals", Model)
+    </div>
+    <div class="clr pad10 center PageSaveButtons">
+        <a href="javascript:void(0);" id="btnNext" class="Button btnContinue @(Model.Balance.HasValue && Model.Balance <= 0 ? "" : "ButtonInactive")">
+            <span>@Html.Term("Continue")</span> </a><span class="clr"></span>
+    </div>
+</div>
+<span class="clr"></span>
+@Html.Partial("MessageCenter")

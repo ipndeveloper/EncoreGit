@@ -1,0 +1,42 @@
+﻿@model DisbursementProfileViewModel
+@*<script type="text/javascript" src="/Resource/Scripts/disbursementProfileValidate.js"></script>*@
+<script type="text/javascript" src="../../Scripts/disbursementProfileValidate.js"></script>
+<script type="text/javascript" src=""></script>
+<div class="mb10 brdr1 brdrAll disbursementProfiles">
+    <h3 class="UI-secBg pad5 brdrYYNN sectionHeader">@Html.Term("PaymentPreference", "Payment Preference")</h3>
+    <div class="pad10 disbursementOptionsWrap">
+        <p>@Html.Term("SelectDisbursementType")</p>
+        <ul class="inlineNav disbursementOptions">
+            <li>
+                <label for="rbPaymentCheck">
+                    <input id="rbPaymentCheck" name="payment" value="Check" type="radio" @Html.Raw(Model.IsCheckDisbursement || Model.PaymentPreference == null ? "checked=\"checked\"" : "") />
+                    @Html.Term("Order Payment")
+                </label>
+            </li>
+            <li>
+                <label for="rbPaymentEFT">
+                    <input id="rbPaymentEFT" name="payment" value="EFT" type="radio" @Html.Raw(Model.IsEftDisbursement ? "checked=\"checked\"" : "") />
+                    @Html.Term("EFT")
+                </label>
+            </li>
+        </ul>
+        <span class="clr"></span>
+    </div>
+    <div id="check" class="disbursementContent" style="display:none">
+       @Html.Partial("_CheckDisbursementControl", new CheckDisbursementViewModel 
+			{ 
+				Account = Model.Account,
+				CheckProfile = Model.CheckProfile,
+				CheckAddress = Model.CheckAddress,
+				ChangeCountryURL = Model.ChangeCountryURL,
+				PostalCodeLookupURL = Model.PostalCodeLookupURL
+   })
+    </div>
+    <div id="eft" class="disbursementContent" style="display:none">
+        @Html.Partial("_EFTDisbursementControl", new EFTDisbursementViewModel
+			{
+				EFTProfiles = Model.EFTProfiles,
+				PostalCodeLookupURL = Model.PostalCodeLookupURL
+			})
+    </div>
+</div>

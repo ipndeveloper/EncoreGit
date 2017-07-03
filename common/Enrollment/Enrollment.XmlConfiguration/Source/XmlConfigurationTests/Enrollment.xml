@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Miche-->
+<Enrollment>
+  <AccountTypes>
+    <AccountType AccountTypeID="3" Enabled="false">
+    </AccountType>
+    <AccountType AccountTypeID="2" Enabled="false">
+    </AccountType>
+    <AccountType AccountTypeID="1" Enabled="true">
+      <Steps>
+        <Step Name="Choose Your Sponsor" UseControl="Sponsor" Skippable="false" TermName="Enrollment_Sponsor_Title" />
+        <Step Name="Personal Information" UseControl="AccountInfo" Skippable="false" TermName="Enrollment_AccountInfo_Title" />
+        <Step Name="Enrollment Products" UseControl="Products" Skippable="false" TermName="Enrollment_Products_Title" />
+        <Step Name="Agreements" UseControl="Agreements" Skippable="false" TermName="Enrollment_Agreements_Title" />
+        <Step Name="Review" UseControl="Review" Skippable="false" TermName="Enrollment_Review_Title" />
+        <Step Name="Receipt" UseControl="Receipt" Skippable="false" TermName="Enrollment_Receipt_Title" />
+      </Steps>
+    </AccountType>
+  </AccountTypes>
+  <Controls>
+    <Control Name="AccountInfo">
+      <Properties>
+        <Property Name="Sections">
+          <Sections AccountTypeID="1">
+            <Section Action="BasicInfo" Name="Account Info and Address" TermName="Enrollment_AccountInfo_BasicInfoTitle" />
+            <!--<Section Action="AboutYou" Name="About You" TermName="Enrollment_AccountInfo_AboutYouTitle" />-->
+            <Section Action="Shipping" Name="Shipping Profile" TermName="Enrollment_AccountInfo_ShippingTitle" />
+            <Section Action="Billing" Name="Billing Profile" TermName="Enrollment_AccountInfo_BillingTitle" />
+            <Section Action="DisbursementProfiles" Name="Disbursement Profiles" TermName="Enrollment_AccountInfo_DisbursementProfiles" />
+            <Section Action="Website" Name="Personal Website URL" TermName="Enrollment_AccountInfo_WebsiteTitle" />
+          </Sections>
+        </Property>
+        <Property Name="Website" AutoshipScheduleID="1000" />
+      </Properties>
+    </Control>
+
+    <Control Name="Products">
+      <Properties>
+        <Property Name="Sections">
+          <Sections AccountTypeID="1">
+            <Section Action="EnrollmentKits" Name="Enrollment Kits" TermName="Enrollment_Products_EnrollmentKitsTitle" />
+          </Sections>
+        </Property>
+        <Property Name="EnrollmentKits">
+          <EnrollmentKit SKU="2038" HeaderText="Starter Kit" HeaderTermName="Enrollment_Products_EnrollmentKits_1" HeaderCssClass="kit1" />
+          <EnrollmentKit SKU="2039" HeaderText="Demi Starter Kit" HeaderTermName="Enrollment_Products_EnrollmentKits_2" HeaderCssClass="kit2" />
+          <EnrollmentKit SKU="2040" HeaderText="Accessory Starter Kit" HeaderTermName="Enrollment_Products_EnrollmentKits_3" HeaderCssClass="kit3" />
+          <EnrollmentKit SKU="2041" HeaderText="Deluxe Starter Kit" HeaderTermName="Enrollment_Products_EnrollmentKits_4" HeaderCssClass="kit4" />
+        </Property>
+      </Properties>
+    </Control>
+
+    <Control Name="Sponsor">
+      <Properties>
+        <Property Name="Sponsor">
+          <Sponsor AccountTypeID="1" DenySponsorChange="True" />
+        </Property>
+      </Properties>
+    </Control>
+    <Control Name="DisbursementProfiles">
+      <Properties>
+        <Property Name="EnableCheckProfile">true</Property>
+        <Property Name="EnableEFTProfile">true</Property>
+        <Property Name="Hidden">false</Property>
+      </Properties>
+    </Control>
+
+  </Controls>
+</Enrollment>

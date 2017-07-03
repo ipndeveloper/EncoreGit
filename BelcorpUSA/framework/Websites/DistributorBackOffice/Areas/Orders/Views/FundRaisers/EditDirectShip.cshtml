@@ -1,0 +1,78 @@
+﻿@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = Html.Term("EditDirectShip", "Edit Direct Ship");
+}
+@section head{
+
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSave').click(function () {
+                if (!$('#addressControl').checkRequiredFields()) {
+                    return false;
+                }
+                var t = $(this);
+                showLoading(t, { float: 'left' });
+                ValidateAddress();
+            });
+        });
+
+        function ValidateAddress() {
+            // do address validation
+            var validation = abstractAddressValidation({
+                    address1: $('#address1').val(),
+                    address2: $('#address2').val(),
+                    address3: $('#address3').val(),
+                    city: $("#city :selected").text() == "" ? $("#city").val() : $("#city :selected").text(), // in case Country is not US, it is a simple text input
+                    state: $('#state :selected').val(),
+                    postalCode: $('#addressControl .PostalCode').fullVal(),
+                    country: $('#country :selected').data("countrycode")
+                });
+            validation.init();
+            $(document).bind("validAddressFound", function (event, address) {
+                var p = $(this).parent();
+                showLoading(p);
+                $.post('@Href("~/Orders/Fundraisers/SaveDirectShip")', {
+                    orderCustomerId: '@ViewBag.OrderCustomerId',
+                    attention: $('#attention').val(),
+                    address1: address.address1,
+                    address2: address.address2,
+                    address3: address.address3,
+                    city: address.city,
+                    state: address.state,
+                    county: $('#county').val(),
+                    postalCode: address.postalCode,
+                    countryId: $('#country').val()
+                }, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Orders/Fundraisers/Cart")';
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+             });
+            }
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Fundraisers")">@Html.Term("Fundraiser", "Fundraiser")</a> &gt; <a href="@Href("~/Orders/Fundraisers/Cart")">@Html.Term("Cart")</a> &gt; @(ViewBag.Shipment == null ? Html.Term("AddDirectShip", "Add Direct Ship") : Html.Term("EditDirectShip", "Edit Direct Ship"))
+}
+@section title {
+    @(ViewBag.Shipment == null ? Html.Term("AddDirectShip", "Add Direct Ship") : Html.Term("EditDirectShip", "Edit Direct Ship"))
+}
+@Html.Partial("Address", new AddressModel()
+{
+    Address = ViewBag.Shipment,
+    LanguageID = CoreContext.CurrentLanguageID,
+    ShowCountrySelect = true,
+    ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+    ExcludeFields = new List<string>() { "ProfileName", "Name" }
+})
+
+<div class="center PageSaveButtons">
+    <a href="javascript:void(0);" class="Button FormSubmit FL" id="btnSave"><span>@Html.Term("Save")</span></a>
+    <a href="@Href("~/Orders/Fundraisers/Cart")" class="Cancel FL"><span>@Html.Term("Cancel")</span></a>
+    <a href="@Url.Action("RemoveDirectShip", "FundRaisers", new { orderCustomerId = ViewBag.OrderCustomerId})" class="Cancel FL"><span>@Html.Term("Remove")</span></a>
+</div>
+@Html.Partial("AddressValidation")

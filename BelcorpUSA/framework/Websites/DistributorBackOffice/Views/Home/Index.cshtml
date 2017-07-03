@@ -1,0 +1,259 @@
+@using DistributorBackOffice.Models.Home
+@model DistributorBackOffice.Models.Home.IndexViewModel
+@section head {
+    @* <link href="@Url.Content("~/FileUploads/assets/plugins/bootstrap/css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css"/>
+   <link href="@Url.Content("~/FileUploads/assets/plugins/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css"/>
+   *@
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <script src="@Url.Content("~/Resource/Scripts/jquery.tools.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/scrollable.css")" />
+    <!-- BEGIN CORE PLUGINS -->
+    <link href="@Url.Content("~/FileUploads/assets/plugins/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/FileUploads/assets/plugins/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('DashboardHome');
+            $('#accordion').accordion();
+
+
+            $('#editModulesSettingsModal').jqm({ modal: false,
+                trigger: '#editModules',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }
+            });
+
+            $('#editModulesSettingsModal .close').click(function () {
+                $('#editModulesSettingsModal').jqmHide();
+            });
+
+            $('#btnCancelModulesSettings').click(function () {
+                $('#editModulesSettingsModal').jqmHide();
+            });
+
+            $('#btnSaveModulesSettings').click(function () {
+                var data = { siteId: '@Model.Site.SiteID' };
+                $('#siteWidgets .widgets:checked').each(function (i) {
+                    data['widgets[' + i + ']'] = $(this).val();
+                });
+
+                $.post('@Href("~/Home/SaveWidgetSettings")', data, function (response) {
+                    if (response.result) {
+                        showMessage('@Html.Term("SettingsSavedsuccessfully", "Settings saved successfully.")', false);
+                        window.location.reload();
+                    }
+                    else
+                        showMessage(response.message, true);
+                });
+            });
+
+            $('a.Toggle').click(function () {
+                var widgetId = $(this).attr("rel").replace(/\D/g, '');
+                var showWidget = $(this).toggleClass('ToggleOn').hasClass("ToggleOn");
+                toggleWidget(widgetId, showWidget);
+            });
+
+            var dismissUrl = '@Url.Action("Dismiss", "AccountAlert")';
+            var showNextAlert = function () {
+                if (modalQueue.length > 0) {
+                    $(modalQueue.pop()).jqmShow();
+                }
+            };
+            var modalQueue = $('.jqmWindowAlert').jqm({
+                closeClass: 'jqmClose',
+                modal: true,
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                    var accountAlertId = h.w.data('accountAlertId');
+                    if (accountAlertId) {
+                        NS.post({
+                            url: dismissUrl,
+                            data: {
+                                id: accountAlertId
+                            }
+                        });
+                    }
+                },
+                onHide: function (h) {
+                    h.w.remove();
+                    h.o.remove();
+                    setTimeout(showNextAlert, 500);
+                }
+            }).get();
+
+            showNextAlert();
+
+            $('.dismissAlert').live('click', function (e) {
+                var t = $(this);
+                var accountAlertId = t.data('accountAlertId');
+                if (accountAlertId) {
+                    NS.post({
+                        url: dismissUrl,
+                        data: {
+                            id: accountAlertId
+                        }
+                    });
+                    $('[data-accountAlertId=' + accountAlertId + ']').each(function () {
+                        var t = $(this);
+                        if (t.data('hideSelector')) {
+                            t.parents(t.data('hideSelector')).slideUp('fast');
+                        }
+                    });
+                }
+                e.preventDefault();
+            });
+        });
+
+        function hideWidget(widgetId) {
+            $.post('@Href("~/Home/HideWidget")', { widgetId: widgetId }, function (response) {
+                if (response.result) {
+                    $('#widgetContainer' + widgetId).hide('normal');
+
+                    $('#widgetToggle' + widgetId).removeClass('ToggleOn');
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        }
+
+        function toggleWidget(widgetId, showWidget) {
+            $.post('@Href("~/Home/ToggleWidget")', { widgetId: widgetId, showWidget: showWidget }, function (response) {
+                if (response.result) {
+                    $('#widgetContainer' + widgetId)[showWidget ? 'show' : 'hide']('normal');
+                } else {
+                    showMessage(response.message, true);
+                    $(this).toggleClass('ToggleOn');
+                }
+            });
+        }
+
+    </script>
+}
+<!-- Dashboard Settings -->
+<div id="editModulesSettingsModal" class="UI-mainBg LModal jqmWindow DashboardSettings">
+    <a href="javascript:void(0);" class="FR ml10 cancel close UI-icon-container"><span
+        class="UI-icon icon-x"></span></a>
+    <h1>
+        @Html.Term("SelectModulesToDisplay", "Select Modules To Display"):</h1>
+    <span class="clr"></span>
+    <div class="UI-lightBg mContent">
+        <ul id="siteWidgets" class="lr flatList dash">
+            @foreach (var siteWidget in Model.ActiveSiteWidgets)
+            {
+                if (ViewEngines.Engines.FindPartialView(Model.ControllerContext, siteWidget.Widget.ViewName).View != null)
+                {
+                    bool isWidgetVisible = Model.UserWidgets.Any(sw => sw.WidgetID == siteWidget.Widget.WidgetID); 
+                    <li class="pad5">
+                        <label for="widget@(siteWidget.Widget.WidgetID)" class="FL">@siteWidget.Widget.GetTerm()</label>
+                        <a class="FR Toggle@(isWidgetVisible ? " ToggleOn" : "")" id="widgetToggle@(siteWidget.Widget.WidgetID)" rel="widget@(siteWidget.Widget.WidgetID)">
+                            <span>Off</span>
+                        </a>
+                        <span class="clr"></span>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+<table class="DashboardLayout">
+    <tr>
+        <td class="DashCol1">
+            @*style="padding-top: 43%;"*@ @*<div class="UI-bg brdrAll pad10 brdr1 actionItems welcomeFlag">
+			    <div class="pad5 UI-secBg center brdrAll userGreeting">
+				    @(DateTime.Now.Hour < 12 ? Html.Term("GoodMorning_AccountName", "Good Morning {0}!", CoreContext.CurrentAccount.FirstName) : (DateTime.Now.Hour < 17 ? Html.Term("GoodAfternoon_AccountName", "Good Afternoon {0}!", CoreContext.CurrentAccount.FirstName) : Html.Term("GoodEvening_AccountName", "Good Evening {0}!", CoreContext.CurrentAccount.FirstName)))
+			    </div>
+				@Html.Partial("AccountQuickFacts", (ViewBag.AccountQuickFacts as DistributorBackOffice.Models.AccountQuickFacts ?? new DistributorBackOffice.Models.AccountQuickFacts()))
+			    <ul class="inlineNav UI-linkAlt">
+				    <li><a href="javascript:void(0);" id="editModules" class="settings overlay UI-icon-container"
+					       rel="#Settings"><span class="UI-icon icon-actionDashTools"></span><span class="iconText">
+																						 	    @Html.Term("DashboardSettings", "dashboard settings")</span> </a></li>
+				    @if (ViewBag.SiteUrl != null)
+				    {
+					    <li id="EditMyPWSDashLink"><a href="@ViewBag.SiteUrl" target="_blank" rel="external" class="pws UI-icon-container">
+											   	    <span class="UI-icon icon-actionDashPWS"></span><span class="iconText">
+																									    @Html.Term("EditMyPersonalWebsite", "edit my personal website")</span> </a>
+					    </li>
+				    }
+			    </ul>
+			    <span class="clr"></span>
+		    </div>*@
+            @foreach (var widget in CoreContext.GetUserWidgets(Model.Site, false, 1))
+            {
+                if (ViewEngines.Engines.FindPartialView(Model.ControllerContext, widget.ViewName).View != null)
+                {
+                    Object widgetModel;
+                    if (widget.ViewName == "AutoshipOverview")
+                    {
+                        var autoshipOverviewModel = new AutoshipOverviewModel(widget);
+                        widgetModel = autoshipOverviewModel;
+                    }
+                    else if (widget.WidgetID == 11)
+                    {
+                        widgetModel = new WidgetModel(widget);
+                        var isWidgetVisible = Model.UserWidgets.Any(sw => sw.WidgetID == widget.WidgetID);
+                        <div class="WidgetContainer" id="widgetContainer@(widget.WidgetID)" @Html.Raw(isWidgetVisible ? "" : "style=\"display:none;\"")>
+                            @Html.Partial(widget.ViewName, widgetModel)
+                        </div>
+                    }
+                }
+            }
+        </td>
+        <td class="DashCol2">
+        </td>
+        @* <td class="DashCol2">
+		    @for (int i = 0; i < Model.AlertMessages.Count; i++)
+      {
+			    @Html.DisplayFor(m => m.AlertMessages[i], "IAccountAlertMessageModel")
+      }
+		    @foreach (var widget in CoreContext.GetUserWidgets(Model.Site, true))
+      {
+          if (ViewEngines.Engines.FindPartialView(Model.ControllerContext, widget.ViewName).View != null)
+          {
+              bool isWidgetVisible = Model.UserWidgets.Any(sw => sw.WidgetID == widget.WidgetID);
+				    <div class="WidgetContainer" id="widgetContainer@(widget.WidgetID)" @Html.Raw(isWidgetVisible ? "" : "style=\"display:none;\"")>
+					    @Html.Partial(widget.ViewName, new WidgetModel(widget))
+				    </div>
+          }
+      }
+		    <table class="DashboardLayout">
+			    <tr>
+				    <td class="DashCol1b">
+					    @foreach (var widget in CoreContext.GetUserWidgets(Model.Site, false, 2))
+         {
+             if (ViewEngines.Engines.FindPartialView(Model.ControllerContext, widget.ViewName).View != null)
+             {
+                 bool isWidgetVisible = Model.UserWidgets.Any(sw => sw.WidgetID == widget.WidgetID);
+							    <div class="WidgetContainer" id="widgetContainer@(widget.WidgetID)" @Html.Raw(isWidgetVisible ? "" : "style=\"display:none;\"")>
+								    @Html.Partial(widget.ViewName, new WidgetModel(widget))
+							    </div>
+             }
+         }
+				    </td>
+				    <td class="DashCol2b">
+					    @foreach (var widget in CoreContext.GetUserWidgets(Model.Site, false, 3))
+         {
+             if (ViewEngines.Engines.FindPartialView(Model.ControllerContext, widget.ViewName).View != null)
+             {
+                 bool isWidgetVisible = Model.UserWidgets.Any(sw => sw.WidgetID == widget.WidgetID);
+							    <div class="WidgetContainer" id="widgetContainer@(widget.WidgetID)" @Html.Raw(isWidgetVisible ? "" : "style=\"display:none;\"")>
+								    @Html.Partial(widget.ViewName, new WidgetModel(widget))
+							    </div>
+             }
+         }
+				    </td>
+			    </tr>
+		    </table>
+	    </td>*@
+    </tr>
+</table>
+@for (int i = 0; i < Model.AlertModals.Count; i++)
+{
+    @Html.DisplayFor(m => m.AlertModals[i], "IAccountAlertModalModel")
+}

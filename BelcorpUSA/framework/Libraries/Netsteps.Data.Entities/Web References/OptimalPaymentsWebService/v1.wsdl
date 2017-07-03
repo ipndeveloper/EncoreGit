@@ -1,0 +1,2204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.optimalpayments.com/creditcard/v1" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.optimalpayments.com/creditcard/xmlschema/v1" targetNamespace="http://www.optimalpayments.com/creditcard/v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns="http://www.optimalpayments.com/creditcard/xmlschema/v1" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.optimalpayments.com/creditcard/xmlschema/v1" version="v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="ccBatchRequestV1" type="ns1:CCBatchRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for transaction batch request</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ccAuthRequestV1" type="ns1:CCAuthRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for Authorization and Purchase Transactions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ccPostAuthRequestV1" type="ns1:CCPostAuthRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for Settlement and Credit Transactions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ccPaymentRequestV1" type="ns1:CCPaymentRequestV1" />
+      <xs:element name="ccCancelRequestV1" type="ns1:CCCancelRequestV1" />
+      <xs:annotation>
+        <xs:documentation>Request used for cancelling Payment Transactions only</xs:documentation>
+      </xs:annotation>
+      <xs:element name="ccAcknowledgeResponseV1" type="ns1:CCAcknowledgeResponseV1">
+        <xs:annotation>
+          <xs:documentation>Instant Response returned for batch or api request</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ccBatchResponseV1" type="ns1:CCBatchResponseV1">
+        <xs:annotation>
+          <xs:documentation>Response returned for batch request</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ccTxnResponseV1" type="ns1:CCTxnResponseV1">
+        <xs:annotation>
+          <xs:documentation>Response returned for all requests</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="AuthenticationV1">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="indicator">
+            <xs:annotation>
+              <xs:documentation>Electronic Commerce Indicator</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:minInclusive value="1" />
+                <xs:maxInclusive value="10" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="cavv">
+            <xs:annotation>
+              <xs:documentation>Cardholder Authentication Verification Value
+						returned in the Authentication Response</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="80" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="xid">
+            <xs:annotation>
+              <xs:documentation>Transaction Identifier
+						returned in the Authentication Response</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="80" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="BillingDetailsV1">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cardPayMethod" type="ns1:CardPayMethodV1">
+            <xs:annotation>
+              <xs:documentation>The method used to make the payment.Possible values are:WEB = Card Number Provided Online, P = Card present, TEL = Card Number Provided by Phone</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="firstName" type="ns1:FirstNameV1">
+            <xs:annotation>
+              <xs:documentation>First name</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="lastName" type="ns1:LastNameV1">
+            <xs:annotation>
+              <xs:documentation>Last name</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="street" type="ns1:StreetV1">
+            <xs:annotation>
+              <xs:documentation>Street information line 1</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="street2" type="ns1:StreetV1">
+            <xs:annotation>
+              <xs:documentation>Street information line 2</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="city" type="ns1:CityV1">
+            <xs:annotation>
+              <xs:documentation>City</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:choice minOccurs="0">
+            <xs:element minOccurs="0" name="region" type="ns1:RegionV1">
+              <xs:annotation>
+                <xs:documentation>use Region for geographical regsions outside US and Canada</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="state" type="ns1:StateV1">
+              <xs:annotation>
+                <xs:documentation>State in US or Province in Canada</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+          <xs:element minOccurs="0" name="country" type="ns1:CountryV1">
+            <xs:annotation>
+              <xs:documentation>State in US or Province in Canada</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="zip" type="ns1:ZipV1">
+            <xs:annotation>
+              <xs:documentation>State in US or Province in Canada</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="phone" type="ns1:PhoneV1">
+            <xs:annotation>
+              <xs:documentation>Phone number</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="email" type="ns1:EmailV1">
+            <xs:annotation>
+              <xs:documentation>Email address</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CardExpiryV1">
+        <xs:sequence>
+          <xs:element name="month">
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:totalDigits value="2" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="year">
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:totalDigits value="4" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CardV1">
+        <xs:sequence>
+          <xs:element name="cardNum">
+            <xs:annotation>
+              <xs:documentation>The card number against which the Purchase is made.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="20" />
+                <xs:minLength value="8" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="cardExpiry" type="ns1:CardExpiryV1">
+            <xs:annotation>
+              <xs:documentation>The expiry date for the card</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="cardType" type="ns1:CardTypeV1">
+            <xs:annotation>
+              <xs:documentation>The type of card against which the Purchase is made.Possible values are: AM = American Express, DC = Diners Club, DI = Discover, FP = FirePay, MC = MasterCard, SO = Solo, SW = Switch, VI = Visa, JC = JCB, LA = Laser, MD = Maestro, VD = Visa Delta, VE = Visa Electron, N = Novus (now Discover), CB = Carte Blanche. NOTE: If you need to use other card types, please contact technical support.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="issueNum">
+            <xs:annotation>
+              <xs:documentation>The 1- or 2-digit number located on the front of the card, following the card number. NOTE: The issueNumber parameter can be used only when the cardType is SO (Solo) or SW (Switch).</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:int">
+                <xs:totalDigits value="4" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="cvdIndicator" type="ns1:CvdIndicatorV1">
+            <xs:annotation>
+              <xs:documentation>The status of CVD value information. Possible values are: 0 ??? The customer did not provide a value. 1 ??? The customer provided a value. 2 ??? The value is illegible. 3 ??? The value is not on the card.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="cvd">
+            <xs:annotation>
+              <xs:documentation>The 3- or 4-digit security code that appears on the back of a card following
+the card number. This code does not appear on imprints. NOTE: The cvd parameter is mandatory when the cvdIndicator parameter value = 1.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="4" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCBatchRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantRefNum" type="ns1:MerchantRefNumV1">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="purchases">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccAuthRequestV1" />
+              </xs:sequence>
+              <xs:attribute name="count" type="xs:positiveInteger" use="required" />
+              <xs:attribute name="total" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="authorizations">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccAuthRequestV1" />
+              </xs:sequence>
+              <xs:attribute name="count" type="xs:positiveInteger" use="required" />
+              <xs:attribute name="total" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="settlements">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccPostAuthRequestV1" />
+              </xs:sequence>
+              <xs:attribute name="count" type="xs:positiveInteger" use="required" />
+              <xs:attribute name="total" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="credits">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccPostAuthRequestV1" />
+              </xs:sequence>
+              <xs:attribute name="count" type="xs:positiveInteger" use="required" />
+              <xs:attribute name="total" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCAuthRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="255" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="amount" type="ns1:AmountV1">
+            <xs:annotation>
+              <xs:documentation>amount in dollars</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="card" type="ns1:CardV1">
+            <xs:annotation>
+              <xs:documentation>Creditcard information</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="authentication" type="ns1:AuthenticationV1">
+            <xs:annotation>
+              <xs:documentation>The 3DSecure authentication information (ex Verfied by Visa)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="billingDetails" type="ns1:BillingDetailsV1" />
+          <xs:element minOccurs="0" name="shippingDetails" type="ns1:ShippingDetailsV1" />
+          <xs:element minOccurs="0" name="previousCustomer" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Indicates whether the customer has previously shopped online with this merchant.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="recurringIndicator" type="ns1:RecurringIndicatorV1">
+            <xs:annotation>
+              <xs:documentation>I (Initial Recurring), R (Subsequent Recurring)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="customerIP">
+            <xs:annotation>
+              <xs:documentation>Customer's IP address</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="50" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="productType" type="ns1:ProductTypeV1">
+            <xs:annotation>
+              <xs:documentation>The type of product ordered. Possible values are:P = Physical Goods, D = Digital Goods (e.g., software), C = Digital Content (e.g., images and/or text), G = Gift Certificate/Digital Cash, S = Shareware
+, M = Both Digital and Physical(e.g., software downloaded followed by media shipment), R = Account Replenish (subscription renewal)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="targetVirtualAccount">
+            <xs:annotation>
+              <xs:documentation>The virtual or wallet account that this transaction is to affect.  In most cases, this will be a firepay personal account</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="25" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="cardRiskService" type="ns1:CardRiskServiceV1">
+            <xs:annotation>
+              <xs:documentation>Indicates that a risk check should be done when processing the transaction</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="dupeCheck" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Validates that this request is not a duplicate. A request is considered a duplicate if the card number, amount and merchantRefNum are the same</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="sdk" type="ns1:SdkV1">
+            <xs:annotation>
+              <xs:documentation>Meta data about the sdk used to send the transaction request</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="addendumData" type="ns1:DetailV1">
+            <xs:annotation>
+              <xs:documentation>Additional data</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="merchantDescriptor">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="dynamicDescriptor">
+                  <xs:annotation>
+                    <xs:documentation>Dynamic descriptor used in credit card statement</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="25" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+                <xs:element minOccurs="0" name="phone">
+                  <xs:annotation>
+                    <xs:documentation>Dynamic descriptor line 2; contact for exact details</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:maxLength value="13" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCPostAuthRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="confirmationNumber" type="ns1:ConfirmationNumberV1">
+            <xs:annotation>
+              <xs:documentation>In the case of a settlement, this should be the response Id (or transactionId from DP) of the original authorization transaction. In the case of a credit (or transactionId from DP) this is the response Id of the original Purchase or Settlement transaction</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="40" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="amount" type="ns1:AmountV1">
+            <xs:annotation>
+              <xs:documentation>amount in dollars</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="origMerchantTxn">
+            <xs:annotation>
+              <xs:documentation>For backwards compatibility only. Applicable to credit requests where the original settlement was processed through the DP protocol. The merchantTxn from DP from the settlement request that is to be credited.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="255" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="dupeCheck" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Validates that this request is not a duplicate. A request is considered a duplicate if the card number, amount and merchantRefNum are the same</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="sdk" type="ns1:SdkV1" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="addendumData" type="ns1:DetailV1" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCPaymentRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used to credit the card holders card (OCT)</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="40" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="amount" type="ns1:AmountV1">
+            <xs:annotation>
+              <xs:documentation>amount in dollars</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="card" type="ns1:CardV1">
+            <xs:annotation>
+              <xs:documentation>Creditcard information</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="billingDetails" type="ns1:BillingDetailsV1" />
+          <xs:element minOccurs="0" name="sdk" type="ns1:SdkV1">
+            <xs:annotation>
+              <xs:documentation>Meta data about the sdk used to send the transaction request</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="addendumData" type="ns1:DetailV1">
+            <xs:annotation>
+              <xs:documentation>Additional data</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCCancelRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="confirmationNumber" type="ns1:ConfirmationNumberV1">
+            <xs:annotation>
+              <xs:documentation>In the case of a settlement, this should be the response Id of the original authorization transaction. In the case of a credit this is the response Id of the original Purchase or Settlement transaction. In case of a payment this is the response Id of the original Payment transaction</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="sdk" type="ns1:SdkV1" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="addendumData" type="ns1:DetailV1" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCAcknowledgeResponseV1">
+        <xs:sequence>
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="40" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element default="UNKNOWN" name="decision" type="ns1:DecisionV1">
+            <xs:annotation>
+              <xs:documentation>UNKNOWN, ACCEPTED, ERROR</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="code" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>A unique numeric code classifying this detail (e.g. "32" might mean "missing parameter").  This is included to simplify "switch" construct processing by the client</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="description">
+            <xs:annotation>
+              <xs:documentation>A human readable description of the tag</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="1024" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="detail" type="ns1:DetailV1">
+            <xs:annotation>
+              <xs:documentation>Any additional details</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCBatchResponseV1">
+        <xs:sequence>
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="40" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="purchases">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccTxnResponseV1" />
+              </xs:sequence>
+              <xs:attribute name="acceptedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="acceptedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="declinedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="declinedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="errorCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="errorTotal" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="authorizations">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccTxnResponseV1" />
+              </xs:sequence>
+              <xs:attribute name="acceptedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="acceptedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="declinedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="declinedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="errorCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="errorTotal" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="settlements">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccTxnResponseV1" />
+              </xs:sequence>
+              <xs:attribute name="acceptedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="acceptedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="declinedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="declinedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="errorCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="errorTotal" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="credits">
+            <xs:complexType>
+              <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="ns1:ccTxnResponseV1" />
+              </xs:sequence>
+              <xs:attribute name="acceptedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="acceptedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="declinedCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="declinedTotal" type="ns1:AmountV1" use="required" />
+              <xs:attribute name="errorCount" type="ns1:CountV1" use="required" />
+              <xs:attribute name="errorTotal" type="ns1:AmountV1" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CCTxnResponseV1">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="requestId" type="xs:long">
+            <xs:annotation>
+              <xs:documentation>Index of the payment Instruction from the Request</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="confirmationNumber" type="ns1:ConfirmationNumberV1">
+            <xs:annotation>
+              <xs:documentation>Confirmation number that is returned by the system for a
+		        request</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value is created
+					by the merchant and submitted as part of the request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="255" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="childAccountNum">
+            <xs:annotation>
+              <xs:documentation>The merchant account against which the transaction is made</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="10" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="decision" type="ns1:DecisionV1">
+            <xs:annotation>
+              <xs:documentation>UNKNOWN, ACCEPTED, DECLINED, ERROR</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="code" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>A unique numeric code classifying this detail (e.g. "32"
+		        might mean "missing parameter"). This is included to
+		        simplify "switch" construct processing by the client</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="actionCode" type="ns1:ActionCodeV1">
+            <xs:annotation>
+              <xs:documentation>R (Retry), M (Merchant Parameter Error), C (Consumer
+		        Parameter Error), D (Do not retry)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="description">
+            <xs:annotation>
+              <xs:documentation>a human readable description of the tag</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="1024" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="authCode">
+            <xs:annotation>
+              <xs:documentation>The Authorization code assigned by the issuing bank and
+		        returned by the transaction processor.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="20" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="avsResponse" type="ns1:AvsResponseV1">
+            <xs:annotation>
+              <xs:documentation>X Exact. Nine-digit zip code and address match.Y Yes.
+		        Five-digit zip code and address match.A Address matches,
+		        but zip code does not.W Nine-digit zip code matches, but
+		        address does not.Z Five-digit zip code matches, but
+		        address does not.N No part of the address matches.U
+		        Address information is unavailable.R Retry. System
+		        unable to process.S AVS not supported.E AVS not
+		        supported for this industry. B AVS not performed.Q
+		        Unknown response from issuer/banknet switch.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="cvdResponse" type="ns1:CvdResponseV1">
+            <xs:annotation>
+              <xs:documentation>The response to the cvd value submitted with the
+		        CCAuthRequest. Possible values are: M (Match) ??? The CVD
+		        value providedmatches the CVD value associated with the
+		        card. N (No Match) ??? The CVD value provided does not
+		        match the CVD value associated with the card. P (Not
+		        Processed) ??? The CVD value was not processed. S ???
+		        Merchant indicated that CVD value was notpresent on
+		        card. U ??? Issuer is not certified and/or has not
+		        provided Visa encryption keys.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="detail" type="ns1:DetailV1">
+            <xs:annotation>
+              <xs:documentation>Any additional details</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="txnTime" type="xs:dateTime">
+            <xs:annotation>
+              <xs:documentation>Transaction Time</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="duplicateFound" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Indicates if this transaction is a duplicate
+		        transaction, if a duplicate check was requested</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="duplicateTransactionResponse" type="ns1:CCTxnResponseV1">
+            <xs:annotation>
+              <xs:documentation>If a duplicate record was found, this element contains
+		        the details of that record</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="tdsResponse" type="ns1:TDSResponseV1">
+            <xs:annotation>
+              <xs:documentation>If the cardholder enrolled in the authentication
+		        program, this response will contain a URL for the
+		        Merchant to redirect the cardholder's browser to the
+		        corresponding Issuing Bank ACS</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="tdsAuthenticateResponse" type="ns1:TDSAuthenticateResponseV1" />
+          <xs:element minOccurs="0" name="lbCascading">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="retryCount" type="xs:int">
+                  <xs:annotation>
+                    <xs:documentation>The number of times Load Balancer engine retried this transaction.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="originalCode" type="xs:int">
+                  <xs:annotation>
+                    <xs:documentation>The original response code returned by the system that caused
+					        the Load Balancer engine to retry the transaction.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DetailV1">
+        <xs:sequence>
+          <xs:element name="tag">
+            <xs:annotation>
+              <xs:documentation>Classification of the detail element</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="30" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="value">
+            <xs:annotation>
+              <xs:documentation>Description of the detail</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="1024" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MerchantAccountV1">
+        <xs:sequence>
+          <xs:element name="accountNum">
+            <xs:annotation>
+              <xs:documentation>The merchant account against which the request is made</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="10" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="storeID">
+            <xs:annotation>
+              <xs:documentation>The account transaction processing id</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="80" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="storePwd">
+            <xs:annotation>
+              <xs:documentation>The account transaction processing password</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="20" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SdkV1">
+        <xs:sequence>
+          <xs:element name="version">
+            <xs:annotation>
+              <xs:documentation>Version number of the sdk being used</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="20" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="platform">
+            <xs:annotation>
+              <xs:documentation>The integration language of the sdk (e.g. java, dotnet, cpp, perl, php, cf).  The values are not enforced via an enumeration.  See integration documentation for list of valid platform elements.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="10" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="provider">
+            <xs:annotation>
+              <xs:documentation>Indicates the author of the sdk.  All SDK's provided by Optimal Payments will set the provider to "op"</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="20" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ShippingDetailsV1">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="carrier" type="ns1:CarrierV1">
+            <xs:annotation>
+              <xs:documentation>The shipment carrier. Possible values are: APC = APC Overnight, APS = AnPost, CAD = Canada Postal Service,  DHL, FEX = Fedex, RML = Royal Mail, UPS = United Parcel Service, USPS = United State Postal Service, CLK = CityLink, EMS = EMS(US Postal Service), NEX = nexworldwide, OTHER.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="shipMethod" type="ns1:ShipMethodV1">
+            <xs:annotation>
+              <xs:documentation>The method of shipment. Possible values are: N = Next Day/Overnight, T = Two-Day Service, C = Lowest Cost, O = Other</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="firstName" type="ns1:FirstNameV1">
+            <xs:annotation>
+              <xs:documentation>First name</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="lastName" type="ns1:LastNameV1">
+            <xs:annotation>
+              <xs:documentation>Last name</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="street" type="ns1:StreetV1">
+            <xs:annotation>
+              <xs:documentation>State in US or Province in Canada</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="street2" type="ns1:StreetV1">
+            <xs:annotation>
+              <xs:documentation>State in US or Province in Canada</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="city" type="ns1:CityV1">
+            <xs:annotation>
+              <xs:documentation>City</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:choice minOccurs="0">
+            <xs:element minOccurs="0" name="region" type="ns1:RegionV1">
+              <xs:annotation>
+                <xs:documentation>Use region for geographical regions outside US and Canada</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="state" type="ns1:StateV1">
+              <xs:annotation>
+                <xs:documentation>Use region for geographical regions outside US and Canada</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:choice>
+          <xs:element minOccurs="0" name="country" type="ns1:CountryV1">
+            <xs:annotation>
+              <xs:documentation>2 leter ISO Country Code</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="zip" type="ns1:ZipV1">
+            <xs:annotation>
+              <xs:documentation>State in US or Province in Canada</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="phone" type="ns1:PhoneV1">
+            <xs:annotation>
+              <xs:documentation>Phone number</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="email" type="ns1:EmailV1">
+            <xs:annotation>
+              <xs:documentation>Email address</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="ActionCodeV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R" />
+          <xs:enumeration value="M" />
+          <xs:enumeration value="C" />
+          <xs:enumeration value="D" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="AmountV1">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="(0|[1-9][0-9]{0,9})(\.[0-9]{1,2})" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CountV1">
+        <xs:annotation>
+          <xs:documentation>a positive number (including 0)</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="AvsResponseV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="X" />
+          <xs:enumeration value="Y" />
+          <xs:enumeration value="A" />
+          <xs:enumeration value="W" />
+          <xs:enumeration value="Z" />
+          <xs:enumeration value="N" />
+          <xs:enumeration value="U" />
+          <xs:enumeration value="R" />
+          <xs:enumeration value="S" />
+          <xs:enumeration value="E" />
+          <xs:enumeration value="B" />
+          <xs:enumeration value="Q" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CardPayMethodV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P" />
+          <xs:enumeration value="TEL" />
+          <xs:enumeration value="WEB" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CardRiskServiceV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="AVS" />
+          <xs:enumeration value="NEG" />
+          <xs:enumeration value="TDS" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CardTypeV1">
+        <xs:annotation>
+          <xs:documentation>The type of card against which the Purchase is made.Possible values are: AM = American Express, DC = Diners Club, DI = Discover, FP = FirePay, MC = MasterCard, SO = Solo, SW = Switch, VI = Visa, JC = JCB, LA = Laser, MD = Maestro, VD = Visa Delta, VE = Visa Electron, N = Novus (now Discover), CB = Carte Blanche. NOTE: If you need to use other card types, please contact technical support.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="2" />
+          <xs:enumeration value="VI" />
+          <xs:enumeration value="MC" />
+          <xs:enumeration value="AM" />
+          <xs:enumeration value="FP" />
+          <xs:enumeration value="DI" />
+          <xs:enumeration value="DC" />
+          <xs:enumeration value="SW" />
+          <xs:enumeration value="SO" />
+          <xs:enumeration value="JC" />
+          <xs:enumeration value="LA" />
+          <xs:enumeration value="MD" />
+          <xs:enumeration value="VD" />
+          <xs:enumeration value="VE" />
+          <xs:enumeration value="N" />
+          <xs:enumeration value="CB" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CarrierV1">
+        <xs:annotation>
+          <xs:documentation>The shipment carrier. Possible values are: APC = APC Overnight, APS = AnPost, CAD = Canada Postal Service,  DHL, FEX = Fedex, RML = Royal Mail, UPS = United Parcel Service, USPS = United State Postal Service, CLK=CityLink, EMS=EMS(US Postal Service), NEX=nexworldwide,OTHER</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="APC" />
+          <xs:enumeration value="APS" />
+          <xs:enumeration value="CAD" />
+          <xs:enumeration value="DHL" />
+          <xs:enumeration value="FEX" />
+          <xs:enumeration value="RML" />
+          <xs:enumeration value="UPS" />
+          <xs:enumeration value="USPS" />
+          <xs:enumeration value="CLK" />
+          <xs:enumeration value="EMS" />
+          <xs:enumeration value="NEX" />
+          <xs:enumeration value="OTHER" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CityV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ConfirmationNumberV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="20" />
+          <xs:minLength value="1" />
+          <xs:whiteSpace value="collapse" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CountryV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="2" />
+          <xs:minLength value="2" />
+          <xs:enumeration value="AD" />
+          <xs:enumeration value="AE" />
+          <xs:enumeration value="AF" />
+          <xs:enumeration value="AG" />
+          <xs:enumeration value="AI" />
+          <xs:enumeration value="AL" />
+          <xs:enumeration value="AM" />
+          <xs:enumeration value="AN" />
+          <xs:enumeration value="AO" />
+          <xs:enumeration value="AQ" />
+          <xs:enumeration value="AR" />
+          <xs:enumeration value="AS" />
+          <xs:enumeration value="AT" />
+          <xs:enumeration value="AU" />
+          <xs:enumeration value="AW" />
+          <xs:enumeration value="AX" />
+          <xs:enumeration value="AZ" />
+          <xs:enumeration value="BA" />
+          <xs:enumeration value="BB" />
+          <xs:enumeration value="BD" />
+          <xs:enumeration value="BE" />
+          <xs:enumeration value="BF" />
+          <xs:enumeration value="BG" />
+          <xs:enumeration value="BH" />
+          <xs:enumeration value="BI" />
+          <xs:enumeration value="BJ" />
+          <xs:enumeration value="BL" />
+          <xs:enumeration value="BM" />
+          <xs:enumeration value="BN" />
+          <xs:enumeration value="BO" />
+          <xs:enumeration value="BR" />
+          <xs:enumeration value="BS" />
+          <xs:enumeration value="BT" />
+          <xs:enumeration value="BV" />
+          <xs:enumeration value="BW" />
+          <xs:enumeration value="BY" />
+          <xs:enumeration value="BZ" />
+          <xs:enumeration value="CA" />
+          <xs:enumeration value="CC" />
+          <xs:enumeration value="CD" />
+          <xs:enumeration value="CF" />
+          <xs:enumeration value="CG" />
+          <xs:enumeration value="CH" />
+          <xs:enumeration value="CI" />
+          <xs:enumeration value="CK" />
+          <xs:enumeration value="CL" />
+          <xs:enumeration value="CM" />
+          <xs:enumeration value="CN" />
+          <xs:enumeration value="CO" />
+          <xs:enumeration value="CR" />
+          <xs:enumeration value="CU" />
+          <xs:enumeration value="CV" />
+          <xs:enumeration value="CX" />
+          <xs:enumeration value="CY" />
+          <xs:enumeration value="CZ" />
+          <xs:enumeration value="DE" />
+          <xs:enumeration value="DJ" />
+          <xs:enumeration value="DK" />
+          <xs:enumeration value="DM" />
+          <xs:enumeration value="DO" />
+          <xs:enumeration value="DZ" />
+          <xs:enumeration value="EC" />
+          <xs:enumeration value="EE" />
+          <xs:enumeration value="EG" />
+          <xs:enumeration value="EH" />
+          <xs:enumeration value="ER" />
+          <xs:enumeration value="ES" />
+          <xs:enumeration value="ET" />
+          <xs:enumeration value="FI" />
+          <xs:enumeration value="FJ" />
+          <xs:enumeration value="FK" />
+          <xs:enumeration value="FM" />
+          <xs:enumeration value="FO" />
+          <xs:enumeration value="FR" />
+          <xs:enumeration value="FX" />
+          <xs:enumeration value="GA" />
+          <xs:enumeration value="GB" />
+          <xs:enumeration value="GD" />
+          <xs:enumeration value="GE" />
+          <xs:enumeration value="GF" />
+          <xs:enumeration value="GG" />
+          <xs:enumeration value="GH" />
+          <xs:enumeration value="GI" />
+          <xs:enumeration value="GL" />
+          <xs:enumeration value="GM" />
+          <xs:enumeration value="GN" />
+          <xs:enumeration value="GP" />
+          <xs:enumeration value="GQ" />
+          <xs:enumeration value="GR" />
+          <xs:enumeration value="GS" />
+          <xs:enumeration value="GT" />
+          <xs:enumeration value="GU" />
+          <xs:enumeration value="GW" />
+          <xs:enumeration value="GY" />
+          <xs:enumeration value="HK" />
+          <xs:enumeration value="HM" />
+          <xs:enumeration value="HN" />
+          <xs:enumeration value="HR" />
+          <xs:enumeration value="HT" />
+          <xs:enumeration value="HU" />
+          <xs:enumeration value="ID" />
+          <xs:enumeration value="IE" />
+          <xs:enumeration value="IL" />
+          <xs:enumeration value="IM" />
+          <xs:enumeration value="IN" />
+          <xs:enumeration value="IO" />
+          <xs:enumeration value="IQ" />
+          <xs:enumeration value="IR" />
+          <xs:enumeration value="IS" />
+          <xs:enumeration value="IT" />
+          <xs:enumeration value="JE" />
+          <xs:enumeration value="JM" />
+          <xs:enumeration value="JO" />
+          <xs:enumeration value="JP" />
+          <xs:enumeration value="KE" />
+          <xs:enumeration value="KG" />
+          <xs:enumeration value="KH" />
+          <xs:enumeration value="KI" />
+          <xs:enumeration value="KM" />
+          <xs:enumeration value="KN" />
+          <xs:enumeration value="KP" />
+          <xs:enumeration value="KR" />
+          <xs:enumeration value="KW" />
+          <xs:enumeration value="KY" />
+          <xs:enumeration value="KZ" />
+          <xs:enumeration value="LA" />
+          <xs:enumeration value="LB" />
+          <xs:enumeration value="LC" />
+          <xs:enumeration value="LI" />
+          <xs:enumeration value="LK" />
+          <xs:enumeration value="LR" />
+          <xs:enumeration value="LS" />
+          <xs:enumeration value="LT" />
+          <xs:enumeration value="LU" />
+          <xs:enumeration value="LV" />
+          <xs:enumeration value="LY" />
+          <xs:enumeration value="MA" />
+          <xs:enumeration value="MC" />
+          <xs:enumeration value="MD" />
+          <xs:enumeration value="ME" />
+          <xs:enumeration value="MG" />
+          <xs:enumeration value="MH" />
+          <xs:enumeration value="MK" />
+          <xs:enumeration value="ML" />
+          <xs:enumeration value="MM" />
+          <xs:enumeration value="MN" />
+          <xs:enumeration value="MO" />
+          <xs:enumeration value="MP" />
+          <xs:enumeration value="MQ" />
+          <xs:enumeration value="MR" />
+          <xs:enumeration value="MS" />
+          <xs:enumeration value="MT" />
+          <xs:enumeration value="MU" />
+          <xs:enumeration value="MV" />
+          <xs:enumeration value="MW" />
+          <xs:enumeration value="MX" />
+          <xs:enumeration value="MY" />
+          <xs:enumeration value="MZ" />
+          <xs:enumeration value="NA" />
+          <xs:enumeration value="NC" />
+          <xs:enumeration value="NE" />
+          <xs:enumeration value="NF" />
+          <xs:enumeration value="NG" />
+          <xs:enumeration value="NI" />
+          <xs:enumeration value="NL" />
+          <xs:enumeration value="NO" />
+          <xs:enumeration value="NP" />
+          <xs:enumeration value="NR" />
+          <xs:enumeration value="NU" />
+          <xs:enumeration value="NZ" />
+          <xs:enumeration value="OM" />
+          <xs:enumeration value="PA" />
+          <xs:enumeration value="PE" />
+          <xs:enumeration value="PF" />
+          <xs:enumeration value="PG" />
+          <xs:enumeration value="PH" />
+          <xs:enumeration value="PK" />
+          <xs:enumeration value="PL" />
+          <xs:enumeration value="PM" />
+          <xs:enumeration value="PN" />
+          <xs:enumeration value="PR" />
+          <xs:enumeration value="PS" />
+          <xs:enumeration value="PT" />
+          <xs:enumeration value="PW" />
+          <xs:enumeration value="PY" />
+          <xs:enumeration value="QA" />
+          <xs:enumeration value="RE" />
+          <xs:enumeration value="RO" />
+          <xs:enumeration value="RS" />
+          <xs:enumeration value="RU" />
+          <xs:enumeration value="RW" />
+          <xs:enumeration value="SA" />
+          <xs:enumeration value="SB" />
+          <xs:enumeration value="SC" />
+          <xs:enumeration value="SD" />
+          <xs:enumeration value="SE" />
+          <xs:enumeration value="SG" />
+          <xs:enumeration value="SH" />
+          <xs:enumeration value="SI" />
+          <xs:enumeration value="SJ" />
+          <xs:enumeration value="SK" />
+          <xs:enumeration value="SL" />
+          <xs:enumeration value="SM" />
+          <xs:enumeration value="SN" />
+          <xs:enumeration value="SO" />
+          <xs:enumeration value="SR" />
+          <xs:enumeration value="ST" />
+          <xs:enumeration value="SV" />
+          <xs:enumeration value="SY" />
+          <xs:enumeration value="SZ" />
+          <xs:enumeration value="TC" />
+          <xs:enumeration value="TD" />
+          <xs:enumeration value="TF" />
+          <xs:enumeration value="TG" />
+          <xs:enumeration value="TH" />
+          <xs:enumeration value="TJ" />
+          <xs:enumeration value="TK" />
+          <xs:enumeration value="TL" />
+          <xs:enumeration value="TM" />
+          <xs:enumeration value="TN" />
+          <xs:enumeration value="TO" />
+          <xs:enumeration value="TR" />
+          <xs:enumeration value="TT" />
+          <xs:enumeration value="TV" />
+          <xs:enumeration value="TW" />
+          <xs:enumeration value="TZ" />
+          <xs:enumeration value="UA" />
+          <xs:enumeration value="UG" />
+          <xs:enumeration value="UM" />
+          <xs:enumeration value="US" />
+          <xs:enumeration value="UY" />
+          <xs:enumeration value="UZ" />
+          <xs:enumeration value="VA" />
+          <xs:enumeration value="VC" />
+          <xs:enumeration value="VE" />
+          <xs:enumeration value="VG" />
+          <xs:enumeration value="VI" />
+          <xs:enumeration value="VN" />
+          <xs:enumeration value="VU" />
+          <xs:enumeration value="WF" />
+          <xs:enumeration value="WS" />
+          <xs:enumeration value="YE" />
+          <xs:enumeration value="YT" />
+          <xs:enumeration value="ZA" />
+          <xs:enumeration value="ZM" />
+          <xs:enumeration value="ZW" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CvdIndicatorV1">
+        <xs:restriction base="xs:int">
+          <xs:totalDigits value="1" />
+          <xs:enumeration value="0" />
+          <xs:enumeration value="1" />
+          <xs:enumeration value="2" />
+          <xs:enumeration value="3" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="CvdResponseV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="M" />
+          <xs:enumeration value="N" />
+          <xs:enumeration value="P" />
+          <xs:enumeration value="S" />
+          <xs:enumeration value="U" />
+          <xs:enumeration value="Q" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="DecisionV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="UNKNOWN" />
+          <xs:enumeration value="ACCEPTED" />
+          <xs:enumeration value="DECLINED" />
+          <xs:enumeration value="ERROR" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="EmailV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="FirstNameV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="LastNameV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="PhoneV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ProductTypeV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P" />
+          <xs:enumeration value="D" />
+          <xs:enumeration value="C" />
+          <xs:enumeration value="G" />
+          <xs:enumeration value="S" />
+          <xs:enumeration value="M" />
+          <xs:enumeration value="R" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="RecurringIndicatorV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I" />
+          <xs:enumeration value="R" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="RegionV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ShipMethodV1">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="N" />
+          <xs:enumeration value="T" />
+          <xs:enumeration value="C" />
+          <xs:enumeration value="O" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="StateV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="2" />
+          <xs:minLength value="2" />
+          <xs:enumeration value="MO" />
+          <xs:enumeration value="OR" />
+          <xs:enumeration value="MT" />
+          <xs:enumeration value="IN" />
+          <xs:enumeration value="WV" />
+          <xs:enumeration value="NE" />
+          <xs:enumeration value="IA" />
+          <xs:enumeration value="WI" />
+          <xs:enumeration value="PA" />
+          <xs:enumeration value="KS" />
+          <xs:enumeration value="WY" />
+          <xs:enumeration value="RI" />
+          <xs:enumeration value="DC" />
+          <xs:enumeration value="CO" />
+          <xs:enumeration value="PR" />
+          <xs:enumeration value="SC" />
+          <xs:enumeration value="AL" />
+          <xs:enumeration value="SD" />
+          <xs:enumeration value="AK" />
+          <xs:enumeration value="AZ" />
+          <xs:enumeration value="AR" />
+          <xs:enumeration value="CA" />
+          <xs:enumeration value="NV" />
+          <xs:enumeration value="NH" />
+          <xs:enumeration value="KY" />
+          <xs:enumeration value="CT" />
+          <xs:enumeration value="NJ" />
+          <xs:enumeration value="LA" />
+          <xs:enumeration value="VI" />
+          <xs:enumeration value="DE" />
+          <xs:enumeration value="NM" />
+          <xs:enumeration value="ME" />
+          <xs:enumeration value="MP" />
+          <xs:enumeration value="TN" />
+          <xs:enumeration value="FL" />
+          <xs:enumeration value="NY" />
+          <xs:enumeration value="MD" />
+          <xs:enumeration value="GU" />
+          <xs:enumeration value="TX" />
+          <xs:enumeration value="GA" />
+          <xs:enumeration value="NC" />
+          <xs:enumeration value="MA" />
+          <xs:enumeration value="AS" />
+          <xs:enumeration value="UT" />
+          <xs:enumeration value="HI" />
+          <xs:enumeration value="ND" />
+          <xs:enumeration value="MI" />
+          <xs:enumeration value="PW" />
+          <xs:enumeration value="VT" />
+          <xs:enumeration value="OH" />
+          <xs:enumeration value="MN" />
+          <xs:enumeration value="ID" />
+          <xs:enumeration value="VA" />
+          <xs:enumeration value="OK" />
+          <xs:enumeration value="MS" />
+          <xs:enumeration value="IL" />
+          <xs:enumeration value="WA" />
+          <xs:enumeration value="AA" />
+          <xs:enumeration value="AE" />
+          <xs:enumeration value="AP" />
+          <xs:enumeration value="US" />
+          <xs:enumeration value="ON" />
+          <xs:enumeration value="QC" />
+          <xs:enumeration value="AB" />
+          <xs:enumeration value="MB" />
+          <xs:enumeration value="NB" />
+          <xs:enumeration value="NL" />
+          <xs:enumeration value="YT" />
+          <xs:enumeration value="BC" />
+          <xs:enumeration value="NT" />
+          <xs:enumeration value="NS" />
+          <xs:enumeration value="NU" />
+          <xs:enumeration value="PE" />
+          <xs:enumeration value="SK" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="StreetV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="MerchantRefNumV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="40" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ZipV1">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="TDSResponseV1">
+        <xs:annotation>
+          <xs:documentation>3D Secure lookup response message</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="acsURL" type="ns1:URLV1">
+            <xs:annotation>
+              <xs:documentation>A fully qualified URL to redirect the consumer to
+		        complete the payer authentication transaction</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="paymentRequest" type="ns1:PayerAuthenticateRequestV1">
+            <xs:annotation>
+              <xs:documentation>An encoded payment request generated by MAPS.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="enrollmentStatus" type="ns1:TDSEnrollmentStatusV1" />
+          <xs:element minOccurs="0" name="eci">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="2" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ccAuthenticateRequestV1" type="ns1:CCAuthenticateRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for 3D Secure Authentication</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="CCAuthenticateRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="confirmationNumber" type="ns1:ConfirmationNumberV1" />
+          <xs:element name="paymentResponse" type="ns1:PayerAuthenticateResponseV1">
+            <xs:annotation>
+              <xs:documentation>Payload value representing the payer authentication.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="merchantRefNum" type="ns1:MerchantRefNumV1">
+            <xs:annotation>
+              <xs:documentation>A merchant reference number for TDS authenticate request.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="PayerAuthenticateRequestV1">
+        <xs:restriction base="xs:string">
+          <xs:minLength value="0" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="URLV1">
+        <xs:restriction base="xs:string">
+          <xs:minLength value="0" />
+          <xs:maxLength value="255" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="PayerAuthenticateResponseV1">
+        <xs:restriction base="xs:string">
+          <xs:minLength value="0" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="xidType">
+        <xs:restriction base="xs:string" />
+      </xs:simpleType>
+      <xs:element name="ccStoredDataRequestV1" type="ns1:CCStoredDataRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for Stored Data Authorization and Purchase
+          Transactions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="CCStoredDataRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique ID number associated with each request. The value
+              is created by the merchant and submitted as part of the
+              request.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="255" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="confirmationNumber">
+            <xs:annotation>
+              <xs:documentation>A confirmation number from previous successful
+              transaction.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="ns1:ConfirmationNumberV1">
+                <xs:pattern value="\d+" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="amount" type="ns1:AmountV1">
+            <xs:annotation>
+              <xs:documentation>amount in dollars</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="cardExpiry" type="ns1:CardExpiryV1" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="TDSEnrollmentStatusV1">
+        <xs:annotation>
+          <xs:documentation>Cardholder authentication availability.
+Y - Cardholder authentication available.
+N - Cardholder not enrolled in authentication.
+U - Cardholder authentication unavailable.
+E - Error</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Y" />
+          <xs:enumeration value="N" />
+          <xs:enumeration value="U" />
+          <xs:enumeration value="E" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="CCEnrollmentLookupRequestV1">
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1" />
+          <xs:element name="merchantRefNum" type="ns1:MerchantRefNumV1" />
+          <xs:element name="amount" type="ns1:AmountV1" />
+          <xs:element name="card" type="ns1:CardV1" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ccEnrollmentLookupRequestV1" type="ns1:CCEnrollmentLookupRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request for TDS enrollment lookup</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="TDSAuthenticateResponseV1">
+        <xs:sequence>
+          <xs:element name="status" type="ns1:TDSAuthenticationStatusV1">
+            <xs:annotation>
+              <xs:documentation>Identifies the authentication outcome.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="cavv">
+            <xs:annotation>
+              <xs:documentation>Authentication value. Indicates that the transaction has
+              been authenticated. This value will be encoded according
+              to the Merchant's Centinel profile in either Base64
+              encoding or Hex encoding.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="80" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="signatureVerification">
+            <xs:annotation>
+              <xs:documentation>Passed Fraud / Signature Check result status. Y - All
+              transaction and signature checks satisfied. N - At least
+              one transaction or signature check failed.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Y" />
+                <xs:enumeration value="N" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="xid">
+            <xs:annotation>
+              <xs:documentation>Transaction Identifier. Some gateways may or may not
+              require this value to be appended to the authorization
+              message. This value will only be returned on payer
+              authentication transactions.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="80" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="eci">
+            <xs:annotation>
+              <xs:documentation>E-Commerce Indicator (ECI). This value will only be returned on payer authentication transactions.
+Visa / JCB
+05 - Identifies a successfully authenticated transaction.
+06 - Identifies an attempts authenticated transaction.
+07 - Identifies a non-authenticated transaction.
+MasterCard
+01 - Identifies a non-authenticated transaction.
+02 - Identifies a successfully authenticated transaction.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="2" />
+                <xs:minLength value="1" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="TDSAuthenticationStatusV1">
+        <xs:annotation>
+          <xs:documentation>Identifies the authentication outcome "Y" - Successful
+          authentication. Cardholder successfully authenticated with
+          their Card Issuer "A" - Attempts authentication. Cardholder
+          authentication was attempted. "N" - Failed authentication.
+          Cardholder failed to successfully authenticate with their Card
+          Issuer. "U" - Authentication unavailable. Authentication with
+          the Card Issuerwas unavailable. "E" - Error</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Y" />
+          <xs:enumeration value="A" />
+          <xs:enumeration value="N" />
+          <xs:enumeration value="U" />
+          <xs:enumeration value="E" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="ccAuthReversalRequestV1" type="ns1:CCAuthReversalRequestV1">
+        <xs:annotation>
+          <xs:documentation>Request used for Authorization Reversal Transactions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:complexType name="CCAuthReversalRequestV1">
+        <xs:annotation>
+          <xs:documentation>A transaction request type for authorization reversal</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element name="merchantAccount" type="ns1:MerchantAccountV1">
+            <xs:annotation>
+              <xs:documentation>Merchant account information</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="confirmationNumber" type="ns1:ConfirmationNumberV1">
+            <xs:annotation>
+              <xs:documentation>The confirmation number of the authorization</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="merchantRefNum">
+            <xs:annotation>
+              <xs:documentation>A unique transaction identifier provided by merchant</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:maxLength value="255" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element minOccurs="0" name="reversalAmount" type="ns1:AmountV1">
+            <xs:annotation>
+              <xs:documentation>The amount to reverse. If this value is empty, the full amount of the authorization will be reversed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.optimalpayments.com/creditcard/v1">
+      <xsd:element name="ccTDSLookup">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccEnrollmentLookupRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccTDSLookupResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelCredit">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccCancelRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelCreditResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccPurchase">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccPurchaseResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccSettlement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccPostAuthRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccSettlementResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCredit">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccPostAuthRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCreditResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthenticate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthenticateRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthenticateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccPayment">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccPaymentRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccPaymentResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccStoredDataPurchase">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccStoredDataRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccStoredDataPurchaseResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ping">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="pingResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthorize">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthorizeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccVerification">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccVerificationResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelPayment">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccCancelRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelPaymentResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccTDSAuthenticate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthenticateRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccTDSAuthenticateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthorizeReversal">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccAuthReversalRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccAuthorizeReversalResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelSettle">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccCancelRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccCancelSettleResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccStoredDataAuthorize">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccStoredDataRequestV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ccStoredDataAuthorizeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" ref="ns1:ccTxnResponseV1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ccCancelPaymentRequest">
+    <wsdl:part name="parameters" element="tns:ccCancelPayment" />
+  </wsdl:message>
+  <wsdl:message name="pingResponse">
+    <wsdl:part name="parameters" element="tns:pingResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccStoredDataPurchaseResponse">
+    <wsdl:part name="parameters" element="tns:ccStoredDataPurchaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthorizeRequest">
+    <wsdl:part name="parameters" element="tns:ccAuthorize" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthorizeReversalRequest">
+    <wsdl:part name="parameters" element="tns:ccAuthorizeReversal" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthenticateResponse">
+    <wsdl:part name="parameters" element="tns:ccAuthenticateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccSettlementResponse">
+    <wsdl:part name="parameters" element="tns:ccSettlementResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccTDSLookupResponse">
+    <wsdl:part name="parameters" element="tns:ccTDSLookupResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccTDSLookupRequest">
+    <wsdl:part name="parameters" element="tns:ccTDSLookup" />
+  </wsdl:message>
+  <wsdl:message name="ccCancelSettleResponse">
+    <wsdl:part name="parameters" element="tns:ccCancelSettleResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccSettlementRequest">
+    <wsdl:part name="parameters" element="tns:ccSettlement" />
+  </wsdl:message>
+  <wsdl:message name="ccCancelCreditResponse">
+    <wsdl:part name="parameters" element="tns:ccCancelCreditResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccPurchaseRequest">
+    <wsdl:part name="parameters" element="tns:ccPurchase" />
+  </wsdl:message>
+  <wsdl:message name="ccTDSAuthenticateRequest">
+    <wsdl:part name="parameters" element="tns:ccTDSAuthenticate" />
+  </wsdl:message>
+  <wsdl:message name="ccPurchaseResponse">
+    <wsdl:part name="parameters" element="tns:ccPurchaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccPaymentResponse">
+    <wsdl:part name="parameters" element="tns:ccPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccCancelPaymentResponse">
+    <wsdl:part name="parameters" element="tns:ccCancelPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccCancelCreditRequest">
+    <wsdl:part name="parameters" element="tns:ccCancelCredit" />
+  </wsdl:message>
+  <wsdl:message name="ccStoredDataPurchaseRequest">
+    <wsdl:part name="parameters" element="tns:ccStoredDataPurchase" />
+  </wsdl:message>
+  <wsdl:message name="ccStoredDataAuthorizeRequest">
+    <wsdl:part name="parameters" element="tns:ccStoredDataAuthorize" />
+  </wsdl:message>
+  <wsdl:message name="pingRequest">
+    <wsdl:part name="parameters" element="tns:ping" />
+  </wsdl:message>
+  <wsdl:message name="ccCreditRequest">
+    <wsdl:part name="parameters" element="tns:ccCredit" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthorizeReversalResponse">
+    <wsdl:part name="parameters" element="tns:ccAuthorizeReversalResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccStoredDataAuthorizeResponse">
+    <wsdl:part name="parameters" element="tns:ccStoredDataAuthorizeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccCancelSettleRequest">
+    <wsdl:part name="parameters" element="tns:ccCancelSettle" />
+  </wsdl:message>
+  <wsdl:message name="ccTDSAuthenticateResponse">
+    <wsdl:part name="parameters" element="tns:ccTDSAuthenticateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthenticateRequest">
+    <wsdl:part name="parameters" element="tns:ccAuthenticate" />
+  </wsdl:message>
+  <wsdl:message name="ccVerificationResponse">
+    <wsdl:part name="parameters" element="tns:ccVerificationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccAuthorizeResponse">
+    <wsdl:part name="parameters" element="tns:ccAuthorizeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ccVerificationRequest">
+    <wsdl:part name="parameters" element="tns:ccVerification" />
+  </wsdl:message>
+  <wsdl:message name="ccPaymentRequest">
+    <wsdl:part name="parameters" element="tns:ccPayment" />
+  </wsdl:message>
+  <wsdl:message name="ccCreditResponse">
+    <wsdl:part name="parameters" element="tns:ccCreditResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CreditCardServiceV1PortType">
+    <wsdl:operation name="ccTDSLookup">
+      <wsdl:input name="ccTDSLookupRequest" message="tns:ccTDSLookupRequest" />
+      <wsdl:output name="ccTDSLookupResponse" message="tns:ccTDSLookupResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelCredit">
+      <wsdl:input name="ccCancelCreditRequest" message="tns:ccCancelCreditRequest" />
+      <wsdl:output name="ccCancelCreditResponse" message="tns:ccCancelCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccPurchase">
+      <wsdl:input name="ccPurchaseRequest" message="tns:ccPurchaseRequest" />
+      <wsdl:output name="ccPurchaseResponse" message="tns:ccPurchaseResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccSettlement">
+      <wsdl:input name="ccSettlementRequest" message="tns:ccSettlementRequest" />
+      <wsdl:output name="ccSettlementResponse" message="tns:ccSettlementResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccCredit">
+      <wsdl:input name="ccCreditRequest" message="tns:ccCreditRequest" />
+      <wsdl:output name="ccCreditResponse" message="tns:ccCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthenticate">
+      <wsdl:input name="ccAuthenticateRequest" message="tns:ccAuthenticateRequest" />
+      <wsdl:output name="ccAuthenticateResponse" message="tns:ccAuthenticateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccPayment">
+      <wsdl:input name="ccPaymentRequest" message="tns:ccPaymentRequest" />
+      <wsdl:output name="ccPaymentResponse" message="tns:ccPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccStoredDataPurchase">
+      <wsdl:input name="ccStoredDataPurchaseRequest" message="tns:ccStoredDataPurchaseRequest" />
+      <wsdl:output name="ccStoredDataPurchaseResponse" message="tns:ccStoredDataPurchaseResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ping">
+      <wsdl:input name="pingRequest" message="tns:pingRequest" />
+      <wsdl:output name="pingResponse" message="tns:pingResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthorize">
+      <wsdl:input name="ccAuthorizeRequest" message="tns:ccAuthorizeRequest" />
+      <wsdl:output name="ccAuthorizeResponse" message="tns:ccAuthorizeResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccVerification">
+      <wsdl:input name="ccVerificationRequest" message="tns:ccVerificationRequest" />
+      <wsdl:output name="ccVerificationResponse" message="tns:ccVerificationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelPayment">
+      <wsdl:input name="ccCancelPaymentRequest" message="tns:ccCancelPaymentRequest" />
+      <wsdl:output name="ccCancelPaymentResponse" message="tns:ccCancelPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccTDSAuthenticate">
+      <wsdl:input name="ccTDSAuthenticateRequest" message="tns:ccTDSAuthenticateRequest" />
+      <wsdl:output name="ccTDSAuthenticateResponse" message="tns:ccTDSAuthenticateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthorizeReversal">
+      <wsdl:input name="ccAuthorizeReversalRequest" message="tns:ccAuthorizeReversalRequest" />
+      <wsdl:output name="ccAuthorizeReversalResponse" message="tns:ccAuthorizeReversalResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelSettle">
+      <wsdl:input name="ccCancelSettleRequest" message="tns:ccCancelSettleRequest" />
+      <wsdl:output name="ccCancelSettleResponse" message="tns:ccCancelSettleResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ccStoredDataAuthorize">
+      <wsdl:input name="ccStoredDataAuthorizeRequest" message="tns:ccStoredDataAuthorizeRequest" />
+      <wsdl:output name="ccStoredDataAuthorizeResponse" message="tns:ccStoredDataAuthorizeResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditCardServiceV1HttpBinding" type="tns:CreditCardServiceV1PortType">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ccTDSLookup">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccTDSLookupRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccTDSLookupResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelCredit">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccCancelCreditRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccCancelCreditResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccPurchase">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccPurchaseRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccPurchaseResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccSettlement">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccSettlementRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccSettlementResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccCredit">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccCreditRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccCreditResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthenticate">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccAuthenticateRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccAuthenticateResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccPaymentRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccPaymentResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccStoredDataPurchase">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccStoredDataPurchaseRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccStoredDataPurchaseResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ping">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="pingRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="pingResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthorize">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccAuthorizeRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccAuthorizeResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccVerification">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccVerificationRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccVerificationResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccCancelPaymentRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccCancelPaymentResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccTDSAuthenticate">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccTDSAuthenticateRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccTDSAuthenticateResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccAuthorizeReversal">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccAuthorizeReversalRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccAuthorizeReversalResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccCancelSettle">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccCancelSettleRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccCancelSettleResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ccStoredDataAuthorize">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="ccStoredDataAuthorizeRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ccStoredDataAuthorizeResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditCardServiceV1">
+    <wsdl:port name="CreditCardServiceV1HttpPort" binding="tns:CreditCardServiceV1HttpBinding">
+      <wsdlsoap:address location="https://webservices.test.optimalpayments.com/creditcardWS/CreditCardService/v1" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

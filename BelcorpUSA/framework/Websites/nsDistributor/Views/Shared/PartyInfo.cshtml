@@ -1,0 +1,23 @@
+﻿@model NetSteps.Data.Entities.Party
+<div class="UI-btn brdrYYNN pad5 shopNavHeader">
+    <span>@Html.Term("PartyInformation", "Party Information")</span>
+</div>
+<div class="brdr pad5">
+    <b>@Model.Name</b>
+    <br />
+    @if (Model.Order.GetHostess() != null)
+    {
+        <b>@Html.Term("Hostess"):</b>
+        <div class="clr ml10">@Model.Order.GetHostess().FullName</div>    
+    }
+    <b>@Html.Term("Date"):</b>
+    <div class="clr ml10">@Model.StartDate.ToString(BaseController.CurrentCulture)</div>
+    
+
+    @if (ViewBag.AllowPartyDetach != null && ViewBag.AllowPartyDetach)
+    {
+        <div class="center mt10">
+            <a id="detachFromParty" href="javascript:void(0);" class="Button MinorButton detachFromParty"><span>@Html.Term("DetachFromParty", "Detach From Party")</span></a>
+        </div>
+    }
+</div>

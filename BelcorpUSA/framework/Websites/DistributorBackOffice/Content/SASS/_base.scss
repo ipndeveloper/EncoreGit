@@ -1,0 +1,325 @@
+﻿//Compass Imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/utilities";
+
+//Base Font Settings//
+$FontFamily:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+$base_font_size: 11; //Pixels that will set a base point for em's to size accordingly
+$input_font_size: 13;
+//Site Color Settings//
+$DarkBg: #333; //Primary Color
+$SecBg: #bebebe; //Secondary Color
+$LightBg: #efefef; //Light Version of Secondary Color
+$MainBg: #000;  //Tertiary Color
+$copy: #444; //Main Font Color
+
+$WhiteBg: #fff;
+$PageBg: $WhiteBg;
+//Site Text Color Settings//
+$BodyText: #000;
+$DarkBgText: #fff;
+$SecBgText: #000;
+$LightBgText: #5e5e5e;
+$MainBgText: #efefef;
+//Site Link Color Settings//
+$BodyLink: #777;
+$BodyLinkHover: shade($BodyLink,50%);
+$NavLink: $DarkBgText;
+$DarkBgLink: $LightBg;
+$SecBgLink: #5e5e5e;
+$LightBgLink: $DarkBg;
+$MainBgLink: #fff;
+//Section colors in a list//
+$Dark: $DarkBg $DarkBgText $DarkBgLink shade($DarkBgLink, 30%);
+$Sec: $SecBg $SecBgText $SecBgLink shade($SecBgLink, 30%);
+$Light: $LightBg $LightBgText $LightBgLink tint($LightBgLink, 30%);
+$Main: $MainBg $MainBgText $MainBgLink shade($MainBgLink, 30%);
+//Alerts//
+$NuetralMessage: #fffde7;//Alert Background color
+$StandardWarning: #f7e40c;//Color for notifications of medium importance
+$WarningMessage: #c4124c;//Color for errors or notifications of high importance
+$SuccessMessage: #6EB43F;//Color for available or success notifications
+$AlertSquare: #ff0831;
+
+$MainButton: #64A63A;
+$SecondaryButton: #555555;
+
+//***********************************************/
+$IconSize:22;
+$action-link-size:36;
+
+$BorderRadius: 5;
+$BorderColor: shade($LightBg, 5%);
+$ButtonRadius: $BorderRadius; //Button border radius size
+$HeadingFontFamily: $FontFamily; //H1
+$HeaderText: $MainBg; //H1
+$NavDropdownBg: $DarkBg;
+$NavDropdownHover: $SecBg;
+
+$SmFont: 11;
+$MedFont: $SmFont + 1;
+$LgFont: $MedFont + 2;
+$XlFont: $LgFont + 4;
+//Login Specific//
+$LoginBgColor: #fff;
+$LoginBg: url("../Images/wkstnLoginLogo.png"); //Logo at top of page
+$LoginContentBgColor: #f3f3f3;
+$LoginContentWidth: 560;
+$LoginLogoHeight: 170px;
+$LoginLeftW: 57%;
+$LoginBrdrColor: #808285;
+$LoginBrdrSize: 5;
+//Wkstn Main Specific//
+$LinkAltColor: #333;
+$ListNavHover: #F5FFEF;
+$WidgetHeight: 216px;
+//Effects
+$transition_time: 400ms;
+
+@function em($pxSet, $pxParent: $base_font_size) {
+	$p: (1 / $pxParent);
+	$list: ();
+	@each $values in $pxSet {
+		$v: $p * $values;
+		@if $v > 0 and $v < .1 {
+			$list: append($list, #{.1}em);
+		}
+		@else {
+			$list: append($list, #{$p * $values}em);
+		}
+	}
+	@return $list;
+}
+
+//**********************************************************
+//* Mixins
+//**********************************************************/
+@mixin site-body {
+	background:$LightBg;
+}
+@mixin nav-link-style {
+	display:block;
+	height:em(40);
+	line-height:em(40);
+	padding: em(0 5);
+	text-decoration:none;
+}
+@mixin ButtonGradient($c, $c2) {
+	background-color: $c;
+	background-image: -moz-linear-gradient(top, rgba($c,.5) 0%, $c2 100%); /* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$c), color-stop(100%,$c2)); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top, $c 0%,$c2 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top, $c 0%,$c2 100%); /* Opera 11.10+ */
+	background-image: -ms-linear-gradient(top, $c 0%,$c2 100%); /* IE10+ */
+	background-image: linear-gradient(to bottom, rgba($c,.5) 0%,$c2 100%); /* W3C */
+	//filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",$c,$c2)); // IE9 and down
+}
+@mixin inline-nav {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	li {
+		display:inline;
+		a {
+			display:inline-block;
+		}
+	}
+}
+
+@mixin horizontal-nav-li-rules {
+	margin:em(0 10);
+}
+
+@mixin flat-list {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+}
+
+@mixin site-typography {
+	font-size:em($base_font_size, 16);
+	line-height:1.25em;
+	font-family:$FontFamily;
+	color:$copy;
+}
+@mixin BorderRadius($brdrs: all, $rSize: em($BorderRadius)) {
+	$r: $rSize $rSize $rSize $rSize !default;
+	@if ($brdrs == top) {
+		$r: $rSize $rSize 0 0;
+	}
+	@else if ($brdrs == bottom) {
+		$r: 0 0 $rSize $rSize;
+	}
+	-moz-border-radius:$r;
+	-webkit-border-radius:$r;
+	border-radius:$r;
+}
+@mixin transition ($p: background-color, $time: $transition_time) {
+	-moz-transition-property: $p;
+	-moz-transition-duration: $time; 
+	-webkit-transition-property: $p;
+	-webkit-transition-duration: $time; 
+	-o-transition-property: $p;
+	-o-transition-duration: $time; 
+	transition-property: $p;
+	transition-duration: $time;
+}
+@mixin base-button-rules {
+	@include border-radius(em($BorderRadius));
+	padding:em(0 10);
+	font-weight:bold;
+	text-decoration:none;
+	white-space: nowrap;
+	line-height: em(30);
+}
+@mixin main-button-style {
+	@include base-button-rules;
+	@include ButtonGradient(tint($MainButton,25%),$MainButton);
+	color:tint($MainButton,90%);
+	@include text-shadow(rgba(0,0,0,.25) em(0 0 3));
+	@include transition((background-color, color), (.4s, .4s));
+}
+@mixin main-button-hover {
+	background-color:shade($MainButton, 40%);
+	@include text-shadow(none);
+	color:#fff;
+}
+@mixin secondary-button-style {
+	@include ButtonGradient(tint($SecondaryButton,25%),$SecondaryButton);
+	color:tint($SecondaryButton,90%);
+}
+@mixin secondary-button-hover {
+	background-color:shade($SecondaryButton, 40%);
+	color:#fff;
+}
+
+@mixin button-inactive {
+	@include base-button-rules;
+	@include ButtonGradient(tint($LightBg,25%),$LightBg);
+	color:#fff;
+	@include opacity(.75);
+}
+
+@mixin BoxShadow2($size: em(5), $rgba: rgba(0,0,0,.4)) {
+	-moz-box-shadow: 0 0 $size $rgba;
+	-webkit-box-shadow: 0 0 $size $rgba;
+	box-shadow: 0 0 $size $rgba;
+}
+
+@mixin DottedLine {
+	border-bottom:em(1) dotted $BorderColor;
+}
+
+@mixin BoxShadow($values, $type: standard) {
+	@if $type == inset {
+		-moz-box-shadow:inset unquote($values);
+		-webkit-box-shadow:inset unquote($values);
+		box-shadow:inset unquote($values);
+	} @else {
+		-moz-box-shadow:unquote($values);
+		-webkit-box-shadow:unquote($values);
+		box-shadow:unquote($values);
+	}
+}
+
+@mixin Gradient($default, $colors, $radius: null, $position: null, $type: Linear){
+	$ieVals: nth(nth($colors,1), 1), nth(nth($colors, length($colors)), 1);
+	@if $type == 'Linear' {
+		@if $radius == null {
+			@include LinearGradient($default, $colors, $ieVals);
+		} @else {
+			@include AngleGradient($default, $colors, $radius, $ieVals);
+		}
+	} @else if $type == 'Radial' {
+		@if $position == null {
+			$position: center center;
+		}
+		@include RadialGradient($default, $colors, $position, $ieVals);
+	}
+}
+
+@mixin LinearGradient($default, $colors, $ieColors){
+	background-color:$default; /* Old browsers */
+	background-image: -moz-linear-gradient(top, getGradientValues($colors, moz)); /* FF3.6+ */
+    background-image:-webkit-gradient(linear, left top, left bottom, getGradientValues($colors, webkit1)); /* Chrome,Safari4+ */
+    background-image:-webkit-linear-gradient(top, getGradientValues($colors, webkit2)); /* Chrome10+,Safari5.1+ */
+    background-image:-o-linear-gradient(top, getGradientValues($colors, opera)); /* Opera 11.10+ */
+    background-image:-ms-linear-gradient(top, getGradientValues($colors, ms)); /* IE10+ */
+	//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(nth($ieColors,1))}', endColorstr='#{ie-hex-str(nth($ieColors,2))}'); // IE6-9
+	//This is not liking the return format from the function???????????????????????
+	//background:linear-gradient(to bottom, getGradientValues($colors, w3c)); /* W3C */
+	//background:radial-gradient(ellipse at center, getGradientValues($colors, w3c)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* W3C */
+	//background:linear-gradient(135deg,  getGradientValues($colors, w3c)); /* W3C */
+	
+	//This is using the variable data, it is putting into just one string???????????????????????
+	
+}
+
+@mixin AngleGradient($default, $colors, $radius, $ieColors) {
+	$radiusW3C: 135deg;
+	@if $radius == -45deg {
+		$radiusW3C: 135deg;
+	}@else {
+		$radiusW3C: $radius;
+	}	
+	background-color:$default; /* Old browsers */
+	background-image:-moz-linear-gradient($radius, getGradientValues($colors, moz)); /* FF3.6+ */
+	background-image:-webkit-gradient(linear, left top, right bottom, getGradientValues($colors, webkit1)); /* Chrome,Safari4+ */
+	background-image:-webkit-linear-gradient($radius,  getGradientValues($colors, webkit2)); /* Chrome10+,Safari5.1+ */
+	background-image:-o-linear-gradient($radius,  getGradientValues($colors, opera)); /* Opera 11.10+ */
+	background-image:-ms-linear-gradient($radius,  getGradientValues($colors, ms)); /* IE10+ */
+	//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(nth($ieColors,1))}', endColorstr='#{ie-hex-str(nth($ieColors,2))}', GradientType=1); // IE6-9
+	//*****
+	//* background:linear-gradient still not working so it is up in my test function at the top
+	//*****/
+}
+
+@mixin RadialGradient($default, $colors, $position, $ieColors){
+	background:$default; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover, getGradientValues($colors, moz)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* FF3.6+ */
+	background:-webkit-gradient(radial, center center, 0px, center center, 100%, getGradientValues($colors, webkit1)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* Chrome,Safari4+ */
+	background:-webkit-radial-gradient(center, ellipse cover, getGradientValues($colors, webkit2)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* Chrome10+,Safari5.1+ */
+	background:-o-radial-gradient(center, ellipse cover,  getGradientValues($colors, opera)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* Opera 11.10+ */
+	background:-ms-radial-gradient(center, ellipse cover,  getGradientValues($colors, ms)) no-repeat scroll nth($position, 1) nth($position, 2) nth(nth($colors, length($colors)), 1); /* IE10+ */
+	//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(nth($ieColors,1))}', endColorstr='#{ie-hex-str(nth($ieColors,2))}'); // IE6-9
+	//*****
+	//* background:radial-gradient still not working so it is up in my test function at the top
+	//*****/
+}
+
+//Backgrounds with color rules//
+@mixin section-rules($class) {
+	background-color: nth($class, 1);
+	color: nth($class, 2);
+	a {
+		color: nth($class, 3);
+		&.Button {
+			color:tint($MainButton,90%);
+		}
+		&:hover {
+			color: nth($class, 4);
+		}
+		&.Button:hover {
+			color:#fff;
+		}
+	}
+}
+
+//**********************
+//* Functions
+//**********************/
+@function getGradientValues($c, $b) {
+	$list: ();
+	@each $values in $c {
+			@if $b == webkit1 {
+				$list: append($list, color-stop(nth($values, 2), nth($values, 1)), comma);
+			} @else if $b == w3c {
+				
+			} @else {
+				$list: append($list, nth($values, 1) nth($values, 2), comma);
+			}		
+	}
+	@return $list;
+}
+

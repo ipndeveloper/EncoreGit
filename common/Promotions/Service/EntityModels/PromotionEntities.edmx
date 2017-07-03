@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EncorePromotionsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="EncorePromotionsModelStoreContainer">
+          <EntitySet Name="PromotionOrderAdjustments" EntityType="EncorePromotionsModel.Store.PromotionOrderAdjustments" store:Type="Tables" Schema="Promo" />
+          <EntitySet Name="PromotionQualifications" EntityType="EncorePromotionsModel.Store.PromotionQualifications" store:Type="Tables" Schema="Promo" />
+          <EntitySet Name="PromotionRewardEffects" EntityType="EncorePromotionsModel.Store.PromotionRewardEffects" store:Type="Tables" Schema="Promo" />
+          <EntitySet Name="PromotionRewards" EntityType="EncorePromotionsModel.Store.PromotionRewards" store:Type="Tables" Schema="Promo" />
+          <EntitySet Name="Promotions" EntityType="EncorePromotionsModel.Store.Promotions" store:Type="Tables" Schema="Promo" />
+          <AssociationSet Name="FK_PromotionOrderAdjustment_OrderAdjustments" Association="EncorePromotionsModel.Store.FK_PromotionOrderAdjustment_OrderAdjustments">
+            <End Role="Promotions" EntitySet="Promotions" />
+            <End Role="PromotionOrderAdjustments" EntitySet="PromotionOrderAdjustments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PromotionQualification_Promotion" Association="EncorePromotionsModel.Store.FK_PromotionQualification_Promotion">
+            <End Role="Promotions" EntitySet="Promotions" />
+            <End Role="PromotionQualifications" EntitySet="PromotionQualifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PromotionReward_Promotion" Association="EncorePromotionsModel.Store.FK_PromotionReward_Promotion">
+            <End Role="Promotions" EntitySet="Promotions" />
+            <End Role="PromotionRewards" EntitySet="PromotionRewards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PromotionRewardEffects_PromotionRewards" Association="EncorePromotionsModel.Store.FK_PromotionRewardEffects_PromotionRewards">
+            <End Role="PromotionRewards" EntitySet="PromotionRewards" />
+            <End Role="PromotionRewardEffects" EntitySet="PromotionRewardEffects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Successor" Association="EncorePromotionsModel.Store.FK_Successor">
+            <End Role="Promotions" EntitySet="Promotions" />
+            <End Role="Promotions1" EntitySet="Promotions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PromotionOrderAdjustments">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentID" />
+          </Key>
+          <Property Name="OrderAdjustmentID" Type="int" Nullable="false" />
+          <Property Name="PromotionID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PromotionQualifications">
+          <Key>
+            <PropertyRef Name="PromotionQualificationID" />
+          </Key>
+          <Property Name="PromotionQualificationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PromotionID" Type="int" Nullable="false" />
+          <Property Name="ExtensionProviderKey" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="PromotionPropertyKey" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="PromotionRewardEffects">
+          <Key>
+            <PropertyRef Name="PromotionRewardEffectID" />
+          </Key>
+          <Property Name="PromotionRewardEffectID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PromotionRewardID" Type="int" Nullable="false" />
+          <Property Name="ExtensionProviderKey" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="RewardPropertyKey" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="PromotionRewards">
+          <Key>
+            <PropertyRef Name="PromotionRewardID" />
+          </Key>
+          <Property Name="PromotionRewardID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PromotionID" Type="int" Nullable="false" />
+          <Property Name="PromotionRewardKind" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="PromotionPropertyKey" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Promotions">
+          <Key>
+            <PropertyRef Name="PromotionID" />
+          </Key>
+          <Property Name="PromotionID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PromotionKind" Type="nvarchar" MaxLength="100" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="PromotionStatusTypeID" Type="int" Nullable="false" />
+          <Property Name="SuccessorPromotionID" Type="int" />
+        </EntityType>
+        <Association Name="FK_PromotionOrderAdjustment_OrderAdjustments">
+          <End Role="Promotions" Type="EncorePromotionsModel.Store.Promotions" Multiplicity="1" />
+          <End Role="PromotionOrderAdjustments" Type="EncorePromotionsModel.Store.PromotionOrderAdjustments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotions">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionOrderAdjustments">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PromotionQualification_Promotion">
+          <End Role="Promotions" Type="EncorePromotionsModel.Store.Promotions" Multiplicity="1" />
+          <End Role="PromotionQualifications" Type="EncorePromotionsModel.Store.PromotionQualifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotions">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionQualifications">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PromotionReward_Promotion">
+          <End Role="Promotions" Type="EncorePromotionsModel.Store.Promotions" Multiplicity="1" />
+          <End Role="PromotionRewards" Type="EncorePromotionsModel.Store.PromotionRewards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotions">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionRewards">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PromotionRewardEffects_PromotionRewards">
+          <End Role="PromotionRewards" Type="EncorePromotionsModel.Store.PromotionRewards" Multiplicity="1" />
+          <End Role="PromotionRewardEffects" Type="EncorePromotionsModel.Store.PromotionRewardEffects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PromotionRewards">
+              <PropertyRef Name="PromotionRewardID" />
+            </Principal>
+            <Dependent Role="PromotionRewardEffects">
+              <PropertyRef Name="PromotionRewardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Successor">
+          <End Role="Promotions" Type="EncorePromotionsModel.Store.Promotions" Multiplicity="0..1" />
+          <End Role="Promotions1" Type="EncorePromotionsModel.Store.Promotions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotions">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="Promotions1">
+              <PropertyRef Name="SuccessorPromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EncorePromotionsModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="NetStepsPromotionsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PromotionOrderAdjustments" EntityType="EncorePromotionsModel.PromotionOrderAdjustment" />
+          <EntitySet Name="PromotionQualifications" EntityType="EncorePromotionsModel.PromotionQualification" />
+          <EntitySet Name="Promotions" EntityType="EncorePromotionsModel.Promotion" />
+          <AssociationSet Name="FK_PromotionOrderAdjustment_OrderAdjustments" Association="EncorePromotionsModel.FK_PromotionOrderAdjustment_OrderAdjustments">
+            <End Role="Promotion" EntitySet="Promotions" />
+            <End Role="PromotionOrderAdjustment" EntitySet="PromotionOrderAdjustments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PromotionQualification_Promotion" Association="EncorePromotionsModel.FK_PromotionQualification_Promotion">
+            <End Role="Promotion" EntitySet="Promotions" />
+            <End Role="PromotionQualification" EntitySet="PromotionQualifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Successor" Association="EncorePromotionsModel.FK_Successor">
+            <End Role="Promotion" EntitySet="Promotions" />
+            <End Role="Promotion1" EntitySet="Promotions" />
+          </AssociationSet>
+          <EntitySet Name="PromotionRewardEffects" EntityType="EncorePromotionsModel.PromotionRewardEffect" />
+          <EntitySet Name="PromotionRewards" EntityType="EncorePromotionsModel.PromotionReward" />
+          <AssociationSet Name="FK_PromotionRewardEffects_PromotionRewards" Association="EncorePromotionsModel.FK_PromotionRewardEffects_PromotionRewards">
+            <End Role="PromotionReward" EntitySet="PromotionRewards" />
+            <End Role="PromotionRewardEffect" EntitySet="PromotionRewardEffects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PromotionReward_Promotion" Association="EncorePromotionsModel.FK_PromotionReward_Promotion">
+            <End Role="Promotion" EntitySet="Promotions" />
+            <End Role="PromotionReward" EntitySet="PromotionRewards" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="PromotionOrderAdjustment">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentID" />
+          </Key>
+          <Property Type="Int32" Name="OrderAdjustmentID" Nullable="false" />
+          <Property Type="Int32" Name="PromotionID" Nullable="false" />
+          <NavigationProperty Name="Promotion" Relationship="EncorePromotionsModel.FK_PromotionOrderAdjustment_OrderAdjustments" FromRole="PromotionOrderAdjustment" ToRole="Promotion" />
+        </EntityType>
+        <EntityType Name="PromotionQualification">
+          <Key>
+            <PropertyRef Name="PromotionQualificationID" />
+          </Key>
+          <Property Type="Int32" Name="PromotionQualificationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="PromotionID" Nullable="false" />
+          <Property Type="String" Name="ExtensionProviderKey" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Promotion" Relationship="EncorePromotionsModel.FK_PromotionQualification_Promotion" FromRole="PromotionQualification" ToRole="Promotion" />
+          <Property Type="String" Name="PromotionPropertyKey" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Promotion">
+          <Key>
+            <PropertyRef Name="PromotionID" />
+          </Key>
+          <Property Type="Int32" Name="PromotionID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="StartDate" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Precision="3" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PromotionStatusTypeID" Nullable="false" />
+          <NavigationProperty Name="PromotionOrderAdjustments" Relationship="EncorePromotionsModel.FK_PromotionOrderAdjustment_OrderAdjustments" FromRole="Promotion" ToRole="PromotionOrderAdjustment" />
+          <NavigationProperty Name="PromotionQualifications" Relationship="EncorePromotionsModel.FK_PromotionQualification_Promotion" FromRole="Promotion" ToRole="PromotionQualification" />
+          <Property Type="Int32" Name="SuccessorPromotionID" />
+          <Property Type="String" Name="PromotionKind" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Promotions1" Relationship="EncorePromotionsModel.FK_Successor" FromRole="Promotion" ToRole="Promotion1" />
+          <NavigationProperty Name="Promotion1" Relationship="EncorePromotionsModel.FK_Successor" FromRole="Promotion1" ToRole="Promotion" />
+          <NavigationProperty Name="PromotionRewards" Relationship="EncorePromotionsModel.FK_PromotionReward_Promotion" FromRole="Promotion" ToRole="PromotionReward" />
+        </EntityType>
+        <Association Name="FK_PromotionOrderAdjustment_OrderAdjustments">
+          <End Type="EncorePromotionsModel.Promotion" Role="Promotion" Multiplicity="1" />
+          <End Type="EncorePromotionsModel.PromotionOrderAdjustment" Role="PromotionOrderAdjustment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotion">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionOrderAdjustment">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PromotionQualification_Promotion">
+          <End Type="EncorePromotionsModel.Promotion" Role="Promotion" Multiplicity="1" />
+          <End Type="EncorePromotionsModel.PromotionQualification" Role="PromotionQualification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotion">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionQualification">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Successor">
+          <End Type="EncorePromotionsModel.Promotion" Role="Promotion" Multiplicity="0..1" />
+          <End Type="EncorePromotionsModel.Promotion" Role="Promotion1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotion">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="Promotion1">
+              <PropertyRef Name="SuccessorPromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PromotionRewardEffect">
+          <Key>
+            <PropertyRef Name="PromotionRewardEffectID" />
+          </Key>
+          <Property Type="Int32" Name="PromotionRewardEffectID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="PromotionRewardID" Nullable="false" />
+          <Property Type="String" Name="ExtensionProviderKey" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RewardPropertyKey" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PromotionReward" Relationship="EncorePromotionsModel.FK_PromotionRewardEffects_PromotionRewards" FromRole="PromotionRewardEffect" ToRole="PromotionReward" />
+        </EntityType>
+        <EntityType Name="PromotionReward">
+          <Key>
+            <PropertyRef Name="PromotionRewardID" />
+          </Key>
+          <Property Type="Int32" Name="PromotionRewardID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="PromotionID" Nullable="false" />
+          <Property Type="String" Name="PromotionRewardKind" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PromotionRewardEffects" Relationship="EncorePromotionsModel.FK_PromotionRewardEffects_PromotionRewards" FromRole="PromotionReward" ToRole="PromotionRewardEffect" />
+          <NavigationProperty Name="Promotion" Relationship="EncorePromotionsModel.FK_PromotionReward_Promotion" FromRole="PromotionReward" ToRole="Promotion" />
+          <Property Type="String" Name="PromotionPropertyKey" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_PromotionRewardEffects_PromotionRewards">
+          <End Type="EncorePromotionsModel.PromotionReward" Role="PromotionReward" Multiplicity="1" />
+          <End Type="EncorePromotionsModel.PromotionRewardEffect" Role="PromotionRewardEffect" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PromotionReward">
+              <PropertyRef Name="PromotionRewardID" />
+            </Principal>
+            <Dependent Role="PromotionRewardEffect">
+              <PropertyRef Name="PromotionRewardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PromotionReward_Promotion">
+          <End Type="EncorePromotionsModel.Promotion" Role="Promotion" Multiplicity="1" />
+          <End Type="EncorePromotionsModel.PromotionReward" Role="PromotionReward" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Promotion">
+              <PropertyRef Name="PromotionID" />
+            </Principal>
+            <Dependent Role="PromotionReward">
+              <PropertyRef Name="PromotionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EncorePromotionsModelStoreContainer" CdmEntityContainer="NetStepsPromotionsEntities">
+          <EntitySetMapping Name="PromotionOrderAdjustments">
+            <EntityTypeMapping TypeName="EncorePromotionsModel.PromotionOrderAdjustment">
+              <MappingFragment StoreEntitySet="PromotionOrderAdjustments">
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+                <ScalarProperty Name="OrderAdjustmentID" ColumnName="OrderAdjustmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PromotionQualifications">
+            <EntityTypeMapping TypeName="EncorePromotionsModel.PromotionQualification">
+              <MappingFragment StoreEntitySet="PromotionQualifications">
+                <ScalarProperty Name="PromotionPropertyKey" ColumnName="PromotionPropertyKey" />
+                <ScalarProperty Name="ExtensionProviderKey" ColumnName="ExtensionProviderKey" />
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+                <ScalarProperty Name="PromotionQualificationID" ColumnName="PromotionQualificationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Promotions">
+            <EntityTypeMapping TypeName="EncorePromotionsModel.Promotion">
+              <MappingFragment StoreEntitySet="Promotions">
+                <ScalarProperty Name="PromotionKind" ColumnName="PromotionKind" />
+                <ScalarProperty Name="SuccessorPromotionID" ColumnName="SuccessorPromotionID" />
+                <ScalarProperty Name="PromotionStatusTypeID" ColumnName="PromotionStatusTypeID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PromotionRewardEffects">
+            <EntityTypeMapping TypeName="EncorePromotionsModel.PromotionRewardEffect">
+              <MappingFragment StoreEntitySet="PromotionRewardEffects">
+                <ScalarProperty Name="RewardPropertyKey" ColumnName="RewardPropertyKey" />
+                <ScalarProperty Name="ExtensionProviderKey" ColumnName="ExtensionProviderKey" />
+                <ScalarProperty Name="PromotionRewardID" ColumnName="PromotionRewardID" />
+                <ScalarProperty Name="PromotionRewardEffectID" ColumnName="PromotionRewardEffectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PromotionRewards">
+            <EntityTypeMapping TypeName="EncorePromotionsModel.PromotionReward">
+              <MappingFragment StoreEntitySet="PromotionRewards">
+                <ScalarProperty Name="PromotionPropertyKey" ColumnName="PromotionPropertyKey" />
+                <ScalarProperty Name="PromotionRewardKind" ColumnName="PromotionRewardKind" />
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+                <ScalarProperty Name="PromotionRewardID" ColumnName="PromotionRewardID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="PromotionEntities" ZoomLevel="72">
+        <EntityTypeShape EntityType="EncorePromotionsModel.PromotionOrderAdjustment" Width="1.5" PointX="2.875" PointY="0.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="EncorePromotionsModel.PromotionQualification" Width="2.25" PointX="2.875" PointY="3.25" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="EncorePromotionsModel.Promotion" Width="1.5" PointX="0.625" PointY="1.125" Height="3.3263964843749996" />
+        <AssociationConnector Association="EncorePromotionsModel.FK_PromotionOrderAdjustment_OrderAdjustments" >
+          <ConnectorPoint PointX="2.125" PointY="1.6103417968749998" />
+          <ConnectorPoint PointX="2.875" PointY="1.6103417968749998" />
+        </AssociationConnector>
+        <AssociationConnector Association="EncorePromotionsModel.FK_PromotionQualification_Promotion" >
+          <ConnectorPoint PointX="2.125" PointY="3.8506982421875" />
+          <ConnectorPoint PointX="2.875" PointY="3.8506982421875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EncorePromotionsModel.FK_Successor" >
+          <ConnectorPoint PointX="1.1569230769230767" PointY="4.451396484375" />
+          <ConnectorPoint PointX="1.1569230769230767" PointY="4.701396484375" />
+          <ConnectorPoint PointX="1.6034615384615383" PointY="4.701396484375" />
+          <ConnectorPoint PointX="1.6034615384615383" PointY="4.451396484375" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EncorePromotionsModel.PromotionRewardEffect" Width="1.5" PointX="9.5" PointY="3.375" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="EncorePromotionsModel.PromotionReward" Width="1.5" PointX="7.25" PointY="3.375" Height="2.1725878906249996" />
+        <AssociationConnector Association="EncorePromotionsModel.FK_PromotionRewardEffects_PromotionRewards" >
+          <ConnectorPoint PointX="8.75" PointY="4.3651432291666659" />
+          <ConnectorPoint PointX="9.5" PointY="4.3651432291666659" />
+        </AssociationConnector>
+        <AssociationConnector Association="EncorePromotionsModel.FK_PromotionReward_Promotion" >
+          <ConnectorPoint PointX="2.125" PointY="2.672841796875" />
+          <ConnectorPoint PointX="8" PointY="2.672841796875" />
+          <ConnectorPoint PointX="8" PointY="3.375" />
+        </AssociationConnector>
+        </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

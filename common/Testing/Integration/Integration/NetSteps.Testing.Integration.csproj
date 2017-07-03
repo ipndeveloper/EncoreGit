@@ -1,0 +1,620 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)\csproj-import-before.targets" Condition="Exists('$(MSBuildThisFileDirectory)\csproj-import-before.targets')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D9B139D1-9113-476F-954A-A4BBAF37CBB9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetSteps.Testing.Integration</RootNamespace>
+    <AssemblyName>NetSteps.Testing.Integration</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.SHDocVw">
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\Interop.SHDocVw.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\Microsoft.mshtml.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Testing.MasterHelpProvider">
+      <HintPath>..\packages\NetSteps.Testing.MasterHelpProvider.1.1.250.0\lib\net40\NetSteps.Testing.MasterHelpProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WatiN.Core">
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountStatus.cs" />
+    <Compile Include="Address_Control.cs" />
+    <Compile Include="CWS\CWS_Base_Page.cs" />
+    <Compile Include="CWS\CWS_GlobalHeader_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CWS\CWS_Home_Page.cs" />
+    <Compile Include="CWS\Edit\CWS_Edit_EditMode_Control.cs" />
+    <Compile Include="CWS\Edit\CWS_Edit_Edit_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_CartTools_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_OrderDetails_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_OrderDetail_Page.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_OrderHistory_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_Parties_Control.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Generic_Page.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_BulkAdd_Control.cs" />
+    <Compile Include="OrderItem_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_OrderEntry_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Receipt_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Overview_Control.cs" />
+    <Compile Include="DWS\Support\DWS_SupportTicket_Control.cs" />
+    <Compile Include="Elements\AttributeName.cs" />
+    <Compile Include="BaseTestClass.cs" />
+    <Compile Include="Billing_Control.cs" />
+    <Compile Include="BillingProfile.cs" />
+    <Compile Include="Compare.cs" />
+    <Compile Include="Country.cs" />
+    <Compile Include="Address.cs" />
+    <Compile Include="Billing.cs" />
+    <Compile Include="CreditCard.cs" />
+    <Compile Include="CustomerType.cs" />
+    <Compile Include="EFT.cs" />
+    <Compile Include="Elements\H1.cs" />
+    <Compile Include="Elements\Head.cs" />
+    <Compile Include="Elements\Meta.cs" />
+    <Compile Include="Elements\Object.cs" />
+    <Compile Include="Elements\Title.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Enroll_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_SubscriptionEdit_Page.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagements_CreateCartRewards.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_Base_Page.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_BrowsePromotions_Page.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_CreatePromotions_Page.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_NewPromotions_Page.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_SectionNav_Control.cs" />
+    <Compile Include="GMP\Products\PromotionsManagement\GMP_Products_PromotionsManagement_SubNav_Control.cs" />
+    <Compile Include="Header_Control.cs" />
+    <Compile Include="Menu_Control.cs" />
+    <Compile Include="NS_Page.cs" />
+    <Compile Include="OrderStatus.cs" />
+    <Compile Include="OrderTotal_Control.cs" />
+    <Compile Include="Phone.cs" />
+    <Compile Include="Defect.cs" />
+    <Compile Include="Distributor.cs" />
+    <Compile Include="DWS\Communication\DWS_Communications_Base_Page.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_Compose_Page.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_Group_Page.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_MailboxNav_Control.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_Mailbox_Page.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_Newsletter_Page.cs" />
+    <Compile Include="DWS\Communication\DWS_Communication_SectionNav_Control.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_AddContact_Page.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_Base_Page.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_Contact_Control.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_ImportContact_Page.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_Page.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_SectionNavigation_Control.cs" />
+    <Compile Include="DWS\Contacts\DWS_Contacts_ViewContact_Page.cs" />
+    <Compile Include="DWS\Documents\DWS_Documents_Page.cs" />
+    <Compile Include="DWS\DWS_Base_Page.cs" />
+    <Compile Include="DWS\DWS_Billing_Control.cs" />
+    <Compile Include="DWS\DWS_GlobalNav_Control.cs" />
+    <Compile Include="DWS\DWS_Login_Page.cs" />
+    <Compile Include="DWS\DWS_UserInfo_Control.cs" />
+    <Compile Include="DWS\Edit\DWS_Edit_Choices_Page.cs" />
+    <Compile Include="DWS\Edit\DWS_Edit_CorporateEdit_Page.cs" />
+    <Compile Include="DWS\Edit\DWS_Edit_EditMode_Control.cs" />
+    <Compile Include="DWS\Edit\DWS_Edit_Edit_Control.cs" />
+    <Compile Include="DWS\DWS_Home_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_Autoship_Control.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_Autoship_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_Base_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_BillingProfile_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_DisbursementProfiles_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_EditProfile_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_EditSecuritySettings_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_ProductCredit_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAccount_ShippingProfile_Page.cs" />
+    <Compile Include="DWS\MyAccount\DWS_MyAcount_SectionNav_Control.cs" />
+    <Compile Include="DWS\News\DWS_News_Page.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_Base_Page.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_Order_Control.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_Page.cs" />
+    <Compile Include="DWS\Orders\DWS_Orders_SectionNav_Control.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_AddDirectShip_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_AddGuest_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Cart_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_GuestSummary.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Guest_Control.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_HostRewards_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Payment_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_SetUp_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_ShippingMethod_Page.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_ShoppingBag_Control.cs" />
+    <Compile Include="DWS\Orders\Party\DWS_Orders_Party_Summary_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Perforformance_Report_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_BarChart_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Barometer_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Base_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Card_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Dashboard_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Downline_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_FlatDownLine_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_GraphicalDownLine_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_MonthlyGoal_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_SalesIndicator_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_SectionNav_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_TitleProgress_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_TreeView_Page.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_Trip_Control.cs" />
+    <Compile Include="DWS\Performance\DWS_Performance_VolumeCompare_Control.cs" />
+    <Compile Include="DWS\Support\DWS_Support_Base_Page.cs" />
+    <Compile Include="DWS\Support\DWS_Support_Browse_Page.cs" />
+    <Compile Include="DWS\Support\DWS_Support_CreateTicket_Page.cs" />
+    <Compile Include="DWS\Support\DWS_Support_SectionNav_Control.cs" />
+    <Compile Include="Elements\Element_Extention.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Gender.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Account_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_AuditHistory_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Base_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_BillingAndShipping_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Birthdate_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Browse_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_CommissionCalculationOverridesEdit_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_CommissionCalculationOverrides_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_CommissionTitleOverrides_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_DisbursementProfiles_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Edit_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollAutoship_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollCompletion_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollDisbursementProfiles_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollShipping_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollInitialOrder_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollPWS_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollSubNav_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_EnrollType_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_IncentivePointsLedger_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_LedgerBase_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Ledger_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_OrderHistory_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_OverviewBase_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Overview_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_PaymentDisbursementHolds_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Phone_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_PoliciesChangeHistory_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_ProductCreditLedger_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_SectionNav_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_Section_Page.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_ShippingAddress_Control.cs" />
+    <Compile Include="GMP\Accounts\GMP_Accounts_SubNav_Control.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_AutoshipScheduleEdit_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_AutoshipSchedules_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_Base_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_ListTypes_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_ListTypeValues_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_RoleEdit_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_Roles_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_SubNav_Control.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_UsersEdit_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_Users_Page.cs" />
+    <Compile Include="GMP\Admin\GMP_Admin_ValidateConfig_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_Admin_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_Base_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_Disbursements_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_Publish_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_Runner_Page.cs" />
+    <Compile Include="GMP\Commissions\GMP_Commissions_SubNav_Control.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_AlertEdit_Page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_Alert_page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_Campaigns_Page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_CreateNewsletterCampaigns_Page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_EmailTemplatesEdit_Page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_EmailTemplates_Page.cs" />
+    <Compile Include="GMP\Communication\GMP_Communication_SubNav_Control.cs" />
+    <Compile Include="GMP\Communication\GMP_Comunication_Base_Page.cs" />
+    <Compile Include="GMP\GMP_Base_Page.cs" />
+    <Compile Include="GMP\GMP_Enums.cs" />
+    <Compile Include="GMP\GMP_GlobalNav_Control.cs" />
+    <Compile Include="GMP\GMP_GlobalUtilities_Control.cs" />
+    <Compile Include="GMP\GMP_Login_Page.cs" />
+    <Compile Include="Pagination_Control.cs" />
+    <Compile Include="Phones.cs" />
+    <Compile Include="GMP\Orders\GMP_ProductAdd_Control.cs" />
+    <Compile Include="PWS\Account\PWS_Account_ChangePassword_Control.cs" />
+    <Compile Include="PWS\Account\PWS_Account_Parties_Page.cs" />
+    <Compile Include="PWS\Account\PWS_Account_ProductCredit_Page.cs" />
+    <Compile Include="PWS\Account\PWS_Account_Settings_Control.cs" />
+    <Compile Include="PWS\Edit\PWS_Edit_EditMode_Control.cs" />
+    <Compile Include="PWS\Edit\PWS_Edit_Edit_Control.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_AboutYou_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_KitUpgrade_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Sponsor_Control.cs" />
+    <Compile Include="PWS\Enroll\PWS_Upgrade_Kits_Page.cs" />
+    <Compile Include="OrderType.cs" />
+    <Compile Include="PWS\PWS_UserMenu_Control.cs" />
+    <Compile Include="PWS\Shop\PWS_Shop_Shipping_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shipping.cs" />
+    <Compile Include="ShippingProfile.cs" />
+    <Compile Include="ShoppingBag.cs" />
+    <Compile Include="UnverifiedAddress_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_AutoshipRunOverview_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Base_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Browse_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Details_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Entry_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_NewOrder_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Order_Control.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_ShipOrder_Page.cs" />
+    <Compile Include="GMP\Orders\GMP_Orders_SubNav_Control.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_Base_Page.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_BrowseSectionHeader_Control.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_Browse_Page.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_CategoryCreate_Page.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_CategorySectionHeader_Control.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_CategoryTrees_Page.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_EditSectionHeader_Control.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_Edit_Page.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_SectionNav_Control.cs" />
+    <Compile Include="GMP\Products\CatalogManagement\GMP_Products_CatalogManagement_SubNav_Control.cs" />
+    <Compile Include="GMP\Products\GMP_Products_Base_Page.cs" />
+    <Compile Include="GMP\Products\GMP_Products_SubNav_Control.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Base_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Browse_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Create_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_CustomerType_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_PriceType_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Product_Control.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_PropertiesEdit_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Properties_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_ResourceType_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_SectionNav_Control.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_SubNav_Control.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_TypeEdit_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\GMP_Products_ProductManagement_Types_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Availability_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Base_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Categories_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_CMS_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Details_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_History_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Inventory_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Overview_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Pricing_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Properties_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Relationships_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_Resources_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_SectionNav_Control.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_VariantsManage_Page.cs" />
+    <Compile Include="GMP\Products\ProductManagement\Product\GMP_Products_ProductManagement_Product_VariantsSetup_Page.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_Base_Page.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_BrowseShippingRegions_Page.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_Inventory_Page.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_ManageShippingRegions_Page.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_SectionNav_Control.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_SubNav_Control.cs" />
+    <Compile Include="GMP\Products\WarehouseManagement\GMP_Products_WarehouseManagement_TransferInventory_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_1099Listing_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountCalculationsAudit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountLedgerAdjustments_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountLedgerBalance_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountRecordAudit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountsDataDump_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Accounts_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AccountTitlesAudit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ActiveLegs_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AttritionChart_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Attrition_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_AuditReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Audit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Base_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_BonusPayout_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_BonusQualificationMatrix_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CalculatedSalesByRepDrillthrough_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CalculatedSalesByRep_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CalculationOverrides_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CommissionableOrders_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CommissionPrepReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CommissionsEarnings_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CommissionsPrep_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_CriticalInventoryLevels_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Demotions_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_DisbursementHolds_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_EnhancedBonusDetails_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Enrollments_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ExecutiveDashboard_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ExecutiveReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ExecutiveSummary_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Executive_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ExpiringCreditCardNumbers_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_FieldFacingReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_FieldFacing_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_FinanceReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Finance_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_GrossRevenue_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_InvalidRoutingNumbers_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_InvalidTaxNumbers_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_InventoryReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Inventory_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ItemReport_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_MissingAdddresses_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_MonthlyBonusesByTitle_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_OrderQueueAudit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_OrdersAudit_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_OrdersByCreditCardNumber_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_OrdersWithTrackingNumbers_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_PersonalEarningsDrillThrough_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_PersonalEarningsStatement_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_PersonalWebsites_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_PriceList_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ProductCreditBalance_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ProductSalesVelocity_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Promotions_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Reports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Sales Tax Details_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesByAccountType_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesByOrderStatus_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesByOrderType_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesByRep_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesBySKU_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesByState_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesReports_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesTax_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SalesVelocity_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Sales_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_SectionNav_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_ShipmentAging_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TerminationsAndCancellations_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Terminations_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TextBox_Control.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TitleOverrides_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TitlePopulations_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TitleQualificationMatrix_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_TopEarnersByVolume_Page.cs" />
+    <Compile Include="GMP\Reports\GMP_Reports_Viewer_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Base_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Copy_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_DistributorWorkstationSubNav_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_DocumentCategories_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_DocumentsEdit_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Documents_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Edit_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_GlobalSiteSubNav_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_NewsEdit_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_News_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Overview_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_PagesEdit_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_Pages_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_PersonalWorkstationSubNav_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_SectionNav_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_SiteMap_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_SiteNavigation_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_SubNav_Control.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_TermTranslation_Page.cs" />
+    <Compile Include="GMP\Sites\GMP_Sites_WebsiteBase_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_Base_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_BrowseTickets_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_CreateTicket_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_SubNav_Control.cs" />
+    <Compile Include="GMP\Support\GMP_Support_TicketEditBase_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_TicketEditDetails_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_TicketEditSectionNav_Control.cs" />
+    <Compile Include="GMP\Support\GMP_Support_TicketHistory_Page.cs" />
+    <Compile Include="GMP\Support\GMP_Support_Ticket_Control.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="ListItem_Control.cs" />
+    <Compile Include="OrderItem.cs" />
+    <Compile Include="Product.cs" />
+    <Compile Include="Param.cs" />
+    <Compile Include="PhoneType.cs" />
+    <Compile Include="Phone_Control.cs" />
+    <Compile Include="PreferredCustomer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PWS\Account\PWS_Account_ManageProfiles_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Account\PWS_Account_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Account\PWS_Account_Profile_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Account\PWS_Account_Profile_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Enroll\PWS_Enroll_Agreements_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_AutoshipItems_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Billing_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Culture_Control.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Disbursement_Page.cs" />
+    <Compile Include="EFTProfile.cs" />
+    <Compile Include="EFT_Control.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Enroll\PWS_Enroll_AccountInfo_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_PersonalWebsite_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Kits_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Receipt_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Review_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_ShippingMethod_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Shipping_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Sponsor_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Enroll\PWS_Enroll_SponsorBrowse_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Enroll\PWS_Enroll_AutoshipBundles_Page.cs" />
+    <Compile Include="PWS\Enroll\PWS_Enroll_Products_Page.cs" />
+    <Compile Include="PWS\PWS_ContactMe_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Enroll\PWS_Enroll_LoginSignup_Page.cs" />
+    <Compile Include="PWS\PWS_GlobalFooter_Control.cs" />
+    <Compile Include="PWS\Shop\PWS_Shop_Receipt_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_ConfirmOrder_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Billing_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_ShippingMethod_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_CartProduct_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\PWS_Base_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\PWS_GlobalHeader_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\PWS_HeaderLogin_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\PWS_Home_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Base_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Cart_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Category_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Product_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_Product_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_SearchResults_Page.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PWS\Shop\PWS_Shop_SectionNav_Control.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RetailCustomer.cs" />
+    <Compile Include="Screenshot.cs" />
+    <Compile Include="SearchSuggestionBox_Control.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NetSteps.Testing.Integration.nuspec" />
+    <None Include="packages.config" />
+    <None Include="PublishProjectToNuget.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\sqlScripts.txt" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageName>NetSteps.Testing.Integration</PackageName>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\csproj-import-after.targets" Condition="Exists('$(MSBuildThisFileDirectory)\csproj-import-after.targets')" />
+</Project>

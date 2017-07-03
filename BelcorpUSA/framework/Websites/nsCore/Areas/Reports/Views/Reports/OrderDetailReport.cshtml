@@ -1,0 +1,50 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/OrderDetailExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetOrderDetailReport")
+        .AddInputFilter(Html.Term("OrderNumber", "OrderNumber"), "orderNumber", ViewData["OrderNumber"])
+        .AddInputFilter(Html.Term("AccountNumber1", "Account Number"), "accountNumber", ViewData["AccountNumber"])
+        .AddInputFilter(Html.Term("OrderType", "Order Type"), "orderType", ViewData["orderType"])
+        .AddSelectFilter(Html.Term("orderStatus", "Order Status"), "orderStatus", new Dictionary<string, string>() { { "", Html.Term("SelectaStatus", "Select a Status...") } }.AddRange(SmallCollectionCache.Instance.OrderStatuses.ToDictionary(pt => pt.GetTerm(), pt => pt.GetTerm())))
+        .AddInputFilter(Html.Term("cuv", "CUV"), "CUV", ViewData["CUV"])
+        .AddInputFilter(Html.Term("parentcode", "Parent Code"), "parentcode", ViewData["ParentCode"])
+        .AddInputFilter(Html.Term("SAP", "SAP CODE"), "sap", ViewData["SAP"])
+        .AddInputFilter(Html.Term("DateRange17", "Order Date"), "OrderDateIni", (ViewData["OrderDateIni"].IsNull()) ? "Start Date" : ViewData["OrderDateIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "OrderDateFin", (ViewData["OrderDateFin"].IsNull()) ? "End Date" : ViewData["OrderDateFin"], true, true)
+        
+
+        .AddColumn(Html.Term("OrderNumber"), "OrderNumber")
+        .AddColumn(Html.Term("AccountNumber23","Account Number"), "AccountNumber")
+        .AddColumn(Html.Term("AccountType"), "AccountType")
+        .AddColumn(Html.Term("OrderType"), "OrderType")
+        .AddColumn(Html.Term("OrderStatus"), "OrderStatus")
+        .AddColumn(Html.Term("BAState"), "BAState")
+        .AddColumn(Html.Term("ShipmentState"), "ShipmentState")
+        .AddColumn(Html.Term("OrderDate"), "OrderDate")
+        .AddColumn(Html.Term("ParentCode"), "ParentCode")
+        .AddColumn(Html.Term("CUV"), "CUV")
+        .AddColumn(Html.Term("SAP"), "SAP")
+        .AddColumn(Html.Term("BPCS"), "BPCS")
+        .AddColumn(Html.Term("ProductDescription"), "ProductDescription")
+        .AddColumn(Html.Term("Quantity"), "Quantity")
+        .AddColumn(Html.Term("Price"), "Price")
+        .AddColumn(Html.Term("CV"), "CV")
+        .AddColumn(Html.Term("QV"), "QV")
+        .AddColumn(Html.Term("Net"), "Net")
+        .AddColumn(Html.Term("Subtotal"), "Subtotal")
+        .AddColumn(Html.Term("TaxAmount"), "TaxAmount")
+        .AddColumn(Html.Term("GrandTotal"), "GrandTotal")                       
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

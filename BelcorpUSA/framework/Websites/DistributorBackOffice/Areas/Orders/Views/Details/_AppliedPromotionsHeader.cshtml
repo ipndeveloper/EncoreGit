@@ -1,0 +1,31 @@
+﻿@model NetSteps.Data.Common.Entities.IOrder
+@{
+    var promotionOrderAdjustments = Model.OrderAdjustments.Where(x => x.ExtensionProviderKey == NetSteps.Promotions.Service.PromotionProvider.ProviderKey && (x.OrderLineModifications.Any() || x.OrderModifications.Any()));
+}
+@if (promotionOrderAdjustments.Any())
+{
+    <div class="UI-mainBg m1 pad5">
+        <div class="FL pad5">
+            @Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions")
+        </div>
+        @foreach (var adjustment in promotionOrderAdjustments)
+        {
+            // this next check is not robust - this needs to be refactored to handle situations in which order adjustments may return a message as part of normal process (etc.).
+            // For now it only checks to determine if the order has a message, then assumes that it is a promotional error message (out of stock).
+            if (adjustment.OrderModifications.Any(modification => modification.ModificationOperationID == (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderOperationKind.Message))
+            {
+                // at the moment it is assumed that the only message is an out of stock message
+            <div class="promoNotification promoNotAvailable">@adjustment.Description
+                <span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+            </div>
+            }
+            else
+            {
+            <div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+                <span class="UI-icon FL icon-star"></span><span class="FL">@Html.Term(adjustment.Description)</span>
+            </div>
+            }
+        }
+        <span class="clr"></span>
+    </div>
+}

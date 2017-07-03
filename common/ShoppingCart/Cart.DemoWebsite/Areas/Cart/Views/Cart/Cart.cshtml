@@ -1,0 +1,131 @@
+﻿@model Cart.DemoWebsite.Areas.Cart.Cart.Models.CartModel
+ @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ @section title {
+	Cart!	
+}
+
+@section scripts {
+	@Script.Make("/areas/Cart/Scripts/CartModels.js")
+																																																	  
+	<script type="text/javascript">
+		var data = @(Html.Raw(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(Model)));
+		var koModelRaw = new CartModel(data);
+		ko.applyBindings(koModelRaw);
+	</script>
+}
+<table id="products" width="100%" class="DataGrid" style="" data-bind="visible: true">
+	<thead>
+		<tr class="GridColHead UI-bg UI-header">
+			<th class="GridCheckBox"></th>
+			<th>
+				SKU
+			</th>
+			<th>
+				Product
+			</th>
+			<th>
+				Price Per Item
+			</th>
+			<th>
+				Commissionable Price
+			</th>
+			<th style="width: 100px;">
+				Qty
+			</th>
+			<th>
+				Item Total
+			</th>
+		</tr>
+	</thead>
+	<tbody id="CartItems" data-bind="foreach: Items">
+		<tr id="productTotalBar" class="GridTotalBar">
+			<td data-bind="click: remove"><a href="javascript:void(0);">Remove</a></td>
+			<td>
+				<span data-bind="text: Sku"></span>
+			</td>
+			<td>
+				<span data-bind="text: Description"></span>
+			</td>
+			<td>
+				<span data-bind="text: UnitPrice"></span>
+			</td>
+			<td>
+				<span data-bind="text: Volume"></span>
+			</td>
+			<td>
+				<span data-bind="text: Quantity"></span>
+			</td>
+			<td>
+				<b>
+					
+					<span class="cartItemSubtotal" data-bind="text: Total">$0.00</span>
+				</b>
+			</td>
+		</tr>
+		<tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+
+                @*<a id="btnUpdateCart" href="javascript:void(0);" class="DTL Update OverrideDisable" data-bind="click: btnUpdateCart_click, disable: isUpdating">
+                    Update
+                </a>*@
+            </td>
+            <td>
+                @*<b>
+                    <span class="cartItemSubtotal" data-bind="text: Total">$0.00</span>
+                </b> *@               
+            </td>
+        </tr>
+	</tbody>
+</table>
+
+<div class="clr mt10">
+
+<div class="pad10 UI-lightBg brdrNNYY orderTotals">
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td id="totals" colspan="2"><b>Totals</b></td>
+            </tr>
+            <tr id="totalBar">
+                <td colspan="2" style="text-align: right; white-space: nowrap">
+                    <div class="FL Loading" id="TotalsLoad" style="display: none;">
+                    </div>
+					Sub Total:<br/>
+					Commissionable Total:
+                </td>
+                <td>
+                    <span class="subtotal" data-bind="text: SubTotal">
+                        $0.00</span>
+					<br/>
+                    <span class="commissionableTotal" data-bind="text: VolumeTotal">
+                        $0.00</span>
+					<br/>
+                    
+                </td>
+            </tr>
+        <tr>
+            <td colspan="2" style="text-align: right">
+                Order Total:<br>
+				Payments Made:<br>
+                                Balance Due:
+            </td>
+            <td>
+			<b><span class="grandTotal" data-bind="text: Total">
+                            $0.00</span></b><br />
+                <b class="paymentTotal">
+					$0.00</b><br/>
+                            <b style="color: Green" class="balanceDue">
+                                $0.00</b>
+            </td>
+        </tr>
+    </tbody>
+    </table> 
+    </div>
+</div>

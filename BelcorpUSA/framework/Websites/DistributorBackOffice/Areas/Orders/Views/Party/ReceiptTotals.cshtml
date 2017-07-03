@@ -1,0 +1,46 @@
+﻿@model Order
+<tr class="GridTotalBar">
+	<td style="text-align: right;">
+		@Html.Term("Subtotal"):<br />
+
+        @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+		@Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                           }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+		@Html.Term("Tax"):<br />
+		@Html.Raw(Html.Term("S&H", "S&amp;H")):<br />
+		<b>@Html.Term("Total"):</b>
+	</td>
+	<td>
+		<span class="subtotal">
+			@Model.Subtotal.ToString(Model.CurrencyID)</span>
+		<br />
+
+         @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+		<span class="commissionableTotal">
+			@Model.CommissionableTotal.ToString(Model.CurrencyID)</span>
+		<br />
+                                 }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+		<span class="taxTotal">
+			@((Model.TaxAmountTotalOverride != null) ? Model.TaxAmountTotalOverride.ToString(Model.CurrencyID) : Model.TaxAmountTotal.ToString(Model.CurrencyID))</span>
+		<br />
+		<span class="shippingTotal">
+			@((Model.ShippingTotalOverride != null) ? (Model.ShippingTotalOverride + Model.HandlingTotal).ToString(Model.CurrencyID) : (Model.ShippingTotal + Model.HandlingTotal).ToString(Model.CurrencyID))</span>
+		<br />
+		<b><span class="grandTotal">
+			@Model.GrandTotal.ToString(Model.CurrencyID)</span></b>
+	</td>
+</tr>

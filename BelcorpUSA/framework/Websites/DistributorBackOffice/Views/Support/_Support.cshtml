@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@section head{
+    @RenderSection("head", false)
+    <script type="text/javascript">
+
+        $(function () {
+            $.post('@Href("~/Support/TicketCount")', null, function (response) {
+                if (response.result) {
+                    $('#allTicketCount').html('(' + response.totalTickets + ')');
+                    $('#openTicketCount').html('(' + response.openTickets + ')');
+                    $('#resolvedTicketCount').html('(' + response.resolvedTickets + ')');
+                    $('#needsInputTicketCount').html('(' + response.needsInputTickets + ')');
+                }
+                else {
+                    showMessage('@Html.Term("Error"): ' + response.message, true);
+                    return false;
+                }
+            });
+
+        });
+
+
+    </script>
+}
+@section breadcrumb {
+    @RenderSection("breadcrumb", false)
+}
+@section title {
+    @RenderSection("title", false)
+}
+@{
+    var ctk = NetSteps.Data.Entities.Extensions.OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "CTK");
+}
+@section ActionItems {
+
+@if (ctk == "S"){
+     @Html.ActionItem("~/Support/CreateTicket", Html.Term("SubmitTicket", "Submit a Ticket"), "icon-actionComposeLetter")
+    }
+    
+}
+    
+    
+     
+@section SideBarExtras {
+    <div class="SavedReports">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title  UI-btn">@Html.Term("MySupportTickets", "My Support Tickets")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                @{
+                    var allTicketsLink = (ViewBag.Selected == null && ViewBag.Open == null) ? "current" : string.Empty;
+                }
+                <li><a class="@allTicketsLink"  href="@Url.Content("~/Support")"><span class="FL">@Html.Term("AllTickets", "All My Tickets")</span>
+                    <span id="allTicketCount" class="FR"></span><span class="clr"></span></a></li>
+                <li>
+                    @{
+                        var openLink = string.Empty;
+
+                        if (ViewBag.Open != null)
+                        {
+                            openLink = (ViewBag.Open == true ? "current" : string.Empty);
+                        }
+                                
+                    }
+                    <a class="@openLink" href="@Url.Content("~/Support?showOpenTickets=" + true)"><span
+                        class="FL">@Html.Term("Open")</span> <span id="openTicketCount" class="FR"></span>
+                        <span class="clr"></span></a></li>
+                <li>
+                    @{
+                        var resolvedLink = string.Empty;
+                        if (ViewBag.Selected != null)
+                        {
+                            resolvedLink = ((short)ViewBag.Selected == Constants.SupportTicketStatus.Resolved.ToShort()) ? "current" : string.Empty;
+                        }
+                                
+                    }
+                    <a class="@resolvedLink" href="@Url.Content("~/Support?supportTicketStatusID=" + Constants.SupportTicketStatus.Resolved.ToShort())">
+                        <span class="FL">@Html.Term("Resolved")</span> <span id="resolvedTicketCount" class="FR">
+                        </span><span class="clr"></span></a></li>
+                <li>
+                    @{
+                        var needsInputLink = string.Empty;
+                        if (ViewBag.Selected != null)
+                        {
+                            needsInputLink = ((short)ViewBag.Selected == Constants.SupportTicketStatus.NeedsInput.ToShort()) ? "current" : string.Empty;
+                        }
+                               
+                    }
+                    <a class="@needsInputLink" href="@Url.Content("~/Support?supportTicketStatusID=" + Constants.SupportTicketStatus.NeedsInput.ToShort())">
+                        <span class="FL">@Html.Term("NewsInput", "Needs Input")</span> <span id="needsInputTicketCount"
+                            class="FR"></span><span class="clr"></span></a></li>
+            </ul>
+        </div>
+    </div>
+}
+@RenderBody()

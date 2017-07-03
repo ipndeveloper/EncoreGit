@@ -1,0 +1,26 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/EnrollmentsExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetEnrollmentsReport")
+        .AddInputFilter(Html.Term("Month", "Month"), "month", ViewData["Month"])
+        .AddInputFilter(Html.Term("State", "State"), "state", ViewData["State"])
+
+        .AddInputFilter(Html.Term("NewEnrollments", "NewEnrollments"), "newEnrollments", ViewData["NewEnrollments"])
+
+        .AddColumn(Html.Term("Month"), "Month")
+        .AddColumn(Html.Term("State"), "State")
+        .AddColumn(Html.Term("NewEnrollments"), "NewEnrollments")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

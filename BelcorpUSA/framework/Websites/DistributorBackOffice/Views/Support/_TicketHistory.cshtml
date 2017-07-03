@@ -1,0 +1,23 @@
+﻿@model IEnumerable<DistributorBackOffice.Models.SupportTicketModels.TicketHistoryModel>
+     
+ @{int i = 0;}
+           
+@foreach (var history in Model)
+{
+    var style = string.Empty;
+
+     if (i % 2 == 0)
+    {
+        style = "AcctNote";
+    }
+    else
+    {
+        style = "AcctNote Alt";
+    }
+    <div class="@style">
+        @history.DateChanged.ToShortDateString() <br />
+        @history.ColumnName @Html.Term("changedfrom", "changed from") [@history.OldValue] @Html.Term("to", "to") [@history.NewValue] 
+    </div>
+
+    i++;
+}

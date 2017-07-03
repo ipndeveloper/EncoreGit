@@ -1,0 +1,455 @@
+@using NetSteps.Addresses.Common.Models
+@model nsDistributor.Models.Checkout.ShippingModel
+@{
+	ViewBag.Title = "Shipping";
+}
+@using NetSteps.Addresses.Common.Models;
+@section head {
+	<script src="@Url.Content("~/Scripts/address-validation.js")"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('#btnCreateProfile').click(function () {
+                $.post('@Url.Resolve("~/Checkout/LoadShippingProfileForEdit")', { addressID: 0 }, function(response) {
+                    if (response.result === true) {
+                        $('#addressID').val('');
+                        $('#editAddressSection').html(response.data);
+                        $('#shippingProfileEmail').val(response.shipToEmail);
+                        showProfileEdit();
+                    }
+                    else if (!response.result && response.message) {
+                        showMessage(response.message, true);
+                    }
+                });
+                return false;
+            });
+
+            $('#btnChoosePup').click(function(){
+                showPupPoints();
+            });
+
+            $('#btnHideCreateProfile').click(function () {
+                hideCreateProfile();
+                return false;
+            });
+
+            $('#btnSelectedShipping').click(function () {
+                var t = $(this);
+				var addressId = t.parent().find('.addressId').val();
+				if(addressId == null || addressId <= 0) {
+	    			showMessage('@NetSteps.Common.Globalization.Translation.GetTerm("NoAddressSelectedPleaseSelectAnAddress", "No address is selected. Please select an address.")', true);
+	   				return;
+				}
+		
+                showLoading(t);
+                t.find('label.useThisProfileTag').html('<img src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" />');
+
+				$.post('@Url.Resolve("~/Checkout/ChooseShippingProfile")', { addressId: addressId }, function (response) {
+                    if (response.result) {
+                        if (response.chooseShippingMethod) {
+                            window.location = '@Url.Resolve("~/Checkout/ShippingMethod")';
+                        } else if(response.products !== null) {
+                                $.each(response.products, function(index, value) {
+                                    $('.shippingExceptionItems').append('<li>' + value + '</li>');
+                                });
+                             $("#productShippingExceptionModal").jqm({modal: true}).jqmShow();
+                        } else {
+                            window.location = '@Url.Resolve("~/Checkout/Billing")';
+                        }
+                    } else {
+                        hideLoading(t);
+                        t.find('label.useThisProfileTag').html('@Html.Term("UseThisLocation", "Use this location")');
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('.btnUseThisProfile').click(function () {
+                $('#btnHideCreateProfile').trigger('click');
+                var addressID = $(this).closest('div').data('id');
+                var addressText = $('#address' + addressID).html();
+                var email = $('#email' + addressID).val();
+                $('#shippingProfileEmail').val(email);
+		
+                // assign the id
+                $('#selectedShippingID').val(addressID);
+
+                // change the address text
+                $('#addressText').html(addressText);
+
+                $(window).scrollTop(0);
+            });
+
+            $('#btnNext').click(function () {
+					if (!$('#editAddressSection').checkRequiredFields()) {
+                        return false;
+                    }
+                ValidateAddress();
+            });
+
+            $('.helpTrigger').click(function () {
+                var helpTarg = $(this).attr('rel');
+                $('#'+helpTarg).slideToggle('fast');
+            });
+
+            $('.closeHelp').click(function () { 
+                $(this).parents('p').slideUp('fast') 
+            });
+
+            $('.EditShippingProfile').click(function () {
+                var addressID = $(this).closest('div').attr('data-id');
+				$.post('@(Url.Resolve("~/Checkout/LoadShippingProfileForEdit"))', { addressID: addressID }, function(response) {
+                    if (response.result === true) {
+                        $('#addressID').val(addressID);
+                        $('#editAddressSection').html(response.data);
+                        $('#shippingProfileEmail').val(response.shipToEmail);
+                        showProfileEdit();
+                    }
+                    else if (!response.result && response.message) {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        });
+
+        function showPupPoints() {
+            $('.EditProfile').fadeOut('fast');
+            $('.MainProfile').fadeOut('fast');
+            $('#PickUpPoints').fadeIn('fast');
+            $('.Highlighted').removeClass('Highlighted');
+            $(window).scrollTop(0);
+        }
+
+        function showProfileEdit() {
+            $('.EditProfile').fadeIn('fast');
+            $('#PickUpPoints').fadeOut('fast');
+            $('.MainProfile').hide();
+            $('.CheckMark').hide();
+            $('.Profile.Default .Button').fadeIn('fast');
+            $('.Highlighted').removeClass('Highlighted');
+            $('label.useThisProfileTag').show();
+            $('#btnCreateProfile').addClass("Selected");
+			$('#selectedPickupPointCode').val('');
+            $(window).scrollTop(0);
+        }
+
+		function hideCreateProfile() {
+			$('.EditProfile').fadeOut('fast');
+            $('#PickUpPoints').fadeOut('fast');
+            $('.MainProfile').show();
+            $('.CheckMark').show();
+            $('.Profile.Default .Button').fadeOut('fast');
+            $('.Highlighted').addClass('Highlighted');
+            $('label.useThisProfileTag').hide();
+            $('#btnCreateProfile').removeClass("Selected");
+            $('#addressID').val('');
+			$('#selectedPickupPointCode').val('');
+            $(window).scrollTop(0);
+        }
+
+        function ValidateAddress() {
+            // do address validation
+            var city = $('#ShippingCheckOutCity').text();
+//            if(city == '') {
+//                city = $('#city').val();
+//            }
+        
+            var validation = abstractAddressValidation({
+                address1: $('#ShippingCheckOutAddress1').val(),
+                address2: $('#ShippingCheckOutAddress2').val(),
+                address3: $('#ShippingCheckOutAddress3').val(),
+                city: city, 
+                //state: $('#state :selected').text(),
+                state: $('#ShippingCheckOutState').val(),
+                //street: $('#street :selected').text(),
+                street: $('#ShippingCheckOutStreet').text(),
+                postalCode: $('#ShippingCheckOutAddressControl .PostalCode').val(),
+                country: $('#ShippingCheckOutcountry').data("countrycode")
+            });
+
+            validation.init();
+
+            $(document).bind("validAddressFound", function (event, address) {
+
+            //console.log("postalcode",postalcode);
+            console.log("address",address);
+
+                var p = $(this).parent();
+                showLoading(p);
+
+                //alert("Verificar Grave Checkout_SaveShippingProfile");
+                $.post('@Url.Resolve("~/Checkout/SaveShippingProfile")', {
+                    country: $('#ShippingCheckOutCountry').val(),
+                    attention: $('#ShippingCheckOutAttention').val(),
+                    profileName: $('#ShippingCheckOutProfileName').val(),
+                    address1: address.address1,
+                    address2: address.address2,
+                    address3: address.address3,
+                    postalCode: address.postalCode.length >5 ? address.postalCode : $('#ShippingCheckOutZip').val() +''+ $('#ShippingCheckOutZipPlusFour').val(),
+                    city: $('#ShippingCheckOutCity').val(),//address.city,
+                    county: $('#ShippingCheckOutCounty').val(),
+                    //state: address.state,
+                    state: $('#ShippingCheckOutState').val(),
+                    addressID: $('#ShippingCheckOutAddressID').val(),
+					pickupPointCode: $('#selectedPickupPointCode').val(),
+                    emailId: $('#shippingProfileEmail').val(),
+                    street: $('#ShippingCheckOutStreet').val()
+                }, function (response) {
+                    if (response.result) {
+						if (response.location === undefined)
+							response.location = 'Shipping';
+						window.location = '@(Url.Resolve("~/Checkout/"))'+response.location;
+                    } else {
+                        hideLoading($('#btnNext'));
+                        showMessage(response.message, true);
+					}
+				});
+			});
+        }
+
+		$(function () {
+			var rawData = @Model.GetJSModelDataJSON();
+			function ShippingViewModel(initialData) {
+				var self = $.extend(this, ko.mapping.fromJS(initialData));
+				self.pickupPointSearchPostalCode = ko.observable("");
+				self.pickupPointSearchCity = ko.observable("");
+				self.selectedPickupPointCode = ko.observable();
+				self.pickupPointSearch = function () {
+					var params = {};
+					params.postalCode = self.pickupPointSearchPostalCode();
+					params.city = self.pickupPointSearchCity();
+					NS.postJSON({
+						url: '@Url.Resolve("~/Checkout/GetPickupPoints")',
+						data: ko.toJSON(params),
+						success: function (data) {
+							if (data.result) {
+								self.selectedPickupPointCode("");
+								self.PickupPoints.removeAll();
+								ko.utils.arrayMap(data.points, function (point) {
+								  self.PickupPoints.push(ko.mapping.fromJS(point));
+								});
+							}
+							else {
+								AddErrorMessage(data.message);
+							}
+						},
+						error: function (data) {
+							AddErrorMessage(data.message);
+						},
+						complete: function () {
+						}
+					});
+				};
+				self.useSelectedPickupPoint = function(data, event) {
+					var code = self.selectedPickupPointCode();
+					if (!code) {
+						AddErrorMessage('@(Html.Term("PWS_Checkout_PickupPointNotSelected", "You must make a selection to continue"))');
+					}
+					$('#selectedPickupPointCode').val(code);
+					ValidateAddress(event.currentTarget);
+				};
+			}
+			var mappedData = new ShippingViewModel(rawData);
+			ko.applyBindings(mappedData, $('#shippingViewModelSection')[0]);
+		});
+		//]]>
+    </script>
+}
+<div id="shippingViewModelSection">
+	<h1>
+		@(Html.Term("PWS_Checkout_Title_ShipOrderTo", "Ship my order to:"))
+	</h1>
+	@{IAddress defaultAddress = Model.DefaultAddress;}
+	@if (Model.Addresses.Any())
+	{
+		<div class="UI-lightBg FL brdrAll splitCol60 MainProfile">
+			<div class="pad10">
+				<p class="Address" id="addressText">
+					@if (defaultAddress != default(IAddress))
+					{
+						@(Html.Raw(defaultAddress.ToDisplay(false)))
+					}
+				</p>
+				<p class="FormSubmit">
+					<input type="hidden" id="selectedShippingID" class="addressId" value="@(defaultAddress != null ? defaultAddress.AddressID : 0)" />
+					<a href="javascript:void(0);" id="btnSelectedShipping" class="Button btnContinue ShipToThisAddress">
+						<span>@(Html.Term("ShipTothisLocation", "Ship To This Location"))</span>
+					</a>
+				</p>
+			</div>
+		</div>
+	
+		<!-- pick up point UI -->
+		<div id="PickUpPoints" class="UI-lightBg FL brdrAll splitCol60 shippingPupDisplay"
+			style="display: none;">
+			<!--data-bind="visible: showPickupPoints"-->
+			<input id="selectedPickupPointCode" type="hidden" data-bind="value: selectedPickupPointCode" />
+			<div class="pad5 mb10 GridFilters pupUtility">
+				<div class="FL overflow">
+					<label class="block">
+						Postal Code:</label>
+					<input type="text" name="pupPostal" data-bind="value: pickupPointSearchPostalCode, enter: pickupPointSearch" />
+				</div>
+				<div class="FL overflow">
+					<label class="block">
+						City:</label>
+					<input type="text" name="pupCity" data-bind="value: pickupPointSearchCity, enter: pickupPointSearch" />
+				</div>
+				<div class="FL overflow runSearch">
+					<a href="#" class="UI-icon-container" title="@(Html.Term("PWS_Checkout_SearchPupLocationsBtnTip", "Search"))" data-bind="click: pickupPointSearch">
+						<span class="UI-icon icon-search"></span>
+					</a>
+				</div>
+				<span class="clr"></span>
+			</div>
+			<div class="pad10 pupResults">
+				<table border="0" width="100%" class="DataGrid" cellpadding="0" cellspacing="0">
+					<thead class="UI-mainBg">
+						<tr>
+							<th>
+							</th>
+							<th>
+								Pick-up Location
+							</th>
+							<th>
+								Distance
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko template: { name: 'pickupPointTemplate', foreach: PickupPoints } -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<p class="FormSubmit">
+				<span class="FR">
+					<a href="javascript:void(0);" class="Button btnContinue" data-bind="click: useSelectedPickupPoint">
+						<span>@Html.Term("Save This Address")</span> 
+					</a>
+				</span>
+				<a href="javascript:void(0);" class="FL Cancel" data-bind="click: hideCreateProfile">
+					<span>@Html.Term("Cancel")</span>
+				</a>
+				<span class="clr"></span>
+			</p>
+			<script type="text/html" id="pickupPointTemplate">
+				<tr>
+					<label data-bind="attr: { for: PickupPointCode }">
+						<td>
+							<input name="pickupPointsGroup" data-bind="checked: $parent.selectedPickupPointCode, value: PickupPointCode, id: PickupPointCode" type="radio" />
+						</td>
+						<td>
+							<span data-bind="text: Name" class="pupName"></span><br />
+							<span data-bind="text: Location" class="pupLoc"></span>
+						</td>
+						<td>
+							<span data-bind="text: Distance" class="pupDist"></span>
+						</td>
+					</label>
+				</tr>
+			</script>
+		</div>
+
+		<!--/ end pick up point UI -->
+    
+		<div class="FR splitCol40 OtherProfiles">
+			<div class="UI-darkBg brdrYYNN pad5 otherProfilesHeader">
+				<h2>@Html.Term("AlternateShippingDestinations", "Alternate shipping destinations")</h2>
+			</div>
+			<ul class="UI-lightBg flatList listNav">
+				<!-- create a new ship profile -->
+				<li class="pad5 createNew">
+					<a id="btnCreateProfile" href="javascript:void(0);" class="FL Button MinorButton btnCreateProfile CreateProfile">
+						<span>@Html.Term("CreateNewShippingDestination", "Create a new shipping destination")</span>
+					</a>
+					<a href="#" class="FR UI-icon-container helpTrigger" title="@Html.Term("ShippingProfilesHelpTip", "What are shipping profiles?")" rel="newShipHelp">
+						<span class="UI-icon icon-help"></span>
+					</a>
+					<span class="clr"></span>
+					<p class="useTip pad5" id="newShipHelp" style="display: none;">
+						@Html.Term("NewShippingProfileHelpTip", "You can choose to ship this order to one of your other destination profiles. Or create a brand new shipping destination.")
+						<a href="#" class="closeHelp">@Html.Term("OK")</a>
+					</p>
+					<span class="clr"></span>
+				</li>
+				<!-- choose PUP btn -->
+				@if (Model.PickupPointsEnabled)
+				{
+					<li class="pad5 choosePup">
+						<a id="" href="javascript:void(0);" class="FL Button MinorButton" data-bind="click: showPupPoints">
+							<span>@Html.Term("PWS_Checkout_SelectPuPButtonText", "Ship to a pick-up point")</span>
+						</a>
+						<a href="#" class="FR UI-icon-container helpTrigger" title="@Html.Term("PWS_Checkout_SelectPupHelpTip", "What pick-up destinations?")" rel="selectPupHelp">
+							<span class="UI-icon icon-help"></span>
+						</a>
+						<span class="clr"></span>
+						<p class="useTip pad5" id="selectPupHelp" style="display: none;">
+							@Html.Term("PWS_Checkout_SelectPupHelpTipContent", "You pick stuff up.. at a place")
+							<a href="#" class="closeHelp">@Html.Term("OK")</a>
+						</p>
+						<span class="clr"></span>
+					</li>
+				}
+			</ul>
+			<!-- list out other shipping profiles -->
+			<div class="brdr profilesListWrap">
+				@foreach (var address in Model.Addresses.Where(a => a.AddressID > 0).OrderByDescending(a => a.IsDefault).ThenBy(a => a.AddressID))
+				{
+					<div data-id="@address.AddressID" class="Profile@(address.IsDefault && address.AddressTypeID == (int)Constants.AddressType.Shipping ? " Default Highlighted" : "")">
+						<a href="javascript:void(0);" class="pad5 UI-linkAlt altProfileLink ShipToThisAddress btnUseThisProfile" title="@Html.Term("Ship my order to this location")">
+							<span class="FL Address splitCol60" id="existingaddress@(address.AddressID)">
+								@Html.Raw(address.ToDisplay(false, showProfileName: true))<br />
+							</span>
+							<span class="FR ProfileSelection splitCol40 center">
+								<label class="useThisProfileTag">
+									<span class="FR UI-icon icon-arrowNext"></span>
+								</label>
+							</span>
+							<span class="clr"></span><span class="clr"></span>
+						</a>
+						<a href="javascript:void(0);" class="pad5 EditShippingProfile">@Html.Term("edit")</a>
+					</div>
+				}
+			</div>
+		</div>
+	}
+</div>
+<div class="FL splitCol60 brdrAll UI-lightBg EditProfile" style="@(Model.Addresses.Any() ? "display: none;" : "")" >
+	<div class="pad10">
+		<input type="hidden" id="addressID" />
+		<div id="editAddressSection">
+			@Html.Partial("Address", Model.AddressModel)
+		</div>
+		@if (Model.ShowShipToEmail)
+		{
+			Html.RenderPartial("_AdditionalEmail", new System.Web.Mvc.ViewDataDictionary(defaultAddress as NetSteps.Data.Entities.Address));
+		}
+		<p class="FormSubmit">
+			<span class="FR">
+				<a id="btnNext" href="javascript:void(0);" class="Button btnContinue">
+					<span>@Html.Term("Save This Address")</span>
+				</a> 
+			</span>
+			<a id="btnHideCreateProfile" href="javascript:void(0);" class="FL Cancel">
+				<span>@Html.Term("Cancel")</span>
+			</a>
+			<span class="clr"></span>
+		</p>
+	</div>
+</div>
+<span class="clr"></span>
+<div id="productShippingExceptionModal" class="jqmWindow LModal">
+	<div class="mContent modalContent">
+		<h2>@Html.Term("InvalidShippingForProducts_Header", "No available shipping methods")</h2>
+		<div class="mb10 invalidShippingDescription">@Html.Term("InvalidShippingForProducts", "No available shipping methods, try changing your shipping address, updating your order subtotal or call customer service.")</div>
+		<div class="UI-lightBg brdrAll pad5">
+			<div class="bold">@Html.Term("InvalidShippingForProductsTitle", "Product's that have shipping exceptions:")</div>
+			<ol class="mt5 ml20 pad2 shippingExceptionItems">
+			</ol>
+		</div>
+		<div class="mt10 center ClearAll">@Html.ActionLink(Html.Term("InvalidShippingForProducts_CloseModal", "Back to Cart"), "", "Cart", null, new { @class = "" })</div>
+	</div>
+</div>
+@Html.Partial("MessageCenter")
+@Html.Partial("_AddressValidation")

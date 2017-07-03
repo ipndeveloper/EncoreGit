@@ -1,0 +1,138 @@
+﻿@*I have removed test content and added commented out example @Model.xxxx to help locate where all needs to be hooked up*@
+@*Line 29 for "totalPromoProducts" will also need the to be set based on how many gifts user is able to select*@
+    <script type="text/javascript">
+
+        $(function () {
+            // Below is the jquery to launch the modal for the promotions modal at the bottom of this file. I (Kirstina) had added the markup, but dev has not been finished up.
+            //Promotion Modal
+            $('#SelectPromotionProducts').jqm({
+                trigger: '.selectGift',
+                modal: true,
+                onShow: function (h) {
+                    h.o.fadeIn();
+                    h.w.fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut();
+                    if (h.o)
+                        h.o.fadeOut(function () { $(this).remove(); });
+                }
+            }).jqmShow();
+            $('a.selectPromoProduct').live('click', function () {
+                $('#SelectPromotionProducts').jqmShow();
+            });
+            //Global Variables
+            var selectedPromoProductQty = 0,
+                totalPromoProducts = 3@*@Model.FreeGiftQty*@, //Needs to be hooked up, this will be how many free gifts user gets to add.
+                promoProductQty = totalPromoProducts,
+                remainingQty = $('span.promoRemaining .promoProductQty'),
+                selectedQty = $('div.selectedPromo .promoProductQty'),
+                promoSelectedList = $('#SelectedPromoProductsList');
+            //Add qty text to modal display
+            remainingQty.text(promoProductQty);
+            $('div.selectedPromo .totalPromoQty').append(totalPromoProducts);
+            //Display Selected Promotion Products in the right column
+            $('#PromoProductsList .promoProduct').click(function () {
+                if (selectedPromoProductQty < totalPromoProducts) {
+                    var t = $(this),
+                        selectedPromoProdDetails = getPromoProductDetails(t),
+                        selectedProduct = '<div class="m5 promoProduct" style="display:none;">' +
+                                  '<div class="FL m1 mr5 imagewrapper splitCol15">' + selectedPromoProdDetails.thumb + '</div>' +
+                                  '<div class="FL promoProductTitle splitCol80">' + selectedPromoProdDetails.title + '</div>' +
+                                  '<div class="FL promoProductValue splitCol80">' + selectedPromoProdDetails.value + '</div>' +
+                                  '<span class="clr"></span>' +
+                                  '<div class="UI-lightBg mt5 mb10 pad2 brdrAll promoUtilities">' +
+                                  '<a title="@Html.Term("CartPromotionModal_DeleteTitleTag", "Remove Gift")" class="FL UI-icon-container Delete" href="javascript:void(0);" id="">' +
+                                  '<span class="UI-icon icon-x"></span>' +
+                                  '<span class="icon-label">@Html.Term("CartPromotionModal_DeleteTitleTag")</span></a>' +
+                                  '<span class="clr"></span>' +
+                                  '</div>' +
+                                  '</div>';
+                    promoSelectedList.prepend(selectedProduct);
+                    promoSelectedList.find(".promoProduct:first").animate({
+                        'height': 'toggle',
+                        'opacity': 'toggle'
+                    }, 500);
+                    remainingQty.text(promoProductQty -= 1);
+                    selectedQty.text(selectedPromoProductQty += 1);
+                }
+                else {
+                    alert('@Html.Term("CartPromotionModal_FreeGiftsAllBeenSelected", "Free Gifts have all been selected")');
+                }
+            });
+            //Remove selected promotion products from selected list in right column
+            $('.Delete').live('click', function () {
+                $(this).closest('div.promoProduct').animate({
+                    'height': 'toggle',
+                    'opacity': 'toggle'
+                }, 500, function () {
+                    $(this).remove();
+                });
+                remainingQty.text(promoProductQty += 1);
+                selectedQty.text(selectedPromoProductQty -= 1);
+            });
+            //Display selections in the cart, this was my prototype that just added to the DOM and did not save to cart (which i
+            $('#btnSave').click(function () {
+                $('#SelectPromotionProducts').jqmHide();
+            });
+        });
+
+        function getPromoProductDetails(t) {
+            var img = '',
+                name = '',
+                val = '',
+                icon = '';
+            if (t == null) {
+                name = '<a href="javascript:void(0);" class="selectPromoProduct">@Html.Term("Cart_PromoProductSelectLinkText", "Select a Gift")</a>',
+                icon = '<span class="UI-icon icon-warning selectGiftNotification"></span>';
+            }
+            else {
+                img = $('div.imagewrapper', t).html(),
+                name = $('div.promoProductTitle', t).text(),
+                val = $('div.promoProductValue', t).text();
+            }
+
+            return {
+                thumb: img,
+                title: name,
+                value: val,
+                icon: icon
+            };
+        }
+    </script>
+
+    <div id="SelectPromotionProducts" class="jqmWindow LModal" style="z-index: 3000; margin-left:0; ">
+    <div class="mContent">
+        <h2>@Html.Term("CartPromotionModal_H2", "Your order qualifies for FREE gifts!")</h2>
+        <div class="FL promoProductChoices splitCol65">
+            <h3>@Html.Term("CartPromotionModal_AvailableProductsHeading", "Available Gifts")
+            <span class="FR promoRemaining qtyIndicator"><span class="bold promoProductQty"></span> @Html.Term("CartPromotionModal_QuantityRemainingNotification", "selections remaining")</span> <span class="clr"></span></h3>
+            <div id="PromoProductsList" class="brdr1 pad2 promoProductsWrap">
+                <div class="brdr1 brdrAll pad5 m5 promoProduct" title="@Html.Term("CartPromotionModal_AddGiftTitleTag", "Add Gift")">
+                    <div class="FL m5 imagewrapper splitCol15"> <img src="http://test.netsteps.com/FileUploads/Products/Penguins.jpg" alt="" width="100%" /> </div>
+                    <div class="FL ml5 pad5 ProductDescription splitCol80">
+                        <div class="FL splitCol70 bold promoProductTitle">@*@Model.ProductName*@</div>
+                        <a href="javascript:void(0);" class="FR UI-icon-container"> <span class="icon-label">@Html.Term("CartPromotionModal_AddGiftLinkText", "Add Gift")</span> <span class="UI-icon icon-arrowNext"></span> </a> <span class="clr"></span>
+                        <div class="promoProductShortDescription">
+                            <p>@*@Model.ProductShortDescription*@</p>
+                        </div>
+                        <div class="promoProductValue"> <small>@*@Model.ProductPrice*@ @Html.Term("CartPromotionModal_Value", "Value")</small> </div>
+                    </div>
+                    <span class="clr"></span>
+                </div>
+            </div>
+        </div>
+        <div class="FR PromoProductsAdded splitCol35">
+            <h3>@Html.Term("CartPromotionModal_CurrentSelectionsHeading", "Your Current Selection(s)")
+            <div class="FR selectedPromo qtyIndicator"><span class="bold promoProductQty">0</span><span class="totalPromoQty">/</span></div>
+            <span class="clr"></span></h3>
+            <div id="SelectedPromoProductsList" class="brdr1 brdrAll pad2 promoProductsWrap">
+            </div>
+        </div>
+        <span class="clr"></span>
+        <p class="mt10">
+            <a class="jqmClose FL" href="javascript:void(0);">@Html.Term("Close", "Close")</a>
+            <a class="Button FR" href="javascript:void(0);" id="btnSave"><span>@Html.Term("CartPromotionModal_AddPromotionSelectionsLinkText", "Save Gifts to Order")</span></a>
+        </p>
+        <span class="clr"></span> </div>
+</div>

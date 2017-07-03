@@ -1,0 +1,86 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = "Hosted Parties Dashboard";
+}
+@section head {
+}
+<div class="pageTitle">
+    <div class="breadCrumb">
+        <a href="@Url.Resolve("~/Account")"><span>@Html.Term("MyAccount", "My Account")</span></a>
+    </div>
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<div class="SideColumn hostedPartiesDashCol">
+    <div class="UI-cmsWrap">
+        @Model.HtmlSections.GetBySectionName("PartyTips").ToDisplay(Model.PageID)
+    </div>
+    <div class="UI-cmsWrap">
+        @Model.HtmlSections.GetBySectionName("HostBenefits").ToDisplay(Model.PageID)
+    </div>
+</div>
+<div class="ContentColumn hostedPartiesDashboard">
+    
+    <div class="pageTitle">
+        <h1>@Html.Term("MyHostedPartiesDashboard", "My Hosted Parties Dashboard")</h1>
+    </div>
+    <table class="mb10 DataGrid partiesList">
+        <thead>
+            <tr>
+                <th>@Html.Term("Party", "Party")</th>
+                <th class="center">@Html.Term("InvitesSent", "Invites Sent")</th>
+                <th class="center">@Html.Term("RSVP", "RSVP")</th>
+                <th class="center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Party party in ViewBag.Parties)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Resolve("~/HostedParties/GuestList", new { partyId = party.PartyID })" class="bold partyName">@party.Name</a>
+                        <span class="clr partyDate">@party.StartDate.ToString()</span> <span class="clr partyConsultant">@Html.Term("Consultant"): @party.Order.ConsultantInfo.FullName</span>
+                    </td>
+                    <td class="center@(party.PartyGuests.Count == 0 ? " noInvites" : "")">
+                        @party.PartyGuests.Count
+                    </td>
+                    <td class="center@(party.PartyRsvps.Count == 0 ? " noRSVP" : "")">
+                        @party.PartyRsvps.GroupBy(pr => pr.PartyGuestID).Count()
+                    </td>
+                    <td class="center">
+                        @{
+                string buttonClass = "", buttonText = "", linkUrl = string.Empty;
+                if (party.Order.OrderStatusID != (int)Constants.OrderStatus.Pending)
+                {
+                    buttonClass = "partySendThanksBtn";
+                    buttonText = Html.Term("SendThankYou", "Send Thank-You");
+                    linkUrl = "~/HostedParties/SendThankYou";
+                }
+                else
+                {
+                    if (party.PartyGuests.Count > 0)
+                    {
+                        buttonClass = "partyInviteMore";
+                        buttonText = Html.Term("InviteMorePeople", "Invite More People");
+                        linkUrl = "~/HostedParties/InviteGuests";
+                    }
+                    else
+                    {
+                        buttonClass = "partyInvite";
+                        buttonText = Html.Term("InvitePeople", "Invite People!");
+                        linkUrl = "~/HostedParties/InviteGuests";
+                        
+                    }
+                }
+                        }
+                        <a href="@Url.Resolve(linkUrl, new { partyId = party.PartyID })" class="Button inviteBtn @buttonClass"><span>@buttonText</span></a>
+                    </td>
+                </tr>
+            }
+          
+        </tbody>
+    </table>
+    <div class="UI-cmsWrap">
+        @Model.HtmlSections.GetBySectionName("HostedPartiesMain").ToDisplay(Model.PageID)
+    </div>
+</div>

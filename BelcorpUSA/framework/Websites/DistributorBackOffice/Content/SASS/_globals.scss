@@ -1,0 +1,565 @@
+﻿
+/************************************************************************************
+* Extra Resets 
+************************************************************************************/
+h1, h2, h3, h4, h5, h6, p, #FooterLinks ul, img, br, form {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	border: 0;
+}
+a {
+	outline: none;
+}
+
+/************************************************************************************
+* Encore Structural Bootstraps
+************************************************************************************/
+
+
+.flatList, .listNav, .listNav ul {
+	@include flat-list;
+}
+
+.inlineNav, .inlineNav ul {
+	@include inline-nav;
+ }
+
+ .listNav {
+	@include list-nav;
+}
+
+.responsiveNav {
+	ul, a {
+		display:inline;
+	}
+	select.responsiveNavDropdown {
+		display: none;
+	}
+}
+/********
+if it's intended to show only for desktop, show it
+********/
+.m-hid {
+	display:block;
+	visibility:visible;
+}
+/********
+if it's intended for "mobile" display only, hide it by default
+********/
+.m-display {
+	display:none;
+	visibility:hidden;
+}
+
+/************************************************************************************
+* Standard Tags
+************************************************************************************/
+body {
+	margin: 0;
+	padding: 0;
+}
+body.noAction {
+	.actionItems {
+		display:none;
+		visibility: hidden;
+	}
+}
+a {
+  text-decoration: none;
+}
+
+/************************************************************************************
+* Global Link & Button Rules
+************************************************************************************/
+.AdditionalFilterButton {
+	line-height: em(50);
+}
+.archiveAddLink {
+	display: block;
+}
+.Toggle {
+	display: inline-block;
+	width: 63px;
+	height: 20px;
+	background: #8d8d8d url(../Images/OnOffToggle.png) no-repeat 0 0;
+	overflow: hidden;
+	outline: none;
+	cursor: pointer;
+	@include BorderRadius(4px);
+	@include BoxShadow(em(0 0 3) rgba(0,0,0,.35), inset);
+	border:1px solid #555;
+}
+.ToggleOn {
+	background-color:$SuccessMessage;
+}
+.Toggle span {
+	display: block;
+	height:22px;
+	margin:-1px;
+	text-indent: -100em;
+	background: url(../Images/OnOffToggle.png) no-repeat 32px bottom;
+	@include transition-duration($transition_time);
+}
+.ToggleOn span {
+	background-position: 0px bottom;
+}
+.PageSaveButtons {
+	margin: 0 auto;
+	text-align: left;
+	width: em(300);
+	margin-top: em(10);
+	a {
+		float: left;
+		margin-right: em(10);
+	}
+}
+.LinkCancel, .PageSaveButtons {
+	line-height: em(30);
+}
+.Button {
+    display:inline-block;
+}
+.ButtonOff {
+	opacity: 0.25;
+	cursor: default;
+}
+#ActiveLinkTerm {
+    display:none;
+    padding:em(3);
+    margin:em(0 5);
+}
+
+/*****************************************************
+* Loading
+*****************************************************/
+.area-loading {
+	position: absolute; 
+	left: 50%; 
+	top: 50%;
+}
+
+
+/************************************************************************************
+* Site Logo
+************************************************************************************/
+
+#LogoContain {
+	overflow: hidden;
+	max-height: 200px;
+	min-height: 125px;
+	img {
+		max-height:100%;
+        max-width:100%;
+        margin:em(15 10);
+	}  
+}
+
+/************************************************************************************
+* Containers, Columns, etc
+************************************************************************************/
+body.IE .DropDown {
+	padding: 0;
+}
+#PageContain {
+	width: 100%;
+	margin: 0 auto em(20) auto; 
+}
+.no-mediaqueries {
+	#PageContain {
+		min-width: $min-desktop + 10;
+	}
+}
+#TopPane {
+	position: relative;
+}
+#AccountUtility {
+	padding:em(10 0);
+	width:100%;
+}
+.PerfKPIHold {
+    .PerfKPI {
+        width:49%;
+        margin-right:1%;
+    }
+    .kpiNameValue.PerfKPI {
+        width:100%;
+        clear:left;
+        margin: 1em 0;
+        float:left;
+    }
+}
+
+/************************************************************************************
+Page name & breadcrumbs
+************************************************************************************/
+.Crumbs {
+  margin: em(0 0 15 0);
+}
+.PageTitle {
+	margin:em(-5 -5 20, 20);
+	padding:em(10 10 20, 20);
+	h1 {
+		display: inline;
+		width: auto;
+        line-height:1em;
+	}
+}
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+.globalSearchBar {
+	position: absolute;
+	top: em(170);
+	margin: em(0 0 0 -123);
+	.Search input.globalsearch {
+		width: em(200, $input_font_size);
+		padding: em(5, $input_font_size);
+	}
+}
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+#globalSearch {
+	max-width:350px;
+	margin-left:10px;
+}
+#UserInfo {
+	margin-right:10px;
+	&:before {
+		display:none;
+	}
+}
+
+/************************************************************************************
+* Docked Info Card (Media Bundle, Tree View, Graphical Viewer)
+************************************************************************************/
+.infoCardWindow {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	border-bottom: none;
+	@include opacity(.8);
+	z-index:100;
+}
+
+#mediaBundleContainer {
+	width: 400px;
+}
+#mediaBundleList li .FL {
+	width:80%;
+}
+
+
+/************************************************************************************
+* Tabber
+************************************************************************************/
+.Tabber {
+    height: em(40);
+    li {
+        line-height: em(39);
+        a {
+            display: block;
+            padding: em(0 10);
+        }
+        &.current a {
+            line-height: em(41);
+        }
+    }
+}
+.TabberBody {
+    padding: em(10 5 5);
+}
+.widgetTabs {
+	font-size: em(9);
+	height: em(24, 9);
+	li {
+		line-height: em(24, 9);
+		&.current a {
+			line-height: em(25, 9);
+		}
+	}
+}
+
+
+
+
+/************************************************************************************
+* Forms
+************************************************************************************/
+#creditCardEntry  {
+	#billZipcode {
+		width: em(75);
+	}
+}
+
+.DatePicker, .TimePicker {
+	width: em(75);
+}
+.partyName {
+	width: 80%;
+}
+.fullWidth {
+	width: 96%;
+}
+.firstNameField {
+	width: em(85);
+}
+input {
+	&.quantity {
+		width: em(25);
+		text-align: center;
+	}
+	&.ccvInput {
+		width: em(30);
+	}
+
+}
+.productLookUp {
+	max-width: em(200);
+}
+textarea.ticketDescription {
+	height: em(200);
+}
+input {
+	&.myURLInput {
+		border-right: none;
+		padding-right: em(0);
+	}
+	&.myURLDomainDisplay {
+		width: auto;
+		padding-left: 0px;
+	}
+}
+
+/************************************************************************************
+* Tables
+************************************************************************************/
+table {
+	display: table;
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 1px;
+	border: none;
+}
+.responsiveDataGrid {
+	width:100%;
+	height:100%;
+	overflow-x:auto;
+}
+.DataGrid {
+	margin-bottom: em(20);
+	thead {
+		th {
+			padding: em(5 3);
+            text-align:left;
+		}
+	}
+	td, th {
+		padding: em(3);
+		vertical-align: middle;
+	}
+	tbody tr {
+		td {
+			@include DottedLine;
+		}
+		&.GuestTotal td {
+			border: none;
+		}
+	}
+}
+.ClickableDataGrid tr, .cell-hovered {
+	cursor: pointer;
+}
+.IconCol {
+	width: em(24);
+	text-align: center;
+}
+.FauxTable {
+	display: table;
+	width: 100%;
+	margin-bottom: em(20);
+	.FRow {
+		display: table-row;
+		label, p {
+			display: table-cell;
+			padding: em(2 0);
+			vertical-align: top;
+			text-align: left;
+		}
+		label {
+			width: em(120);
+		}
+	}
+}
+tbody td.clickable {
+	cursor: pointer;
+}
+body.IE7 .SortColumn {
+	margin-top: -17px;
+}
+th .SortColumn {
+	*margin-top: -17px;
+}
+.FormRow br, .FRow br {
+	height: em(2);
+	line-height: em(2);
+}
+
+/************************************************************************************
+* Grid Filters, Pagination, etc
+************************************************************************************/
+.GridFilters {
+	padding: em(10);
+	border-bottom: none;
+	.FL {
+		margin: em(4 8 0 0);
+		label {
+			display: block;
+		}
+	}
+	.RunFilter {
+		margin-top: 1.5em;
+	}
+}
+.GridUtility {
+	padding: em(3);
+	margin: em(2 0 );
+	overflow:hidden;
+	.UI-icon-container span {
+		float: left;
+		display: block;
+	}
+	.pipe {
+		display: none;
+	}
+	a {
+		float:left;
+		margin-right: em(5);
+	}
+}
+
+.Pagination {
+	margin-left: em(1);
+	padding: em(5);
+	line-height: em(28);
+	.previousPage {
+		float: left;
+	}
+	.nextPage {
+		float: right;
+		*margin-top: em(-28);
+	}
+	.Bar {
+		margin: 0 auto;
+		text-align: center;
+		width: em(200);
+		float: left;
+		height: em(28);
+    }
+	a {
+		display: block;
+		width: em(28);
+		height: em(28);
+		line-height: em(40);
+		overflow: hidden;
+		span {
+			display: block;
+		} 
+	} 
+}
+body.IE7 .nextPage {
+	margin-top: em(-28);
+ }
+.PageSize {
+	float: right;
+}
+.Pagination .pages {
+	display: inline-block;
+}
+
+
+
+
+/*****************
+* Tooltip plugin
+*****************/
+
+.has-tooltip {
+	.tooltip {
+		position: absolute;
+		display: none;
+	}
+	&:hover .tooltip {
+		display: block;
+	}
+}
+a.qmark_trigger {
+	position:relative;
+	right: em(-10)
+}
+.actionItems .icon-help:before {
+	font-size: em(21);
+}
+.qmark_close{
+	position: absolute;
+	right:em(-8);
+	top: em(-6);
+	pointer-events: auto;
+}
+.qmark {
+	padding: em(20);
+	width: em(170);
+	margin-left: em(-95);
+	left: 50%;
+	text-align: center;
+	text-indent: em(0);
+	position: absolute;
+	pointer-events: none;
+	opacity: 0;
+	box-shadow: em(1 1 2) rgba(0,0,0,0.1);
+	border: em(3) solid #bbb;
+	font-weight: normal;
+}
+.qmark::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	margin-left: em(-10);
+	bottom: em(-9);
+	width: 0;
+	height: 0;
+	border-left: em(0) solid transparent;
+	border-right: em(10) solid transparent;
+	border-top: em(8) solid #bbb;
+}
+.qmarkLabel {
+    float:left;
+    line-height:em($IconSize);
+}
+
+
+/********************
+* Notes
+********************/
+.AcctNote {
+	padding:em(5);
+}
+
+/************************************************************************************
+* Alerts
+************************************************************************************/
+.UI-Alert {
+	height: em(41);
+	line-height: em(41);
+	margin: em(0 0 5 0);
+}
+.errorMessageBubble {
+  display: none;
+  margin-bottom: em(10, 12);
+  padding: em(2 5 3 3, 12);
+  position: absolute;
+  height: em(14, 12);
+}

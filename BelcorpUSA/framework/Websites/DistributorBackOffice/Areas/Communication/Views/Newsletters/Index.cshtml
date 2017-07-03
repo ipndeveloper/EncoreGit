@@ -1,0 +1,78 @@
+﻿@model DistributorBackOffice.Areas.Communication.Models.Newsletters.IndexModel
+@{
+    ViewBag.Title = "Newsletters";
+}
+@section head{
+
+<link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+<link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jcrop.css")" />
+<script type="text/javascript" src="@Href("~/Resource/Scripts/fileuploader.js")"></script>
+<script type="text/javascript" src="@Href("~/Resource/Scripts/jcrop.js")"></script>
+
+@*These are required by PaginatedGrid control when loaded via ajax - ACLS*@
+<script type="text/javascript" src="@Href("~/Resource/Scripts/multiselect.js")"></script>
+<link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/multiselect.css")" />
+
+<script type="text/javascript">
+	$(function () {
+		$('#SelectedCampaignID').change(function () {
+			var value = $(this).val();
+
+			$.post('/Communication/Newsletters/GetNewsletterCampaignActions', { campaignID: value }, function (response) {
+				if (response.result) {
+					var ddl = $('#SelectedCampaignActionID');
+					ddl.empty()
+					$.each(response.selectList, function (key, selectListItem) {
+						ddl
+                            .append($("<option></option>")
+                            .attr("value", selectListItem.Value)
+                            .text(selectListItem.Text)
+                        );
+					});
+					ddl.change();
+				} else {
+					showMessage(response.message, true);
+				}
+			});
+		});
+	});
+
+    $(function () {
+    	$('#SelectedCampaignActionID').change(function () {
+            var value = $(this).val();
+
+            $('#newsletterInfoContainer').html('<img src="/Content/Images/loader_36x36.gif" alt="loading..." />');
+            $.post('/Communication/Newsletters/NewsletterInfo', { campaignActionID: value }, function (response) {
+                $('#newsletterInfoContainer').html(response);
+            });
+        });
+    });
+    </script>
+
+}
+@section title{
+ @Html.Term("Newsletters", "Newsletters")
+}
+
+@if (Model.ShowNewsletters)
+{
+    <div class="UI-lightBg brdrAll GridFilters mb10">
+        <div class="FL FilterSet">
+            <div class="FL">
+                <label>@Html.Term("Newsletter", "Newsletter"):</label>
+                @Html.DropDownListFor(m => m.SelectedCampaignID, Model.CampaignSelectList)
+
+                <label>@Html.Term("Mailing", "Mailing"):</label>
+                @Html.DropDownListFor(m => m.SelectedCampaignActionID, Model.CampaignActionSelectList)
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div id="newsletterInfoContainer">
+        @Html.Partial("NewsletterInfo", Model.NewsletterInfoModel)
+    </div>
+}
+else
+{
+    @Html.Term("NoNewsletters", "There are no newsletters to view or edit.")
+}

@@ -1,0 +1,53 @@
+﻿@model nsCore.Areas.Products.Models.Promotions.Base.PriceAdjustmentPromotionModel
+		   
+<div style="display: none;" id="crSub" class="TabContent">
+	@{	
+        
+        var promotionModel = Model.CartCondition as nsCore.Areas.Products.Models.Promotions.ICustomerSubtotalRangeCartCondition;
+
+        decimal? minimumSubtotal = null;
+		decimal? maximumSubtotal = null;
+		
+		if (promotionModel != null)
+		{
+			minimumSubtotal = promotionModel.MinimumSubtotal;
+			maximumSubtotal = promotionModel.MaximumSubtotal;		
+		}
+	} 
+	<table>
+		<tr>
+			<td style="width:230px; vertical-align: middle;">
+				@Html.Term("Promotions_ConditionsCartSubtotalLabel", "Cart's subtotal is greater than or equal to:")<br />		
+			</td>
+			<td style="width:200px; vertical-align: middle;">
+
+            <input type="text"  monedaidioma='CultureIPN' value="@(minimumSubtotal.HasValue ? minimumSubtotal.Value.ToString("N", CoreContext.CurrentCultureInfo) : "")"
+					   style="width: 200px;" class="pad5 mr10 numeric" id="subVal" />
+				@*<input type="text" value="@(minimumSubtotal.HasValue ? minimumSubtotal.Value.ToString("0.00").Replace(",", ".") : "")"
+					   style="width: 200px;" class="pad5 mr10 numeric" id="subVal" />*@
+			</td>
+			<td style="width:230px; vertical-align: middle;">
+				<span class="lawyer block">
+					@Html.Term("Promotions_CartRewardsDoesNotIncludeText", "does not consider taxes & shipping")</span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td style="width:230px; vertical-align: middle;">
+				@Html.Term("Promotions_ConditionsCartSubtotalMaximumLabel", "Cart's subtotal is less than or equal to:")<br />		
+			</td>
+			<td style="width:200px; vertical-align: middle;">
+
+            <input type="text"  monedaidioma='CultureIPN' value="@(maximumSubtotal.HasValue ? maximumSubtotal.Value.ToString("N", CoreContext.CurrentCultureInfo) : "")"
+					   style="width: 200px; float:right;" class="pad5 mr10 numeric" id="subMaxValue" />
+				@*<input type="text" value="@(maximumSubtotal.HasValue ? maximumSubtotal.Value.ToString("0.00").Replace(",", ".") : "")"
+					   style="width: 200px; float:right;" class="pad5 mr10 numeric" id="subMaxValue" />*@
+				
+			</td>
+			<td style="width:230px; vertical-align: middle;">
+				<span class="lawyer block">
+					@Html.Term("Promotions_CartRewardsDoesNotIncludeText", "does not consider taxes & shipping")</span>		
+			</td>
+		</tr>	
+	</table>
+</div>

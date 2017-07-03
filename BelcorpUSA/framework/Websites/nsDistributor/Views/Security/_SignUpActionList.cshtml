@@ -1,0 +1,12 @@
+﻿<div id="SignUpActionList" data-bind="with: SignUp">
+	<ul class="flatList" data-bind="template: { name: getTemplate, foreach: SignUpTypes }">
+	</ul>
+	<span class="clr"></span>
+</div>
+
+@* knockout templates *@
+<script type="text/html" id="@SecurityController.SignUpTemplates.Default">
+	<li class="UI-lightBg trigger actionItems" data-bind="click: select, enter: select, css: { selected: IsVisible }, attr: { tabindex: $root.nextTabIndex() }">
+		@Html.Partial("_SignUpDefaultTemplate")
+	</li>
+</script>

@@ -1,0 +1,31 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/VolumesExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetVolumesReport")
+        .AddInputFilter(Html.Term("AccountNumber1", "Account Number"), "accountNumber", ViewData["AccountNumber"])
+        .AddInputFilter(Html.Term("Name", "Name"), "name", ViewData["Name"])
+
+        .AddInputFilter(Html.Term("QVIni1", "QV --> Min"), "qvIni", ViewData["QVIni"])
+        .AddInputFilter(Html.Term("QVFin1", "--> Max"), "qvFin", ViewData["QVFin"])
+
+        .AddInputFilter(Html.Term("CVIni1", "CV --> Min"), "cvIni", ViewData["CVIni"])
+        .AddInputFilter(Html.Term("CVFin1", "--> Max"), "cvFin", ViewData["CVFin"])
+
+        .AddColumn(Html.Term("AccountNumber1"), "AccountNumber")
+        .AddColumn(Html.Term("Name"), "Name")
+        .AddColumn(Html.Term("QV"), "QV")
+         .AddColumn(Html.Term("CV"), "CV")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

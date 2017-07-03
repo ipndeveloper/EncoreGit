@@ -1,0 +1,61 @@
+@using NetSteps.Data.Entities.Business.HelperObjects.SearchData;
+
+@model NetSteps.Data.Entities.Business.SupportTicketSearchParameters
+           
+@section head {
+
+    <script type="text/javascript">
+     $(function () {
+        if ('@Model.SupportTicketStatusID' == '@Constants.SupportTicketStatus.Resolved.ToShort()') {
+            $('#SupportTicketStatusOpenInputFilter').attr('checked', 'checked');
+        } else {
+            $('#SupportTicketStatusOpenInputFilter').removeAttr('checked');
+        }
+
+        $('#SupportTicketStatusOpenInputFilter').change(function () {
+            if ($(this).is(":checked")) {
+                $('#SupportTicketStatusOpenInputFilter').attr('checked', 'checked');
+                window.location = '@Href("~/Support?supportTicketStatusID=" + Constants.SupportTicketStatus.Resolved.ToShort())';
+            } else {
+                $('#SupportTicketStatusOpenInputFilter').removeAttr('checked');
+                window.location = '@Href("~/Support?showOpenTickets=true")';
+            }
+        });
+    });
+    
+    </script>
+
+
+}
+@section breadcrumb {
+}
+@section title {
+    @Html.Term("ConsultantSupportCenter", "Consultant Support Center")
+}
+
+<div>
+    <div id="TicketsDisplay">
+          @{
+          
+            AccountSlimSearchData consultantSlimSearchData = Model.AccountID.HasValue ? CachedData.GetAccountSlimSearch((int)Model.AccountID):null;
+            string consultantDisplayName = consultantSlimSearchData != null ? string.Format("{0} {1} (#{2})", consultantSlimSearchData.FirstName, consultantSlimSearchData.LastName, consultantSlimSearchData.AccountNumber) : string.Empty;
+
+            Html.PaginatedGrid<SupportTicketSearchData_BackOffice>("~/Support/GetSupportTickets")
+            .AutoGenerateColumns()
+            .SetDefaultSort("SupportTicketPriorityID", NetSteps.Common.Constants.SortDirection.Ascending)
+            .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+            .AddData("supportTicketStatusID", Model.SupportTicketStatusID)
+            .AddData("showOpenTickets", Model.SupportTicketStatusOpen)
+            .AddInputFilter(Html.Term("SupportTicketNumber", "Support Ticket Number"), "SupportTicketNumber")
+            .AddInputFilter(Html.Term("SupportTicketTitle", "Title"), "Title")
+            .AddInputFilter(Html.Term("ShowResolvedTicket", "Show resolved ticket"), "SupportTicketStatusOpen", false, false, false, false, "checkbox")
+            .ClickEntireRow()
+            .Render();
+        }
+     
+    </div>
+    <span class="ClearAll"></span>
+   
+ </div>
+
+

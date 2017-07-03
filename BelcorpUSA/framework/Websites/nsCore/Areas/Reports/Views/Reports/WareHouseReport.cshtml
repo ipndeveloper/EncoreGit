@@ -1,0 +1,36 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/ExportExcel")';
+        });
+    });
+</script>
+@{
+    
+    var grid=Html.PaginatedGrid("~/Reports/Reports/GetWarehouseReport")
+        .AddSelectFilter(Html.Term("Status"), "active", new Dictionary<string, string>() { { "", Html.Term("SelectaStatus", "Select a Status...") }, { "true", Html.Term("Active") }, { "false", Html.Term("Inactive") } })
+        .AddSelectFilter(Html.Term("Type"), "type", new Dictionary<string, string>() { { "", Html.Term("SelectaType", "Select a Type...") } }.AddRange(SmallCollectionCache.Instance.ProductTypes.ToDictionary(pt => pt.ProductTypeID.ToString(), pt => pt.GetTerm())))
+        .AddInputFilter(Html.Term("SKUorName", "SKU or Name"), "query", ViewData["Query"])
+        .AddInputFilter(Html.Term("SAPSKU", "SAP SKU"), "sapSku", ViewData["SAPSKU"])
+		.AddColumn(Html.Term("SKU"), "SKU")
+        .AddColumn(Html.Term("ProductName", "Product Name"), "query")
+        .AddColumn(Html.Term("Status"), "Active")
+        .AddColumn(Html.Term("OfferType", "Offer Type"), "OfferType",false,false)
+        .AddColumn(Html.Term("SAP_CODE", "SAP Code"), "ProductType.TermName")
+        .AddColumn(Html.Term("Product_Type", "Type"), "ProductType.TermName")
+        .AddColumn(Html.Term("Variant", "Is Variant"), "Variant",false,false)
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+       
+        
+        foreach (Warehouse warehouse in SmallCollectionCache.Instance.Warehouses.Where(w => w.Active && w.WarehouseID==2))
+       {
+           grid.AddColumn(warehouse.GetTerm() + "<a href=\"javascript:void(0);\" class=\"pad10 bold toggleWarehouse\" rel=\"warehouse" + warehouse.WarehouseID + "\" title=\"Toggle column\"><span>+</span></a>", warehouse.Name, false);
+       }
+       
+        grid.Render();
+}

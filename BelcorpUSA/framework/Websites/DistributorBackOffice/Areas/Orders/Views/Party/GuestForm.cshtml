@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AccountSlimSearchData>
+@using DistributorBackOffice.Areas.Orders.Models.Party
+
+<script type="text/javascript">
+	//<![CDATA[
+    $(function () {
+        $('.FirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")');
+        $('.LastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+        $('.Email').watermark('@Html.JavascriptTerm("Email", "Email")');
+
+        $('.FirstName').jsonSuggest('@Href("~/Orders/Party/SearchAccounts")',
+        { onSelect: function (item) {
+            $('#accountId').val(item.id);
+            var guestFormDiv = $(this).closest('div');
+            var guid = guestFormDiv.attr('data-id');
+            var guestFormContainer = guestFormDiv.parents('.FormContainer');
+            $.get('@Href("~/Orders/Party/GetAccount")', { accountId: item.id }, function (response) {
+                if (response.result) {
+                    guestFormContainer.find('#txtFirstName' + guid).val(response.firstName);
+                    guestFormContainer.find('#txtLastName' + guid).val(response.lastName);
+                    guestFormContainer.find('#txtEmail' + guid).val(response.email);
+
+                    var address = "#address" + guid;
+
+                    var country = address + 'Country';
+                    $(country).val(response.Country);
+                    if (!$(country).find('option:selected').length) {
+                        $(country + ' option:first').attr('selected', 'selected');
+                    }
+
+                    $(address + 'Address1').val(response.address1);
+                    $(address + 'Address2').val(response.address2);
+                    $(address + 'Address3').val(response.address3);
+
+                    window['hostAddressPostalCodeLookupComplete'] = function () {
+                        $(address + 'City').val(response.city);
+                        $(address + 'County').val(response.county);
+                        $(address + 'State').val(response.state);
+                        window['hostAddressPostalCodeLookupComplete'] = undefined;
+                    };
+
+                    var addressContainer = '#hostAddressContainer' + guid;
+                    var postalCodeControls = $(addressContainer + ' .PostalCode');
+
+                    if (postalCodeControls.length == 1) {
+                        postalCodeControls.val(response.postalCode).triggerHandler('keyup');
+                    }
+                    else {
+                        var zip = (response.postalCode) ? response.postalCode : '';
+                        var position = 0;
+                        postalCodeControls.each(function () {
+                            var length = $(this).attr('maxlength');
+                            $(this).val(zip.substr(position, length));
+                            position += length;
+                        }).filter(':last').triggerHandler('keyup');
+                    }
+
+                    $(address + 'City').val(response.city);
+                    $(address + 'County').val(response.county);
+                    $(address + 'State').val(response.state);
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+
+        }, minCharacters: 3, ajaxResults: true, maxResults: 50, showMore: true, width: $('.FirstName').outerWidth(true) + $('.LastName').outerWidth()
+        });
+    });
+    //]]>
+</script>
+
+
+@if (Model != null)
+{
+    foreach (var account in Model)
+    {
+        @Html.Partial("_AddIndividualGuest", new AddIndividualGuestModel(account.FirstName, account.LastName, account.FullName, account.EmailAddress, account.AccountID.ToString()))
+    }
+}
+else if (ViewBag.Guest != null)
+{
+    PartyGuest guest = ViewBag.Guest;
+    @Html.Partial("_AddIndividualGuest", new AddIndividualGuestModel(
+        guest.FirstName
+        , guest.LastName
+        , NetSteps.Data.Entities.Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, CoreContext.CurrentCultureInfo.Name)
+        , guest.EmailAddress));   
+}
+
+@for (var i = 0; i < ViewBag.GuestCount; i++)
+{
+    @Html.Partial("_AddIndividualGuest", new AddIndividualGuestModel())
+}

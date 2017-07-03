@@ -1,0 +1,37 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+<!-- network widget -->
+
+<script type="text/javascript">
+    $(function () {
+        showLoading($('#newContactsContainer'));
+        var data = {
+            //			accountType: 'Prospect',
+            page: 0,
+            pageSize: 8,
+            orderBy: 'DateCreatedUTC',
+            orderByDirection: 'Descending'
+        };
+        $.get('@Href("~/Contacts/GetOverview")', data, function (response) {
+            if (response.result) {
+                $('#newContactsContainer').html(response.data);
+                $("div.WidgetWrap.Network ul.lr li:odd").addClass("Alt");
+                hideLoading($('#newContactsContainer'));
+            } else {
+                showMessage(response.message, true);
+                hideLoading($('#newContactsContainer'));
+            }
+        });
+    });
+</script>
+
+<div class="WidgetWrap Network" style="display: block;">
+    <div class="Widget">
+        <div class="UI-btn txtShadowDrk WidgetTitle">
+            <span class="Txt UI-btn">@Html.Term("NewContacts", "New Contacts")</span> <span class="FR WidgetControls"><a href="javascript:void(0);"
+				onclick="javascript:hideWidget(@Model.Widget.WidgetID);" title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")"><span>X</span></a></span>
+        </div>
+        <div class="WidgetBody" id="newContactsContainer">
+        </div>
+    </div>
+</div>
+<!--end widget -->

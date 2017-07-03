@@ -1,0 +1,79 @@
+﻿<div class="signUpActionTitle">
+    <h3>@Html.Term("PWS_SignUp_PreferredCustomer_Heading", "Preferred Customer") <a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="#" content-qmark="@Html.Term("AccountToolTip_PreferredCustomer", "Receive discounts on select items as a preferred customer.")"></a></h3>
+</div>
+<div style="display: none;" class="target signUpActionContent">
+    <div class="FormContainer loginForm">
+        <div class="FRow splitCol firstName">
+            <div class="FLabel">
+                <label for="txtFirstName">
+                    @Html.Term("FirstName", "First Name"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtFirstName" class="required" name="@Html.Term("FirstNameIsRequired", "First Name is required.")" tabindex="14" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow splitCol lastName">
+            <div class="FLabel">
+                <label for="txtLastName">
+                    @Html.Term("LastName", "Last Name"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtLastName" class="required" name="@Html.Term("LastNameIsRequired", "Last Name is required.")" tabindex="15" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow fullWidth email">
+            <div class="FLabel">
+                <label for="txtEmail">
+                    @Html.Term("Email"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtEmail" class="required" name="@Html.Term("EmailIsRequired", "Email is required.")" tabindex="16" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        @if (Model.DisplayUsernameField)
+        {
+            <div class="FRow splitCol username">
+                <div class="FLabel">
+                    <label for="txtUsername">
+                        @Html.Term("Username"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtNewUsername" class="required" name="@Html.Term("UsernameIsRequired", "Username is required.")" tabindex="17" />
+                </div>
+                <span class="clr"></span>
+            </div>
+        }
+        <div class="FRow splitCol password">
+            <div class="FLabel">
+                <label for="txtPassword">
+                    @Html.Term("Password"):</label>
+            </div>
+            <div class="FInput">
+                <input type="password" id="txtNewPassword" class="required" name="@Html.Term("PasswordIsRequired", "Password is required.")" tabindex="18" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow splitCol confirmPassword">
+            <div class="FLabel">
+                <label for="txtPassword">
+                    @Html.Term("ConfirmPassword", "Confirm Password"):</label>
+            </div>
+            <div class="FInput">
+                <input type="password" id="txtNewPasswordConfirm" class="required" name="@Html.Term("PasswordConfirmationIsRequired", "Password confirmation is required.")" tabindex="19" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <span class="clr"></span>
+        <div class="FRow options visible">
+            <input type="checkbox" />
+            <label>@Html.Term("PWS_SignUp_OptOut_Label", "Opt-out of being contacted") </label><a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="#" content-qmark="@Html.Term("AccountToolTip_OptOut", "Opt out to avoid being contacted.")"></a>
+        </div>
+    </div>
+    <p class="FormSubmit">
+        <a class="Button MinorButton btnSignUp" href="javascript:void(0);" id="btnSignUp" tabindex="20"><span>
+            @Html.Term("PWS_SignUp_Continue_Button", "Continue")</span></a>
+    </p>
+</div>

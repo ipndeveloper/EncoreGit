@@ -1,0 +1,11 @@
+﻿@model NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo
+<div class="promotionDescription">@Model.Description</div>
+@if (!string.IsNullOrEmpty(Model.CouponCode))
+{
+    <a href="javascript:void(0);" title="@Model.ActionText" class="FL UI-mainBg mt10 pad5 brdrAll promotionCodeBtn">
+        <span class="block FL mr10 ml10 promotionCode">@Model.CouponCode</span>
+        <div class="FL UI-icon-container Add">
+            <span class="UI-icon icon-plus"></span><span class="clr"></span>
+        </div>
+    </a>
+}

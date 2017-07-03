@@ -1,0 +1,284 @@
+﻿@model OrderEntryModel
+@{
+    int currencyID = Model.Order.CurrencyID;
+ }
+
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td class="FLabel">
+            <span class="FL">
+                @Html.Term("Products", "Products")</span>
+            <br />
+            <img id="ProductLoad" src='@Href("~/Content/Images/processing.gif")'
+                alt="@Html.Term("loading", "loading...")" class="FR" />
+        </td>
+        <td>
+            <input id="hidNumOfOrderCustomers" type="hidden" value='@Model.Order.ParentOrder.OrderCustomers.Count' />
+            <table class="DataGrid">
+                <tr class="GridColHead">
+                    <th class="GridCheckBox">
+                        @Html.Term("Replace", "Replace")
+                    </th>
+                    <th>
+                        @Html.Term("SKU", "SKU")
+                    </th>
+                    <th>
+                        @Html.Term("Product", "Product")
+                    </th>
+                    <th>
+                        @Html.Term("PricePerItem", "Price Per Item")
+                    </th>
+                    <th>
+                        @Html.Term("NumberToReplace", "# to Replace")
+                    </th>
+                    <th style="width: 9.091em;">
+                        @Html.Term("OriginalQuantity", "Original Quantity")
+                    </th>
+                    <th>
+                        @Html.Term("ReplacementReason", "Replacement Reason")
+                    </th>
+                    <th>
+                        @Html.Term("Notes", "Notes")
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.Order.ParentOrder.OrderCustomers.Count; i++)
+                {
+                    <input id='@string.Format("hidNumOfItems_{0}", i)' type="hidden" value='@Model.Order.ParentOrder.OrderCustomers[i].OrderItems.Count' />
+                    for (int t = 0; t < Model.Order.ParentOrder.OrderCustomers[i].OrderItems.Count; t++)
+                    {
+                        if(Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].HasChildOrderItems)
+						{
+							continue;
+						}
+                        <tr id='@string.Format("trReplaceOriginal_{0}_{1}", i, t)'>
+                            <td>
+                                <input id='@string.Format("chkReplace_{0}_{1}", i, t)' type="checkbox" onclick='@string.Format("javascript:ToggleVisible({0}, {1});", i, t)' />
+                            </td>
+                            <td>@Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].SKU
+                                <input type='hidden' id='@string.Format("hidItemID_{0}_{1}", i, t)' value='@Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].ProductID' />
+                            </td>
+                            <td>@Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].ProductName
+                            </td>
+                            <td>@string.Format("{0:0.00}", Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].ItemPrice)
+                            </td>
+                            <td>
+                                <input id='@string.Format("txtReplaceAmount_{0}_{1}", i, t)' type="text" value='1' class='Short quantity required' style="width:4.167em;" onkeypress='validate(event)' />
+                            </td>
+                            <td>@Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].Quantity
+                                <input id='@string.Format("hidOriginalQuantity_{0}_{1}", i, t)' type='hidden' value='@Model.Order.ParentOrder.OrderCustomers[i].OrderItems[t].Quantity' />
+                            </td>
+                            <td>
+                                <select id='@string.Format("selReplacementReason_{0}_{1}", i, t)'>
+                                    @foreach (ReplacementReason reason in SmallCollectionCache.Instance.ReplacementReasons)
+                                    {
+                                        <option value='@reason.ReplacementReasonID'>@reason.GetTerm()</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input id='@string.Format("txtNotes_{0}_{1}", i, t)' type="text" />
+                            </td>
+                        </tr>
+                    }
+                    <tr class='GridTotalBar'>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <a id='btnUpdateReplacement' href="javascript:void(0);" class="DTL Update OverrideDisable">
+                                Update </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            <table id='tblReplacementPlaceholder' class="DataGrid">
+                <tr class="GridColHead">
+                    <th class="GridCheckBox">
+                    </th>
+                    <th>
+                        @Html.Term("SKU", "SKU")
+                    </th>
+                    <th>
+                        @Html.Term("Product", "Product")
+                    </th>
+                    <th>
+                        @Html.Term("PricePerItem", "Price Per Item")
+                    </th>
+                    <th style="width: 9.091em;">
+                        @Html.Term("QuantityToReturn", "Quantity to Return")
+                    </th>
+                    <th>
+                        @Html.Term("ReplacementReason", "Replacement Reason")
+                    </th>
+                    <th>
+                        @Html.Term("Notes", "Notes")
+                    </th>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<script type='text/javascript'>
+
+
+
+    $(function ()
+    {
+        $('#btnUpdateReplacement').click(function () { UpdateOrder(); });
+
+        
+        $.post('@Href("~/Orders/Replacement/InitialReplacementGrid")', null, function (results)
+        {
+            if (results.result)
+            {
+                $('#shippingMethods').html(results.shippingMethods);
+                $('#tblReplacementPlaceholder').html(results.returnItemsHtml);
+
+                if (results.orderItems.length && $('#btnPerformOverrides').length)
+                {
+                    $('#btnPerformOverrides').removeClass('ButtonOff');
+                }
+
+                updateTotals(results);
+
+                if (!results.orderItems)
+                {
+                    $('.shippingMethodsSection').effect("blind", { mode: 'hide' }, 500);
+                } else
+                {
+                    $('#shippingMethods').html(results.shippingMethods);
+                    $('.shippingMethodsSection').effect("blind", { mode: 'show' }, 500);
+                }
+            }
+            else
+            {
+                alert(results.message);
+            }
+        });
+
+    })
+
+    function ToggleVisible(customerNum, itemNum) {
+        var easyUse = '_' + customerNum + '_' + itemNum;
+        var checkbox = document.getElementById('chkReplace' + easyUse);
+
+
+        if (checkbox.prop('checked')) {
+            $('#trReplace' + easyUse).show();
+        }
+        else {
+            $('#trReplace' + easyUse).hide();
+        }
+    }
+
+    function validate(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        var regex = /[0-9]/;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+
+
+    function UpdateOrder() {
+    	var p = $('#btnUpdateReplacement');
+    	showLoading(p);
+
+        var orderItemIDArray = {};
+        var quantityArray = {};
+        var originalQuantityArray = {};
+        var categoryArray = {};
+        var reasonArray = {};
+        var notesArray = {};
+
+        var numberOfCustomers = $('#hidNumOfOrderCustomers').val();
+
+        var indexer = 0;
+        var i = 0;
+        var t = 0;
+
+        for (i = 0; i < numberOfCustomers; i++) {
+            var numberOfItems = $('#hidNumOfItems_' + i).val();
+            for (t = 0; t < numberOfItems; t++) {
+            	if ($('#chkReplace_' + i + '_' + t).prop('checked')) {
+                    var newQuantity = $('#txtReplaceAmount_' + i + '_' + t).val();
+                    var originalQuantity = $('#hidOriginalQuantity_' + i + '_' + t).val();
+
+                    if (newQuantity > originalQuantity) {
+                        $('#txtReplaceAmount_' + i + '_' + t).val(originalQuantity);
+                        newQuantity = originalQuantity;
+                    }
+
+                    orderItemIDArray[indexer] = $('#hidItemID_' + i + '_' + t).val();
+                    quantityArray[indexer] = newQuantity;
+                    originalQuantityArray[indexer] = originalQuantity;
+                    categoryArray[indexer] = $('#selReplacementCategory_' + i + '_' + t).val();
+                    reasonArray[indexer] = $('#selReplacementReason_' + i + '_' + t).val();
+                    notesArray[indexer] = $('#txtNotes_' + i + '_' + t).val();
+                    indexer = indexer + 1;
+                }
+            }
+        }
+
+        var data =
+            {
+                OrderItemIDArray: orderItemIDArray,
+                QuantityArray: quantityArray,
+                OriginalQuantityArray: originalQuantityArray,
+                ReplacementReasons: reasonArray,
+                Notes: notesArray
+            };
+
+
+        $.post('@Href("~/" + Model.ReplacementUpdateOrderLocation)', data, function (results) {
+            if (results.result) {
+                $('#shippingMethods').html(results.shippingMethods);
+                //$('.shippingMethodsSection').effect("blind", { mode: 'show' }, 500);
+                $('#tblReplacementPlaceholder').html(results.returnItemsHtml);
+
+                if (results.orderItems.length && $('#btnPerformOverrides').length) {
+                    $('#btnPerformOverrides').removeClass('ButtonOff');
+                }
+
+                updateTotals(results);
+
+                if (!results.orderItems) {
+                    $('.shippingMethodsSection').effect("blind", { mode: 'hide' }, 500);
+                } else {
+                    $('#shippingMethods').html(results.shippingMethods);
+                    $('.shippingMethodsSection').effect("blind", { mode: 'show' }, 500);
+                }
+            }
+            else
+            {
+                showMessage(results.message, true);
+            }
+            
+			hideLoading(p);
+        });
+              
+    }
+
+</script>

@@ -1,0 +1,17 @@
+﻿@model DistributorBackOffice.Areas.Communication.Models.MailStats.RecipientListModel
+
+@{
+    Html.PaginatedGrid<MailMessageGroupAddressSearchData>("~/Communication/MailStats/RecipientListData")
+        .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+		.ExcludeScriptSection()
+        .AddData("searchType", Model.SearchType)
+        .AddData("campaignActionID", Model.CampaignActionID)
+        .AddData("campaignSubscriptionAddedByAccountID", Model.CampaignSubscriptionAddedByAccountID)
+        .AddColumn(Html.Term("FirstName", "First Name"), "FirstName")
+        .AddColumn(Html.Term("LastName", "Last Name"), "LastName")
+        .AddColumn(Html.Term("EmailAddress", "Email Address"), "EmailAddress")
+        .AddColumn(Html.Term("TotalActions", "Total Actions"), "TotalActions")
+        .AddColumn(Html.Term("LastActionDateTime", "Last Action Date/Time"), "LastActionDateUTC")
+        .AddColumn(Html.Term("Link", "Link"), "LastClickUrl")
+        .Render();
+}

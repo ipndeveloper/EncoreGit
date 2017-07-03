@@ -1,0 +1,783 @@
+﻿
+
+
+/******************************************************************************************************************************************
+* QUICK REFERENCE GUIDE
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* Standard Tags             * Re-used Color Rules           * Containers, Columns, etc  * Image Sprites          * Buttons/Stylized Links
+* Logo                      * Site User Utilities           * SiteNav                   * Footer Navigation      * Site Owner Widget
+* Home Page                 * News Widget                   * Secondary Navigation      * CMS Blocks             * Forms
+* Form Validation           * Tables                        * Steps                     * Shopping Main          * Shop by Collections
+* Shopping Search           * Product Details Page          * Tabber                    * Bundles                * Product Variants
+* Cart                      * Shopping Checkout             * My Account Page           * Address Verification	 * News Views
+* Login/SignUp Page         * Enrollment                    * Public Media Library      * Site Response Messages * Sprite Positioning
+* Other Misc Styles         * Hidden Framework Elements     * CSS Overrides             * CMS and Page Content CSS
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* END QUICK REFERENCE GUIDE
+*******************************************************************************************************************************************/
+
+body {
+	@include site-body;
+	@include site-typography;
+}
+
+/******************************************************************************
+Shared CSS3 Transitions
+*******************************************************************************/
+.ShopNav a, #ShoppingCart a, .UI-cycle-icon, #SecondaryNav a  {
+	@include transition-property(all);
+}
+
+
+/******************************************************************************
+* Logo & Masthead
+*******************************************************************************/
+
+#Logo {
+	padding:10px 0;	
+}
+
+
+/*******************************************************************************
+* Standard Tags (headers, links, inputs)
+*******************************************************************************/
+h1 {font-size:175%;font-family:$HeaderFontFamily;}
+h2 {font-size:150%; line-height:1.3em;} 
+h3 {font-size:125%;}
+h4 {font-size:105%;}
+a {
+	text-decoration:none;
+	outline:none;
+	color:$BodyLink;
+	@include transition-property(color);
+	@include transition-duration(.5s);
+	&.current {
+		font-weight:bold;
+	}
+	&:hover {
+		color: $BodyLinkHover;
+	}
+}
+
+input, textarea, select {padding:2px;border:1px inset $BorderColor;font-family:$FontFamily;}
+input[type="checkbox"], input[type="radio"] {border:0;}
+
+
+/*******************************************************************************
+* Re-used Color Rules
+*******************************************************************************/
+.UI-mainBg {
+	color:$MainBgText;
+	background-color:$MainBg;
+}
+
+.UI-secBg {
+	color:$SecBgText;
+	background-color:$SecBg;
+}
+
+.UI-darkBg {
+	color:$DarkBgText;
+	background-color:$DarkBg;
+}
+
+.UI-lightBg, .GridFilter, .selected {
+	background-color:$LightBg;
+	color:$LightBgText;
+}
+
+.GridUtility {
+	background: tint($LightBg,50%);
+}
+.UI-linkAlt {
+	color:$AltLink;
+}
+.UI-whiteBg {
+	background-color:$WhiteBg;
+}
+.UI-errorBg {
+	font-weight:bold;
+	color:$Error;
+	background-color:$Notification;
+}
+
+.DataGrid th {
+	color:$DarkBgText;
+	background-color:$DarkBg;
+}
+.brdr {
+	border-color:$BorderColor;
+}
+
+.decoratedList li {
+	border-bottom:1px solid lighten($BorderColor, 20%);
+}
+.available {
+	color:$Success;
+}
+.Alt {
+	background-color:lighten($LightBg, 17%);
+}
+
+
+/*******************************************************************************
+* Buttons/Stylized Links
+*******************************************************************************/
+a.Button {
+	@include main-button-style;
+	&:hover {
+		@include main-button-hover;
+	}
+}
+
+#attachAndContinue {
+	&:hover {
+
+	}
+}
+
+a.MinorButton {
+	@include minor-button-style;
+	&:hover {
+		@include minor-button-hover;
+	}
+}
+
+a.ButtonInactive, a.ButtonInactive:hover {
+	@include button-inactive;
+}
+
+
+/*******************************************************************************
+* Containers, Columns, etc...
+*******************************************************************************/
+
+.UI-siteBg {}
+#SiteContain  {}
+#PageContain {
+	font-size:$BaseFontSize;
+	background:$PageBg;
+	color:$BodyText;
+}
+.UI-pageBg {
+	background:$PageBg;
+	color:$BodyText;
+}
+
+
+/*******************************************************************************
+* Image Sprites
+*******************************************************************************/
+.UI-bg {}
+.UI-icon {}
+a.UI-icon-container:hover .UI-icon {}
+.GridUtility .UI-icon {}
+.searchIconContainer .icon-label {@include HideText;}
+
+/*******************************************************************************
+* Site User Utilities
+*******************************************************************************/
+#SiteUserUtilities {
+	background:$DarkBg;
+	color: tint($DarkBg,75%);
+	padding:10px;
+	text-align:right;
+	margin:1px 0 1px 0;
+	.SiteInfo {
+		float:right;
+		.userLinks {
+			li {
+				margin-left:1em;
+			}
+			.LanguageDropDown {
+				@include box-shadow(rgba(0, 0, 0,.25)0 .25em 1em);
+				li {
+					margin:0;
+					a {
+						display:block;
+						padding:.25em;
+					}
+				}
+			}
+		}
+	}
+	a {
+		color: tint($DarkBg,50%);
+		&:hover {
+			color: tint($DarkBg,75%);
+		}
+	}
+}
+
+/*******************************************************************************
+* SiteNav & Dropdowns
+*******************************************************************************/
+#SiteNav {
+	text-align:center;
+	background: $LightBg;
+	/*** top level ***/
+	ul {
+		@include inline-nav;
+		li {	
+			/*** top level ***/
+			margin-left:.5em;
+			line-height:3.5em;
+			&:hover {
+				background: $DarkBg;
+				a {
+					background: $DarkBg;
+					color: $LightBg;
+				}
+			}
+			a {
+				padding:0 .5em 0 .5em;
+			}
+			/*** drop down menu ***/
+			&:hover {
+				color: $LightBg;
+			}
+			ul {
+				text-align:left;
+				width:150px;
+				padding:.5em 0;
+				@include box-shadow(rgba(0,0,0,.5).25em .25em 1em);
+				clear:both;
+				background: $DarkBg;
+				li {
+					line-height:normal;
+					margin:0;
+					a {
+						color: $LightBg;
+						padding:.5em;
+						&:hover {
+							color: tint($DarkBg,75%);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/*******************************************************************************
+* Footer
+*******************************************************************************/
+#Footer {
+	#FooterLinks {
+		text-align:center;
+		@include gradientColorCheck($DarkBg);
+		color: tint($DarkBg, 30%);
+		font-size:90%;
+		padding:1em;
+		.navigation {
+			@include inline-nav;
+			li {
+				margin:0 .5em 0 .5em;
+			}
+		}
+		a {
+			color: tint($DarkBg,45%);
+			&:hover {
+				color: tint($DarkBg,35%);
+				text-decoration:underline;
+			}
+		}
+	}	
+}
+
+
+
+/*******************************************************************************
+* Site Owner Widget (Home Page Display)
+*******************************************************************************/
+#Module_Bio {
+	.MyPhoto {
+		overflow:hidden;
+		float:left;
+		width:130px;
+		height:130px;
+		img {
+			width:100%;
+		}
+	}
+	.Bio {
+		width:156px;
+		float:right;
+	}
+}
+
+/*******************************************************************************
+* Site Owner Widget (Header Display)
+*******************************************************************************/
+#DistributorInfo {
+	.MyPhoto {
+		float:right;
+		width:65px;
+		height:65px;
+		overflow:hidden;
+		img {
+			width:100%;
+		}
+	}
+}
+
+
+
+
+#Module_Bio .buyFromPartyBtn {display:block;margin-top:4px;}
+
+/*******************************************************************************
+* Site Owner Widget (Home Page Display)
+*******************************************************************************/
+#Module_Bio .Bio {width:150px;float:right;}
+#Module_Bio .MyPhoto {float:left;overflow:hidden;margin-bottom:15px;}
+#Module_Bio .MyPhoto img {display:block;}
+#Module_Bio .partyRadio {display:none;}
+#Module_Bio .buyFromPartyBtn {display:block;margin-top:4px;}
+
+/*******************************************************************************
+* News Widget
+*******************************************************************************/
+/*** News Roller ***/
+.NewsRollWrapper {}
+/*** News Slide ***/
+
+/*******************************************************************************
+* Secondary Navigation
+*******************************************************************************/
+.TwoColumnContent {
+	#SecondaryNav {
+		a {
+			padding:.5em;
+			border-bottom: 1px dotted $SecBg;
+			&:hover {
+				background: $LightBg;
+			}
+		}
+	}
+}
+
+/******************************************************************************
+* One Column Template Navigation
+*******************************************************************************/
+
+.OneColumnNav {
+	margin-bottom:2em;
+	padding-bottom:1em;
+	border-bottom:1px dotted $LightBg;
+}
+
+/*******************************************************************************
+* CMS Blocks
+*******************************************************************************/
+
+/*******************************************************************************
+* Forms
+*******************************************************************************/
+
+/*******************************************************************************
+* Form Validation
+*******************************************************************************/
+.errorMessageBubble, .field-validation-error {color:$Error;font-weight:bold;border:1px solid $Error;margin-left:3px;background: lighten($Error, 50%);}
+.input-validation-error {border:1px solid $Error;}
+.validation-summary-errors {
+	color:$Error;
+	font-weight:bold;
+	ul {
+		@include flat-list;
+	}
+}
+
+/*******************************************************************************
+* Tables
+*******************************************************************************/
+.FauxTable .FRow .FLabel, .FauxTable .FRow .FInput {text-align:left;vertical-align:top;}
+.FauxTable .FRow .FLabel {font-weight:bold;}
+.DataGrid {border:$Border;}
+.DataGrid tbody td {vertical-align:middle;border-top:1px dotted lighten($BorderColor, 10%);}
+.DataGrid th, .DataGrid, td {text-align:left;}
+.DataGrid th.center, .DataGrid td.center {text-align:center;}
+.DataGrid th.right, .DataGrid td.right {text-align:right;}
+.DataGrid th a {color:#fff;text-decoration:underline;}
+td.thumbCol {text-align:center;}
+.GuestOrderSummaryTable td {font-weight:bold;text-align:center;}
+.cartQty {text-align:center;}
+.CartThumb {text-align:center;}
+
+/*******************************************************************************
+* Steps
+*******************************************************************************/
+.steps, .checkOutSteps {	
+	border-bottom:1px solid $LightBg;
+	li {
+		color: tint($DarkBg,50%);
+		&.active {
+			color: $DarkBg;
+			font-weight:bold;
+		}
+	}
+}
+
+/*******************************************************************************
+* Shopping Main
+*******************************************************************************/
+
+
+.CategoryGroup .categoryHeading {padding:2px 5px;}
+/*** Side Column ***/
+/*** Product Listing ***/
+.ProductThumbBox {border:$ProductThumbBoxBrdrSize solid $BorderColor;@include BorderRadius;@include style(both, $ProductThumbBoxShadowSize, $ProductThumbBoxBrdrSize);}
+.ProductThumbBox .listingAddToCart {@include BorderRadius;}
+
+/*******************************************************************************
+* Shopping Category Navigation
+*******************************************************************************/
+.shopNavListContain {
+	ul {
+		a {
+			padding:10px;
+			border-bottom:1px dotted $LightBg;
+			&:hover {
+				background: $LightBg;
+			}
+		}	
+	}
+}
+/*******************************************************************************
+* Shopping Search
+*******************************************************************************/
+
+.searchForm {
+	@include box-shadow(rgba(0,0,0, 0.5) 0 0 1em inset); 
+	background: $LightBg;
+	padding:.25em 1em .25em 1em;
+	@include border-radius(25px);
+	input {
+		color: darken($LightBg,90%);
+		border:none;
+		background:none;
+		width:85%;
+		float:left;
+	}
+	a#btnSearch, a#searchButton  {
+		float:right;
+		label {
+			display:none;
+		}
+	}
+}
+
+
+
+/*******************************************************************************
+* Shopping Cart
+*******************************************************************************/
+#ShoppingCart {
+	min-width: 300px;
+	text-align: right;
+	font-weight:bold;
+	font-size:125%;
+	a {
+		background: $DarkBg;
+		color: tint($DarkBg,75%);
+		padding:.5em .75em .5em .5em;
+		&:hover {
+			background: tint($DarkBg,25%);
+			color: tint($DarkBg,85%);
+		}
+	}
+	.cartTotalsLink:before {
+		vertical-align:-.3em;
+	}
+	cite {
+		font-style:normal;
+		font-size:75%;
+		margin:0 .5em;
+	}
+}
+/*** Cart Messages ***/
+/*** Cart Preview ***/
+#CartPreview th.right {text-align:left;}
+/*** Cart ***/
+/*** Upgrade Account ***/
+.upgradeAcctContainer span.icon-star {
+	font-size:3.5em;
+	margin-right:1%;
+}
+.upgradeAcctHeader {
+	font-weight:bold;
+}
+
+/*******************************************************************************
+* Product Details Page
+*******************************************************************************/
+
+/*******************************************************************************
+* Tabber
+*******************************************************************************/
+.Tabber, .TabberBody, .Tabber li a {
+	border-color:hsl(hue($MainBg), saturation($MainBg), 35%);
+	border-style:solid;
+}
+.Tabber {
+	border-width:0 0 1px 0;
+
+	li {
+		border-left:0;
+
+		a {
+			background:hsl(hue($MainBg), saturation($MainBg), 55%);
+			color:$WhiteBg;
+			text-align:center;
+			text-decoration:none;
+			border-width:1px 1px 0;
+			@include BorderRadius(top);
+		}
+		&.current {
+			background:transparent;
+		
+			a {
+				background-color:$PageBg;
+				color:hsl(hue($MainBg), saturation($MainBg), 35%);
+			}
+		}
+	}
+}
+.TabberBody {
+	border-width:0 1px 1px;
+}
+
+/*******************************************************************************
+* Bundles
+*******************************************************************************/
+.BundleAlert {
+	border:$Border;
+}
+#BundleTabber {
+	margin-left:5px;
+
+	li {
+		position:relative;
+		margin-right: -($BorderRadius + 1);
+
+		a {
+			@include BoxShadow(3px -2px 5px -3px rgba(0, 0, 0, 0.5));
+			margin-top:-1px;
+			border-width:1px;
+		}
+
+		&.current {
+			z-index:1;
+
+			a {
+				padding-top:2px;
+				padding-bottom:1px;
+				margin-top:-3px;
+				border-bottom:0;
+			}
+		}
+	}
+}
+/*** Filters ***/
+.AlphaFilters .btnFilter {
+	text-transform:uppercase;
+	font-size:.9em;
+	color:$WhiteBg;
+}
+.searchBundle {
+	background:transparent;
+}
+/*** Products ***/
+
+/*** Bundle's Contents ***/
+.SavePack, .BundleProducts .Pagination {
+	text-align:center;
+}
+#GoalTracker {
+	.ProgressBar {
+		background: $DarkBg;
+		@include BorderRadius(all, 10px);
+	}
+	#ProgressStar {
+		background: lighten($DarkBg, 20%);
+	}
+	.icon-star {
+		margin-left: -15px;
+		margin-top: -1px;
+		position: absolute;
+		color:lighten($DarkBg, 50%);
+	}
+	.current {
+		font-weight:bold;
+	}
+}
+.BundleItems .ThumbWrapper {
+	background: #fff;
+}
+
+/*******************************************************************************
+* Product Variants
+*******************************************************************************/
+.productVariants li .frame a {
+	text-decoration:none;
+}
+/*** Add to cart button ***/
+/*** Type: Text ***/
+/*** Type: Thumbnail ***/
+/*** Type: Checkbox ***/
+/*** Type: Radio ***/
+/*** Type: Dropdown ***/
+
+
+/*******************************************************************************
+* Shopping Checkout
+*******************************************************************************/
+
+.Tabber.paymentsTabber, .Tabber.paymentsTabber li.current, .PaymentEntry, .applyPaymentBox, .customerPaymentsColumn .appliedPaymentsTable, .customerPaymentsColumn p, .BalanceDueContainer {border:$Border;}
+.applyPaymentBox, .BalanceDueContainer {border-radius:0 0 $BorderRadius $BorderRadius;}	
+.applyPaymentBox, .customerPaymentsColumn p, .customerPaymentsColumn p, .customerPaymentsColumn th {color:#333333;background:#f3f3f3;}
+.Tabber.paymentsTabber {font-size:.9em;height:2.5em;}
+.Tabber.paymentsTabber li {line-height:2.5em;}
+.Tabber.paymentsTabber li.current {background:#fff;color:#333333;border-width:0 1px;}
+.BalanceDueContainer {font-weight:bold;line-height:2em;color:#333333;text-align:center;}
+.BalanceDueContainer.BalanceCovered {color:#449687;}
+
+/*******************************************************************************
+* My Account Page
+*******************************************************************************/
+/*** General ***/
+.accountColumn {font-size:.9em;}
+.acctBox h4 {@include DottedLine;}
+.generalAcctBox {margin-right:10px;border-right:1px dotted lighten($BorderColor, 10%);}
+.generalAcctBox span.FL {font-weight:bold;}
+/*** Hosted Parties Management ***/
+/*** Shipping and Billing ***/
+.accountColumn .Profiles .FRow {border:1px solid lighten($BorderColor, 10%);}
+.accountColumn .Profiles .FRow .FLabel {font-weight:normal;}
+
+/*******************************************************************************
+* Address Verification Modal
+*******************************************************************************/
+
+/*******************************************************************************
+* News
+*******************************************************************************/
+.searchNews {
+	margin-bottom:1em;
+}
+#News {
+	.news {
+		@include DottedLine;
+	}
+}
+
+
+/*******************************************************************************
+* Enrollment
+*******************************************************************************/
+h2.step {
+	font-size:70px;
+	line-height:50px;
+	color:hsl(hue($MainBgText),
+	saturation($MainBgText), 93%);
+}
+/*******************************************************************************
+* Enrollment - Select Sponsor
+*******************************************************************************/
+.distributorLocatorWrap {
+	.locatorTools {
+		font-size:.9em;
+		background:$MainBg;
+	}
+	.locatorOr {
+		background:darken($LightBg, 2%)-#050505;
+	}
+}
+
+/*******************************************************************************
+* Enrollment - Policy
+*******************************************************************************/
+.policy {
+	font-size:.9em;
+	h3 {
+		font-size:100%;
+		font-weight:bold;
+		color:$SecBgText;
+		background:$SecBg;
+	}
+	div {
+		border:$Border;
+		line-height:normal;
+	}
+}
+
+/*******************************************************************************
+* Enrollment - Personal Info
+*******************************************************************************/
+.personalInfoForm .completed > div, .personalInfoForm .splitCol div div.mb10 {font-size:.9em;line-height:1.3em;}
+.personalInfoForm .completed > div {opacity:.5;filter:alpha(opacity=50);}
+/*******************************************************************************
+* Enrollment - Kits
+*******************************************************************************/
+.kits {
+	background:$PageBg;
+	cursor:pointer;
+	.imagewrapper {
+		height:$EnrollmentProductImg;
+	}
+	.check {
+		color:$SuccessMessage;
+	}
+}
+
+/*******************************************************************************
+* Enrollment - Autoship
+*******************************************************************************/
+.personalInfoForm.enrollProducts .autoship {background:$PageBg;}
+
+
+/*******************************************************************************
+* Login/SignUp Page
+*******************************************************************************/
+#SignUpActionList {
+	.actionItems {
+		@include BorderRadius(all);
+		@include transition-property(all);
+		@include transition-duration(.5s);
+	}
+	.signUpActionContent {
+		background:$LightBgText;
+		@include BorderRadius(bottom);
+	}
+	.actionItems:hover, .selected {
+		background:$LightBgText;
+		color:$LightBg;
+	}
+}
+
+/*******************************************************************************
+* Site Response Messaging
+*******************************************************************************/
+#messageCenterModal {
+	background:$NuetralMessage;
+}
+
+/*******************************************************************************
+* Other Misc Styles
+*******************************************************************************/
+#ThemePreview, .SiteDesignContent #preview {background:#ebebeb center no-repeat;}
+.SiteDesignContent #preview {height:200px;}
+
+.sectionHeader {@include BorderRadius(top);}
+.sectionContent {@include BorderRadius(bottom);border:$Border;}
+.GridFilters {@include BorderRadius;background:$LightBg;}
+.GridFilters.MultiPackFilters {@include BorderRadius(top);}
+.GridUtility.clearBundleFilters {@include BorderRadius(bottom);}
+
+#SaleItemImg {background: url("/Resource/Content/Images/saleSpritsheet.png") repeat scroll 0px -255px transparent;height: 75px;margin: 0px -5px;position: absolute;left: 0;text-indent: -9999px;top: 0px;width: 75px;z-index: 200;}
+
+.OriginalPrice.strikethrough {color: #999999;}
+
+.discountPrice {color: #D90000;}
+

@@ -1,0 +1,19 @@
+﻿@using NetSteps.Promotions.UI.Common.Interfaces
+@model DistributorBackOffice.Models.Promotion.PromotionModel
+<div id="@string.Format("{0}{1}", "divPromotionBox_", Model.Info.PromotionId)">
+    <div class="mb10 pad10 ml10 brdr1 promotionCoupon">
+        <h3 class="mb10 pad5 promotionTitle">@Model.Info.Title</h3>
+        @Model.Info.ImagePaths.List(@<div class="ml10 FL imageWrapper">
+            <img width="80px" class="pad2 brdr1" src="@item" alt=""/>
+        </div>)
+        @Html.WrapPromotion(Model.Info, @<div class="FL ml10 splitCol60">@item</div>)
+        <span class="clr"></span>
+        @if (Model.Info.ExpiredDate.HasValue)
+        {
+            <div class="UI-lightBg mt10 pad2 center">
+                @Html.Term("Promotion Expires"):&nbsp;@Model.ExpirationDateVal
+            </div>
+            <span class="clr"></span>
+        }
+    </div>
+</div>

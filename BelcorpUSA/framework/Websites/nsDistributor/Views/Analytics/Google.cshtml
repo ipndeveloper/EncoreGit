@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Google";
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+<script type="text/javascript">
+	//<![CDATA[
+    $(function () {
+        $('#btnUpdate').click(function () {
+            var t = $(this);
+            showLoading(t);
+            $('#invalidLogin').hide();
+            $.post('@Url.Resolve("~/Analytics/UpdateGoogleTracker")', { trackerID: $('#txtTrackerID').val() }, function (response) {
+                hideLoading(t);
+                if (response.result) {
+                    showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+                } else {
+                    showMessage(results.message, true);
+                }
+            });
+        });
+    });
+    //]]>
+</script>
+<h1>
+    @Html.Term("GoogleAnalytics", "Google Analytics")</h1>
+You can get a Google TrackingID from <a href="https://www.google.com/analytics/settings/home" target="_blank">@Html.Term("GoogleAnalytics", "Google Analytics")</a>.
+<br />
+Enter Google Analytics TrackingID (UA-XXXXX-YY):<br />
+<input type="text" id="txtTrackerID" value="@ViewBag.GoogleAnalyticTrackerID" />
+<br />
+<br />
+<div class="clr SubmitForm">
+    <a href="javascript:void(0);" id="btnUpdate" class="FL Button"><span>@Html.Term("Update")</span></a>
+    <span class="clr"></span>
+</div>
+@Html.Partial("MessageCenter")

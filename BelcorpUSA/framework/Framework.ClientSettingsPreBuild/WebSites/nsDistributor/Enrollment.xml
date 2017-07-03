@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Framework CONFIG-->
+<Enrollment>
+    <AccountTypes>
+        <AccountType AccountTypeID="1" Enabled="true">
+            <Steps>
+                <Step Name="Choose Your Sponsor" UseControl="Sponsor" Skippable="false" TermName="Enrollment_Sponsor_Title" />
+                <Step Name="Personal Information" UseControl="AccountInfo" Skippable="false" TermName="Enrollment_AccountInfo_Title" />
+                <Step Name="Agreements" UseControl="Agreements" Skippable="false" TermName="Enrollment_Agreements_Title" />
+                <Step Name="Enrollment Products" UseControl="Products" Skippable="false" TermName="Enrollment_Products_Title" />
+                <Step Name="Review" UseControl="Review" Skippable="false" TermName="Enrollment_Review_Title" />
+                <Step Name="Receipt" UseControl="Receipt" Skippable="false" TermName="Enrollment_Receipt_Title" />
+            </Steps>
+        </AccountType>
+        <AccountType AccountTypeID="2" Enabled="true">
+            <Steps>
+                <Step Name="Choose Your Sponsor" UseControl="Sponsor" Skippable="false" TermName="Enrollment_Sponsor_Title" />
+                <Step Name="Enrollment Products" UseControl="Products" Skippable="false" TermName="Enrollment_Products_Title" />
+                <Step Name="Personal Information" UseControl="AccountInfo" Skippable="false" TermName="Enrollment_AccountInfo_Title" />
+                <Step Name="Agreements" UseControl="Agreements" Skippable="false" TermName="Enrollment_Agreements_Title" />
+                <Step Name="Review" UseControl="Review" Skippable="false" TermName="Enrollment_Review_Title" />
+                <Step Name="Receipt" UseControl="Receipt" Skippable="false" TermName="Enrollment_Receipt_Title" />
+            </Steps>
+        </AccountType>
+        <AccountType AccountTypeID="3" Enabled="false" />
+    </AccountTypes>
+    <Controls>
+        <Control Name="AccountInfo">
+            <Properties>
+                <Property Name="Sections">
+                    <Sections AccountTypeID="1">
+                        <Section Action="BasicInfo" Name="Account Info and Address" TermName="Enrollment_AccountInfo_BasicInfoTitle" />
+                        <Section Action="AboutYou" Name="About You" TermName="Enrollment_AccountInfo_AboutYouTitle" />
+                        <Section Action="Shipping" Name="Shipping Profile" TermName="Enrollment_AccountInfo_ShippingTitle" />
+                        <Section Action="Billing" Name="Billing Profile" TermName="Enrollment_AccountInfo_BillingTitle" />
+                        <Section Action="Website" Name="Personal Website URL" TermName="Enrollment_AccountInfo_WebsiteTitle" />
+                    </Sections>
+                    <Sections AccountTypeID="2">
+                        <Section Action="BasicInfo" Name="Account Info and Address" TermName="Enrollment_AccountInfo_BasicInfoTitle" />
+                        <Section Action="Billing" Name="Billing Profile" TermName="Enrollment_AccountInfo_BillingTitle" />
+                    </Sections>
+                </Property>
+                <Property Name="BasicInfo">
+                    <BasicInfo AccountTypeID="2" SetShippingAddressFromMain="True" SetBillingAddressFromMain="True" />
+                </Property>
+                <Property Name="Billing">
+                    <Billing AccountTypeID="2" HideBillingAddress="True" />
+                </Property>
+                <Property Name="Website" AutoshipScheduleID="3" />
+            </Properties>
+        </Control>
+
+        <Control Name="Products">
+            <Properties>
+                <Property Name="Sections">
+                    <Sections AccountTypeID="1">
+                        <Section Action="EnrollmentKits" Name="Enrollment Kits" TermName="Enrollment_Products_EnrollmentKitsTitle" />
+                        <Section Action="ShippingMethod" Name="Shipping Method" TermName="Enrollment_Products_ShippingMethodTitle" />
+                        <!--<Section Action="AutoshipBundles" Name="Autoship Bundles" TermName="Enrollment_Products_AutoshipBundlesTitle" />-->
+                        <!--<Section Action="AutoshipItems" Name="Autoship Items" TermName="Enrollment_Products_AutoshipItemsTitle" />-->
+                    </Sections>
+                    <Sections AccountTypeID="2">
+                        <Section Action="EnrollmentItems" Name="Enrollment Items" TermName="Enrollment_Products_EnrollmentItemsTitle" />
+                    </Sections>
+                </Property>
+                <Property Name="EnrollmentKits">
+                    <EnrollmentKit HeaderText="Gold" HeaderTermName="Enrollment_Products_EnrollmentKits_LgHeader" HeaderCssClass="lgKit" SKU="ns1022" />
+                    <EnrollmentKit HeaderText="Silver" HeaderTermName="Enrollment_Products_EnrollmentKits_MedHeader" HeaderCssClass="medKit" SKU="ns1002" />
+                    <EnrollmentKit HeaderText="Bronze" HeaderTermName="Enrollment_Products_EnrollmentKits_SmHeader" HeaderCssClass="smKit" SKU="ns1003" />
+                </Property>
+                <!--<Property Name="AutoshipBundles">
+                    <AutoshipBundles AccountTypeID="1">
+                        <AutoshipBundle HeaderText="Deluxe" HeaderTermName="Enrollment_Products_AutoshipBundles_DeluxeHeader" HeaderCssClass="deluxeBundle" SKU="ns1022" />
+                        <AutoshipBundle HeaderText="Standard" HeaderTermName="Enrollment_Products_AutoshipBundles_StandardHeader" HeaderCssClass="standardBundle" SKU="ns1002" />
+                        <AutoshipBundle HeaderText="Basic" HeaderTermName="Enrollment_Products_AutoshipBundles_BasicHeader" HeaderCssClass="basicBundle" SKU="ns1003" />
+                    </AutoshipBundles>
+                </Property>-->
+                <!--<Property Name="InitialOrder">
+                    <InitialOrder AccountTypeID="2" ImportShoppingOrder="True" SaveAsAutoshipOrder="True" MinimumCommissionableTotal="50" />
+                </Property>
+                <Property Name="Autoship">
+                    <Autoship AccountTypeID="1" AutoshipScheduleID="1" MinimumCommissionableTotal="100" />
+                    <Autoship AccountTypeID="2" AutoshipScheduleID="1" Hidden="True" />
+                </Property>-->
+            </Properties>
+        </Control>
+
+        <Control Name="Sponsor">
+            <Properties>
+                <Property Name="Sponsor">
+                    <Sponsor AccountTypeID="2" DenySponsorChange="True" />
+                </Property>
+            </Properties>
+        </Control>
+    </Controls>
+</Enrollment>

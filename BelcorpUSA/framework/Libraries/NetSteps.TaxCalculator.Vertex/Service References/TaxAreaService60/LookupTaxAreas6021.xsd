@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=25" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Tax Area Request message.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="TaxAreaRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Tax Area request type declaration.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxgisRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TaxAreaLookup" type="TaxAreaLookupType">
+            <xsd:annotation>
+              <xsd:documentation>The criteria to use in looking up the tax area. Use one of the following: TaxAreaId, PostalAddress, or ExternalJurisdiction.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

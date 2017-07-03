@@ -1,0 +1,61 @@
+﻿
+/*
+	root element for the scrollable.
+	when scrolling occurs this element stays still.
+*/
+.scrollable { /* required settings */float: left; position: relative; overflow: hidden; width: 450px; height: 140px; /* custom decorations */ 
+              border: 1px solid #ccc; background: url(../Images/scrollable/background.png) repeat-x; }
+.scrollable.vertical { width: 150px; height: 225px; }
+/*
+	root element for scrollable items. Must be absolutely positioned
+	and it should have a extremely large width to accomodate scrollable items.
+	it's enough that you set the width and height for the root element and
+	not for this element.
+*/
+.scrollable .items { /* this cannot be too large */ width: 20000em; position: absolute; clear: both; }
+.scrollable.vertical .items { height: 20000em; width: auto; }
+
+.items .itemGroup { float: left; width: 450px; }
+.scrollable.vertical .items .itemGroup { width: 150px; height: 225px; }
+
+.scrollable .item { cursor: pointer; }
+.scrollable.vertical .item { margin-bottom: 15px; }
+
+/* single scrollable item */
+.scrollable img { float: left; margin: 20px 9px 0px 30px; background-color: #fff; padding: 2px; border: 1px solid #ccc; width: 60px; height: 75px; cursor: pointer; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+.scrollable .titlecontent { float: left; margin: 20px 5px 0px 20px; display: block; cursor: pointer; width: 75px; height: 75px; vertical-align: middle; text-align: center; border: 1px solid #ccc; position: relative; }
+
+/* active item */
+.scrollable .active { border: 5px solid #DDDD00; position: relative; cursor: default; top: -4px; }
+.scrollable.vertical .active { top: 0; }
+
+/* prev, next, prevPage and nextPage buttons */
+a.browse { background: url(../Images/scrollable/buttons.png) no-repeat; display: block; width: 30px; height: 30px; float: left; margin: 40px 10px; cursor: pointer; font-size: 1px; }
+a.browse.vertical { display: block; clear: both; width: 30px; height: 30px; /*margin: 15px 60px;*/ cursor: pointer; float: none; }
+
+/* right */
+a.right { background-position: 0 -30px; clear: right; margin-right: 0px; }
+a.right:hover { background-position: -30px -30px; }
+a.right:active { background-position: -60px -30px; }
+
+/* left */
+a.left { margin-left: 0px; }
+a.left:hover { background-position: -30px 0; }
+a.left:active { background-position: -60px 0; }
+
+/* up */
+a.up { margin: 5px 60px 5px 60px; }
+a.up:hover { }
+a.up:active { }
+
+/* down */
+a.down { margin: 12px 60px 5px 60px; }
+a.down:hover { }
+a.down:active { }
+
+/* disabled navigational button */
+/*a.disabled { visibility: hidden !important; }*/
+
+a.sortButton { margin: 5px 10px; }
+
+#reorderButtons { position: relative; top: 100px; }

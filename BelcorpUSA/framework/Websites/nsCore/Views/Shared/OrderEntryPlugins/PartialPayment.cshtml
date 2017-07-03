@@ -1,0 +1,654 @@
+﻿
+@model OrderEntryModel
+@{
+    NetSteps.Data.Entities.TrackableCollection<AccountPaymentMethod> paymentMethods = CoreContext.CurrentAccount.AccountPaymentMethods;
+    List<PaymentType> nonProfilePaymentMethods = CoreContext.CurrentAccount.GetNonProfilePaymentTypes(CoreContext.CurrentUser, Model.Order.OrderTypeID);
+    bool showActualOrderPayment = false;
+    OrderPayment orderPayment = null;
+    int paymentMethodId = 0;
+    bool isOrderEntry = ViewContext.RouteData.Values["controller"].ToString() == "OrderEntry";
+    bool isOrderEntryTest = ViewContext.RouteData.Values["controller"].ToString() == "TestOrderEntry";       
+} 
+
+<script type="text/javascript" src="@Href("~/Scripts/ga.js")"></script>
+<script type="text/javascript" src="@Href("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+<script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js"  type="text/javascript"></script>
+      
+<table class="FormTable Section" width="100%">
+	<tr>
+		<td class="FLabel">
+			
+            @Html.Term("Payment", "Payment")
+            
+			<p class="InputTools" id="lblAddNewPayment" >
+             @if (Convert.ToInt32(Session["AccountNumber"]) != 2)
+             {
+				<a href="javascript:void(0);" style="cursor: pointer" onclick="editPaymentMethod();">
+					@Html.Term("AddNewPaymentMethod", "Add New Payment Method")</a>
+             }
+			</p>
+           
+		</td>
+		<td style="text-align: left; width: 35%;">
+			<table class="PaymentSelector">
+				<tr>  
+                    <td>
+                         <div id="dvB">
+                            @Html.DropDownList("sPaymentMethod", (TempData["sPaymentMethod"] as IEnumerable<SelectListItem>))
+                         </div>
+                         <div id="dvU">
+                            <select id="sPaymentMethod02">
+                            @if ((!Model.Order.IsTemplate && paymentMethods.Count < 1 && nonProfilePaymentMethods.Count < 1)
+                                        || (Model.Order.IsTemplate && paymentMethods.Count < 1))
+                            {
+	                            <option value="">--@Html.Term("PleaseAddaPaymentMethod", "Please add a payment method")-- </option>
+                            }
+                            @if (Model.Order.IsTemplate && Model.Order.OrderCustomers[0].OrderPayments.Count > 0)
+                            {
+                                orderPayment = Model.Order.OrderCustomers[0].OrderPayments[0];
+                                AccountPaymentMethod selectedPaymentMethod = null;
+                                if (orderPayment.SourceAccountPaymentMethodID.HasValue)
+                                {
+                                    // Match by AccountPaymentMethodID
+                                    selectedPaymentMethod = paymentMethods.FirstOrDefault(pm => pm.AccountPaymentMethodID == orderPayment.SourceAccountPaymentMethodID.Value);
+                                }
+                                else
+                                {
+                                    // Templates with no SourceAccountPaymentMethodID can still match by account number
+                                    selectedPaymentMethod = paymentMethods.FirstOrDefault(pm => pm.DecryptedAccountNumber == orderPayment.DecryptedAccountNumber);
+                                }
+
+                                if (selectedPaymentMethod != null)
+                                {
+                                    paymentMethodId = selectedPaymentMethod.AccountPaymentMethodID;
+                                }
+                                else
+                                {
+                                    showActualOrderPayment = true;
+	                                <option value="">--@Html.Term("PleaseSelectAPaymentMethod", "Please select a payment method")--</option>
+                            
+                                }
+                            }
+                            @foreach (var paymentMethod in paymentMethods.OrderByDescending(pm => pm.IsDefault))
+                            {
+	                            <option value="@paymentMethod.AccountPaymentMethodID" @(paymentMethodId == paymentMethod.AccountPaymentMethodID ? "selected=\"selected\"" : "")>
+		                            @((string.IsNullOrEmpty(paymentMethod.ProfileName) ? paymentMethod.MaskedAccountNumber : paymentMethod.ProfileName) + (paymentMethod.IsDefault ? " (" + Html.Term("default", "default") + ")" : ""))
+	                            </option>
+                            }
+                            @if (!Model.Order.IsTemplate)
+                            {
+                                foreach (var nonProfilePaymentMethod in nonProfilePaymentMethods.OrderByDescending(nppm => nppm.GetTerm()))
+                                {
+	                                <option value='@string.Format("-{0}", nonProfilePaymentMethod.PaymentTypeID)'>
+		                                @nonProfilePaymentMethod.GetTerm()
+	                                </option>
+                                }
+                            }
+                            </select>
+                            </div>
+                     
+                        </td> 
+					<td>
+						<div id="paymentMethodContainer">
+							                    @foreach (var paymentMethod in paymentMethods)
+                           {
+								                    <div id='@string.Format("paymentMethod{0}", paymentMethod.AccountPaymentMethodID)' class="paymentMethodDisplay">
+									                    <b>
+										                    @(string.IsNullOrEmpty(paymentMethod.ProfileName) ? paymentMethod.MaskedAccountNumber : paymentMethod.ProfileName)</b> - <a title="@Html.Term("Edit", "Edit")" style="cursor: pointer;" onclick="editPaymentMethod(@paymentMethod.AccountPaymentMethodID);">
+											                    @Html.Term("Edit", "Edit")</a>
+									                    <br />
+									                    <div id='@string.Format("divPaymentInfo{0}", paymentMethod.PaymentTypeID)'>
+									                    </div>
+									                    @Html.Raw(paymentMethod.ToDisplay(CoreContext.CurrentCultureInfo))
+								                    </div>
+                           }
+							                    @*if order payment doesn't match an existing payment method, just show the actual order payment (for accuracy)*@
+							                    @if (showActualOrderPayment && orderPayment != null)
+                           {
+								                    <div id="paymentMethod" class="paymentMethodDisplay">
+									                    @orderPayment.ToDisplay(CoreContext.CurrentCultureInfo)
+								                    </div>
+                           }
+							                    @foreach (var nonProfilePaymentMethod in nonProfilePaymentMethods.OrderByDescending(nppm => nppm.GetTerm()))
+                           {
+								                    <div id="paymentMethod-@nonProfilePaymentMethod.PaymentTypeID" class="paymentMethodDisplay">
+									                    @if (nonProfilePaymentMethod.PaymentTypeID == Constants.PaymentType.ProductCredit.ToInt())
+                             {
+
+                                 Html.RenderPartial("ProductCredit");
+                             }
+                             else if (nonProfilePaymentMethod.PaymentTypeID == Constants.PaymentType.GiftCard.ToInt())
+                             {
+										                    @string.Format("{0}: ", Html.Term("GiftCardBalance", "Gift Card Balance"))<span id="GiftCardBalance">-</span>
+										                    <br />
+										                    @string.Format("{0}: ", Html.Term("GiftCardCode", "Gift Card Code"))<input type="text" id="GiftCardCode" class="TextInput" style="width: 75px;" />
+										                    <img id="btnLookupGC" src="@Href("~/Resource/Content/Images/Icons/16x16/search-trans.png")"
+                                                        alt="@Html.Term("Lookup Gift Card Balance")" title="@Html.Term("Lookup Gift Card Balance")"
+                                                        style="height: 14px;" />
+										                    <img id="gcLoader" src='@Href("~/Resource/Content/Images/progress-indicaator.gif")'
+                                                        style="display: none;" alt="loading" />
+                             }
+                             else
+                             {
+                                 Html.RenderPartial("CustomPayments", nonProfilePaymentMethod.PaymentTypeID);
+                             }
+								                    </div>
+                           }
+						                    </div>
+						    @if (ViewContext.RouteData.Values["controller"].ToString() == "OrderEntry" || Model.EnablePayment)
+          {
+              string.Format("{0}:", Html.Term("Amount", "Amount"));
+
+              string.Format("{0}", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol);
+
+              var d = @Model.Order.Balance;
+              if (d >= 0) { d = null; } else { d = Model.Order.Balance; }
+              
+          
+                                                <input id="txtPaymentAmount" type="text" class="TextInput" value="@d"
+                                                style="background:white;border-width: 0px; display: block; font-size:medium; color:Black;width:60px;"  />
+         
+                                                <div id="dvBtnApplyPayment">
+							                    <a href="javascript:void(0);" id="btnApplyPayment" class="DTL Add">
+								                    @Html.Term("Apply", "Apply")</a>
+                                                </div>
+                                                <img id="loaderApplyPayment" src='@Href("~/Content/Images/processing.gif")'
+                                    alt="@Html.Term("loading", "loading...")" class="FR" />
+          }
+					</td> 
+				</tr>
+                <tr> 
+                    <td  colspan="2">   
+                    
+                     <p class="InputTools" style="font-weight: bold;font-size:15px;" id="lblTargetCredit" >
+                  
+            @Html.Term("NumberofSharestoDeferPayment", "Number of shares to defer payment")
+			                 
+                        <input id="txtNumberCuotas" type="text" class="TextInput" 
+                         style="width: 9px;background:white;border-width: 0px;font-weight: bold;font-size:15px;" readonly="readonly"
+                          />
+    						
+                        <input id="txtMsg"  type="text" class="TextInput"  style="width: 170px; border-width:0;font-weight: bold;font-size:15px;" readonly="readonly" />      						
+                        <input id="hdnPaymentAmount"  type="hidden" />
+                       
+                        </p>
+                      
+                    </td>
+                </tr>
+			</table>
+		</td>
+		<td style="text-align: left;">
+			<table id="payments" width="100%" class="DataGrid">
+				<tbody id="paymentsGrid">
+					@{
+                        Html.RenderPartial("PaymentsGrid", Model.Order);
+					}
+				</tbody>
+				<tr id="totalBar" class="GridTotalBar">
+					<td colspan="2" style="text-align: right;">
+						<div class="FL Loading" id="TotalsLoad">
+						</div>
+						@Html.Term("Subtotal"):<br />
+
+                         @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+						@Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+						@Html.Term("Tax"):<br />
+						@Html.Term("Shipping"):<br />
+						@Html.Term("Handling"):<br />
+						@Html.Term("OrderTotal", "Order Total"):
+					</td>
+					<td>
+						<span class="subtotal">
+							@*@Model.Order.Subtotal.ToString(Model.Order.CurrencyID)</span>*@
+                            @Model.Order.Subtotal.ToString(CoreContext.CurrentCultureInfo)</span>
+						<br />
+
+                         @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+						<span class="commissionableTotal">
+                        @Model.Order.CommissionableTotal.ToString(CoreContext.CurrentCultureInfo)</span>
+							@*@Model.Order.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>*@
+						<br />
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+						<span class="taxTotal">
+						@*	@((Model.Order.TaxAmountTotalOverride != null) ? Model.Order.TaxAmountTotalOverride.ToString(Model.Order.CurrencyID) : Model.Order.TaxAmountTotal.ToString(Model.Order.CurrencyID))</span>*@
+                        	@((Model.Order.TaxAmountTotalOverride != null) ? Model.Order.TaxAmountTotalOverride.ToString(CoreContext.CurrentCultureInfo) : Model.Order.TaxAmountTotal.ToString(CoreContext.CurrentCultureInfo))</span>
+						<br />
+						<span class="shippingTotal">
+							@*@((Model.Order.ShippingTotalOverride != null) ? Model.Order.ShippingTotalOverride.ToString(Model.Order.CurrencyID) : Model.Order.ShippingTotal.ToString(Model.Order.CurrencyID))</span>*@
+                            @((Model.Order.ShippingTotalOverride != null) ? Model.Order.ShippingTotalOverride.ToString(CoreContext.CurrentCultureInfo) : Model.Order.ShippingTotal.ToString(CoreContext.CurrentCultureInfo))</span>
+						<br />
+						<span class="handlingTotal">
+							@*@Model.Order.HandlingTotal.ToString(Model.Order.CurrencyID)</span>*@
+                            @Model.Order.HandlingTotal.ToString(CoreContext.CurrentCultureInfo)</span>
+						<br />
+						<b><span class="grandTotal">
+							@*@Model.Order.GrandTotal.ToString(Model.Order.CurrencyID)</span></b>*@
+                            @Model.Order.GrandTotal.ToString(CoreContext.CurrentCultureInfo)</span></b>
+					</td>
+				</tr>
+				@if (isOrderEntry || isOrderEntryTest)
+    {        
+					<tr>
+						<td colspan="2" style="text-align: right">
+							@Html.Term("PaymentsMade", "Payments Made"):<br />
+							@Html.Term("BalanceDue", "Balance Due"):
+						</td>
+						<td>
+                         @{
+                              var paymentsTotal = Model.Order.PaymentTotal;
+                            if( paymentsTotal<0){
+                                  paymentsTotal= 0;}}
+							<b class="paymentTotal">
+								@*@paymentsTotal.ToString(Model.Order.CurrencyID)</b><br />*@
+                                @paymentsTotal.ToString(CoreContext.CurrentCultureInfo)</b><br />
+							<b style="color: @((Model.Order.Balance ?? 0) < 0 ? "Red" : "Green")" class="balanceDue">
+                             @Model.Order.Balance.ToString(CoreContext.CurrentCultureInfo)
+                               @* @Model.Order.Balance.ToString(Model.Order.CurrencyID)*@
+                           </b>
+						</td>
+					</tr>
+    }
+			</table>
+			<span class="ClearAll"></span>
+		</td>
+	</tr><tr><td></td><td colspan="2">  <span class="ClearAll"></span>
+                <p class="NextSection">  
+                            <input type="button" id="btnSubmitOrder" class="Button BigBlue ButtonOff" disabled="disabled" value="@Html.Term("MakePayment_CompleteOrder", "Make Payment - Complete Order")" />
+		            </p>   </td> 
+                            </tr>
+
+</table>
+
+<div id="dvProductLacks" class="jqmWindow LModal Overrides">
+    <div class="mContent">
+        <table id="productLacks" width="100%" class="DataGrid">
+            <thead>
+                <tr class="GridColHead">
+                    <th> @Html.Term("SKU", "SKU")</th>
+                    <th> @Html.Term("Product", "Product")</th>
+                    <th style="width: 9.091em;"> @Html.Term("Quantity", "Quantity")</th>
+                    <th> @Html.Term("Motive", "Motive")</th>
+                </tr>
+            </thead>
+            <tbody id="first">
+            </tbody>
+        </table>
+        <br />
+        <hr />
+        <br />
+        <a href="javascript:void(0);" id="btnClosedivProductLacks" class="Button jqmClose">@Html.Term("Close", "Close")</a>
+    </div>
+</div>
+
+<!-- Modificacion submitOrder para el manejo de la pasarela de pago con PayPal (jmorales-csti)-->
+<div id="PayPalPrePayment" class="jqmWindow LModal Overrides" style="width: 900px;
+    position: fixed;">
+    <div class="mContent">
+        <div id="prepaymentForm">
+            <div id="prepaymentWait">
+                @Html.Term("PleaseWaitWhileWeProcessYourOrder", "Please wait while we process your order...")
+                <br />
+                <img src="@Href("~/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+            </div>
+        </div>
+        <br />
+        <span style="text-align: center;">
+            <img id="PrePayPalLoadImg" src='@Href("~/Content/Images/processing.gif")' alt="@Html.Term("loading", "loading...")" class="FR" /></span>
+        <div id="paypalForm">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //Modificacion  para el manejo de las pantallas de la pasarela de pago con PayPal (jmorales-csti)
+    function makePay()
+    {
+
+        var accID = "@Model.Order.OrderCustomers[0].AccountInfo.AccountID";
+        var monto = "@Model.Order.GrandTotal.ToString(Model.Order.CurrencyID)";
+
+        $('#PayPalPrePayment').jqmShow();
+
+        $('#prepaymentForm').load('@Url.Action("PreparePayment", "EntryPayPal")');
+
+        $('#PrePayPalLoadImg').hide();
+
+    }
+
+    $('#PayPalPrePayment').jqm({ modal: true, onShow: function (h)
+    {
+        h.w.css({
+            top: '40px',
+            left: '600px'
+        }).fadeIn();
+    }
+    });
+
+    $('#lnkClosePopup').click(function ()
+    {
+        $('#PayPalPrePayment').jqmHide();
+    });
+
+    function closeFunc()
+    {
+        $('#PayPalPrePayment').jqmHide();
+    };
+
+    $(function () {
+        if ('@Convert.ToInt32(Session["AccountNumber"])' == 2) {
+            $('#sPaymentMethod').append('<option value="10" selected="selected">Payment Ticket</option>');
+            $("select").attr('disabled', 'disabled');
+        }
+        $('#dvProductLacks').jqm({ modal: false, onShow: function (h) {
+            h.w.css({
+                top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+            }).fadeIn();
+        }
+        });
+
+        if ('@Session["GeneralParameterVal"]' == 'S') {
+            $("#lblAddNewPayment").show();
+            $('#dvB').hide();
+            $('#dvU').show();
+            $('#dvBtnApplyPayment').css("display", "block");
+        } else {
+            $("#lblAddNewPayment").hide();
+            $('#dvB').show();
+            $('#dvU').hide();
+            $('#dvBtnApplyPayment').css("display", "none");
+            $('#txtPaymentAmount').attr('disabled', 'disabled');
+        }
+        $('#btnClosedivProductLacks').click(function () {
+            $('#dvProductLacks').jqmHide();
+        });
+
+        $('#btnViewProductsLacks').click(function () {
+            $("#productLacks tbody tr td").remove();
+            $.ajax({
+                type: 'POST',
+                url: '@Href("~/Orders/OrderEntry/ListWarehouseMaterialLacks")',
+                asyn: false,
+                success: function (data) {
+                    if (data.result == true) {
+                        for (var i = 0; i < data.listWarehouseMaterialLacks.length; i++) {
+                            $("#productLacks > tbody:first").append('<tr><td>' + data.listWarehouseMaterialLacks[i].ProductId + '</td>' +
+                                                                       '<td>' + data.listWarehouseMaterialLacks[i].NameProduct + '</td>' +
+                                                                       '<td>' + data.listWarehouseMaterialLacks[i].Quantity + '</td>' +
+                                                                       '<td>' + data.listWarehouseMaterialLacks[i].Motive + '</td>' + '</tr>');
+                        }
+                        $('#dvProductLacks').jqmShow();
+                    }
+                }
+            });
+        });
+        //        
+
+
+        $("#lblTargetCredit").hide();
+
+        $("#sPaymentMethod").change(function () {
+            $('#hdnPaymentAmount').val($('#txtPaymentAmount').val());
+            $.ajax({
+                type: 'POST',
+                url: '@Href("~/Orders/OrderEntry/IsCreditCard/")',
+                data: (
+                        {
+                            CollectionEntityID: $("#sPaymentMethod").val()
+                        }),
+                asyn: false,
+                success: function (data) {
+                    if (data.result == true) {
+                        //                        sShippingAddress
+                        // deshabilitamos
+                        $("#sShippingAddress").attr('disabled', true);
+                        $('#AddNewShippingAddress').hide();
+                        if (data.IsBoleta) {
+                            $("#lblTargetCredit").hide();
+                            $("#lblAddNewPayment").hide();
+                            //===================================================//
+                            // Boleto anticipado se  hace  un solo pago( solo se debe de ingresar un metodo de pago con el monto  total(balanceAmount)
+                            if (data.totals["balanceAmount"] < 0) {
+                                $('#txtPaymentAmount').val(data.totals["balanceAmount"] * (-1));
+                                //$('#txtPaymentAmount').val(data.totals["totalAmount"] * (-1));
+                            }
+                            else {
+                                $('#txtPaymentAmount').val('');
+                            }
+                            //===================================================//
+                            $("#txtPaymentAmount").prop("readonly", true);
+                        } else {
+                            $("#txtNumberCuotas").val(data.numberTarget);
+                            calMsg();
+                            //Solo se habilita el txtPaymentAmount cuando es Tarjeta de Credito: "readonly", false.
+                            $("#txtPaymentAmount").prop("readonly", false);
+                        }
+                    } else {
+                        $("#sShippingAddress").attr('disabled', true);
+                        $('#AddNewShippingAddress').show();
+                        $("#lblTargetCredit").hide();
+                        $("#txtPaymentAmount").prop("readonly", true);
+                    }
+                }
+            });
+            //if ('@Session["GeneralParameterVal"]' != 'N') { 
+            $('#btnApplyPayment').click();
+            //} 
+        });
+
+
+
+        $('#txtPaymentAmount').numeric();
+
+        $('#txtPaymentAmount').keyup(function (e) {
+
+            // calMsg();
+
+            if (e.keyCode == 13)
+                $('#btnApplyPayment').click();
+        });
+
+        function calMsg() {
+            if ($("#sPaymentMethod").val() != 0 && $('#hdnPaymentAmount').val() != '') {
+
+                var total = $('#hdnPaymentAmount').val(); // $('#txtPaymentAmount').val();
+                var num = $("#txtNumberCuotas").val();
+                var div = parseFloat(parseFloat(total) / parseFloat(num)).toFixed(2);
+                $("#txtMsg").val('@Html.Term("EachByValue ", "each by value ") ' + div);
+                $("#lblTargetCredit").show();
+            } else {
+                $("#txtMsg").val('');
+            }
+        }
+
+        $('#btnApplyPayment').click(function () {
+            $('.Radio').attr('disabled', 'disabled');
+
+            var selecPaymentMethod = '';
+            var selecPaymentMethodHtml = '';
+
+            // if ('@Session["GeneralParameterVal"]' != 'N') {
+            selecPaymentMethod = $('#sPaymentMethod').val();
+            selecPaymentMethodHtml = $('#sPaymentMethod option:selected').html();
+            //            } else {
+            //                selecPaymentMethod = $('#sPaymentMethod02').val();
+            //                selecPaymentMethodHtml = $('#sPaymentMethod02 option:selected').html();
+            //            }
+
+
+            var numberCuota = 0;
+            if ($("#txtNumberCuotas").val() != 0) {
+                numberCuota = $("#txtNumberCuotas").val();
+            }
+            var GiftCardCode = 0
+            if ($('#GiftCardCode').val()) {
+                GiftCardCode = $('#GiftCardCode').val();
+            } else {
+                GiftCardCode = 0;
+            }
+
+
+
+            if (selecPaymentMethod != 0 && $('#txtPaymentAmount').val() != '') {
+
+                $('#btnApplyPayment').hide();
+                $('#loaderApplyPayment').show();
+
+                var location = '@Href("~/" + Model.ApplyPaymentLocation)';
+                $.post(location, {
+                    paymentMethodId: selecPaymentMethod,
+                    NameOnCard: selecPaymentMethodHtml,
+                    amount: parseFloat($('#txtPaymentAmount').val()),
+                    AmountConfiguration: $('#txtPaymentAmount').val(),
+                    NumberCuota: numberCuota,
+                    AmountConfiguration: $('#txtPaymentAmount').val(),
+                    giftCardCode: GiftCardCode
+                },
+                                   function (results) {
+
+                                       $('#btnApplyPayment').show();
+                                       $('#loaderApplyPayment').hide();
+
+                                       if (results.result) {
+                                           $('#GiftCardCode').val('');
+                                           $('#GiftCardBalance').html('-');
+                                           $('#paymentsGrid').html(results.paymentsGrid);
+                                           updateTotals(results);
+
+                                           //==============================================================================================
+                                           // btnSubmitOrder y btnSaveOrder
+                                           if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) { 
+                                               $('#btnSubmitOrder').removeClass("ButtonOff");
+                                               $('#btnSubmitOrder').attr('disabled', false);
+                                               $('#btnSaveOrder').addClass("ButtonOff");
+                                               $('#btnSaveOrder').attr('disabled', true);
+                                           }
+                                           else {
+                                               $('#btnSubmitOrder').addClass("ButtonOff");
+                                               $('#btnSubmitOrder').attr('disabled', false);
+                                               $('#btnSaveOrder').removeClass("ButtonOff");
+                                               $('#btnSaveOrder').attr('disabled', false);
+                                           }
+                                           if (parseFloat(results.totals['balanceAmount']) >= 0) {
+                                               $('#txtPaymentAmount').attr('disabled', 'disabled');
+                                               $('#sPaymentMethod').attr('disabled', 'disabled');
+                                           }
+                                           //==============================================================================================
+                                       }
+                                       else {
+                                           showMessage(results.message, true);
+                                       }
+                                   });
+
+
+            }
+        });
+
+        //if ('@Session["GeneralParameterVal"]' != 'N') {
+        $("#sPaymentMethod option[value='-6']").remove();
+        getSelectedPaymentMethod();
+        $('#sPaymentMethod').change(getSelectedPaymentMethod);
+        //        } else {
+        //            $("#sPaymentMethod02 option[value='-6']").remove();
+        //            getSelectedPaymentMethod();
+        //            $('#sPaymentMethod02').change(getSelectedPaymentMethod);
+        //        }
+
+    });
+
+
+    function getSelectedPaymentMethod() {
+		$('#paymentMethodContainer .paymentMethodDisplay').hide();
+		$('#paymentMethod' + $('#sPaymentMethod').val()).show();
+	}
+
+	function removePayment(id, vindice) {
+	    $(".Radio").removeAttr('disabled');
+
+	    $('#loaderApplyPayment').show();
+	    $.post('@Href("~/" + Model.RemovePaymentLocation)', { paymentId: id, indice: vindice }, function (results) {
+	        if (results.result) {
+
+	            $("#sShippingAddress").attr('disabled', false);
+	            $('#AddNewShippingAddress').show();
+	            var payment = $('#pmt' + id); 
+	            if (payment.length) {
+	                payment.remove();
+	            } 
+	            if (!$('#payments .paymentItem').length)
+	                $('#noPaymentsRow').show();
+
+	            updateTotals(results);
+	            //==============================================================================================
+	            // btnSubmitOrder y btnSaveOrder
+	            HabBotonesSubmitOrderSaveOrder(results); 
+
+	            $('#sPaymentMethod').val('0');
+	            $("#lblTargetCredit").hide();
+	            $('#sPaymentMethod').attr('disabled', false);
+	            $('#sShippingAddress').attr('disabled', false);
+	            $('#AddNewShippingAddress').show();
+	            //==============================================================================================
+	            $('#loaderApplyPayment').hide();
+	        }
+	        else {
+	            showMessage('@Html.Term("ErrorRemovingPayment", "There was a problem removing the payment"): ' + results.message, true);
+	        }
+	    }, 'json');
+
+	}
+
+	function HabBotonesSubmitOrderSaveOrder(results) {
+	    var ProductCredit = '@Session["ProductCredit"]';
+
+
+	    if (results.totals['numberOfItems'] > 0 && results.totals['numberofPayment'] == 0) {
+	        $('#btnSaveOrder').removeClass("ButtonOff");
+	        $('#btnSaveOrder').attr('disabled', false);
+	    } else {
+
+	        $('#btnSaveOrder').addClass("ButtonOff");
+	        $('#btnSaveOrder').attr('disabled', true);
+	    }
+
+	    if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) {
+
+	        $('#btnSubmitOrder').removeClass("ButtonOff");
+	        $('#btnSubmitOrder').attr('disabled', false);
+	    }
+	    else {
+
+	        $('#btnSubmitOrder').addClass("ButtonOff");
+	        $('#btnSubmitOrder').attr('disabled', true);
+	    }
+
+	}
+
+	function displayPaymentMethods(results) {
+		if (results.options !== undefined) {
+			$('#sPaymentMethod').replaceWith('<select id="sPaymentMethod">' + results.options + '</select>');
+			$('#sPaymentMethod').change(getSelectedPaymentMethod);
+		}
+		if (results.paymentMethods !== undefined) {
+			$('#paymentMethodContainer').html(results.paymentMethods);
+		}
+
+		getSelectedPaymentMethod();
+	}
+</script>

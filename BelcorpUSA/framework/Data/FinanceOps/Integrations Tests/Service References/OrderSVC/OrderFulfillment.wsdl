@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://orderfulfillment.michetesting.com" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://orderfulfillment.michetesting.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://orderfulfillment.michetesting.com/Imports">
+      <xsd:import schemaLocation="http://localhost:57405/OrderFulfillment.svc?xsd=xsd0" namespace="http://orderfulfillment.michetesting.com" />
+      <xsd:import schemaLocation="http://localhost:57405/OrderFulfillment.svc?xsd=xsd2" namespace="urn:EncoreOrderFulfillmentService" />
+      <xsd:import schemaLocation="http://localhost:57405/OrderFulfillment.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="OrderFulfillmentService_GetOrdersToFulfill_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrdersToFulfill" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_GetOrdersToFulfill_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrdersToFulfillResponse" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_GetOrdersToFulfill_FaultDetailFault_FaultMessage">
+    <wsdl:part xmlns:q1="urn:EncoreOrderFulfillmentService" name="detail" element="q1:FaultDetail" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendOrderFulfillmentAcknowledgment" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendOrderFulfillmentAcknowledgmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_FaultDetailFault_FaultMessage">
+    <wsdl:part xmlns:q2="urn:EncoreOrderFulfillmentService" name="detail" element="q2:FaultDetail" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderShippingInformation_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendOrderShippingInformation" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderShippingInformation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendOrderShippingInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="OrderFulfillmentService_SendOrderShippingInformation_FaultDetailFault_FaultMessage">
+    <wsdl:part xmlns:q3="urn:EncoreOrderFulfillmentService" name="detail" element="q3:FaultDetail" />
+  </wsdl:message>
+  <wsdl:portType name="OrderFulfillmentService">
+    <wsdl:operation name="GetOrdersToFulfill">
+      <wsdl:input wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/GetOrdersToFulfill" message="tns:OrderFulfillmentService_GetOrdersToFulfill_InputMessage" />
+      <wsdl:output wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/GetOrdersToFulfillResponse" message="tns:OrderFulfillmentService_GetOrdersToFulfill_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/GetOrdersToFulfillFaultDetailFault" name="FaultDetailFault" message="tns:OrderFulfillmentService_GetOrdersToFulfill_FaultDetailFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendOrderFulfillmentAcknowledgment">
+      <wsdl:input wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderFulfillmentAcknowledgment" message="tns:OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_InputMessage" />
+      <wsdl:output wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderFulfillmentAcknowledgmentResponse" message="tns:OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderFulfillmentAcknowledgmentFaultDetailFault" name="FaultDetailFault" message="tns:OrderFulfillmentService_SendOrderFulfillmentAcknowledgment_FaultDetailFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendOrderShippingInformation">
+      <wsdl:input wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderShippingInformation" message="tns:OrderFulfillmentService_SendOrderShippingInformation_InputMessage" />
+      <wsdl:output wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderShippingInformationResponse" message="tns:OrderFulfillmentService_SendOrderShippingInformation_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://orderfulfillment.michetesting.com/OrderFulfillmentService/SendOrderShippingInformationFaultDetailFault" name="FaultDetailFault" message="tns:OrderFulfillmentService_SendOrderShippingInformation_FaultDetailFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

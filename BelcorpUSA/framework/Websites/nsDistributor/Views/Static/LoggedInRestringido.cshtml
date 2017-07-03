@@ -1,0 +1,46 @@
+﻿@using NetSteps.Common.EldResolver
+@if (BaseController.IsLoggedIn)
+{
+    <span id="loggedInName">@Html.Term("PWS_Authenticated_User_Prefix","Welcome back,") @CoreContext.CurrentAccount.FullName</span>
+    <div class="userLinks">
+        <ul class="flatList" id="AuthenticatedUserLinks">
+           @* @if (BaseController.OwnerLoggedIn)
+            {
+                <li class="ulEditPws"><a href="@Url.Resolve("~/Admin")">@Html.Term("EditMyPWS", "Edit My PWS")</a></li>
+            }*@
+            @*<li class="ulAccount"><a href="@Url.Resolve("~/Account")">@Html.Term("MyAccount", "My Account")</a></li>*@
+            @*@{var distributorLoggedIn = BaseController.IsLoggedIn && CoreContext.CurrentAccount.AccountTypeID == (int)Constants.AccountType.Distributor; }*@
+           @* @if (distributorLoggedIn)
+            {
+                <li class="ulDws"><a id="lnkWorkstation" href="@(NetSteps.Common.Configuration.ConfigurationManager.GetAppSetting<string>(NetSteps.Common.Configuration.ConfigurationManager.VariableKey.BackOfficeUrl).EldEncode().AppendForwardSlash().ConvertToSecureUrl(ConfigurationManager.ForceSSL) + "Login?token=" + Account.GetSingleSignOnToken(CoreContext.CurrentAccount.AccountID))">
+                    @Html.Term("MyWorkstation", "My Workstation")</a></li>
+            }*@
+@* Disabled due to performance issues and the feature never worked to begin with. In order to enable this feature the backend code will need to be optimized to prevent a performance hit. - Lundy
+        @if (ViewBag.HasHostedParties != null && ViewBag.HasHostedParties)
+        {
+            <li><a href="@Url.Resolve("~/HostedParties")">@Html.Term("MyHostedParties", "My Hosted Parties")</a></li>
+        }*@
+            @*<li class="ulCart"><a href="@Url.Resolve("~/Cart")">Cart</a></li>*@
+            @if (BaseController.CurrentSite.Languages.Count > 1)
+            {
+            <li class="ulLang">@Html.Partial("_languagePicker")</li>
+            }
+            <li class="ulLogOut"><a href="@Url.Resolve("~/Logout")">@Html.Term("PWS_UserMenu_LogOut_Link","Logout")</a></li>
+        </ul>
+    </div>
+}
+else
+{
+    <span id="anonUser" class="anonGreet">Welcome!</span>
+    <div class="userLinks anonLinks">
+        <ul class="flatList" id="VisitorLinks">
+            <li class="ulLogIn"><a href="@Url.Resolve("~/Login")">@Html.Term("PWS_UserMenu_LogIn_Link","Please log in")</a></li>
+            @*<li class="ulCart"><a href="@Url.Resolve("~/Cart")">@Html.Term("Cart", "Cart")</a></li>*@
+            @if (BaseController.CurrentSite.Languages.Count > 1)
+            {
+            <li class="ulLang">@Html.Partial("_languagePicker")</li>
+            }
+        </ul>
+    </div>
+ @Html.Partial("_LoginContainer")
+}

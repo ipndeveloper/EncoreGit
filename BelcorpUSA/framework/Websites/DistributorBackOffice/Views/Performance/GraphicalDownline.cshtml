@@ -1,0 +1,304 @@
+@using NetSteps.Accounts.Downline.UI.Common.InfoCard
+@using NetSteps.Web.Mvc.Models
+@using NetSteps.Web.Mvc.Helpers
+@model dynamic
+@section head {
+    <link href="@Href("~/Resource/Content/CSS/Hypertree.css")" rel="stylesheet" type="text/css" />
+    <!--[if IE]><script src="@Href("~/Scripts/excanvas.js")" type="text/javascript"></script><![endif]-->
+    <script src="@Href("~/Scripts/jit.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        var labelType, useGradients, nativeTextSupport, animate, ht, rootNodeId = parseInt('@CoreContext.CurrentAccount.AccountID');
+        var defaultRootNodeId = parseInt('@CoreContext.CurrentAccount.AccountID');
+
+        $(function () {
+            $('body').addClass('body_graphicalTree');
+            $('#DownlineKeys').css('display', 'block');
+
+            /*CGI(DT-JCT;JICM) Autocambiar el css de la leyenda - INI*/
+            $('input[name="reportIconType"]:radio').click(function () {
+                if ($(this).attr('id') == 'rdo-CommissionQualified') {
+                    $("#KeyQual_TabContent").css('display', 'block');
+                    $("#KeyAcct_TabContent").css('display', 'none');
+
+                    $("#li_KeyQual_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg last current');
+                    $("#li_KeyAcct_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg first');
+                }
+                else if ($(this).attr('id') == 'rdo-CustomerTypes') {
+                    $("#KeyAcct_TabContent").css('display', 'block');
+                    $("#KeyQual_TabContent").css('display', 'none');
+
+                    $("#li_KeyQual_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg last');
+                    $("#li_KeyAcct_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg current first');
+                }
+            });
+
+            /*CGI(DT-JCT;JICM) Autocambiar el css de la leyenda - FIN*/
+
+            // Hide and show the node info card window
+            var infoContainerHeight = $('#treeViewNodeWrapper').show().height();
+            var oldInfoContainerHeight = 0;
+            $('#treeViewNodeWrapper').hide();
+            var treeContainer = $('#center-container'),
+                treeCenter = (treeContainer.width() - 32) / 2;
+            treeContainer.find('.loadingIcon').css({ 'position': 'absolute', 'margin-top': treeCenter + 'px', 'margin-left': treeCenter + 'px', 'z-index': '500' });
+
+
+            var ua = navigator.userAgent,
+                iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
+                typeOfCanvas = typeof HTMLCanvasElement,
+                nativeCanvasSupport = (typeOfCanvas == 'object' || typeOfCanvas == 'function'),
+                textSupport = nativeCanvasSupport
+                    && (typeof document.createElement('canvas').getContext('2d').fillText == 'function');
+            //I'm setting this based on the fact that ExCanvas provides text support for IE
+            //and that as of today iPhone/iPad current text support is lame
+            labelType = (!nativeCanvasSupport || (textSupport && !iStuff)) ? 'Native' : 'HTML';
+            nativeTextSupport = labelType == 'Native';
+            useGradients = nativeCanvasSupport;
+            animate = !(iStuff || !nativeCanvasSupport);
+
+            var button = $jit.id('runSearch');
+            button.onclick = function () {
+                showPage();
+                return false;
+            }
+
+            var showConsultants = $jit.id('showConsultants');
+            showConsultants.onchange = function () {
+                var showPCs = $jit.id('showPCs');
+                if (!this.checked) {
+                    showPCs.checked = false;
+                    showPCs.disabled = true;
+                } else {
+                    showPCs.disabled = false;
+                }
+            }
+
+            showPage();
+        });
+
+        var showDetails = false;
+
+        function showPage() {
+            var showPCs = $jit.id('showPCs');
+            var showConsultants = $jit.id('showConsultants');
+            if (!Modernizr.canvas) {
+                $('img.loadingIcon').show().addClass('brdr1').addClass('UI-whiteBg').addClass('pad5');
+            }
+            $.post('/Performance/GetDownlineNodes',
+            {
+                rootNodeId: rootNodeId,
+                maxLevels: 100,
+                showPCs: showPCs.checked,
+                showConsultants: showConsultants.checked,
+                type: $('input[name="reportIconType"]:radio').filter(':checked').val()
+            }, function (response) {
+                if (response.result !== undefined && !response.result) {
+                    showMessage(response.message, true);
+                    $('img.loadingIcon').hide().removeClass('brdr1').removeClass('UI-whiteBg').removeClass('pad5');
+                }
+                if (ht === undefined) {
+                    init(response.downline);
+                } else {
+                    //load JSON data.
+                    ht.loadJSON(response.downline);
+                    //compute positions and plot.
+                    ht.refresh();
+                    //end
+                    ht.controller.onAfterCompute();
+                }
+
+                var breadCrumb = $jit.id('breadCrumb');
+                breadCrumb.innerHTML = response.upline;
+                if (downlineInfoCardModel != undefined) {
+                    downlineInfoCardModel.load(rootNodeId);
+                }
+
+            }, 'json');
+        }
+
+
+        function init(json) {
+            var infovis = document.getElementById('infovis');
+            var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
+
+            //init Hypertree
+            ht = new $jit.Hypertree({
+                //id of the visualization container
+                injectInto: 'infovis',
+                //canvas width and height
+                width: w,
+                height: h,
+                //Change node and edge styles such as
+                //color, width and dimensions.
+                Node: {
+                    dim: 9,
+                    type: 'circle', // 'circle','rectangle', 'square', 'ellipse', 'triangle', 'star',
+                    color: "#fff", //ryan - i override with node.data.color
+                    height: 30, //20
+                    width: 30, //90
+                    lineWidth: 2
+                },
+                Edge: {
+                    type: 'hyperline', //'line', 'hyperline', 'arrow'
+                    lineWidth: 1,
+                    color: "#088"
+                },
+                onBeforeCompute: function (node) {
+                    //Log.write("centering");
+                },
+                //Attach event handlers and add text to the
+                //labels. This method is only triggered on label
+                //creation
+                onCreateLabel: function (domElement, node) {
+                    //                    var showConsultants = $jit.id('showConsultants');
+                    //                    if (!showConsultants.checked)
+                    domElement.innerHTML = node.name;
+                    //                    else
+                    //                        domElement.innerHTML = '&nbsp;&nbsp;';
+                    domElement.title = node.data.tooltip;
+                    $jit.util.addEvent(domElement, 'click', function () {
+                        //ht.onClick(node.id);
+                        if (Modernizr.canvas) {
+                            ht.onClick(node.id, {
+                                onComplete: function () {
+                                    //ht.controller.onComplete();
+                                    rootNodeId = node.id;
+                                    if (downlineInfoCardModel != undefined) {
+                                        downlineInfoCardModel.load(rootNodeId);
+                                    }
+                                    showDetails = true;
+                                    showPage();
+                                }
+                            });
+                        } else {
+                            rootNodeId = node.id;
+                            showDetails = true;
+                            showPage();
+                        }
+                    });
+                },
+                //Change node styles when labels are placed
+                //or moved.
+                onPlaceLabel: function (domElement, node) {
+                    var style = domElement.style;
+                    style.display = '';
+                    style.cursor = 'pointer';
+                    if (node._depth === 0) {
+                        style.fontSize = "1.2em";
+                        style.color = "#bf0000";
+                        style.background = "#fff";
+                        style.padding = ".25em";
+                        style.border = "1px #000 solid";
+                    } else if (node._depth <= 1) {
+                        style.fontSize = "0.8em";
+                        style.background = "transparent";
+                        style.color = "#000";
+                        style.padding = "0";
+                        style.border = "0";
+
+                    } else if (node._depth == 2) {
+                        style.fontSize = "0.7em";
+                        style.background = "transparent";
+                        style.color = "#000";
+                        style.padding = "0";
+                        style.border = "0";
+
+                    } else {
+                        style.display = 'none';
+                    }
+                    if (Modernizr.rgba) {
+                        if (node._depth === 0) {
+                            style.background = "rgba(255, 255, 255, .8)";
+                        }
+                    }
+                    var left = parseInt(style.left);
+                    var w = domElement.offsetWidth;
+                    style.left = (left - w / 2) + 'px';
+                },
+
+                onAfterCompute: function () {
+                    //Log.write("done");
+                    $('img.loadingIcon').hide().removeClass('brdr1').removeClass('UI-whiteBg').removeClass('pad5');
+
+                },
+
+                onComplete: function () {
+                }
+            });
+
+            //load JSON data.
+            ht.loadJSON(json);
+            //compute positions and plot.
+            ht.refresh();
+            //end
+            ht.controller.onAfterCompute();
+        }
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Performance")">@Html.Term("BreadCrumbLabel_Performance", "Performance")</a>
+}
+@section title {
+    @Html.Term("GraphicalDownline", "GraphicalDownline")
+}
+<div class="UI-lightBg brdrAll GridFilters">
+    <div class="FL FilterSet">
+        @Html.Partial("DownlineSearch")
+    </div>
+    <div class="FL FilterSet">
+        <label class="clr">@Html.Term("Display"):</label> 
+        
+        <div class="FL">
+            <label form="rdo-CommissionQualified">@Html.Term("DownlineFiltering_CommissionQualified", "Qualified"):</label>
+            <input id="rdo-CommissionQualified" type="radio" name="reportIconType" value="CommissionQualified" />
+        </div>
+         
+        <div class="FL">
+            <label for="rdo-CustomerTypes" style="width: 110px; margin-top: -13.5px;" >@Html.Term("DownlineFiltering_CustomerType", "Accounts per Paid As Title"):</label>
+            <input id="rdo-CustomerTypes" type="radio" name="reportIconType" value="CustomerType" checked="checked" />
+        </div>    
+
+        <div class="FL" style="display: None;"> <!--R2594 - CGI(DT-JCT;JICM) - Ocupa espacio en blanco cambiando de visibility a display none -->
+            <label for="showPCs">@Html.Term("DownlineFiltering_Show_PCs", "Show PCs"):</label>
+            <input id="showPCs" type="checkbox" />
+        </div>
+
+        <div class="FL" style="display: None;">
+            <label for="showConsultants">@Html.Term("DownlineFiltering_Show_NonExecutiveConsultants", "Show non-executive Consultants"):</label>
+            <input id="showConsultants" type="checkbox" />
+        </div>
+        <!-- activate filters/report -->
+        <div class="FL">
+            <a id="runSearch" href="#" class="Button MoreOptions"><span>@Html.Term("ApplyFilters", "Apply Filters")</span></a>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <span class="clr"></span>
+</div>
+<p class="ml10 clr" id="breadCrumb">
+</p>
+<div id="container">
+    <div id="center-container">
+        <img class="loadingIcon" src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="@Html.Term("loading...")"/>
+        <div id="infovis">
+        </div>
+    </div>
+    <div id="log">
+    </div>
+</div>
+<div id="treeViewNodeWrapper" class="TreeNodeDetails UI-whiteBg brdrYYNN brdr1 infoCardWindow" style="display: none" data-bind="visible: true">
+	@Html.Partial("_DownlineInfoCard")
+</div>
+@section bodyFooter
+{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Performance/DownlineInfoCardModel.js")"></script>
+	<script type="text/javascript">
+		var downlineInfoCardModel;
+		$(function () {
+			var downlineInfoCardOptions = @(((IDownlineInfoCardModel)Model.DownlineInfoCard).OptionsJson());
+			var downlineInfoCardData = @(((IDownlineInfoCardModel)Model.DownlineInfoCard).DataJson());
+			downlineInfoCardModel = new DownlineInfoCardModel(downlineInfoCardOptions, downlineInfoCardData);
+			ko.applyBindings(downlineInfoCardModel, document.getElementById('treeViewNodeWrapper'));
+		});
+	</script>
+}

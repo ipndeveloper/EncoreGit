@@ -1,0 +1,53 @@
+﻿<div id="recentLibraryContainer">
+    <div class="UI-mainBg pad5 brdrYYNN recentLibraryHeading">
+        <span class="bold">@Html.Term("Images_Recently_Added_to_My_Library", "Images Recently Added to My Library")</span>
+    </div>
+    <div id="Library" class="brdr pad5 overflow recentItems">
+        <ul class="FL inlineNav">
+            @{
+
+                if (!Request.IsLocal && ViewBag.ImagePaths != null)
+                {
+                    var imagePaths = ViewBag.ImagePaths;
+                    foreach (FileResource resource in imagePaths)
+                    {
+                        var thumbnail = resource.FileResourceProperties.FirstOrDefault(x => x.FileResourcePropertyTypeID == (int)ConstantsGenerated.FileResourcePropertyType.ImageThumbnail);
+                        var imagePath = string.Format("{0}?Stamp={1}", thumbnail != null ? thumbnail.PropertyValue.ReplaceFileUploadPathToken() : resource.FileResourcePath.RemoveFileUploadToken(), DateTime.Now);
+                <li>
+                    <img src="@imagePath" alt="" height="65" />
+                    <input type="hidden" value="@resource.FileResourcePath.RemoveFileUploadToken()"/>
+                </li>
+                    }
+                }
+
+                if (Request.IsLocal)
+                {
+                <li>
+                    <img src="/Content/Images/StockImageExamples/istockLarge_thumb.jpg" alt="" height="65" />
+                    <input type="hidden" value="/Content/Images/StockImageExamples/istockLarge.jpg" />
+                </li>
+                <li>
+                    <img src="/Content/Images/StockImageExamples/new_louis_barnard_thumb.jpg" alt=""
+                        height="65" />
+                    <input type="hidden" value="/Content/Images/StockImageExamples/new_louis_barnard.jpg" />
+                </li>
+                <li>
+                    <img src="/Content/Images/StockImageExamples/istockMediumLarge_thumb.jpg" alt=""
+                        height="65" />
+                    <input type="hidden" value="/Content/Images/StockImageExamples/istockMediumLarge.jpg" />
+                </li>
+                <li>
+                    <img src="/Content/Images/StockImageExamples/istockMediumSmall_thumb.jpg" alt=""
+                        height="65" />
+                    <input type="hidden" value="/Content/Images/StockImageExamples/istockMediumSmall.jpg" />
+                </li>
+                <li>
+                    <img src="/Content/Images/StockImageExamples/istockSmall_thumb.jpg" alt="" height="65" />
+                    <input type="hidden" value="/Content/Images/StockImageExamples/istockSmall.jpg" />
+                </li>
+                }
+            }
+        </ul>
+        <a href="javascript:void(0);" class="Button selectImage" id="ViewLibrary">@Html.Term("Open_my_image_library", "Open my image library")</a>
+    </div>
+</div>

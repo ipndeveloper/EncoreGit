@@ -1,0 +1,120 @@
+@model NetSteps.Data.Entities.Site
+@{
+    var siteUrl = Model.SiteUrls.FirstOrDefault();
+    var isSubdomain = NetSteps.Common.Configuration.ConfigurationManager.GetAppSetting<bool>(NetSteps.Common.Configuration.ConfigurationManager.VariableKey.UrlFormatIsSubdomain, true);
+    string[] domains = ViewData["Domains"] as string[];
+
+    string url = siteUrl == null ? "" : siteUrl.Url;
+    string authority = url.GetURLAuthority();
+    string domain = url.GetURLDomain();
+    string subdomain = isSubdomain ? url.GetURLSubdomain() : url.GetURLPath().Substring(1);   
+}
+<script type="text/javascript" src="@Href("~/Resource/Scripts/jquery.autogrow.js")"></script>
+<script type="text/javascript">
+
+    $(function () {
+        function delayTimer(delay) {
+            var timer;
+            return function (fn) {
+                timer = clearTimeout(timer);
+                if (fn)
+                    timer = setTimeout(function () {
+                        fn();
+                    }, delay);
+                return timer;
+            }
+        }
+
+        function getUrl() {
+            if (parseBool('@isSubdomain')) {
+                return 'http://' + $('#urlSubDomain').val() + '.@domains[0]/';
+            } else {
+                return 'http://www.@domains[0]/' + $('#urlSubDomain').val();
+            }
+        }
+
+        function setUrl() {
+            var url = getUrl();
+
+            $('#fullUrl').html(url + '<b>(@Html.Term("CheckingAvailability", "Checking availability"))</b>').removeClass();
+        }
+
+        function checkAvailability() {
+            var subDomain = $('#urlSubDomain').val().trim();
+            if (subDomain == '') {
+                $('#fullUrl').html('<b>(@Html.Term("PleaseEnterAURLAbove", "Please Enter a URL above."))</b>');
+                return;
+            }
+
+            //showLoading($('#fullUrl'));
+            $.post('@Href("~/Account/Autoships/CheckIfAvailableUrl")', {
+                siteID: $('#siteId').val(),
+                url: getUrl()
+            }, function (response) {
+                if (response.result) {
+                    var currentUrl = getUrl();
+                    if (response.url == currentUrl) {
+                        if (response.available) {
+                            $('#fullUrl').addClass('available').html(response.url + ' <b id="isfullUrlAvailable">(@Html.Term("Available"))</b>');
+                        }
+                        else {
+                            $('#fullUrl').addClass('unavailable').html(response.url + '<b id="isfullUrlAvailable">(@Html.Term("NotAvailable", "Not Available"))</b>');
+                        }
+               
+                    }
+                }
+                else {
+                    showMessage('@Html.Term("ErrorCheckingURLAvailability", "Error checking URL availability"): ' + response.message, true);
+                }
+            });
+        }
+
+        var inputDelayer = delayTimer(500);
+
+        $('#urlSubDomain').alphanumeric();
+
+        $('#urlSubDomain').keyup(function () {
+            $('#saveURLChange').fadeIn();
+            setUrl();
+            inputDelayer(function () {
+                checkAvailability();
+            });
+        })
+
+        $('.checkAvailability').click(function () {
+            setUrl();
+            checkAvailability();
+        });
+    });
+</script>
+<div class="GridFilters UI-lightBg pad10 brdrAll pwsDomainManager">
+    <input type="hidden" id="siteId" value="@(siteUrl == null ? 0 : siteUrl.SiteID)" />
+    <input type="hidden" id="siteUrlId" value="@(siteUrl == null ? 0 : siteUrl.SiteUrlID)" />
+    <input type="hidden" id="domain" value="@domains[0]" />
+    <div class="FilterSet">
+        <div class="FL">
+            <label for="urlSubDomain">
+                @Html.Term("MyPersonalWebsite", "My Personal Website"):
+            </label>
+            <input id="urlSubDomain" class="url required subdomain pad5 myURLInput" type="text" value="@subdomain"
+            name="@Html.Term("URLRequired", "URL is required")" />
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div class="mt10">
+        <div class="FL mr10 bold pwsHelpText">
+            @Html.Term("PWS_Help_Text", "This is what your PWS URL will be"):
+        </div>
+        <div class="FL mr10">
+            <span id="fullUrl" class="available">
+                @url
+            </span>
+        </div>
+        <div class="FL">
+            <span class="availability"></span>
+        </div>
+        <a href="javascript:void(0);" class="FL checkAvailability UI-icon-container"><span
+            class="UI-icon icon-refresh"></span><span>@Html.Term("CheckAvailability", "Check availability")</span></a>
+    </div>
+    <span class="clr"></span>
+</div>

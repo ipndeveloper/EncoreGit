@@ -1,0 +1,107 @@
+@model List<AccountListValue>
+<script type="text/javascript">
+    $(function () {
+        var hasListChanged = false;
+        $('#btnAdd').click(function () {
+            $('#listValues').append('<li class="pad5 icon-24"><div class="FL"><input type="text" name="value0" class="pad5 listValue" /></div><a href="javascript:void(0);" class=\"FR IconLink Delete\"><span class="UI-icon icon-x"></span></a><span class="clr"></span></li>');
+        });
+
+        $('#listValues .Delete').die().live('click', function () {
+            if (confirm('@Html.Term("WouldYouLikeToDeleteThisListValue", "Would you like to delete this list value?")')) {
+                var listValue = $(this).parent().find('input'), listValueId = listValue.attr('name').replace(/\D/g, '');
+                if (listValueId > 0) {
+                    var data = { type: '@ViewBag.ListValueTypeID', listValueId: listValueId };
+                    $.post('@Url.Content("~/Contacts/DeleteValue")', data, function (response) {
+                        if (response.result) {
+                            listValue.closest('li').fadeOut('normal', function () {
+                                $('#listValues').html(response.items);
+                            });
+                        }
+                        else {
+                            showMessage(response.message, true);
+                            return false;
+                        }
+                        hasListChanged = true;
+                    });
+                }
+                else {
+                    listValue.closest('li').fadeOut('normal', function () {
+                        listValue.closest('li').remove();
+                    });
+                }
+            }
+        });
+
+        $('#btnSaveList').click(function () {
+            if ($('#listValues .listValue').length == 0) {
+                return;
+            }
+
+            var listValueMissing = false;
+            $('#listValues .listValue').each(function (i) {
+                var empty = '';
+                if ($.trim($(this).val()) == empty) {
+                    listValueMissing = true;
+
+                    $(this).showError('@Html.JavascriptTerm("EditContactListValueMissing", "Please enter a value")').keyup(function () {
+                        if ($.trim($(this).val()) != empty) {
+                            $(this).clearError();
+                        }
+                    });
+                }
+            });
+            if (listValueMissing) {
+                return;
+            }
+
+            var data = { type: '@ViewBag.ListValueTypeID' }, t = $(this);
+
+            showLoading(t);
+
+            $('#listValues .listValue').filter(function () { return !!$(this).val(); }).each(function (i) {
+                var val = $(this).val();
+                if (val.length) {
+                    data['listValues[' + i + '].AccountListValueID'] = $(this).attr('name').replace(/\D/g, '');
+                    data['listValues[' + i + '].Value'] = val;
+                }
+            });
+
+            $.post('@Url.Content("~/Contacts/SaveValues")', data, function (response) {
+                hideLoading(t);
+                if (response.result)
+                //window.location = '@NetSteps.Web.WebContext.ReferalUrl';
+                    $('#editAcountListValueModal').jqmHide();
+                else {
+                    showMessage(response.message, true);
+                    return false;
+                }
+            });
+
+        });
+    });
+</script>
+<h2 style="margin-bottom: 5px;">
+    @Html.Term("EditListValueType", "Edit {0}", (string)ViewBag.ListValueType)</h2>
+<div class="UI-mainBg icon-24 brdrAll  GridUtility">
+    <a href="javascript:void(0);" class="UI-icon-container EditMyAccount overlay"
+        id="btnAdd" rel="#EditAccountInfo"><span class="UI-icon icon-plus"></span><span>
+            @Html.Term("AddNewlistValue", "Add new list value")</span></a> <span class="clr">
+    </span><span class="clr"></span>
+</div>
+<ul id="listValues" class="flatList listNav">
+    @foreach (AccountListValue value in Model)
+    {
+        <li class="pad5 icon-24">
+            <div class="FL">
+                <input type="text" name="listValue@(value.AccountListValueID)" value="@(value.IsCorporate ? value.GetTerm() : value.Value)" class="pad5 listValue" />
+            </div>
+            <a href="javascript:void(0);" class="FR IconLink Delete" title="@Html.Term("Delete")">
+                <span class="UI-icon icon-x"></span></a><span class="clr"></span></li>
+    }
+</ul>
+<div class="clr pad10 center">
+    <a id="btnSaveList" href="javascript:void(0);" class="FL Button"><span>
+        @Html.Term("Save")</span></a> <a href="javascript:void(0);" class="jqmClose FR cancel">
+            <span>
+                @Html.Term("Close")</span></a> <span class="clr"></span>
+</div>

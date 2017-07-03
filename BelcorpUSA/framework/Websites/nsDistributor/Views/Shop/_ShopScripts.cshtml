@@ -1,0 +1,190 @@
+﻿
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/jsonSuggest.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/jsonSuggest.js")"></script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Shared/CartModel.js")"></script>
+	@Html.Partial("MessageCenter")
+    <script type="text/javascript">
+		//<![CDATA[
+		var cartModel;
+        var shopAddToCartData;
+        $(function () {
+			cartModel = new CartModel(@Html.Raw(Json.Encode(ViewBag.CartModel)));
+			ko.applyBindings(cartModel, document.getElementById('ShoppingCart'));
+
+            var messageTimeout,
+				absolute = true,
+				originalTop = $('#ShoppingCart').offset().top + $('#ShoppingCart').height();
+            $('body').addClass('shoppingBody');
+			if (!$('li.navigationItem a.current').length)
+			{
+            $('li.navigationItem a[href="/Shop"]').addClass('current');
+			}
+
+            $('#txtSearch').watermark('Search').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('#btnSearch').click();
+                }
+            }).jsonSuggest('@Url.Resolve("~/Shop/QuickSearch")', { minCharacters: 3, ajaxResults: true, startCollapsed: false, width: 395, imageSize: [38, 38], onSelect: function (item, group) {
+                window.location = '@Url.Content("~/Shop/Product/")' + item.id;
+            }
+            });
+            $('#btnSearch').click(function (e) {
+                e.preventDefault();
+                window.location = '@Url.Resolve("~/Shop/Search?q=")' + $('#txtSearch').val();
+            });
+
+            $('a.ViewDetails').click(function () {
+                var id = $(this).attr('id'),
+				productId = id.indexOf('_') < 0 ? id : id.substr(id.lastIndexOf('_') + 1, id.length - id.lastIndexOf('_'));
+                window.location = '@Url.Content("~/Shop/Product/")' + productId;
+            });
+
+            $('a.Add,a.AddCart').click(function () {
+                var t = $(this), quantityField = $(this).parent().find('input.quantity'),
+					quantity = quantityField.val().length ? quantityField.val() : 1,
+					id = $(this).attr('id'),
+					sku = id.indexOf('_') < 0 ? id : id.substr(0, id.indexOf('_'));
+                var addToCart = t.closest('.AddToCart,.listingAddToCart');
+                var backOrder = addToCart.find('.backOrder');
+                if(backOrder.length!=0)
+                {
+                    if(!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")'))
+                    {
+                        return false;
+                    }
+                }
+				@{
+				//This quantity check was for > -1
+				//Why would we ever need a quantity = 0 when adding an item?
+				}
+                if (quantity > 0) {
+                    var btns = $('a.Add,a.AddCart');
+                    showLoading(btns);
+                    shopAddToCartData = $.extend(shopAddToCartData, { sku: sku, quantity: quantity });
+
+                    $.post('@Url.Resolve("~/Cart/Add")', shopAddToCartData, function (response) {
+						shopAddToCartData = {};
+                        window.clearTimeout(messageTimeout);
+                        var newMessage = $('<div class="UI-whiteBg pad5 brdrAll" style="display:none;"></div>');
+                        hideLoading(btns);
+                        if (response.result) {
+                            if (!$('#detachFromParty').length) {
+                                $('a.partyAttachBtn').show();
+                            }
+
+							if (response.CartModel) {
+								cartModel.updateFromJS(response.CartModel);
+							}
+
+                            $('#CartTitle').text('@Html.Term("AddedToCart", "Added to Cart")');
+                            $('span.itemsInCart').text(response.itemsInCart);
+                            $('span.Total').text(response.total);
+                            newMessage.html(String.format('<span class="FL mr10 brdr pad2 cartMessageThumb"><img src="{1}" alt="" /></span><span class="FL cartMessageLabel">@Html.Term("ProductWasAddedToYourCart", "{0} was added to your cart")</span><span class="clr"></span>', response.productName, response.image));
+                            wireupCartHover();
+                        } else {
+                            $('#CartTitle').text('Error');
+                            newMessage.html(response.message);
+                        }
+                        $('#CartMessages').fadeIn('fast');
+                        var height = newMessage.appendTo('#CartMessageContent').show().height();
+                        newMessage.height(0).css('opacity', '0').animate({ height: height, opacity: 1 }, 500);
+                        messageTimeout = window.setTimeout(function () { $("#CartMessages").fadeOut("slow"); }, 5000);
+                        window.setTimeout(function () { $("#CartMessageContent div:first").animate({ opacity: 0, height: 0 }, 900, function () { $(this).remove(); }); }, 5000);
+                        if (response.isBundle) {
+                            var queryString = "?productId=" + response.productId + "&bundleGuid=" + response.bundleGuid;
+                            window.location.href = '@Url.Content("~/Shop/BundlePackItems")' + queryString;
+                        }
+                    });
+                }
+            });
+
+            $('input.quantity').numeric({ allowNegative: false, allowDecimal: false });
+
+            $(window).scroll(function () {
+                if (absolute && originalTop < $(window).scrollTop()) {
+                    absolute = false;
+                    $('#CartMessages').toggleClass('cartMessagesFixed');
+                } else if (!absolute && originalTop > $(window).scrollTop()) {
+                    absolute = true;
+                    $('#CartMessages').toggleClass('cartMessagesFixed');
+                }
+            });
+
+            $('#CartMessages').hide();
+            //            $('div.cartHasItems').live('hover', function () {
+            //                $('#CartPreview').fadeToggle('fast');
+            //                $(this).toggleClass('cartHasItems-hovered');
+            //            });
+
+            $('a.partyAttachBtn').click(function () {
+                $('#CartPreviewBody').fadeOut(50, function () { $('#selectParty').fadeIn(); });
+            });
+            $('a.cancelAttach').click(function () {
+                $('#selectParty').fadeOut(50, function () { $('#CartPreviewBody').fadeIn(); });
+            });
+
+            function attachToParty(callback) {
+                $.post('@Url.Resolve("~/Shop/AttachToParty")', { partyId: $('#selectParty input[name="party"]:checked').val() }, function (response) {
+                    if (response.result) {
+                        callback();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }
+            $('#attachAndContinue').click(function () {
+                attachToParty(function () {
+                    $('#selectParty').fadeOut(50, function () { $('#CartPreviewBody').fadeIn(); });
+                    $('#partyInfo').html('<img src="@Url.Content("~/Resource/Content/Images/Icons/loading-blue.gif")" alt="loading..." />');
+                    $.get('@Url.Resolve("~/Shop/PartyInfo")', { partyId: $('#selectParty input[name="party"]:checked').val() }, function (response) {
+                        if (response.result === undefined || response.result) {
+                            $('#partyInfo').html(response);
+                            $('a.partyAttachBtn').hide();
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                });
+            });
+            $('#attachAndCheckout').click(function () {
+                attachToParty(function () { window.location = '@Url.Resolve("~/Cart")'; });
+            });
+
+            $('#detachFromParty').live('click', function () {
+                $.post('@Url.Resolve("~/Shop/DetachFromParty")', {}, function (response) {
+                    if (response.result) {
+                        $('a.partyAttachBtn').show();
+                        $('#partyInfo').empty();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            function wireupCartHover() {
+                $('div.cartTotals').hoverIntent({
+                    over: function () {
+                        $('#CartPreview').fadeIn('fast');
+                        $('a.cartTotalsLink', this).addClass('cartTotalsLink-hover');
+                        if ($('#CartMessages').is(':visible') && absolute) {
+                            $('#CartMessages').animate({ top: ($('#CartPreview').position().top + $('#CartPreview').outerHeight(false)) + 'px' }, 400);
+                        }
+                    },
+                    timeout: 200,
+                    out: function () {
+                        $('#CartPreview').fadeOut('fast');
+                        $('a.cartTotalsLink', this).removeClass('cartTotalsLink-hover');
+                        if ($('#CartMessages').is(':visible') && absolute) {
+                            $('#CartMessages').animate({ top: '30px' }, 400);
+                        }
+                    }
+                }).find('a.cartTotalsLink').addClass('cartTotalsLink-hasItems');
+            }
+            @if (ViewBag.OrderItemCount > 0) {
+            <text>wireupCartHover();</text>
+            }
+        });
+		
+		//]]>
+    </script>

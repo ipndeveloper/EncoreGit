@@ -1,0 +1,64 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<%--Modifications:--%>
+<%--@01 20150615 BR-LG-003 CSTI BAL : Add Navigation items to Shipping Rules Management--%>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="SubNavigation">
+	
+     <%= Html.DropDownNavigation(Html.Term("RoutesManagement", "Routes Management"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("BrowseRoute", "Browse Route"), Url = "~/Logistics/Routes" },
+			new NavigationItem() { LinkText = Html.Term("AddaNewRoute", "Add a New Route"), Url = "~/Logistics/Routes/NewRoute" },
+                       
+		})%>
+
+        <%--@01 A07--%>
+        <%= Html.DropDownNavigation(Html.Term("ShippingRulesManagement", "Shipping Rules Management"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowseShippingRules", "Browse Shipping Rules"), Url = "~/Logistics/Shipping/Rules" },
+            new NavigationItem() { LinkText = Html.Term("NewRule", "New Rule"), Url = "~/Logistics/Shipping/RuleDetail" },
+            new NavigationItem() { LinkText = Html.Term("BrowseShippingRates", "Browse Shipping Rates"), Url = "~/Logistics/Shipping/Rates" },
+            new NavigationItem() { LinkText = Html.Term("RateDetail", "Rate Detail"), Url = "~/Logistics/Shipping/RateDetail" }
+        })
+    %>
+      <%= Html.DropDownNavigation(Html.Term("LogisticProvManagement", "Logistic Prov Management"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowseLogisticProvider", "Browse Logistic Provider"), Url = "~/Logistics/Logistics/BrowseProvider" },
+            new NavigationItem() { LinkText = Html.Term("AddNewLogisticProvider", "Add New Logistic Provider"), Url = "~/Logistics/Logistics/ProviderDetails/" }
+        })
+    %>
+
+    <%= Html.SubTab("~/Logistics/Logistics/BrowseOrdersAllocate", "Allocate Logistic Provider")%>
+     <%= Html.SubTab("~/Logistics/GenerateBatch/Index", "Generate Manual Billing")%>
+     <%= Html.SubTab("~/Logistics/GenerateBatch/GenerateBatch", "Generate Batch Separation")%>
+ 
+</asp:Content>
+
+
+<asp:Content ID="Content3" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<div class="TagInfo">
+					<asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+</asp:Content>
+
+            

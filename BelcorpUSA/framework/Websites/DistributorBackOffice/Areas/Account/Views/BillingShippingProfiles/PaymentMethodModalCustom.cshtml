@@ -1,0 +1,35 @@
+@model NetSteps.Data.Entities.AccountPaymentMethod
+<script type="text/javascript">
+
+    $(function () {
+        $('#btnCancelPaymentMethod').click(function () {
+            if ($('#editPaymentMethodModal').length && $('#editPaymentMethodModal').is(':visible'))
+                $('#editPaymentMethodModal').jqmHide();
+            window.location = '@Href("~/Account")';
+        });
+    });
+
+</script>
+@if (Model.BillingAddressID > 0)
+{
+    <div class="UI-mainBg brdrAll GridUtility">
+        <input type="hidden" id="currentPaymentId" value="@Model.AccountPaymentMethodID" />
+        <a href="javascript:void(0);" class="UI-icon-container IconText Delete" onclick="deletePaymentMethod($('#currentPaymentId').val());">
+            <span class="UI-icon icon-x"></span>
+            <span>
+                @Html.Term("DeleteThisProfile", "Delete This Profile")</span> </a>
+        @if (!Model.IsDefault)
+        {
+            <span id="shippingAddressSetAsDefaultLink"><a href="javascript:void(0);" class="UI-icon-container IconText SetDefault"
+                onclick="setDefaultPaymentMethod($('#currentPaymentId').val());">
+                 <span class="UI-icon icon-save icon-makeDefault"></span>
+                <span>
+                    @Html.Term("MakeDefaultProfile", "Make Default Profile")</span> </a></span>
+        }
+        <!--<a href="#" class="IconText Close close"><span>Close Window</span></a>-->
+        <span class="clr"></span>
+    </div>
+}
+<div id="accountPaymentMethodContainer">
+    @Html.Partial("PaymentMethodModal", Model)
+</div>

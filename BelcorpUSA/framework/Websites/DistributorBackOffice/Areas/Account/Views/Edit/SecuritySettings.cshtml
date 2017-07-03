@@ -1,0 +1,55 @@
+@model dynamic
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSavePassword').click(function () {
+                var data = {
+                    password: $('#txtPassword').val(),
+                    confirmPassword: $('#txtConfirmPassword').val()
+                };
+
+                $.post('@Href("~/Account/Edit/ChangePassword")', data, function (response) {
+                    if (response.result) {
+                        showMessage('@Html.Term("PasswordChanged", "Password changed successfully")', false);
+                    }
+                    else
+                        showMessage(response.message, true);
+                }, 'json');
+            });
+        });
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+    @Html.Term("SecuritySettings", "Security Settings")
+}
+<table width="100%" class="DataGrid" cellspacing="0">
+    <tbody>
+        <tr id="newPassword">
+            <td>
+                @Html.Term("Password"):
+            </td>
+            <td>
+                <input type="hidden" name="userChangingPassword" id="userChangingPassword" value="false" />
+                <input type="password" id="txtPassword" value="@*@accountToEdit.User.Password*@"
+						class="required" name="@Html.Term("PasswordRequired", "Password is required")" />
+            </td>
+        </tr>
+        <tr id="newPasswordConfirm">
+            <td>
+                @Html.Term("ConfirmPassword", "Confirm Password"):
+            </td>
+            <td>
+                <input type="password" id="txtConfirmPassword" value="@*@accountToEdit.User.Password*@"
+						class="required" name="@Html.Term("PasswordRequired", "Password is required")" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a id="btnSavePassword" href="javascript:void(0);" class="Button BigBlue"><span>
+    @Html.Term("Save")</span></a> 

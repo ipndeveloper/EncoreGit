@@ -1,0 +1,64 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+@{var featuredArchives = DistributorBackOffice.Controllers.BaseController.GetArchives().Where(a => a.IsFeatured && a.Active).ToList();}
+<!-- resources widget -->
+
+<script type="text/javascript">
+    $(function () {
+        $('#documentScroller').scrollable();
+    })
+</script>
+
+<div class="WidgetWrap Resources">
+	<div class="Widget">
+		<div class="UI-btn txtShadowDrk WidgetTitle">
+			<span class="Txt UI-btn">
+				@Html.Term("NewBusinessResources", "New Business Resources")
+			</span><span class="FR WidgetControls"><a href="javascript:void(0);" onclick="javascript:hideWidget(@Model.Widget.WidgetID);" title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")">
+				<span>X</span></a></span>
+		</div>
+		<div class="UI-lightBg brdrAll WidgetBody">
+			<div class="ResourcePreviewInfo">
+				<a href="javascript:void(0);" class="FL ImgPrev ml10 prev UI-linkAlt" title="@Html.Term("Previous")">
+					<span class="UI-icon icon-arrowPrev"></span><span>@Html.Term("Prev")</span>
+				</a>
+				<div id="documentScroller" class="scrollable mr10 ml10 ImgWrapper">
+					<div class="items">
+						@foreach (var archive in featuredArchives)
+						{
+						  var archivePath = archive.ArchivePath.ReplaceFileUploadPathToken();
+						  var name = archive.Translations.GetByLanguageIdOrDefaultForDisplay().Name;
+							<div class="ScrollerItemContainer">
+								<div class="thumbWrapper">
+									<a href="@archivePath" class="block clr ResourcesImage">
+										<img src="@archive.ArchiveImage.ReplaceFileUploadPathToken()" alt="@name" />
+									</a>
+								</div>
+								<div class="clr resourceInfoText">
+									<span class="ResourceName">@name</span> <span class="ResourceCat"><a href="javascript:void(0);">
+										<!-- Future Category Here -->
+									</a></span><span class="ResourceLink"><a href="@archivePath" class="downloadNow">@Html.Term("DownloadNow", "Download Now")</a>
+									</span>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<a href="javascript:void(0);" class="FL ImgNext next UI-linkAlt" title="@Html.Term("Next")">
+					<span class="UI-icon icon-arrowNext"></span><span>@Html.Term("Next")</span>
+				</a><span class="clr"></span>
+            </div>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#documentScroller .ScrollerItemContainer img').each(function (index) {
+            //$(this).addClass('item' + index);
+
+            //$(this).css('margin', '20px 0 0 ' + ((140 - $(this).width()) / 2) + 'px');
+        });
+    });
+</script>
+<!--end widget -->

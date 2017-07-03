@@ -1,0 +1,190 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage<dynamic>"
+    MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <% Product modelObject = Model is NetSteps.Data.Entities.Product ? Model : Model.Product; %>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+    <script type="text/javascript">
+        $(function () {
+            $(".SeeMore").click(function () {
+                $("#moreVariants").show();
+                $(".SeeMore").hide();
+                $(".SeeLess").show();
+            });
+            $(".SeeLess").click(function () {
+                $("#moreVariants").hide();
+                $(".SeeLess").hide();
+                $(".SeeMore").show();
+            });
+            $('#btnToggleStatus').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('<%= ResolveUrl(string.Format("~/Products/Products/ToggleStatus/{0}/{1}", modelObject.ProductBaseID, modelObject.ProductID)) %>', {}, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        t.toggleClass('ToggleInactive');
+                    } else {
+                        showMessage(response.message);
+                    }
+                })
+                .fail(function() {
+                    hideLoading(t);
+                    showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+                });
+            });
+            //Used to add a class for additional styling if scrollbar becomes visible
+            var ywContainer = $('div.yellowWidgetListContainer');
+            if (ywContainer.height() == parseInt(ywContainer.css('max-height'))) {
+                ywContainer.addClass('ywScroll');
+            }
+        });
+    </script>
+</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+    <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+        <div class="SectionNav">
+            <ul class="SectionLinks">
+                <% Product modelObject = Model is NetSteps.Data.Entities.Product ? Model : Model.Product; %>
+                <% var productId = string.Format("{0}/{1}", modelObject.ProductBaseID, modelObject.ProductID); %>
+                <%= Html.SelectedLink("~/Products/Products/Overview/" + productId, Html.Term("ProductOverview", "Product Overview"), new List<string>() { "~/Products/Products/AuditHistory/" + productId }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Details/" + productId, Html.Term("Details"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Pricing/" + productId, Html.Term("Pricing"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Variants/" + productId, Html.Term("Variants"), new List<string>() { "~/Products/Products/VariantSKUS/" + productId }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/CMS/" + productId, Html.Term("CMS"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Categories/" + productId, Html.Term("Categories"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Properties/" + productId, Html.Term("Properties"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Resources/" + productId, Html.Term("Resources"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Relations/" + productId, Html.Term("Relationships"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/Availability/" + productId, Html.Term("Availability"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Products/Products/StateProvinceExclusions/" + productId, Html.Term("StateProvinceExclusions"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+              <%--  EB-229  <%if (modelObject.ProductBase.IsShippable)
+				  {
+					  Response.Write(Html.SelectedLink("~/Products/Products/Inventory/" + productId, Html.Term("Inventory"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, ""));
+				  }--%>
+				
+            </ul>
+        </div>
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="YellowWidget" runat="server">
+    <asp:ContentPlaceHolder ID="YellowWidget" runat="server">
+        <div class="TagInfo">
+            <div class="Content">
+                <div class="SubTab">
+                    <h1>
+                        <% Product modelObject = Model is NetSteps.Data.Entities.Product ? Model : Model.Product; %>
+                        <a href="<%= ResolveUrl("~/Products/Products/Overview/" + modelObject.ProductBase.ProductBaseID) %>">
+                            <%= modelObject.Translations.Name()%></a>
+                    </h1>
+                    <%--<div class="DropDown">
+						<ul>
+							<% foreach(Product product in modelObject.BaseProduct.Products.Where(p => p.Id != modelObject.Id)){ %>
+							<li><a href="<%= ResolveUrl("~/Products/Overview") + product.Id %>">
+								<%= product.SKU %>
+								-
+								<%= product.Descriptions.Name() %></a></li>
+							<%} %>
+						</ul>
+						<div class="DropDownUtility">
+							<ul>
+								<li><a href="#"><b>+ Create New Product Variant</b></a></li>
+							</ul>
+						</div>
+					</div>--%>
+                </div>
+                <%--<b>Product Display Name</b>--%>
+                <table class="DetailsTag Section" width="100%">
+                    <tr>
+                        <td class="Label">
+                            <%= Html.Term("SKU", "SKU") %>:
+                        </td>
+                        <td>
+                            <%= modelObject.SKU %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="Label">
+                            <%= Html.Term("Status", "Status") %>:
+                        </td>
+                        <td>
+                            <a id="btnToggleStatus" href="javascript:void(0);" class="Toggle ToggleActive<%= !modelObject.Active ? " ToggleInactive" : "" %>">
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="Label" style="vertical-align: top;">
+                            <%= Html.Term("Categories", "Categories") %>:
+                        </td>
+                        <td>
+                            <div class="yellowWidgetListContainer">
+                            <%foreach (var category in modelObject.ProductBase.Categories)
+                              {
+                                  var name = category.Translations.Name(); %>
+                            
+                            <a href="<%= ResolveUrl("~/Products/Categories/EditTree?categoryId=") + category.CategoryID %>">
+                                <%= name.Length > 19 ? name.Substring(0, 19) + "..." : name %></a><br />
+                            <%} %>
+                            </div>
+                        </td>
+                    </tr>
+                    <%var totalChildProductCount = modelObject.ProductBase.Products.Count();
+                        var variants = modelObject.ProductBase.Products.Where(p=>!p.IsVariantTemplate).ToList();
+                        if (totalChildProductCount > 1 && variants.Count() > 0)
+                      {
+                          var amountToShow = variants.Count() > 5 ? 5 : variants.Count();
+                    %>
+                        <tr>
+                            <td class="Label" style="vertical-align: top;">
+                                <%= Html.Term("Variants", "Variants")%>:
+                            </td>
+                            <td>
+                                <% var productId = string.Format("{0}/{1}", modelObject.ProductBaseID, modelObject.ProductID); %>
+                                <a href="<%= ResolveUrl("~/Products/Products/VariantSKUS/" + productId) %>"><%=variants.Count() + " " + Html.Term("Total") %></a> 
+                            </td>
+                        </tr>
+                        <%--<tr>
+                            <td class="Label" style="vertical-align: top;">
+                                <%= Html.Term("Variants", "Variants")%>:
+                            </td>
+                            <td>
+                                <%for (int i=0; i<amountToShow; i++)
+                                  {
+                                      var p = variants[i];
+                                      var name = p.Translations.Name(); %>
+                                    <%= name.Length > 19 ? name.Substring(0, 19) + "..." : name%>
+                                    <br />
+                                <%} %>
+                                <%if(variants.Count() > amountToShow)
+                                  {%>
+                                    <a href="javascript:void(0);" class="SeeMore"><%=Html.Term("SeeMore", "See More") %></a>
+                                    <div id="moreVariants" style="display:none;">
+                                        <%for (int i = amountToShow; i < variants.Count(); i++)
+                                          {
+                                              var p = variants[i];
+                                              var name = p.Translations.Name(); %>
+                                            <%= name.Length > 19 ? name.Substring(0, 19) + "..." : name%>
+                                            <br />
+                                        <%} %>
+                                    </div>
+                                    <a href="javascript:void(0);" class="SeeLess" style="display:none;"><%=Html.Term("SeeLess", "See Less") %></a>
+                                    <br />
+                                    <%=Html.Term("TotalCount", "Total Count") %>: <%=variants.Count() %>
+                                    <br />
+                                <%} %>
+                            </td>
+                        </tr>--%>
+                    <%}%>
+                </table>
+            </div>
+            <div class="TagBase">
+            </div>
+        </div>
+    </asp:ContentPlaceHolder>
+</asp:Content>

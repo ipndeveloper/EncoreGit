@@ -1,0 +1,487 @@
+﻿/*Base Font Settings*/
+/*Site Color Settings*/
+/*Site Text Color Settings*/
+/*Site Link Color Settings*/
+/*BorderSettings*/
+/*Alerts*/
+/***********************************************/
+/**********************************************************
+* Mixins
+**********************************************************/
+#mediaLibrary { top: 20px; bottom: 70px; left: 20px; right: 20px; position: fixed; margin-left: 0; padding: 10px; font-size: 11px; line-height: 150%; font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; color: #444444; background: rgba(0, 0, 0, 0.6); }
+#mediaLibrary .Delete { padding: 0; background-position: 0 -72px; }
+#mediaLibrary h3 { margin: 5px 0 0 5px; font-size: 160%; border-bottom: 0; width: 100%; padding: 0; }
+#mediaLibrary .LibrarySearch { padding: 10px; }
+#mediaLibrary .emGrid { margin-bottom: 0px; }
+#mediaLibrary .emLibraryContent { margin-top: 0px; }
+#mediaLibrary #qqUploadList { margin: 6% 4% 0; padding: 1%; width: 90%; max-height: 80%; overflow: auto; line-height: normal; word-wrap: break-word; }
+#mediaLibrary :before { margin-right: 0; }
+#mediaLibrary #MediaLibraryContainer { height: 100%; margin: 1px; }
+#mediaLibrary #MediaLibraryHeader h1 { margin: 13px; padding: 0; font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size: 175%; line-height: .85em; color: black; text-transform: uppercase; font-weight: normal; }
+#mediaLibrary .mContent { height: 100%; padding: 0; background: white; }
+#mediaLibrary .LibrarySearch { padding: 10px; }
+#mediaLibrary .libraryToolBar { text-align: right; }
+#mediaLibrary #txtSearchMedia { padding: 5px; width: 40%; max-width: 300px; min-width: 160px; font-size: 100%; font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; -moz-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); border: 1px solid white; -moz-border-radius: 5px 5px 5px 5px; -webkit-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; }
+#mediaLibrary .NS-modalContent .UI-darkBg { background: #555555; }
+#mediaLibrary .NS-modalContent .UI-darkBg h3 { color: #fff; font-family: inherit; }
+#mediaLibrary .NS-modalContent .UI-darkBg h3:before { color: #fff; }
+#mediaLibrary .NS-modalContent .UI-darkBg .changeViewIcon { background: none repeat scroll 0 0 #bbbbbb; border: 1px solid #444444; -moz-border-radius: 3px 3px 3px 3px; -webkit-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; display: inline-block; padding: 3px 1px; color: #555555; }
+#mediaLibrary .NS-modalContent .UI-darkBg .changeViewIcon:hover, #mediaLibrary .NS-modalContent .UI-darkBg .changeViewIcon.active { background: #dddddd; color: #777777; border-color: black !important; }
+#mediaLibrary .NS-removeLink { position: absolute; margin: -4px; }
+#mediaLibrary .NS-fileInfo { margin: .9%; height: 170px; width: 31%; position: relative; background-color: #fff; -webkit-transition-property: background-color; -moz-transition-property: background-color; -o-transition-property: background-color; transition-property: background-color; -webkit-transition-duration: 0.5s; -moz-transition-duration: 0.5s; -o-transition-duration: 0.5s; transition-duration: 0.5s; border: 1px solid #d1d3d4; text-align: center; min-width: 220px; -moz-transition-property: box-shadow; -moz-transition-duration: 400ms; -webkit-transition-property: box-shadow; -webkit-transition-duration: 400ms; -o-transition-property: box-shadow; -o-transition-duration: 400ms; transition-property: box-shadow; transition-duration: 400ms; }
+#mediaLibrary .NS-fileInfo:hover { border-color: #a7a8a9; -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4); box-shadow: 0 0 5px rgba(0, 0, 0, 0.4); }
+#mediaLibrary .NS-fileName { background: #efefef; margin-bottom: 10px; padding: 6px 4%; text-overflow: ellipsis; overflow: hidden; width: 92%; white-space: nowrap; }
+#mediaLibrary .NS-thumbnail { height: 70px; width: 70px; overflow: hidden; padding: 5px; vertical-align: top; border: 1px dotted #d1d3d4; background: #fff; }
+#mediaLibrary .NS-thumbnail img { max-height: 100%; max-width: 100%; }
+#mediaLibrary .NS-thumbnail, #mediaLibrary .NS-dateTime { display: inline-block; }
+#mediaLibrary .NS-thumbnail.hide { display: none; }
+#mediaLibrary .NS-dateTime { margin-top: 20px; width: 100%; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); opacity: 0.5; text-align: left; }
+#mediaLibrary .NS-dateTime:before { float: left; font-size: 60px; margin-top: 7px; }
+#mediaLibrary .NS-dateTime span { display: block; }
+#mediaLibrary .libraryToolBar *:before { padding: 2px; }
+#mediaLibrary #imagesBrowser .NS-dateTime { width: auto; }
+#mediaLibrary .NS-filePath { width: 74%; margin-left: 2%; }
+#mediaLibrary .emFileURL { width: 95%; min-width: 100px; -moz-border-radius: 5px 5px 5px 5px; -webkit-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; }
+#mediaLibrary .NS-selectInsert { width: 22%; float: left; }
+#mediaLibrary .NS-selectInsert a.emSB.InsertFile, #mediaLibrary .NS-selectInsert a.emSB.SelectFile { width: 90%; min-width: 45px; }
+#mediaLibrary .NS-filePath, #mediaLibrary .NS-selectInsert { margin-top: 15px; }
+#mediaLibrary .qq-uploader, #mediaLibrary .emLibraryFolders ul { margin-top: 20px; }
+#mediaLibrary .emMediaLibrary > div { height: 100%; overflow: auto; }
+#mediaLibrary .emLibraryFolders { background: #f2f2f2; -moz-box-shadow: inset -2px 2px 4px -2px rgba(0, 0, 0, 0.3); -webkit-box-shadow: inset -2px 2px 4px -2px rgba(0, 0, 0, 0.3); box-shadow: inset -2px 2px 4px -2px rgba(0, 0, 0, 0.3); }
+#mediaLibrary #uploadNewFile { background-color: #e0e0e0; background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e0e0e0), color-stop(50%, #efefef), color-stop(100%, #e0e0e0)); background: -webkit-linear-gradient(left center, #e0e0e0, #efefef, #e0e0e0); background: -moz-linear-gradient(left center, #e0e0e0, #efefef, #e0e0e0); background: -o-linear-gradient(left center, #e0e0e0, #efefef, #e0e0e0); background: linear-gradient(left center, #e0e0e0, #efefef, #e0e0e0); -moz-box-shadow: inset 2px 0 1px white; -webkit-box-shadow: inset 2px 0 1px white; box-shadow: inset 2px 0 1px white; }
+#mediaLibrary #qqUploadList.hasFiles { border: 1px solid #d1d3d4; background: white; text-align: left; }
+#mediaLibrary .imagePreview { border: 1px solid #a7a8a9; width: 90%; max-width: 250px; max-height: 250px; background: #fbfbfb; position: absolute; margin: 5px; padding: 5px; z-index: 9999; -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); }
+#mediaLibrary .imagePreview img { max-width: 100%; max-height: 100%; }
+#mediaLibrary a.emSB { -webkit-border-radius: 10px; -moz-border-radius: 10px; -ms-border-radius: 10px; -o-border-radius: 10px; border-radius: 10px; padding: 0.5em 1em; font-weight: bold; background: #d4d4d4; background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d4d4d4), color-stop(100%, #7f7f7f)); background: -webkit-linear-gradient(#d4d4d4, #7f7f7f); background: -moz-linear-gradient(#d4d4d4, #7f7f7f); background: -o-linear-gradient(#d4d4d4, #7f7f7f); background: linear-gradient(#d4d4d4, #7f7f7f); color: #fff; padding: 0; }
+#mediaLibrary a.emSB:hover { background: #7f7f7f; }
+#mediaLibrary .qq-upload-button { -webkit-border-radius: 10px; -moz-border-radius: 10px; -ms-border-radius: 10px; -o-border-radius: 10px; border-radius: 10px; padding: 0.5em 1em; font-weight: bold; background: #8abc6b; background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8abc6b), color-stop(100%, #64a63a)); background: -webkit-linear-gradient(#8abc6b, #64a63a); background: -moz-linear-gradient(#8abc6b, #64a63a); background: -o-linear-gradient(#8abc6b, #64a63a); background: linear-gradient(#8abc6b, #64a63a); color: #eff6eb; text-shadow: rgba(0, 0, 0, 0.25) -1px -1px 0; -webkit-transition-property: color; -moz-transition-property: color; -o-transition-property: color; transition-property: color; font-size: 120%; line-height: normal; padding: 10px 8px; }
+#mediaLibrary .qq-upload-button:hover { background: #64a63a; color: #fff; }
+#mediaLibrary .qq-uploader { height: 94%; }
+#mediaLibrary #MediaLibraryHeader { height: 94px; left: 33px; position: fixed; right: 33px; top: 33px; }
+#mediaLibrary .emMediaLibrary { bottom: 80px; left: 33px; position: fixed; right: 33px; top: 128px; }
+#mediaLibrary .listView .NS-fileInfo { display: block; width: 97%; border: dashed #d1d3d4; border-width: 0 0 1px 0; height: auto; margin: 0 0.9%; padding: 10px 0.5% 5px; }
+#mediaLibrary .listView .NS-fileInfo div { float: left; margin-top: 0; margin-bottom: 0; line-height: 19px; }
+#mediaLibrary .listView .NS-fileInfo :before { display: none; }
+#mediaLibrary .listView .NS-fileInfo:hover { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; background-color: #f6f6f6; }
+#mediaLibrary .listView .NS-fileInfo .NS-fileName { margin-bottom: 10px; }
+#mediaLibrary .listView .NS-removeLink { margin: 0 10px 0 5px; position: static; }
+#mediaLibrary .listView .NS-fileName { background: transparent; text-align: left; padding: 0; width: 25%; min-width: 150px; text-overflow: ellipsis; overflow: hidden; }
+#mediaLibrary .listView .NS-dateTime span { display: none; }
+#mediaLibrary .listView .NS-dateTime { width: 20%; min-width: 140px; }
+#mediaLibrary .listView .NS-filePath { width: 30%; min-width: 150px; margin-left: 0; }
+#mediaLibrary .listView .NS-selectInsert { width: 8%; min-width: 60px; }
+
+@media screen and (max-width: 1024px) { #mediaLibrary .emLibraryBrowser { width: 70%; }
+  #mediaLibrary .emLibraryFolders, #mediaLibrary #uploadNewFile { width: 30%; }
+  #mediaLibrary .NS-fileInfo { width: 47%; }
+  #mediaLibrary #uploadNewFile { bottom: 0; height: auto; left: -2px; position: absolute; top: 150px; background: transparent; }
+  #mediaLibrary .qq-uploader { height: 90%; } }
+@media screen and (max-width: 640px) { #mediaLibrary { bottom: 90px; font-size: 14px; }
+  #mediaLibrary #MediaLibraryHeader h1, #mediaLibrary h3 { font-size: 18px; margin: 0; }
+  #mediaLibrary h3:before { display: none; }
+  #mediaLibrary h3 { padding-left: 4px; font-size: 100%; line-height: 3em; }
+  #mediaLibrary .changeViewIcon { font-size: 12px; line-height: 1em; margin-top: -5px; }
+  #mediaLibrary #uploadNewFile { display: none; }
+  #mediaLibrary .emLibraryBrowser { width: 100%; }
+  #mediaLibrary .emMediaLibrary > div.emLibraryFolders { height: 35px; left: 33px; position: fixed; right: 33px; width: auto; padding-top: 5px; }
+  #mediaLibrary .emMediaLibrary > div.emLibraryBrowser { bottom: 100px; height: auto; left: 33px; position: fixed; right: 33px; top: 182px; width: auto; }
+  #mediaLibrary .emLibraryFolders ul { margin: 0; }
+  #mediaLibrary .emLibraryFolders li { border-bottom: 0 none; float: left; }
+  #mediaLibrary .emLibraryFolders li :before { color: #64a63a; }
+  #mediaLibrary .emLibraryFolders li:nth-child(1) .icon-folder:before { content: "\e02f"; }
+  #mediaLibrary .emLibraryFolders li:nth-child(2) .icon-folder:before { content: "\e030"; }
+  #mediaLibrary .emLibraryFolders li:nth-child(3) .icon-folder:before { content: "\e032"; }
+  #mediaLibrary .emLibraryFolders li:nth-child(4) .icon-folder:before { content: "\e031"; }
+  #mediaLibrary .emLibraryFolders li.current :before { color: #444444; }
+  #mediaLibrary .emMediaLibrary { top: 141px; }
+  #mediaLibrary .emGrid .NS-fileInfo { float: none; width: 92%; margin: 8px auto; height: auto; padding: 0; min-width: auto; }
+  #mediaLibrary #txtSearchMedia { float: left; clear: both; width: 96%; }
+  #mediaLibrary #MediaLibraryHeader { height: 107px; }
+  #mediaLibrary .NS-fileName { width: 92%; }
+  #mediaLibrary .NS-thumbnail { margin-bottom: 5px; }
+  #mediaLibrary .NS-dateTime { margin-top: 0; font-size: 90%; min-width: 70px; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+  #mediaLibrary .NS-dateTime span { display: none; }
+  #mediaLibrary .NS-dateTime:before { height: 70px; margin-left: 0; text-align: center; width: 100%; line-height: 60px; }
+  #mediaLibrary .NS-filePath, #mediaLibrary .NS-selectInsert { margin: 0 0 12px; float: none; width: 100%; }
+  #mediaLibrary .emFileURL, #mediaLibrary a.emSB.InsertFile, #mediaLibrary a.emSB.SelectFile { padding: 5px; width: 90%; }
+  #mediaLibrary .icon-folder { display: block; text-indent: -500px; overflow: hidden; width: 2em; height: 2.1em; }
+  #mediaLibrary .icon-folder:before { text-indent: 0px; display: block; }
+  #mediaLibrary .listView .NS-fileInfo { margin: 0; padding: 5px 2%; height: auto; min-width: auto; width: 96%; }
+  #mediaLibrary .listView .NS-fileInfo div { margin-left: 0; }
+  #mediaLibrary .listView .NS-fileInfo .NS-filePath, #mediaLibrary .listView .NS-fileInfo .NS-selectInsert { margin: 0 0 12px; float: none; width: 100%; }
+  #mediaLibrary .listView .NS-fileName { width: 80%; }
+  #mediaLibrary .listView .NS-dateTime { margin-left: 5px; width: 96%; text-align: left; }
+  #mediaLibrary .listView .emFileURL, #mediaLibrary .listView a.emSB.InsertFile, #mediaLibrary .listView a.emSB.SelectFile { width: 96%; } }
+@media screen and (max-height: 480px) { #mediaLibrary { z-index: 10005 !important; bottom: 10px; }
+  #mediaLibrary .emMediaLibrary > div.emLibraryBrowser, #mediaLibrary .emMediaLibrary { bottom: 20px; } }
+body.IE7 #mediaLibrary .emLibraryBrowser, body.IE8 #mediaLibrary .emLibraryBrowser { width: 70%; }
+body.IE7 #mediaLibrary .emLibraryFolders, body.IE7 #mediaLibrary #uploadNewFile, body.IE8 #mediaLibrary .emLibraryFolders, body.IE8 #mediaLibrary #uploadNewFile { width: 30%; }
+body.IE7 #mediaLibrary .NS-fileInfo, body.IE8 #mediaLibrary .NS-fileInfo { width: 47%; }
+body.IE7 #mediaLibrary #uploadNewFile, body.IE8 #mediaLibrary #uploadNewFile { bottom: 0; height: auto; left: -2px; position: absolute; top: 150px; background: transparent; }
+body.IE7 #mediaLibrary .qq-uploader, body.IE8 #mediaLibrary .qq-uploader { height: 90%; }
+
+/*******************************
+	Edit Mode 
+**********************************/
+html > body { margin-bottom: 75px !important; }
+
+hr { border: none; border-bottom: 1px dotted silver; }
+
+.NS-brALL { border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+
+.NS-brYYNN { border-radius: 5px 5px 0 0; -moz-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; }
+
+.NS-brNNYY { border-radius: 0 0 5px 5px; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; }
+
+/**************** 
+Reusable Stuff
+****************/
+.FL, .NS-FL { float: left; }
+
+.FR, .NS-FR { float: right; }
+
+.clr, .ClearAll, ul.flatList br, ul.lr br, .NS-clr { display: block; clear: both; }
+
+.NS-flatUL { margin: 0; padding: 0; }
+
+.NS-inlineNav, .NS-flatList, .NS-flatUL, .NS-WidgetBody ul { margin: 0; padding: 0; list-style-type: none; }
+
+.NS-inlineNav li { float: left; }
+
+.NS-inlineNav li a { display: block; }
+
+.NS-listNav li a { display: block; padding: 5px; }
+
+.NS-dropDown { display: none; position: absolute; }
+
+.NS-center { text-align: center; }
+
+.NS-bold { font-weight: bold; }
+
+.NS-pad10 { padding: 10px; }
+
+.NS-pad5 { padding: 5px; }
+
+.pad2 { padding: 2px; }
+
+.NS-mr10 { margin-right: 10px; }
+
+.NS-ml10 { margin-left: 10px; }
+
+.NS-mb10 { margin-bottom: 10px; }
+
+.NS-mt10 { margin-top: 10px; }
+
+.NS-lawyer { color: #c0c0c0; }
+
+.emGrid { display: table; border-collapse: separate; border-spacing: 0; width: 100%; margin: 10px 0 10px 0; }
+
+.emGrid > div { float: left; }
+
+.emGrid.UI-secBg { background: #474749; border-bottom: 1px solid white; }
+
+.emGrid.UI-secBg div { padding-bottom: 100px; margin-bottom: -94px; }
+
+.emGrid .NS-fileInfo { padding: 0; }
+
+.EditModeToolColumn { float: right; width: 290px; }
+
+.EditModeContentColumn { float: left; width: 68%; }
+
+.ContentColumn.EditModeContentColumn { float: left; width: 68%; }
+
+.emLibraryFolders, #uploadNewFile { width: 20%; text-align: center; }
+
+.emLibraryBrowser { width: 60%; }
+
+.emLibraryFolders ul { margin-bottom: 10px; text-align: left; }
+
+.emLibraryFolders li { border-bottom: 1px dotted #b4b4b4; margin-left: 5px; }
+
+.emLibraryFolders li.current { -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); }
+
+.emLibraryFolders li a { display: block; color: #000; padding: 3px 5px 3px 5px; outline: none; }
+
+.emLibraryFolders li a:hover, .emLibraryFolders li.current a { background: #fff; }
+
+.emLibraryContent { display: block; }
+
+.emMediaThumb { width: 150px; height: 100px; border-right: 1px dotted silver; }
+
+.emMediaUploader .uploadedFile { width: 200px; }
+
+.emBreadCrumbs { color: #999; }
+
+.emFileURL { width: 150px; background-color: #E8E8E8; }
+
+#editContentModal { width: 750px; }
+
+#editContentModal .EditContainer { width: 700px; }
+
+.ChoicesColumn { width: 150px; }
+
+.ChoiceEditor { width: 500px; text-align: left; }
+
+#emNoticeContainer { padding: 0 10px 5px 10px; }
+
+#editmode { position: fixed; background: #575759; color: #fff; font: normal 1.1em Arial, Helvetica, sans-serif; text-align: left; bottom: 0px; left: 0px; opacity: .90; -moz-opacity: .90; width: 100%; z-index: 10000; }
+
+#editmode span.emNoticeTitle { font-size: 1.2em; font-weight: bold; display: block; margin-left: 10px; }
+
+#editmode .editModeControls a { display: block; background-color: #4698CE; opacity: 100; padding: 5px; border-radius: 0 0 5px 5px; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; margin-right: 5px; color: #fff; }
+
+#editmode .editModeControls a:hover { background-color: #0078BA; color: #fff; }
+
+#editmode input.DatePicker, #editmode input.DatePicker, #editmode input.TimePicker { width: 75px; border: none; background: transparent; cursor: pointer; font-size: 11px; color: #DFF3FF; font-weight: bold; }
+
+#editmode input.DatePicker:hover, #editmode input.DatePicker:hover, #editmode input.TimePicker:hover { text-decoration: underline; }
+
+.emWidget input.DatePicker, .emWidget input.TimePicker { color: #000000; }
+
+#cmsMessageModal .PaginationContainer { padding: 5px; }
+
+#cmsMessageModal .Pagination .Bar { float: left; }
+
+#cmsMessageModal .Pagination .PageSize { float: right; }
+
+#cmsMessageModal .Pagination .pages { padding: 0 10px 0 10px; }
+
+#cmsMessageModal .Pagination .Bar a { background-color: #DFF3FF; padding: 3px; color: #333; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+/*******************************
+	Editable Content
+**********************************/
+.DashboardHome .EditableContent { position: relative; }
+
+.EditableContent { white-space: nowrap; }
+
+a.Edit, #FooterInner a.Edit { position: absolute; min-width: 123px; line-height: 24px; display: block; clear: both; float: none; background: #000; color: #fff; padding: 3px 10px 3px 3px; border: 2px solid white; opacity: .85; filter: alpha(opacity=85); -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; text-decoration: none; z-index: 10000; }
+
+a.Edit:hover { opacity: 1; filter: alpha(opacity=100); }
+
+.EditableContent .loading { margin-left: 45px; }
+
+span.EditNotification { display: block; float: left; width: 30px; height: 24px; background: white url(../Images/EditMode/contentStatusIcons.png) no-repeat; }
+
+.Edit span.EditNotification:first-child { -moz-border-radius: 5px 0 0 5px; -webkit-border-radius: 5px 0 0 5px; border-radius: 5px 0 0 5px; }
+
+.Edit span.EditNotification:last-child { margin-right: 8px; -moz-border-radius: 0 5px 5px 0; -webkit-border-radius: 0 5px 5px 0; border-radius: 0 5px 5px 0; }
+
+.ContentEditForm .qq-upload-button { margin: 0 0 5px; }
+
+span.PendingApproval { background-position: -2px -1px; }
+
+span.PendingApproval.On { background-position: -2px -77px; }
+
+span.Pushed { background-position: 2px -153px; }
+
+span.Pushed.On { background-position: 2px -229px; }
+
+span.WorkingDraft { background-position: 0 -305px; }
+
+span.WorkingDraft.Approved { background-position: 0 -381px; }
+
+span.WorkingDraft.Denied { background-position: 0 -457px; }
+
+span.WorkingDraft.On { background-position: 0 -533px; }
+
+/*********************
+BUTTONS *******************/
+a.emButton { background: url(../images/EditMode/btns.png) no-repeat 0px -239px; color: #fff; height: 30px; display: -moz-inline-box; display: inline-block; overflow: hidden; font-weight: bold; font-size: 13px; border: 1px solid #0080bc; border-radius: 20px; -moz-border-radius: 20px; -webkit-border-radius: 20px; text-decoration: none; }
+
+a.emButton:hover { background-position: 0px bottom; color: #fff; }
+
+a.emButton span { line-height: 30px; padding: 0 15px 0 15px; }
+
+a.emSecondary { background: #ddd; color: #222; border-radius: 10px; -moz-border-radius: 10px; border: 1px solid silver; font-weight: normal; font-size: 11px; height: auto; }
+
+a.emSecondary span { padding: 2px 5px 2px 5px; font-size: 11px; line-height: 15px; }
+
+a.emSecondary.Selected { background: #FFFFEF; color: #CFCFCF; cursor: default; }
+
+a.emSB { height: 19px; background-position: 0 -218px; font-weight: normal; font-size: 11px; color: #868686; border-color: #ababab; }
+
+a.emSB span { line-height: 19px; padding: 0 5px 0 5px; }
+
+a.emSB:hover { background-position: 0px -198px; color: #000; border-color: #868686; }
+
+.NS-qq-upload-button { width: auto; }
+
+a.emDeleteChoice, emButton.DeleteChoice { background-position: 0px 0px; border: 1px solid #cccccc; color: #5F5F5F; }
+
+a.emDeleteChoice:hover, .emButton.emDeleteChoice:hover { background-position: 0px -31px; border: 1px solid #cccccc; color: #9F5959; }
+
+.NS-qq-upload { line-height: normal; }
+
+.emIconLink, .emIconText { background: url(../Images/EditMode/iconset.png) no-repeat scroll left top transparent; display: block; height: 18px; overflow: hidden; width: 18px; }
+
+.emIconLink span, .NS-noText span { display: block; margin-top: -500px; }
+
+.emIconText { width: auto; }
+
+.emGridUtility a { float: left; margin-right: 10px; text-decoration: none; }
+
+.emGridUtility a span { margin: 0 0 0 22px; }
+
+.NS-Add { background-position: 0px -45px; }
+
+.NS-Add:hover { background-position: -481px -45px; }
+
+.NS-Edit { background-position: 0px -225px; }
+
+.NS-Edit:hover { background-position: -481px -225px; }
+
+.emIconLink.Delete, .NS-Delete { background-position: 0px -72px; }
+
+.NS-Delete:hover { background-position: -481px -72px; }
+
+.NS-Email { background-position: 0px -92px; }
+
+.NS-Email:hover { background-position: -481px -92px; }
+
+.NS-Excel, .exportToExcel { background-position: 0px -117px; }
+
+.NS-Excel:hover, .exportToExcel:hover { background-position: -481px -117px; }
+
+.NS-Merge { background-position: 0px -143px; }
+
+.NS-Merge:hover { background-position: -481px -143px; }
+
+.NS-Clear { background-position: 0px -170px; }
+
+.NS-Clear:hover { background-position: -481px -170px; }
+
+.NS-Save, .saveReportLink { background-position: 0px -199px; }
+
+.NS-Save:hover, .saveReportLink:hover { background-position: -481px -199px; }
+
+.NS-Prev { background-position: 0px -687px; }
+
+.NS-Prev:hover { background-position: -481px -687px; }
+
+.NS-Next { background-position: right -660px; padding: 0 18px 0 0; }
+
+.NS-Next:hover { background-position: right -716px; }
+
+a.NS-MediaLibrary { background-position: 0px -559px; }
+
+a.NS-MediaLibrary:hover { background-position: -483px -559px; }
+
+a.NS-UploadMedia { background-position: 0px -590px; }
+
+a.NS-UploadMedia:hover { background-position: -483px -590px; }
+
+a.NS-PreviewContent { background-position: 0px -622px; }
+
+a.NS-PreviewContent:hover { background-position: -483px -622px; }
+
+/*********************
+Color Scheme Switcher 
+**********************/
+#NS_ThemeSelector { background: #f8f6f7 url(../images/Admin/themeBG.gif) repeat-x bottom; text-align: center; }
+
+#NS_ThemeSelector table { display: table; width: auto; margin: 0px auto; text-align: left; border-collapse: separate; border-spacing: 1px; }
+
+#NS_ThemeSelector td { vertical-align: middle; }
+
+#NS_ThemeSelector td.SwitchLabel { color: #C02932; font: bold 14px georgia, "times new roman", serif; padding: 0px 10px 0px 10px; text-align: right; }
+
+#photoCropper, #previewContainer { float: left; }
+
+.jcrop-holder { margin-right: 10px; }
+
+.NS-FRow { border-bottom: 1px dotted #efefef; padding: 3px 0 3px 0; }
+
+.NS-FRow label { float: left; width: 35%; color: #666; }
+
+.NS-FRow .NS-FInput { float: right; width: 56%; }
+
+.NS-FRow .NS-FInput input { margin-bottom: 3px; }
+
+.NS-FRow br { clear: both; margin-bottom: 2px; }
+
+/******************
+Tabber
+*****************/
+.NS-Tabber { height: 25px; overflow: hidden; background: url(../Images/EditMode/tabber_bg.png) no-repeat; margin-top: 20px; }
+
+.NS-Tabber ul.emContentTypeTab { height: 25px; background: url(../Images/EditMode/tabber_cap.png) no-repeat top right; padding: 0px 10px 0px 10px; }
+
+.NS-Tabber ul.emContentTypeTab li a { display: block; color: #424242; line-height: 20px; padding: 0px 10px 0px 10px; margin-right: 1px; }
+
+.NS-Tabber ul.emContentTypeTab li.NS-current a { background: #424242; color: #fff; }
+
+.ContentEditUtilities { margin-top: -27px; }
+
+.ContentEditUtilities a { margin: 0 10px 0 10px; }
+
+/******************
+Edit Mode Widgets
+******************/
+.emBreadCrumbs { padding-bottom: 10px; text-align: left; }
+
+.emWidget { border: 1px solid #cdcdcd; margin-bottom: 10px; background-color: #fff; text-align: left; }
+
+.emWidget .Inner { padding: 3px; }
+
+.emWidgetTitle { background: white; /* Old browsers */ /* IE9 SVG, needs conditional override of 'filter' to 'none' */ background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkNmQ2ZDYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+); background: -moz-linear-gradient(top, white 0%, #d6d6d6 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #d6d6d6)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, white 0%, #d6d6d6 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, white 0%, #d6d6d6 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, white 0%, #d6d6d6 100%); /* IE10+ */ background: linear-gradient(top, #ffffff 0%, #d6d6d6 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d6d6d6',GradientType=0 ); /* IE6-8 */ height: 30px; overflow: hidden; color: #000; text-shadow: 0 1px 0 white; }
+
+.emWidgetTitle span { display: block; line-height: 30px; padding: 0 10px 0 10px; }
+
+.emWidget li a { color: #0079BA; }
+
+.ContentSavingOptions { background: #FFFFEA; border-top: 1px solid #cdcdcd; padding: 5px; }
+
+.ContentChoiceName { padding: 5px; background: #EAEAEA; }
+
+.ContentChoiceName.Active { background: #dcf2c7; }
+
+.ContentChoiceName .TextInput { width: 97%; padding: 5px; font-size: 14px; }
+
+.ContentEditor { padding: 5px; }
+
+.ContentEditor textarea { width: 100%; height: 300px; }
+
+.ChoicesSlider { margin: 0 0 10px 0; }
+
+.ChoicesSlider .Inner { overflow: hidden; width: 86%; padding: 0; }
+
+.EnvironmentPicker .nav li a { display: block; padding: 5px 10px 5px 10px; }
+
+.EnvironmentPicker .NS-flatUL li.current a { background-color: #0078BA; color: #fff; text-decoration: none; }
+
+.archiveContentPreview { overflow: hidden; max-width: 700px; margin: 10px 0 10px 0; }
+
+.NS-brdbtmdot, ul.NS-brdbtmdot li, .NS-brdbtmdot a { border-bottom: 1px dotted silver; }
+
+.NS-current { background-color: #424242; }
+
+.NS-current a, .NS-current a:hover { color: #fff; }
+
+span.usage { background: #424242; bottom: 0; color: #FFFFFF; display: block; position: absolute; text-align: center; width: 115px; }
+
+body.IE7 span.usage { left: 0; }
+
+#sortChoicesModal { width: 500px; }
+
+#sortChoicesModal .item { border-bottom: 1px solid #cccccc; cursor: pointer; display: block; padding: 4px; }
+
+#sortChoicesModal #choicesSortable { height: 350px; overflow: auto; border: 1px solid #efefef; margin-bottom: 5px; }
+
+#sortChoicesModal .imgSorting .item { border: none; float: left; margin: 5px; border: 1px solid #cccccc; width: auto !important; height: 125px; width: 100px; overflow: hidden; }
+
+#sortChoicesModal .imgSorting .item img { width: 100%; height: auto !important; }
+
+body.IE7 #sortChoicesModal .imgSorting .item img { width: 100px; }
+
+.NS-modalContent h1 { color: #333; }
+
+/*
+.emGrid { display: table; border-collapse: separate; border-spacing: 0; width: 100%; margin: 10px 0 10px 0; }
+.emGrid > div {float:left;}
+.emGrid.UI-secBg {background:#474749;border-bottom:1px solid #fff;}
+.emGrid.UI-secBg div {padding-bottom:100px;margin-bottom:-94px;}
+*/
+.NS-delete-hover { background: rgba(255, 0, 0, 0.1) !important; }
+
+.changeViewIcon.active { background: #fff; }

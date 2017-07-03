@@ -1,0 +1,19 @@
+﻿<div class="productCredit">
+	@{
+		var productCreditBalance = ViewData["ProductCreditBalance"];	
+		if (productCreditBalance != null && CoreContext.CurrentAccount.HasFunction("Orders-Payment Method-Product Credit", true, false, CoreContext.CurrentAccount.AccountTypeID))
+		{
+			string colorStyle = "";
+			if (productCreditBalance.ToString().StartsWith("(") && productCreditBalance.ToString().EndsWith(")"))
+			{
+				colorStyle = "style='color:red'";
+			}
+			<div>
+				@Html.Term("ProductCreditBalance", "Product Credit Balance"):&nbsp;<span @Html.Raw(colorStyle)>@(productCreditBalance != null ? productCreditBalance.ToString() : "NA")</span>
+			</div>     
+		}
+	}
+</div>
+
+
+    

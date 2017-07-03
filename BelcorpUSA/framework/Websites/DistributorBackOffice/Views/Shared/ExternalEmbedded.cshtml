@@ -1,0 +1,33 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = "ExternalEmbedded";
+}
+@section head
+{
+    @{
+        var keywords = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Keywords;
+        var description = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Description;
+        
+        <script type="text/javascript">
+            $(function () {
+                //setting iframe's parent element to be height of client window.
+                var clientHeight = $(window).height();
+                $('#ExternalEmbedded').css('height', clientHeight);
+            });
+        </script>
+    }
+    @if (!string.IsNullOrWhiteSpace(keywords))
+    {
+        <meta name="keywords" content="@keywords" />
+    }
+    @if (!string.IsNullOrWhiteSpace(description))
+    {
+        <meta name="description" content="@description" />
+    }
+}
+<div id="ExternalEmbedded">
+    @if (!string.IsNullOrEmpty(Model.ExternalUrl))
+    { 
+        <iframe src="@Model.ExternalUrl" class="EmbeddedIframe" id="EncoreIframe" frameborder="0">test </iframe>
+    }
+</div>

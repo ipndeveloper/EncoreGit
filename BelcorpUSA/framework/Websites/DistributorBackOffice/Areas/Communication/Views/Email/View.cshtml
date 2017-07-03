@@ -1,0 +1,105 @@
+@model NetSteps.Data.Entities.Mail.MailMessage
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+
+            $(".DataGrid tbody tr:even").addClass("Alt");
+            $("ul.lr li:odd").addClass("Alt");
+
+            $('#uxDeleteEmail').click(function () {
+                var p = $(this).parent();
+                showLoading(p);
+
+                $.post('@Href("~/Communication/Email/Delete")', { id: '@Model.MailMessageID' }, function (response) {
+                    hideLoading(p);
+                    if (response.result) {
+                        showMessage('@Html.Term("EmailDeletedSuccessfully", "Email deleted successfully!")', false);
+                        window.location = '@Href("~/Communication/Email/Mailbox?folder=Inbox")';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                }, 'json');
+            });
+
+            $('#uxUnDeleteEmail').click(function () {
+                var p = $(this).parent();
+                showLoading(p);
+
+                $.post('@Href("~/Communication/Email/Undelete")', { id: '@Model.MailMessageID' }, function (response) {
+                    hideLoading(p);
+                    if (response.result) {
+                        showMessage('@Html.Term("EmailUndeletedSuccessfully", "Email undeleted successfully!")', false);
+                        window.location = '@Href("~/Communication/Email/Mailbox?folder=Inbox")';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                }, 'json');
+            });
+
+        });
+    </script>
+
+}
+@section breadcrumb{
+    <a href="@Href("~/Communication/Email/Mailbox?folder=Inbox")">
+        @Html.Term("Inbox")</a>
+}
+@section title {
+    @Model.Subject
+}
+<!-- Grid Utilities -->
+<div class="UI-mainBg brdrAll GridUtility icon-24">
+    <a href="@(Href("~/Communication/Email/Compose?emailAction=Reply&mailMessageID=") + Model.MailMessageID)"
+			class="UI-icon-container Reply">
+            <span class="UI-icon icon-reply"></span>
+            <span>@Html.Term("Reply")</span></a> 
+    <a href="@(Href("~/Communication/Email/Compose?emailAction=ReplyToAll&mailMessageID=") + Model.MailMessageID)"
+			class="UI-icon-container Reply">
+            <span class="UI-icon icon-replyAll"></span>
+            <span>@Html.Term("ReplyToAll", "Reply to All")</span></a> 
+    <a href="@(Href("~/Communication/Email/Compose?emailAction=Forward&mailMessageID=") + Model.MailMessageID)"
+					class="UI-icon-container Forward">
+                    <span class="UI-icon icon-forward"></span>
+                    <span> @Html.Term("Forward")</span></a>
+    @if (Model.MailFolderTypeID == NetSteps.Data.Entities.Mail.Constants.MailFolderType.Trash.ToShort())
+    {
+        <a href="javascript:void(0);" id="uxUnDeleteEmail" class="UI-icon-container Delete">
+        <span class="UI-icon icon-trash"></span>
+        <span>
+            @Html.Term("Undelete")</span></a>
+    }
+    else
+    {
+        <a href="javascript:void(0);" id="uxDeleteEmail" class="UI-icon-container Delete">
+        <span class="UI-icon icon-trash"></span>
+        <span>
+            @Html.Term("Delete")</span></a>
+    }
+    <!-- next/prev email browser -->
+    @*<div class="FR">
+			<a href="#" class="IconText Prev" title="@Html.Term("PreviousEmail", "Previous Email")">
+				<span>
+					@Html.Term("Prev")</span></a> <a href="#" class="IconText Next" title="@Html.Term("NextEmail", "Next Email")">
+						<span>
+							@Html.Term("Next")</span></a>
+		</div>*@ 
+        <span class="clr"></span>
+</div>
+<div class="Message Block">
+    <div class="UI-lightBg pad5 brdrAll">
+            
+        <label class="bold">@Html.Term("To"):</label>  @Model.To.ToEmailList()
+        <br />   
+        <label class="bold ">@Html.Term("From"):</label>  @Model.FromAddressFormated
+        <br />
+        <label class="bold">@Html.Term("Date"):</label> @Model.DateAdded.ToStringDisplay(CoreContext.CurrentCultureInfo)
+        <br />     
+        <label class="bold">@Html.Term("Subject"):</label>  @Model.Subject
+
+    </div>         
+    <hr />
+    <div class="clr pad10 MessageBody">
+        @Html.Raw(!Model.HTMLBody.IsNullOrEmpty() ? Model.HTMLBody : Model.Body)
+    </div>
+</div>

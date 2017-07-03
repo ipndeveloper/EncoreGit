@@ -1,0 +1,22 @@
+﻿<div id="loginContainer" class="UI-darkBg pad5 brdrAll brdr LoginContainer" style="display: none;">
+    <div class="UI-lightBg brdrAll brdr pad5 loginContainerInner">
+        <h1>
+            @Html.Term("PWS_LoginPopUp_LogInToYourAccount", "Log in to your account")</h1>
+        <p>
+            <input type="text" id="txtUsername" placeholder="@Html.Term("PWS_LoginPopUp_UsernameLabel", "Username")" value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Username : "")" /></p>
+        <p>
+            <input type="password" id="txtPassword" placeholder="@Html.Term("PWS_LoginPopUp_PasswordLabel", "Password")" value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Password : "")" /></p>
+        <div id="invalidLogin" style="display: none;" class="clr pad10 error">
+            @Html.Term("PWS_LoginPopUp_InvalidLoginMessage", "Invalid login.")</div>
+        <div class="clr SubmitForm">
+            <a href="javascript:void(0);" id="btnLogin" class="FR Button btnLogIn"><span>@Html.Term("PWS_LoginPopUp_LoginButton", "Login")</span></a>
+            @if (ConfigurationManager.GetAppSetting<bool>(ConfigurationManager.VariableKey.EnableForgotPassword))
+            {
+                <a href="@Url.Resolve("~/ForgotPassword")" class="FL mr10 Button MinorButton btnSignUp">
+                    <span>@Html.Term("PWS_LoginPopUp_ForgotPassword", "Forgot your password?")</span></a>
+            }
+            <a href="@Url.Resolve("~/Login")" class="FL Button MinorButton btnSignUp"><span>@Html.Term("PWS_LoginPopUp_SignUpLink", "Sign up")</span></a>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>

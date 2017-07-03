@@ -1,0 +1,54 @@
+﻿<tr class="UI-lightBg specialPromotionItem bold">
+	<td class="center noText">
+		<span class="UI-icon icon-star"></span>
+	</td>
+	<!-- ko if: $parent.showDeleteColumn -->
+	<td>
+	</td>
+	<!-- /ko -->
+	<td class="center CartThumb">
+	</td>
+	<td>
+		<span class="promoHeading" data-bind="text: Description"></span>
+		<!-- ko if: StepID() && $root.showSelectGiftLink -->
+		<a class="ml5 selectGift" href="javascript:void(0);" data-bind="attr: { stepId: StepID }">@Html.Term("Cart_SelectPromoProductLinkText", "(Select)")</a>
+		<!-- /ko -->
+	</td>
+	<td>
+		<!-- ko text: $parent.CurrencySymbol -->
+		<!-- /ko -->0.00
+	</td>
+	<td class="center cartQty" data-bind="text: Selections().length">
+	</td>
+	<td class="right">
+		<!-- ko text: $parent.CurrencySymbol -->
+		<!-- /ko -->0.00
+	</td>
+</tr>
+<!-- ko foreach: Selections -->
+<tr class="promoGiftLineItem">
+	<!-- ko if: $root.showDeleteColumn -->
+	<td class="center noText">
+	</td>
+	<!-- /ko -->
+	<td>
+		<span class="FL UI-icon icon-bundle-arrow"></span><span class="FL pad5 promoItemSku"
+			data-bind="text: SKU"></span>
+	</td>
+	<td class="center CartThumb">
+		<img width="25" alt="" data-bind="attr: { src: ImageUrl }" />
+	</td>
+	<td class="promoItemName">
+		<!-- ko text: ProductName -->
+		<!-- /ko -->
+		<br />
+	</td>
+	<td>
+		<span class="FL freeItemPrice">@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+	</td>
+	<td class="center cartQty" data-bind="text: Quantity">
+	</td>
+	<td class="right">
+	</td>
+</tr>
+<!-- /ko -->

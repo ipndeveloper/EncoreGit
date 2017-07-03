@@ -1,0 +1,22 @@
+﻿@model NetSteps.Data.Entities.Product
+
+@if (Model.IsStaticKit() && Model.ShowKitContents)
+{
+    <div class="CategoryGroup">
+        <h4>
+            @Html.Term("ThisProductContains", "This product contains...")</h4>
+        <div class="KitExpander">
+								@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+							
+    var childProducts = Model.ChildProductRelations.Where(r => r.ProductRelationsTypeID == (int)Constants.ProductRelationsType.Kit).Select(r => inventory.GetProduct(r.ChildProductID));
+    foreach (var product in childProducts)
+    {
+                    <div class="KitProduct">
+                        <h5>@product.Translations.Name()</h5>
+                    </div>
+    }
+            }
+        </div>
+    </div>
+    <span class="ClearAll"></span>
+}

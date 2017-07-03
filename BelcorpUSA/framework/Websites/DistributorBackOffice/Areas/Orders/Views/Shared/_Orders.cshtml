@@ -1,0 +1,91 @@
+﻿@{
+	Layout = "~/Views/Shared/_ContentLayout.cshtml";
+	bool isPartyOrderClient = NetSteps.Common.Configuration.OrdersSection.Instance != null &&
+		NetSteps.Common.Configuration.OrdersSection.Instance.IsPartyOrderClient;
+	bool isFundraiserClient = NetSteps.Common.Configuration.OrdersSection.Instance != null &&
+		NetSteps.Common.Configuration.OrdersSection.Instance.FundraisersEnabled;
+	bool showFundraiserLink = isFundraiserClient;
+}
+@section head{
+	@RenderSection("head", false)
+}
+@section breadcrumb {
+	@RenderSection("breadcrumb", false)
+}
+@section title {
+	@RenderSection("title", false)
+}
+@section ActionItems {
+    @*<a href="javascript:void(0);" id="btnStartOrder" class="icon-actionPersonalOrder"><span class="lbl">@Html.Term("StartAPersonalOrder", "Start a Personal Order")</span>   </a>*@
+    @*Habilitar boton here the validation*@ 
+    @*@if (Convert.ToBoolean(ViewBag.bloqueadoPorPeriodo))
+    {*@
+        @Html.ActionItem(Url.Content("~/Orders/OrderEntry/NewOrder"), Html.Term("StartAPersonalOrder", "Start a Personal Order"), "icon-actionPersonalOrder")
+        
+   @* }*@
+   @if (ViewBag.Cancel == true)
+   {
+       @Html.ActionItem(Url.Content("~/Orders/OrderEntry/CancelOrder"), Html.Term("CancelOrder", "Cancel Order"), "icon-actionPersonalOrder")
+   }
+@*    @Html.ActionItem(Url.Content("~/Orders/Details/GenerarReportePDF" + "?orderNumber=" + "51635"), Html.Term("PrintOrder", "Print Order"), "icon-actionPersonalOrder")*@
+
+	@if (isPartyOrderClient)
+ {
+		@Html.ActionItem(Url.Content("~/Orders/Party/NewOrder"), Html.Term("ScheduleAParty", "Schedule a Party"), "icon-actionParty")
+		@Html.ActionItem(Url.Content("~/Orders"), Html.Term("ManageMyParties", "Manage My Parties"), "icon-actionPartyOrder")
+ }
+	@if (showFundraiserLink)
+ { 
+		@Html.ActionItem(Url.Content("~/Orders/FundRaisers/NewOrder"), Html.Term("ScheduleFundraiser", "Schedule a Fundraiser"), "icon-actionPartyOrder")
+ }
+	@{ Html.RenderPartial("_OrderLinks");}
+}
+@section SideBarExtras {
+	@RenderSection("rail", false)
+}
+@RenderBody()
+@section bodyFooter
+{
+	@RenderSection("bodyFooter", false)
+}
+
+ <div id="addMessage" class="jqmWindow LModal Overrides"> 
+       <div class="mContent">
+            <h2> @Html.Term("Mensage", "Mensage") </h2> 
+                 <p>
+                    Actualmente hay una Pre Orden disponible
+                 </p>
+                 <p>
+                    <a id="btnContinuar" href="javascript:void(0);"  class="Button BigBlue"> @Html.Term("Continuar", "Continuar")</a> 
+                    <a id="btnCancel"  href="javascript:void(0);" class="Button jqmClose"> @Html.Term("Cancelar", "Cancelar")</a>
+                </p>
+        </div>
+    </div>
+<script type="text/javascript">
+$(function () {
+    $('#btnStartOrder').click(function () {
+        $.ajax({
+            type: 'POST',
+            url:  "/OrderEntry/GetPreOrder",
+            data: ({ accountId: $('#accountId').val() }),
+            asyn: false,
+            success: function (data) {
+                if (data.result == true) {
+                    $('#addMessage').jqmShow();
+                } else {
+                    location = '/Orders/OrderEntry/NewOrder';
+                }
+            }
+        });
+    }); 
+
+    $('#addMessage').jqm({ modal: false, onShow: function (h) {
+            h.w.css({
+                top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+            }).fadeIn();
+        }
+    });
+
+});
+</script>

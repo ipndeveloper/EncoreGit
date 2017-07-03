@@ -1,0 +1,38 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+<%@ Import Namespace="nsCore.Areas.Admin.Models.Shared" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="SubNavigation">
+		<%= Html.SubTab("~/Admin/Users", Html.Term("Users", "Users"), onlyCheckController: true, function: "Admin-Create and Edit User")%>
+		<%= Html.SubTab("~/Admin/Roles", Html.Term("Roles", "Roles"), onlyCheckController: true, function: "Admin-Create and Edit Role")%>
+		<%= Html.SubTab("~/Admin/ListTypes", Html.Term("ListTypes", "List Types"), onlyCheckController: true, function: "Admin-Create and Edit List Value")%>
+        <%= Html.SubTab("~/Admin/AutoshipSchedules", Html.Term("AutoshipSchedules", "Autoship Schedules"), onlyCheckController: true, function: "Admin-Create and Edit Schedule")%>
+        <%= Html.SubTab("~/Admin/ShowConfig", Html.Term("ValidateConfig", "Validate Config"), onlyCheckController: true)%>
+		<%= Html.SubTab("~/Admin/Ceps/LoadBulk", Html.Term("CepsUpdate", "Ceps Update"), onlyCheckController: true)%> 
+        <% Html.RenderPartial("~/Areas/Admin/Views/Shared/_OrderRulesOptions.cshtml", new OrderRulesOptionsModel()); %>
+             <%= Html.DropDownNavigation(Html.Term("Rules", "Rules"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("ReEntryRules", "Re-Entry Rules"), Url = "~/Admin/ReEntryRules/Index", MappedUrls = new List<string>(){ "~/Admin/ReEntryRoles/Index/" } }
+		}) %> 
+       <!-- CGI(AHAA) - BR-BLK-001 - Bloqueo Manual - Inicioo -->
+        <% Html.RenderPartial("~/Areas/Admin/Views/Shared/_BlockingRulesOptions.cshtml", new BlockingRulesOptionModel()); %>
+        <!-- CGI(AHAA) - BR-BLK-001 - Bloqueo Manual - FinNN -->
+        <%= Html.SubTab("~/Admin/ManagerExecutions", Html.Term("ExecutionsManager", "Executions Manager"), onlyCheckController: true)%> 
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr> 
+			<td class="CoreLeftNav">
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server" />
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+			</td>
+		</tr>
+	</table>
+</asp:Content>

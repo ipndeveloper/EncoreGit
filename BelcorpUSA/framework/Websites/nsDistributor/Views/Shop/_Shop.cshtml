@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+@section head{
+    @{Html.RenderPartial("_ShopScripts");}
+    @RenderSection("head", false)
+}
+ @{Html.RenderPartial("_ShopSearch");}
+<!-- Shopping Cart & Preview -->
+@{Html.RenderPartial("_CartPreview");}
+<!--/ End Shopping Cart -->
+<div class="shoppingContentPane">
+    <div class="shoppingContentInnerPane">
+        @{Html.RenderPartial("_ShopNav");}
+        <div class="shoppingMainContent">
+            <div class="ContentInner">
+                @RenderBody()
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>

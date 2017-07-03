@@ -1,0 +1,21 @@
+﻿@model NetSteps.Addresses.UI.Mvc.Models.AddressEntrySettings
+@using NetSteps.Addresses.UI.Mvc.Controllers;
+@using NetSteps.Addresses.UI.Common.Services;
+@using NetSteps.Encore.Core.IoC;
+@using NetSteps.Addresses.UI.Mvc.Models;
+@{
+    var newModel = Model;
+    if (Model.AddressEntity != null)
+    {
+        IAddressesService service = Create.New<IAddressesService>();
+        var address = service.GetUIModelFromAddressEntity(Model.AddressEntity);
+        Model.AddressModel = address;
+    }
+    else if (Model.AddressModel == null)
+    {
+        IAddressesService service = Create.New<IAddressesService>();
+        Model.AddressModel = service.GetMarketAddressModel(Model.MarketID);
+    }
+    
+    @Html.Partial("Addresses/AddressEntryByModel", newModel);
+}

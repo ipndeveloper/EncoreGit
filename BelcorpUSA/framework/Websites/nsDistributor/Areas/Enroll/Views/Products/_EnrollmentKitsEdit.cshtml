@@ -1,0 +1,91 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.EnrollmentKitsModel
+<script type="text/javascript">
+    $(function () {
+        $('div.kits').each(function () {
+            var tallestKit = "";
+            $(this).click(function () {
+                $('div.kits').removeClass('selected');
+                $('.check').hide();
+                $('.check', this).fadeIn('fast');
+                $(this).addClass('selected').find('[type = "radio"]').attr('checked', 'checked');
+            });
+        });
+
+
+    });
+</script>
+<div class="enrollKitsCms1">
+    <div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Products_EnrollmentKits_LeftContent"]
+    </div>
+</div>
+<div class="enrollKitsCms2">
+    <div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Products_EnrollmentKits_RightContent"]
+    </div>
+</div>
+<span class="clr"></span>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.ValidationSummary()
+
+    foreach (var kit in Model.EnrollmentKits)
+    {
+    <div class="FL splitCol33 m5">
+        <div class="brdr brdrAll pad5 kits @(kit.ProductID == Model.SelectedProductID ? "selected" : "")">
+            <div class="brdr brdrAll pad10">
+                
+                <table>
+                    <tr>
+                        <td>
+                          <h2>
+                            @Html.RadioButtonFor(m => m.SelectedProductID, kit.ProductID)
+                            <span class="kitTitle">@kit.Name</span>
+                        </h2>
+                        </td>
+                        <td rowspan="3">
+                            <div class="imagewrapper">
+                                <img src="@kit.ImageUrl" alt="@kit.Name" class="enrollKitImg" />
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                             <span class="price kitPrice">@kit.Price.ToString("C", Model.FormatProvider)</span>
+                            <h3>@kit.Name</h3>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <p>@kit.Description</p>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+
+                </table>
+               
+               
+            </div>
+            <div class="check">
+                <span class="UI-icon icon-check"></span>
+            </div>
+        </div>
+    </div>
+    }
+    
+   
+   
+    <span class="clr"></span>          
+    
+             
+    <p class="FormSubmit enrollSectionBtns">
+        <a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent">
+            <span>@Html.Term("Next")</span> </a>
+    </p>
+    @Html.AntiForgeryToken()
+}

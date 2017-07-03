@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2011 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Delivery term specification. Declararion of structures and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="DeliveryTermCodeType">
+    <xsd:annotation>
+      <xsd:documentation>For detailed explanations of these terms, refer to the Terms of Sales definition in the glossary of the U.S. Department of Transportation Maritime Administration Web site at <a target="_blank" href="http://www.marad.dot.gov/publications/glossary/T.html" xmlns="urn:vertexinc:o-series:tps:6:0">http://www.marad.dot.gov/publications/glossary/T.html</a>.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="EXW">
+        <xsd:annotation>
+          <xsd:documentation>Ex Works</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="FCA">
+        <xsd:annotation>
+          <xsd:documentation>Free Carrier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="FAS">
+        <xsd:annotation>
+          <xsd:documentation>Free Along Ship</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="FOB">
+        <xsd:annotation>
+          <xsd:documentation>Free Onboard Vessel</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CFR">
+        <xsd:annotation>
+          <xsd:documentation>Cost and Freight</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CIF">
+        <xsd:annotation>
+          <xsd:documentation>Cost Insurance and Freight</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CPT">
+        <xsd:annotation>
+          <xsd:documentation>Carriage Paid To</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CIP">
+        <xsd:annotation>
+          <xsd:documentation>Carriage Insurance Paid To</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DAF">
+        <xsd:annotation>
+          <xsd:documentation>Delivered at Frontier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DES">
+        <xsd:annotation>
+          <xsd:documentation>Delivered Ex-Ship</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DEQ">
+        <xsd:annotation>
+          <xsd:documentation>Delivered Ex Quay Duty Unpaid</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DDU">
+        <xsd:annotation>
+          <xsd:documentation>Delivery Duty Unpaid</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DDP">
+        <xsd:annotation>
+          <xsd:documentation>Delivery Duty Paid</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DAP">
+        <xsd:annotation>
+          <xsd:documentation>Delivered at Place</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DAT">
+        <xsd:annotation>
+          <xsd:documentation>Delivered at Terminal</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="SUP">
+        <xsd:annotation>
+          <xsd:documentation>Supplier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CUS">
+        <xsd:annotation>
+          <xsd:documentation>Customer</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="DeliveryTerm" type="DeliveryTermCodeType">
+    <xsd:annotation>
+      <xsd:documentation>Delivery term structure.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+</xsd:schema>

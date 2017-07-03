@@ -1,0 +1,3865 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Orders.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipBatch">
+      <summary>
+            Common interface for AutoshipBatch.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipBatch.AddAutoshipLog(NetSteps.Orders.Common.Models.IAutoshipLog)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipLog" /> to the AutoshipLogs collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipLog" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipBatch.RemoveAutoshipLog(NetSteps.Orders.Common.Models.IAutoshipLog)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipLog" /> from the AutoshipLogs collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipLog" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.AutoshipBatchID">
+      <summary>
+            The AutoshipBatchID for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.UserID">
+      <summary>
+            The UserID for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.StartDateUTC">
+      <summary>
+            The StartDateUTC for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.EndDateUTC">
+      <summary>
+            The EndDateUTC for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.Notes">
+      <summary>
+            The Notes for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipBatch.AutoshipLogs">
+      <summary>
+            The AutoshipLogs for this AutoshipBatch.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipLog">
+      <summary>
+            Common interface for AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.AutoshipLogID">
+      <summary>
+            The AutoshipLogID for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.AutoshipBatchID">
+      <summary>
+            The AutoshipBatchID for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.TemplateOrderID">
+      <summary>
+            The TemplateOrderID for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.Succeeded">
+      <summary>
+            The Succeeded for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.Results">
+      <summary>
+            The Results for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.NewOrderID">
+      <summary>
+            The NewOrderID for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.DateCreatedUTC">
+      <summary>
+            The DateCreatedUTC for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.RunDate">
+      <summary>
+            The RunDate for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.AutoshipBatch">
+      <summary>
+            The AutoshipBatch for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.NewOrder">
+      <summary>
+            The NewOrder for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipLog.TemplateOrder">
+      <summary>
+            The TemplateOrder for this AutoshipLog.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipOrder">
+      <summary>
+            Common interface for AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.AutoshipOrderID">
+      <summary>
+            The AutoshipOrderID for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.TemplateOrderID">
+      <summary>
+            The TemplateOrderID for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.AccountID">
+      <summary>
+            The AccountID for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.AutoshipScheduleID">
+      <summary>
+            The AutoshipScheduleID for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.ConsecutiveOrders">
+      <summary>
+            The ConsecutiveOrders for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.DataVersion">
+      <summary>
+            The DataVersion for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.Day">
+      <summary>
+            The Day for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.DateLastCreated">
+      <summary>
+            The DateLastCreated for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.LastRunDate">
+      <summary>
+            The LastRunDate for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.NextRunDate">
+      <summary>
+            The NextRunDate for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.StartDate">
+      <summary>
+            The StartDate for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.EndDate">
+      <summary>
+            The EndDate for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.AutoshipReminderNextRunDate">
+      <summary>
+            The AutoshipReminderNextRunDate for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipOrder.Order">
+      <summary>
+            The Order for this AutoshipOrder.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipSchedule">
+      <summary>
+            Common interface for AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipSchedule.AddAutoshipScheduleDay(NetSteps.Orders.Common.Models.IAutoshipScheduleDay)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleDay" /> to the AutoshipScheduleDays collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleDay" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipSchedule.RemoveAutoshipScheduleDay(NetSteps.Orders.Common.Models.IAutoshipScheduleDay)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleDay" /> from the AutoshipScheduleDays collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleDay" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipSchedule.AddAutoshipScheduleProduct(NetSteps.Orders.Common.Models.IAutoshipScheduleProduct)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct" /> to the AutoshipScheduleProducts collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipSchedule.RemoveAutoshipScheduleProduct(NetSteps.Orders.Common.Models.IAutoshipScheduleProduct)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct" /> from the AutoshipScheduleProducts collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.AutoshipScheduleID">
+      <summary>
+            The AutoshipScheduleID for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.OrderTypeID">
+      <summary>
+            The OrderTypeID for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.Name">
+      <summary>
+            The Name for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.TermName">
+      <summary>
+            The TermName for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.IntervalTypeID">
+      <summary>
+            The IntervalTypeID for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.Active">
+      <summary>
+            The Active for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.AutoshipScheduleTypeID">
+      <summary>
+            The AutoshipScheduleTypeID for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.BaseSiteID">
+      <summary>
+            The BaseSiteID for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.MinimumCommissionableTotal">
+      <summary>
+            The MinimumCommissionableTotal for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.LastRunDate">
+      <summary>
+            The LastRunDate for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.NextRunDate">
+      <summary>
+            The NextRunDate for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.MaximumAttemptsPerInterval">
+      <summary>
+            The MaximumAttemptsPerInterval for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.MaximumFailedIntervals">
+      <summary>
+            The MaximumFailedIntervals for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.AutoshipReminderDayOffSet">
+      <summary>
+            The AutoshipReminderDayOffSet for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.IsTemplateEditable">
+      <summary>
+            The IsTemplateEditable for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.IsEnrollable">
+      <summary>
+            The IsEnrollable for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.AutoshipScheduleDays">
+      <summary>
+            The AutoshipScheduleDays for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipSchedule.AutoshipScheduleProducts">
+      <summary>
+            The AutoshipScheduleProducts for this AutoshipSchedule.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipScheduleDay">
+      <summary>
+            Common interface for AutoshipScheduleDay.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleDay.AutoshipScheduleDayID">
+      <summary>
+            The AutoshipScheduleDayID for this AutoshipScheduleDay.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleDay.AutoshipScheduleID">
+      <summary>
+            The AutoshipScheduleID for this AutoshipScheduleDay.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleDay.Day">
+      <summary>
+            The Day for this AutoshipScheduleDay.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleDay.AutoshipSchedule">
+      <summary>
+            The AutoshipSchedule for this AutoshipScheduleDay.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct">
+      <summary>
+            Common interface for AutoshipScheduleProduct.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct.AutoshipScheduleProductID">
+      <summary>
+            The AutoshipScheduleProductID for this AutoshipScheduleProduct.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct.AutoshipScheduleID">
+      <summary>
+            The AutoshipScheduleID for this AutoshipScheduleProduct.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct.ProductID">
+      <summary>
+            The ProductID for this AutoshipScheduleProduct.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleProduct.Quantity">
+      <summary>
+            The Quantity for this AutoshipScheduleProduct.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IAutoshipScheduleType">
+      <summary>
+            Common interface for AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipScheduleType.AddAutoshipSchedule(NetSteps.Orders.Common.Models.IAutoshipSchedule)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to the AutoshipSchedules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IAutoshipScheduleType.RemoveAutoshipSchedule(NetSteps.Orders.Common.Models.IAutoshipSchedule)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> from the AutoshipSchedules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.AutoshipScheduleTypeID">
+      <summary>
+            The AutoshipScheduleTypeID for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.Name">
+      <summary>
+            The Name for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.TermName">
+      <summary>
+            The TermName for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.Description">
+      <summary>
+            The Description for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.Active">
+      <summary>
+            The Active for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IAutoshipScheduleType.AutoshipSchedules">
+      <summary>
+            The AutoshipSchedules for this AutoshipScheduleType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IHostessRewardRule">
+      <summary>
+            Common interface for HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.HostessRewardRuleID">
+      <summary>
+            The HostessRewardRuleID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.HostessRewardTypeID">
+      <summary>
+            The HostessRewardTypeID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.HostessRewardRuleTypeID">
+      <summary>
+            The HostessRewardRuleTypeID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.Min">
+      <summary>
+            The Min for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.Max">
+      <summary>
+            The Max for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.Reward">
+      <summary>
+            The Reward for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.CreditPercent">
+      <summary>
+            The CreditPercent for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.Products">
+      <summary>
+            The Products for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.ProductDiscount">
+      <summary>
+            The ProductDiscount for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.OrderItemTypeID">
+      <summary>
+            The OrderItemTypeID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.DiscountCap">
+      <summary>
+            The DiscountCap for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.StartDateUTC">
+      <summary>
+            The StartDateUTC for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.EndDateUTC">
+      <summary>
+            The EndDateUTC for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.DaysOffset">
+      <summary>
+            The DaysOffset for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.ProductID">
+      <summary>
+            The ProductID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.MarketID">
+      <summary>
+            The MarketID for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.MinCustomers">
+      <summary>
+            The MinCustomers for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.IsRedeemedAtChildParty">
+      <summary>
+            The IsRedeemedAtChildParty for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRule.MinOrderSubTotal">
+      <summary>
+            The MinOrderSubTotal for this HostessRewardRule.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IHostessRewardRuleType">
+      <summary>
+            Common interface for HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IHostessRewardRuleType.AddHostessRewardRule(NetSteps.Orders.Common.Models.IHostessRewardRule)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to the HostessRewardRules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IHostessRewardRuleType.RemoveHostessRewardRule(NetSteps.Orders.Common.Models.IHostessRewardRule)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> from the HostessRewardRules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.HostessRewardRuleTypeID">
+      <summary>
+            The HostessRewardRuleTypeID for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.Name">
+      <summary>
+            The Name for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.Description">
+      <summary>
+            The Description for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.TermName">
+      <summary>
+            The TermName for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.Active">
+      <summary>
+            The Active for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardRuleType.HostessRewardRules">
+      <summary>
+            The HostessRewardRules for this HostessRewardRuleType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IHostessRewardType">
+      <summary>
+            Common interface for HostessRewardType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardType.HostessRewardTypeID">
+      <summary>
+            The HostessRewardTypeID for this HostessRewardType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardType.Name">
+      <summary>
+            The Name for this HostessRewardType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardType.TermName">
+      <summary>
+            The TermName for this HostessRewardType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardType.Description">
+      <summary>
+            The Description for this HostessRewardType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IHostessRewardType.Active">
+      <summary>
+            The Active for this HostessRewardType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IIntervalType">
+      <summary>
+            Common interface for IntervalType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IIntervalType.AddAutoshipSchedule(NetSteps.Orders.Common.Models.IAutoshipSchedule)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to the AutoshipSchedules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IIntervalType.RemoveAutoshipSchedule(NetSteps.Orders.Common.Models.IAutoshipSchedule)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> from the AutoshipSchedules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IAutoshipSchedule" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.IntervalTypeID">
+      <summary>
+            The IntervalTypeID for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.Name">
+      <summary>
+            The Name for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.Description">
+      <summary>
+            The Description for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.TermName">
+      <summary>
+            The TermName for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.Interval">
+      <summary>
+            The Interval for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.IntervalDay">
+      <summary>
+            The IntervalDay for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.IsMonthly">
+      <summary>
+            The IsMonthly for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.IsWeekly">
+      <summary>
+            The IsWeekly for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.IsAnnual">
+      <summary>
+            The IsAnnual for this IntervalType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IIntervalType.AutoshipSchedules">
+      <summary>
+            The AutoshipSchedules for this IntervalType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrder">
+      <summary>
+            Common interface for Order.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddNote(NetSteps.Common.Models.INote)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Common.Models.INote" /> to the Notes collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Common.Models.INote" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveNote(NetSteps.Common.Models.INote)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Common.Models.INote" /> from the Notes collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Common.Models.INote" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddOrderAdjustment(NetSteps.Orders.Common.Models.IOrderAdjustment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustment" /> to the OrderAdjustments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveOrderAdjustment(NetSteps.Orders.Common.Models.IOrderAdjustment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustment" /> from the OrderAdjustments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddOrderCustomer(NetSteps.Orders.Common.Models.IOrderCustomer)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to the OrderCustomers collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveOrderCustomer(NetSteps.Orders.Common.Models.IOrderCustomer)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> from the OrderCustomers collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> from the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> from the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.AddOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrder.RemoveOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> from the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderID">
+      <summary>
+            The OrderID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderNumber">
+      <summary>
+            The OrderNumber for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderStatusID">
+      <summary>
+            The OrderStatusID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderTypeID">
+      <summary>
+            The OrderTypeID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ConsultantID">
+      <summary>
+            The ConsultantID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.SiteID">
+      <summary>
+            The SiteID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ParentOrderID">
+      <summary>
+            The ParentOrderID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.CurrencyID">
+      <summary>
+            The CurrencyID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.CompleteDateUTC">
+      <summary>
+            The CompleteDateUTC for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.CommissionDateUTC">
+      <summary>
+            The CommissionDateUTC for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.HostessRewardsEarned">
+      <summary>
+            The HostessRewardsEarned for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.HostessRewardsUsed">
+      <summary>
+            The HostessRewardsUsed for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.IsTaxExempt">
+      <summary>
+            The IsTaxExempt for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxAmountTotal">
+      <summary>
+            The TaxAmountTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxAmountTotalOverride">
+      <summary>
+            The TaxAmountTotalOverride for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxableTotal">
+      <summary>
+            The TaxableTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxAmountOrderItems">
+      <summary>
+            The TaxAmountOrderItems for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxAmountShipping">
+      <summary>
+            The TaxAmountShipping for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.TaxAmount">
+      <summary>
+            The TaxAmount for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.Subtotal">
+      <summary>
+            The Subtotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.DiscountTotal">
+      <summary>
+            The DiscountTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ShippingTotal">
+      <summary>
+            The ShippingTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ShippingTotalOverride">
+      <summary>
+            The ShippingTotalOverride for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.GrandTotal">
+      <summary>
+            The GrandTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.PaymentTotal">
+      <summary>
+            The PaymentTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.Balance">
+      <summary>
+            The Balance for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.CommissionableTotal">
+      <summary>
+            The CommissionableTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ReturnTypeID">
+      <summary>
+            The ReturnTypeID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.StepUrl">
+      <summary>
+            The StepUrl for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.DateCreatedUTC">
+      <summary>
+            The DateCreatedUTC for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.CreatedByUserID">
+      <summary>
+            The CreatedByUserID for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.DataVersion">
+      <summary>
+            The DataVersion for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.HandlingTotal">
+      <summary>
+            The HandlingTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.DiscountPercent">
+      <summary>
+            The DiscountPercent for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.PartyShipmentTotal">
+      <summary>
+            The PartyShipmentTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.PartyHandlingTotal">
+      <summary>
+            The PartyHandlingTotal for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.Notes">
+      <summary>
+            The Notes for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderAdjustments">
+      <summary>
+            The OrderAdjustments for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderCustomers">
+      <summary>
+            The OrderCustomers for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderPaymentResults">
+      <summary>
+            The OrderPaymentResults for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderPayments">
+      <summary>
+            The OrderPayments for this Order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrder.OrderShipments">
+      <summary>
+            The OrderShipments for this Order.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderAdjustment">
+      <summary>
+            Common interface for OrderAdjustment.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderAdjustment.AddOrderAdjustmentOrderLineModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to the OrderAdjustmentOrderLineModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderAdjustment.RemoveOrderAdjustmentOrderLineModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> from the OrderAdjustmentOrderLineModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderAdjustment.AddOrderAdjustmentOrderModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to the OrderAdjustmentOrderModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderAdjustment.RemoveOrderAdjustmentOrderModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> from the OrderAdjustmentOrderModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.OrderAdjustmentID">
+      <summary>
+            The OrderAdjustmentID for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.OrderID">
+      <summary>
+            The OrderID for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.Description">
+      <summary>
+            The Description for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.ExtensionProviderKey">
+      <summary>
+            The ExtensionProviderKey for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.Order">
+      <summary>
+            The Order for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.OrderAdjustmentOrderLineModifications">
+      <summary>
+            The OrderAdjustmentOrderLineModifications for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustment.OrderAdjustmentOrderModifications">
+      <summary>
+            The OrderAdjustmentOrderModifications for this OrderAdjustment.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification">
+      <summary>
+            Common interface for OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.OrderAdjustmentOrderLineModificationID">
+      <summary>
+            The OrderAdjustmentOrderLineModificationID for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.OrderAdjustmentID">
+      <summary>
+            The OrderAdjustmentID for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.PropertyName">
+      <summary>
+            The PropertyName for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.ModificationOperationID">
+      <summary>
+            The ModificationOperationID for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.ModificationDecimalValue">
+      <summary>
+            The ModificationDecimalValue for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.ModificationDescription">
+      <summary>
+            The ModificationDescription for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.OrderAdjustment">
+      <summary>
+            The OrderAdjustment for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification.OrderItem">
+      <summary>
+            The OrderItem for this OrderAdjustmentOrderLineModification.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification">
+      <summary>
+            Common interface for OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.OrderAdjustmentOrderModificationID">
+      <summary>
+            The OrderAdjustmentOrderModificationID for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.OrderAdjustmentID">
+      <summary>
+            The OrderAdjustmentID for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.PropertyName">
+      <summary>
+            The PropertyName for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.ModificationOperationID">
+      <summary>
+            The ModificationOperationID for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.ModificationDecimalValue">
+      <summary>
+            The ModificationDecimalValue for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.ModificationDescription">
+      <summary>
+            The ModificationDescription for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.OrderAdjustment">
+      <summary>
+            The OrderAdjustment for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification.OrderCustomer">
+      <summary>
+            The OrderCustomer for this OrderAdjustmentOrderModification.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderCustomer">
+      <summary>
+            Common interface for OrderCustomer.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.AddOrderAdjustmentOrderModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to the OrderAdjustmentOrderModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.RemoveOrderAdjustmentOrderModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> from the OrderAdjustmentOrderModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderModification" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.AddOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.RemoveOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> from the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.AddOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.RemoveOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> from the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.AddOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.RemoveOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> from the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.AddOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomer.RemoveOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> from the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderID">
+      <summary>
+            The OrderID for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.AccountID">
+      <summary>
+            The AccountID for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountTotal">
+      <summary>
+            The TaxAmountTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountCity">
+      <summary>
+            The TaxAmountCity for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountState">
+      <summary>
+            The TaxAmountState for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountCounty">
+      <summary>
+            The TaxAmountCounty for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountDistrict">
+      <summary>
+            The TaxAmountDistrict for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxableTotal">
+      <summary>
+            The TaxableTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.IsTaxExempt">
+      <summary>
+            The IsTaxExempt for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.DiscountAmount">
+      <summary>
+            The DiscountAmount for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.Subtotal">
+      <summary>
+            The Subtotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.PaymentTotal">
+      <summary>
+            The PaymentTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.Balance">
+      <summary>
+            The Balance for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.Total">
+      <summary>
+            The Total for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.FutureBookingDateUTC">
+      <summary>
+            The FutureBookingDateUTC for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.DataVersion">
+      <summary>
+            The DataVersion for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountOrderItems">
+      <summary>
+            The TaxAmountOrderItems for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountShipping">
+      <summary>
+            The TaxAmountShipping for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmount">
+      <summary>
+            The TaxAmount for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.CommissionableTotal">
+      <summary>
+            The CommissionableTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.ShippingTotal">
+      <summary>
+            The ShippingTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderCustomerTypeID">
+      <summary>
+            The OrderCustomerTypeID for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.HandlingTotal">
+      <summary>
+            The HandlingTotal for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxAmountCountry">
+      <summary>
+            The TaxAmountCountry for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.IsBookingCredit">
+      <summary>
+            The IsBookingCredit for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.TaxGeocode">
+      <summary>
+            The TaxGeocode for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.SalesTaxTransactionNumber">
+      <summary>
+            The SalesTaxTransactionNumber for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.UseTaxTransactionNumber">
+      <summary>
+            The UseTaxTransactionNumber for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.Order">
+      <summary>
+            The Order for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderAdjustmentOrderModifications">
+      <summary>
+            The OrderAdjustmentOrderModifications for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderItems">
+      <summary>
+            The OrderItems for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderPaymentResults">
+      <summary>
+            The OrderPaymentResults for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderPayments">
+      <summary>
+            The OrderPayments for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomer.OrderShipments">
+      <summary>
+            The OrderShipments for this OrderCustomer.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderCustomerType">
+      <summary>
+            Common interface for OrderCustomerType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomerType.AddOrderCustomer(NetSteps.Orders.Common.Models.IOrderCustomer)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to the OrderCustomers collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderCustomerType.RemoveOrderCustomer(NetSteps.Orders.Common.Models.IOrderCustomer)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> from the OrderCustomers collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderCustomer" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.OrderCustomerTypeID">
+      <summary>
+            The OrderCustomerTypeID for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.Name">
+      <summary>
+            The Name for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.TermName">
+      <summary>
+            The TermName for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.Description">
+      <summary>
+            The Description for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.Active">
+      <summary>
+            The Active for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderCustomerType.OrderCustomers">
+      <summary>
+            The OrderCustomers for this OrderCustomerType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItem">
+      <summary>
+            Common interface for OrderItem.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddChildOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to the ChildOrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveChildOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> from the ChildOrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderAdjustmentOrderLineModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to the OrderAdjustmentOrderLineModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderAdjustmentOrderLineModification(NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> from the OrderAdjustmentOrderLineModifications collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderAdjustmentOrderLineModification" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderItemMessage(NetSteps.Orders.Common.Models.IOrderItemMessage)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemMessage" /> to the OrderItemMessages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemMessage" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderItemMessage(NetSteps.Orders.Common.Models.IOrderItemMessage)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemMessage" /> from the OrderItemMessages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemMessage" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderItemPrice(NetSteps.Orders.Common.Models.IOrderItemPrice)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPrice" /> to the OrderItemPrices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPrice" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderItemPrice(NetSteps.Orders.Common.Models.IOrderItemPrice)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPrice" /> from the OrderItemPrices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPrice" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> from the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderItemReturn(NetSteps.Orders.Common.Models.IOrderItemReturn)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to the OrderItemReturns collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderItemReturn(NetSteps.Orders.Common.Models.IOrderItemReturn)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> from the OrderItemReturns collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOrderShipmentPackageItem(NetSteps.Orders.Common.Models.IOrderShipmentPackageItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to the OrderShipmentPackageItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOrderShipmentPackageItem(NetSteps.Orders.Common.Models.IOrderShipmentPackageItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> from the OrderShipmentPackageItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.AddOriginalOrderItemReturn(NetSteps.Orders.Common.Models.IOrderItemReturn)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to the OriginalOrderItemReturns collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItem.RemoveOriginalOrderItemReturn(NetSteps.Orders.Common.Models.IOrderItemReturn)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> from the OriginalOrderItemReturns collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReturn" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemTypeID">
+      <summary>
+            The OrderItemTypeID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.HostessRewardRuleID">
+      <summary>
+            The HostessRewardRuleID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ParentOrderItemID">
+      <summary>
+            The ParentOrderItemID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ProductID">
+      <summary>
+            The ProductID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ProductPriceTypeID">
+      <summary>
+            The ProductPriceTypeID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ProductName">
+      <summary>
+            The ProductName for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.SKU">
+      <summary>
+            The SKU for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.CatalogID">
+      <summary>
+            The CatalogID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.Quantity">
+      <summary>
+            The Quantity for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ItemPrice">
+      <summary>
+            The ItemPrice for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.Discount">
+      <summary>
+            The Discount for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.DiscountPercent">
+      <summary>
+            The DiscountPercent for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.AdjustedPrice">
+      <summary>
+            The AdjustedPrice for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.CommissionableTotal">
+      <summary>
+            The CommissionableTotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.CommissionableTotalOverride">
+      <summary>
+            The CommissionableTotalOverride for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ChargeTax">
+      <summary>
+            The ChargeTax for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ChargeShipping">
+      <summary>
+            The ChargeShipping for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.Points">
+      <summary>
+            The Points for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.MinCustomerSubtotal">
+      <summary>
+            The MinCustomerSubtotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.MaxCustomerSubtotal">
+      <summary>
+            The MaxCustomerSubtotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercent">
+      <summary>
+            The TaxPercent for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmount">
+      <summary>
+            The TaxAmount for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercentCity">
+      <summary>
+            The TaxPercentCity for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountCity">
+      <summary>
+            The TaxAmountCity for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountCityLocal">
+      <summary>
+            The TaxAmountCityLocal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercentState">
+      <summary>
+            The TaxPercentState for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountState">
+      <summary>
+            The TaxAmountState for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercentCounty">
+      <summary>
+            The TaxPercentCounty for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountCounty">
+      <summary>
+            The TaxAmountCounty for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountCountyLocal">
+      <summary>
+            The TaxAmountCountyLocal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercentDistrict">
+      <summary>
+            The TaxPercentDistrict for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountDistrict">
+      <summary>
+            The TaxAmountDistrict for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxPercentCountry">
+      <summary>
+            The TaxPercentCountry for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxAmountCountry">
+      <summary>
+            The TaxAmountCountry for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxableTotal">
+      <summary>
+            The TaxableTotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.DataVersion">
+      <summary>
+            The DataVersion for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ShippingTotal">
+      <summary>
+            The ShippingTotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.HandlingTotal">
+      <summary>
+            The HandlingTotal for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ShippingTotalOverride">
+      <summary>
+            The ShippingTotalOverride for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.DynamicKitGroupID">
+      <summary>
+            The DynamicKitGroupID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemParentTypeID">
+      <summary>
+            The OrderItemParentTypeID for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ItemPriceActual">
+      <summary>
+            The ItemPriceActual for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.TaxNumber">
+      <summary>
+            The TaxNumber for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderCustomer">
+      <summary>
+            The OrderCustomer for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemReplacement">
+      <summary>
+            The OrderItemReplacement for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ParentOrderItem">
+      <summary>
+            The ParentOrderItem for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.ChildOrderItems">
+      <summary>
+            The ChildOrderItems for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderAdjustmentOrderLineModifications">
+      <summary>
+            The OrderAdjustmentOrderLineModifications for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemMessages">
+      <summary>
+            The OrderItemMessages for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemPrices">
+      <summary>
+            The OrderItemPrices for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemProperties">
+      <summary>
+            The OrderItemProperties for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderItemReturns">
+      <summary>
+            The OrderItemReturns for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OrderShipmentPackageItems">
+      <summary>
+            The OrderShipmentPackageItems for this OrderItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItem.OriginalOrderItemReturns">
+      <summary>
+            The OriginalOrderItemReturns for this OrderItem.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemMessage">
+      <summary>
+            Common interface for OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.OrderItemMessageID">
+      <summary>
+            The OrderItemMessageID for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.OrderItemMessageDisplayKindID">
+      <summary>
+            The OrderItemMessageDisplayKindID for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.MessageSourceKey">
+      <summary>
+            The MessageSourceKey for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.Message">
+      <summary>
+            The Message for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessage.OrderItem">
+      <summary>
+            The OrderItem for this OrderItemMessage.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind">
+      <summary>
+            Common interface for OrderItemMessageDisplayKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind.OrderItemMessageDisplayKindID">
+      <summary>
+            The OrderItemMessageDisplayKindID for this OrderItemMessageDisplayKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind.Name">
+      <summary>
+            The Name for this OrderItemMessageDisplayKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind.TermName">
+      <summary>
+            The TermName for this OrderItemMessageDisplayKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemMessageDisplayKind.Active">
+      <summary>
+            The Active for this OrderItemMessageDisplayKind.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemParentType">
+      <summary>
+            Common interface for OrderItemParentType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemParentType.AddOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemParentType.RemoveOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> from the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.OrderItemParentTypeID">
+      <summary>
+            The OrderItemParentTypeID for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.Name">
+      <summary>
+            The Name for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.TermName">
+      <summary>
+            The TermName for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.Description">
+      <summary>
+            The Description for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.Active">
+      <summary>
+            The Active for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemParentType.OrderItems">
+      <summary>
+            The OrderItems for this OrderItemParentType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemPrice">
+      <summary>
+            Common interface for OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.OrderItemPriceID">
+      <summary>
+            The OrderItemPriceID for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.OriginalUnitPrice">
+      <summary>
+            The OriginalUnitPrice for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.ProductPriceTypeID">
+      <summary>
+            The ProductPriceTypeID for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.UnitPrice">
+      <summary>
+            The UnitPrice for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPrice.OrderItem">
+      <summary>
+            The OrderItem for this OrderItemPrice.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemProperty">
+      <summary>
+            Common interface for OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemPropertyID">
+      <summary>
+            The OrderItemPropertyID for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemPropertyTypeID">
+      <summary>
+            The OrderItemPropertyTypeID for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemPropertyValueID">
+      <summary>
+            The OrderItemPropertyValueID for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.PropertyValue">
+      <summary>
+            The PropertyValue for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.Active">
+      <summary>
+            The Active for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItem">
+      <summary>
+            The OrderItem for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemPropertyType">
+      <summary>
+            The OrderItemPropertyType for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemProperty.OrderItemPropertyValue">
+      <summary>
+            The OrderItemPropertyValue for this OrderItemProperty.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemPropertyType">
+      <summary>
+            Common interface for OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyType.AddOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyType.RemoveOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> from the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyType.AddOrderItemPropertyValue(NetSteps.Orders.Common.Models.IOrderItemPropertyValue)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPropertyValue" /> to the OrderItemPropertyValues collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPropertyValue" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyType.RemoveOrderItemPropertyValue(NetSteps.Orders.Common.Models.IOrderItemPropertyValue)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPropertyValue" /> from the OrderItemPropertyValues collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemPropertyValue" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.OrderItemPropertyTypeID">
+      <summary>
+            The OrderItemPropertyTypeID for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.Name">
+      <summary>
+            The Name for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.DataType">
+      <summary>
+            The DataType for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.Required">
+      <summary>
+            The Required for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.SortIndex">
+      <summary>
+            The SortIndex for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.TermName">
+      <summary>
+            The TermName for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.Description">
+      <summary>
+            The Description for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.Active">
+      <summary>
+            The Active for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.OrderItemProperties">
+      <summary>
+            The OrderItemProperties for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyType.OrderItemPropertyValues">
+      <summary>
+            The OrderItemPropertyValues for this OrderItemPropertyType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemPropertyValue">
+      <summary>
+            Common interface for OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.AddOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.RemoveOrderItemProperty(NetSteps.Orders.Common.Models.IOrderItemProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> from the OrderItemProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.OrderItemPropertyValueID">
+      <summary>
+            The OrderItemPropertyValueID for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.OrderItemPropertyTypeID">
+      <summary>
+            The OrderItemPropertyTypeID for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.Name">
+      <summary>
+            The Name for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.Value">
+      <summary>
+            The Value for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.OrderItemPropertyType">
+      <summary>
+            The OrderItemPropertyType for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemPropertyValue.OrderItemProperties">
+      <summary>
+            The OrderItemProperties for this OrderItemPropertyValue.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemReplacement">
+      <summary>
+            Common interface for OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReplacement.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReplacement.ReplacementReasonID">
+      <summary>
+            The ReplacementReasonID for this OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReplacement.Notes">
+      <summary>
+            The Notes for this OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReplacement.OrderItem">
+      <summary>
+            The OrderItem for this OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReplacement.ReplacementReason">
+      <summary>
+            The ReplacementReason for this OrderItemReplacement.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemReturn">
+      <summary>
+            Common interface for OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.OrderItemReturnID">
+      <summary>
+            The OrderItemReturnID for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.IsDestroyed">
+      <summary>
+            The IsDestroyed for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.IsRestocked">
+      <summary>
+            The IsRestocked for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.HasBeenReceived">
+      <summary>
+            The HasBeenReceived for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.ReturnReasonID">
+      <summary>
+            The ReturnReasonID for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.Quantity">
+      <summary>
+            The Quantity for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.OriginalOrderItemID">
+      <summary>
+            The OriginalOrderItemID for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.OrderItem">
+      <summary>
+            The OrderItem for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.OriginalOrderItem">
+      <summary>
+            The OriginalOrderItem for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemReturn.ReturnReason">
+      <summary>
+            The ReturnReason for this OrderItemReturn.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderItemType">
+      <summary>
+            Common interface for OrderItemType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemType.AddHostessRewardRule(NetSteps.Orders.Common.Models.IHostessRewardRule)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to the HostessRewardRules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemType.RemoveHostessRewardRule(NetSteps.Orders.Common.Models.IHostessRewardRule)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> from the HostessRewardRules collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IHostessRewardRule" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemType.AddOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderItemType.RemoveOrderItem(NetSteps.Orders.Common.Models.IOrderItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> from the OrderItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.OrderItemTypeID">
+      <summary>
+            The OrderItemTypeID for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.Name">
+      <summary>
+            The Name for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.TermName">
+      <summary>
+            The TermName for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.Description">
+      <summary>
+            The Description for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.Active">
+      <summary>
+            The Active for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.IsHostessReward">
+      <summary>
+            The IsHostessReward for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.HostessRewardRules">
+      <summary>
+            The HostessRewardRules for this OrderItemType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderItemType.OrderItems">
+      <summary>
+            The OrderItems for this OrderItemType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderPayment">
+      <summary>
+            Common interface for OrderPayment.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderPayment.AddOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderPayment.RemoveOrderPaymentResult(NetSteps.Orders.Common.Models.IOrderPaymentResult)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> from the OrderPaymentResults collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPaymentResult" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderPaymentID">
+      <summary>
+            The OrderPaymentID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderID">
+      <summary>
+            The OrderID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.PaymentTypeID">
+      <summary>
+            The PaymentTypeID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.AccountNumber">
+      <summary>
+            The AccountNumber for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingFirstName">
+      <summary>
+            The BillingFirstName for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingLastName">
+      <summary>
+            The BillingLastName for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingName">
+      <summary>
+            The BillingName for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingAddress1">
+      <summary>
+            The BillingAddress1 for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingAddress2">
+      <summary>
+            The BillingAddress2 for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingAddress3">
+      <summary>
+            The BillingAddress3 for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingCity">
+      <summary>
+            The BillingCity for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingCounty">
+      <summary>
+            The BillingCounty for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingState">
+      <summary>
+            The BillingState for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingStateProvinceID">
+      <summary>
+            The BillingStateProvinceID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingPostalCode">
+      <summary>
+            The BillingPostalCode for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingCountryID">
+      <summary>
+            The BillingCountryID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BillingPhoneNumber">
+      <summary>
+            The BillingPhoneNumber for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.IdentityNumber">
+      <summary>
+            The IdentityNumber for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.IdentityState">
+      <summary>
+            The IdentityState for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.Amount">
+      <summary>
+            The Amount for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.RoutingNumber">
+      <summary>
+            The RoutingNumber for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderPaymentStatusID">
+      <summary>
+            The OrderPaymentStatusID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.IsDeferred">
+      <summary>
+            The IsDeferred for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.ProcessOnDateUTC">
+      <summary>
+            The ProcessOnDateUTC for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.ProcessedDateUTC">
+      <summary>
+            The ProcessedDateUTC for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.TransactionID">
+      <summary>
+            The TransactionID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.DeferredAmount">
+      <summary>
+            The DeferredAmount for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.DeferredTransactionID">
+      <summary>
+            The DeferredTransactionID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.ExpirationDateUTC">
+      <summary>
+            The ExpirationDateUTC for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.DataVersion">
+      <summary>
+            The DataVersion for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.CurrencyID">
+      <summary>
+            The CurrencyID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.NameOnCard">
+      <summary>
+            The NameOnCard for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.CreditCardTypeID">
+      <summary>
+            The CreditCardTypeID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.Request">
+      <summary>
+            The Request for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.AccountNumberLastFour">
+      <summary>
+            The AccountNumberLastFour for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.PaymentGatewayID">
+      <summary>
+            The PaymentGatewayID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.SourceAccountPaymentMethodID">
+      <summary>
+            The SourceAccountPaymentMethodID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BankAccountTypeID">
+      <summary>
+            The BankAccountTypeID for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.BankName">
+      <summary>
+            The BankName for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.NachaClassType">
+      <summary>
+            The NachaClassType for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.NachaSentDate">
+      <summary>
+            The NachaSentDate for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.Order">
+      <summary>
+            The Order for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderCustomer">
+      <summary>
+            The OrderCustomer for this OrderPayment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPayment.OrderPaymentResults">
+      <summary>
+            The OrderPaymentResults for this OrderPayment.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderPaymentResult">
+      <summary>
+            Common interface for OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderPaymentResultID">
+      <summary>
+            The OrderPaymentResultID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderPaymentID">
+      <summary>
+            The OrderPaymentID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderID">
+      <summary>
+            The OrderID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.CurrencyID">
+      <summary>
+            The CurrencyID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.DateAuthorizedUTC">
+      <summary>
+            The DateAuthorizedUTC for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.AuthorizeType">
+      <summary>
+            The AuthorizeType for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.RoutingNumber">
+      <summary>
+            The RoutingNumber for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.AccountNumber">
+      <summary>
+            The AccountNumber for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.BankName">
+      <summary>
+            The BankName for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ExpirationDateUTC">
+      <summary>
+            The ExpirationDateUTC for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.Amount">
+      <summary>
+            The Amount for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ErrorLevel">
+      <summary>
+            The ErrorLevel for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ErrorMessage">
+      <summary>
+            The ErrorMessage for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ResponseCode">
+      <summary>
+            The ResponseCode for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ResponseSubCode">
+      <summary>
+            The ResponseSubCode for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ResponseReasonCode">
+      <summary>
+            The ResponseReasonCode for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ResponseReasonText">
+      <summary>
+            The ResponseReasonText for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.AVSResult">
+      <summary>
+            The AVSResult for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.CardCodeResponse">
+      <summary>
+            The CardCodeResponse for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.ApprovalCode">
+      <summary>
+            The ApprovalCode for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.Response">
+      <summary>
+            The Response for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.TransactionID">
+      <summary>
+            The TransactionID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.IsTesting">
+      <summary>
+            The IsTesting for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.PaymentGatewayID">
+      <summary>
+            The PaymentGatewayID for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.BalanceOnCard">
+      <summary>
+            The BalanceOnCard for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.Order">
+      <summary>
+            The Order for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderCustomer">
+      <summary>
+            The OrderCustomer for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentResult.OrderPayment">
+      <summary>
+            The OrderPayment for this OrderPaymentResult.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderPaymentStatus">
+      <summary>
+            Common interface for OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderPaymentStatus.AddOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderPaymentStatus.RemoveOrderPayment(NetSteps.Orders.Common.Models.IOrderPayment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> from the OrderPayments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderPayment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.OrderPaymentStatusID">
+      <summary>
+            The OrderPaymentStatusID for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.Name">
+      <summary>
+            The Name for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.TermName">
+      <summary>
+            The TermName for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.Description">
+      <summary>
+            The Description for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.Active">
+      <summary>
+            The Active for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderPaymentStatus.OrderPayments">
+      <summary>
+            The OrderPayments for this OrderPaymentStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderShipment">
+      <summary>
+            Common interface for OrderShipment.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipment.AddOrderShipmentPackage(NetSteps.Orders.Common.Models.IOrderShipmentPackage)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackage" /> to the OrderShipmentPackages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackage" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipment.RemoveOrderShipmentPackage(NetSteps.Orders.Common.Models.IOrderShipmentPackage)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackage" /> from the OrderShipmentPackages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackage" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderShipmentID">
+      <summary>
+            The OrderShipmentID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderID">
+      <summary>
+            The OrderID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderCustomerID">
+      <summary>
+            The OrderCustomerID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.ShippingMethodID">
+      <summary>
+            The ShippingMethodID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderShipmentStatusID">
+      <summary>
+            The OrderShipmentStatusID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.FirstName">
+      <summary>
+            The FirstName for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.LastName">
+      <summary>
+            The LastName for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Attention">
+      <summary>
+            The Attention for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Name">
+      <summary>
+            The Name for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Address1">
+      <summary>
+            The Address1 for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Address2">
+      <summary>
+            The Address2 for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Address3">
+      <summary>
+            The Address3 for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.City">
+      <summary>
+            The City for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.County">
+      <summary>
+            The County for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.State">
+      <summary>
+            The State for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.StateProvinceID">
+      <summary>
+            The StateProvinceID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.PostalCode">
+      <summary>
+            The PostalCode for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.CountryID">
+      <summary>
+            The CountryID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Email">
+      <summary>
+            The Email for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.DayPhone">
+      <summary>
+            The DayPhone for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.EveningPhone">
+      <summary>
+            The EveningPhone for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.TrackingNumber">
+      <summary>
+            The TrackingNumber for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.TrackingURL">
+      <summary>
+            The TrackingURL for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.DateShippedUTC">
+      <summary>
+            The DateShippedUTC for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.GovernmentReceiptNumber">
+      <summary>
+            The GovernmentReceiptNumber for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.IsDirectShipment">
+      <summary>
+            The IsDirectShipment for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.IsWillCall">
+      <summary>
+            The IsWillCall for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.DataVersion">
+      <summary>
+            The DataVersion for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.SourceAddressID">
+      <summary>
+            The SourceAddressID for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.PickupPointCode">
+      <summary>
+            The PickupPointCode for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.Order">
+      <summary>
+            The Order for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderCustomer">
+      <summary>
+            The OrderCustomer for this OrderShipment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipment.OrderShipmentPackages">
+      <summary>
+            The OrderShipmentPackages for this OrderShipment.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderShipmentPackage">
+      <summary>
+            Common interface for OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipmentPackage.AddOrderShipmentPackageItem(NetSteps.Orders.Common.Models.IOrderShipmentPackageItem)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to the OrderShipmentPackageItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipmentPackage.RemoveOrderShipmentPackageItem(NetSteps.Orders.Common.Models.IOrderShipmentPackageItem)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> from the OrderShipmentPackageItems collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.OrderShipmentPackageID">
+      <summary>
+            The OrderShipmentPackageID for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.OrderShipmentID">
+      <summary>
+            The OrderShipmentID for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.ShippingMethodID">
+      <summary>
+            The ShippingMethodID for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.TrackingNumber">
+      <summary>
+            The TrackingNumber for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.DateShippedUTC">
+      <summary>
+            The DateShippedUTC for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.TrackingUrl">
+      <summary>
+            The TrackingUrl for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.OrderShipment">
+      <summary>
+            The OrderShipment for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackage.OrderShipmentPackageItems">
+      <summary>
+            The OrderShipmentPackageItems for this OrderShipmentPackage.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem">
+      <summary>
+            Common interface for OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.OrderShipmentPackageItemID">
+      <summary>
+            The OrderShipmentPackageItemID for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.OrderShipmentPackageID">
+      <summary>
+            The OrderShipmentPackageID for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.OrderItemID">
+      <summary>
+            The OrderItemID for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.Quantity">
+      <summary>
+            The Quantity for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.OrderItem">
+      <summary>
+            The OrderItem for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentPackageItem.OrderShipmentPackage">
+      <summary>
+            The OrderShipmentPackage for this OrderShipmentPackageItem.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderShipmentsLog">
+      <summary>
+            Common interface for OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.OrderShipmentLogID">
+      <summary>
+            The OrderShipmentLogID for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.LogDateUTC">
+      <summary>
+            The LogDateUTC for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.Succeeded">
+      <summary>
+            The Succeeded for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.OrderID">
+      <summary>
+            The OrderID for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.ShipNo">
+      <summary>
+            The ShipNo for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.Sku">
+      <summary>
+            The Sku for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.Status">
+      <summary>
+            The Status for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.ShippingMethod">
+      <summary>
+            The ShippingMethod for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.TrackingNumber">
+      <summary>
+            The TrackingNumber for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.Quantity">
+      <summary>
+            The Quantity for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentsLog.Order">
+      <summary>
+            The Order for this OrderShipmentsLog.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderShipmentStatus">
+      <summary>
+            Common interface for OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipmentStatus.AddOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderShipmentStatus.RemoveOrderShipment(NetSteps.Orders.Common.Models.IOrderShipment)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> from the OrderShipments collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderShipment" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.OrderShipmentStatusID">
+      <summary>
+            The OrderShipmentStatusID for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.Name">
+      <summary>
+            The Name for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.TermName">
+      <summary>
+            The TermName for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.Description">
+      <summary>
+            The Description for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.Active">
+      <summary>
+            The Active for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderShipmentStatus.OrderShipments">
+      <summary>
+            The OrderShipments for this OrderShipmentStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderStatus">
+      <summary>
+            Common interface for OrderStatus.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderStatus.AddOrder(NetSteps.Orders.Common.Models.IOrder)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrder" /> to the Orders collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrder" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IOrderStatus.RemoveOrder(NetSteps.Orders.Common.Models.IOrder)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrder" /> from the Orders collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrder" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.OrderStatusID">
+      <summary>
+            The OrderStatusID for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.Name">
+      <summary>
+            The Name for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.TermName">
+      <summary>
+            The TermName for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.Description">
+      <summary>
+            The Description for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.Active">
+      <summary>
+            The Active for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.IsCommissionable">
+      <summary>
+            The IsCommissionable for this OrderStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderStatus.Orders">
+      <summary>
+            The Orders for this OrderStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IOrderType">
+      <summary>
+            Common interface for OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.OrderTypeID">
+      <summary>
+            The OrderTypeID for this OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.Name">
+      <summary>
+            The Name for this OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.TermName">
+      <summary>
+            The TermName for this OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.Description">
+      <summary>
+            The Description for this OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.IsTemplate">
+      <summary>
+            The IsTemplate for this OrderType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IOrderType.Active">
+      <summary>
+            The Active for this OrderType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IParty">
+      <summary>
+            Common interface for Party.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IParty.AddPartyGuest(NetSteps.Orders.Common.Models.IPartyGuest)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IPartyGuest" /> to the PartyGuests collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyGuest" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IParty.RemovePartyGuest(NetSteps.Orders.Common.Models.IPartyGuest)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IPartyGuest" /> from the PartyGuests collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyGuest" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IParty.AddPartyRsvp(NetSteps.Orders.Common.Models.IPartyRsvp)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to the PartyRsvps collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IParty.RemovePartyRsvp(NetSteps.Orders.Common.Models.IPartyRsvp)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> from the PartyRsvps collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.PartyID">
+      <summary>
+            The PartyID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.OrderID">
+      <summary>
+            The OrderID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.AddressID">
+      <summary>
+            The AddressID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.EmailTemplateID">
+      <summary>
+            The EmailTemplateID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.Name">
+      <summary>
+            The Name for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.EviteOrganizerEmail">
+      <summary>
+            The EviteOrganizerEmail for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.UseEvites">
+      <summary>
+            The UseEvites for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.ShowOnPWS">
+      <summary>
+            The ShowOnPWS for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.StartDateUTC">
+      <summary>
+            The StartDateUTC for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.EndDateUTC">
+      <summary>
+            The EndDateUTC for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.DataVersion">
+      <summary>
+            The DataVersion for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.ParentPartyID">
+      <summary>
+            The ParentPartyID for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.Address">
+      <summary>
+            The Address for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.Order">
+      <summary>
+            The Order for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.PartyGuests">
+      <summary>
+            The PartyGuests for this Party.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IParty.PartyRsvps">
+      <summary>
+            The PartyRsvps for this Party.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IPartyGuest">
+      <summary>
+            Common interface for PartyGuest.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IPartyGuest.AddPartyRsvp(NetSteps.Orders.Common.Models.IPartyRsvp)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to the PartyRsvps collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IPartyGuest.RemovePartyRsvp(NetSteps.Orders.Common.Models.IPartyRsvp)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> from the PartyRsvps collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPartyRsvp" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.PartyGuestID">
+      <summary>
+            The PartyGuestID for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.PartyID">
+      <summary>
+            The PartyID for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.AccountID">
+      <summary>
+            The AccountID for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.FirstName">
+      <summary>
+            The FirstName for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.LastName">
+      <summary>
+            The LastName for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.EmailAddress">
+      <summary>
+            The EmailAddress for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.Party">
+      <summary>
+            The Party for this PartyGuest.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyGuest.PartyRsvps">
+      <summary>
+            The PartyRsvps for this PartyGuest.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IPartyRsvp">
+      <summary>
+            Common interface for PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.PartyRsvpID">
+      <summary>
+            The PartyRsvpID for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.PartyID">
+      <summary>
+            The PartyID for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.IsComing">
+      <summary>
+            The IsComing for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.PartyGuestID">
+      <summary>
+            The PartyGuestID for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.ResponseDateUTC">
+      <summary>
+            The ResponseDateUTC for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.Party">
+      <summary>
+            The Party for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPartyRsvp.PartyGuest">
+      <summary>
+            The PartyGuest for this PartyRsvp.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IPublicationChannel">
+      <summary>
+            Common interface for PublicationChannel.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IPublicationChannel.AddRedemption(NetSteps.Orders.Common.Models.IRedemption)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to the Redemptions collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IPublicationChannel.RemoveRedemption(NetSteps.Orders.Common.Models.IRedemption)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> from the Redemptions collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.PublicationChannelID">
+      <summary>
+            The PublicationChannelID for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.PublicationChannelNumber">
+      <summary>
+            The PublicationChannelNumber for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.Name">
+      <summary>
+            The Name for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.TermName">
+      <summary>
+            The TermName for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.Description">
+      <summary>
+            The Description for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.Active">
+      <summary>
+            The Active for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IPublicationChannel.Redemptions">
+      <summary>
+            The Redemptions for this PublicationChannel.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IRedemption">
+      <summary>
+            Common interface for Redemption.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IRedemption.AddPublicationChannel(NetSteps.Orders.Common.Models.IPublicationChannel)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IPublicationChannel" /> to the PublicationChannels collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPublicationChannel" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IRedemption.RemovePublicationChannel(NetSteps.Orders.Common.Models.IPublicationChannel)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IPublicationChannel" /> from the PublicationChannels collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IPublicationChannel" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionID">
+      <summary>
+            The RedemptionID for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionNumber">
+      <summary>
+            The RedemptionNumber for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionMethodID">
+      <summary>
+            The RedemptionMethodID for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionInstruction">
+      <summary>
+            The RedemptionInstruction for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionCouponName">
+      <summary>
+            The RedemptionCouponName for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionCode">
+      <summary>
+            The RedemptionCode for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.RedemptionMethod">
+      <summary>
+            The RedemptionMethod for this Redemption.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemption.PublicationChannels">
+      <summary>
+            The PublicationChannels for this Redemption.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IRedemptionMethod">
+      <summary>
+            Common interface for RedemptionMethod.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IRedemptionMethod.AddRedemption(NetSteps.Orders.Common.Models.IRedemption)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to the Redemptions collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IRedemptionMethod.RemoveRedemption(NetSteps.Orders.Common.Models.IRedemption)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> from the Redemptions collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IRedemption" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.RedemptionMethodID">
+      <summary>
+            The RedemptionMethodID for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.Name">
+      <summary>
+            The Name for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.TermName">
+      <summary>
+            The TermName for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.Description">
+      <summary>
+            The Description for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.Active">
+      <summary>
+            The Active for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IRedemptionMethod.Redemptions">
+      <summary>
+            The Redemptions for this RedemptionMethod.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IReplacementReason">
+      <summary>
+            Common interface for ReplacementReason.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IReplacementReason.AddOrderItemReplacement(NetSteps.Orders.Common.Models.IOrderItemReplacement)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReplacement" /> to the OrderItemReplacements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReplacement" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Orders.Common.Models.IReplacementReason.RemoveOrderItemReplacement(NetSteps.Orders.Common.Models.IOrderItemReplacement)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReplacement" /> from the OrderItemReplacements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Orders.Common.Models.IOrderItemReplacement" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.ReplacementReasonID">
+      <summary>
+            The ReplacementReasonID for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.Name">
+      <summary>
+            The Name for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.TermName">
+      <summary>
+            The TermName for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.Description">
+      <summary>
+            The Description for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.Active">
+      <summary>
+            The Active for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.ModifiedUserID">
+      <summary>
+            The ModifiedUserID for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReplacementReason.OrderItemReplacements">
+      <summary>
+            The OrderItemReplacements for this ReplacementReason.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IReturnReason">
+      <summary>
+            Common interface for ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.ReturnReasonID">
+      <summary>
+            The ReturnReasonID for this ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.Name">
+      <summary>
+            The Name for this ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.TermName">
+      <summary>
+            The TermName for this ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.Description">
+      <summary>
+            The Description for this ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.Active">
+      <summary>
+            The Active for this ReturnReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnReason.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this ReturnReason.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Orders.Common.Models.IReturnType">
+      <summary>
+            Common interface for ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.ReturnTypeID">
+      <summary>
+            The ReturnTypeID for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.Name">
+      <summary>
+            The Name for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.TermName">
+      <summary>
+            The TermName for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.Description">
+      <summary>
+            The Description for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.Active">
+      <summary>
+            The Active for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this ReturnType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Orders.Common.Models.IReturnType.Editable">
+      <summary>
+            The Editable for this ReturnType.
+            </summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,13 @@
+@model NetSteps.Web.Mvc.Controls.Models.PhotoCropperModel
+<div>
+    <div id="@(Model.Mode)Container" class="NS-PhotoContainer">
+        <div>
+            <h2 class="UI-mainBg brdrAll pad5 previewPhotoTitle center">
+                @Html.Term("Preview", "Preview")</h2>
+            <div id="@(Model.Mode)PreviewContainer" class="center" style="overflow: hidden;">
+                <img src="@(Model.Content == null ? "" : Model.Content.GetImage().GetHtmlAttributeValue("src"))" alt="" id="@(Model.Mode)PreviewImage" class="image" />
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="@(Model.Mode)Coords" value="" class="coordinates" />
+</div>

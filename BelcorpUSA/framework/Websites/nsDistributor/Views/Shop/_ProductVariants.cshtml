@@ -1,0 +1,238 @@
+@model NetSteps.Data.Entities.Product
+@{
+	int optionalAttributeCount = 0;
+	var TriggerPropertyId = ViewData["TriggerPropertyId"] == null ? 0 : (int)ViewData["TriggerPropertyId"];
+	var productBase = Model.ProductBase;
+	var allChildProducts = productBase.Products.Where(p => !p.IsVariantTemplate && p.Active);
+
+	var productsWithValue = allChildProducts;
+
+	IEnumerable<ProductBaseProperty> applicableProductBaseProperties = productBase.ProductBaseProperties
+		.Where(prop => prop.ProductPropertyType.IsProductVariantProperty && prop.ProductPropertyType.ProductPropertyValues.Count > 0
+			&& allChildProducts.Any(p => p.Properties.Any(property => property.ProductPropertyTypeID == prop.ProductPropertyType.ProductPropertyTypeID)));
+
+	IEnumerable<ProductPropertyType> applicableProductPropertyTypes = applicableProductBaseProperties.Select(pbp => pbp.ProductPropertyType);
+
+	ProductPropertyType triggerPropertyType = applicableProductBaseProperties.Where(prop => prop.ProductPropertyType.ProductPropertyTypeID == TriggerPropertyId).Select(prop => prop.ProductPropertyType).FirstOrDefault();
+	IEnumerable<ProductPropertyValue> triggerPropertyValues = triggerPropertyType == null ? null : triggerPropertyType.ProductPropertyValues
+			.Where(productPropertyValue => allChildProducts.Any(p => p.Properties.Any(prop => prop.ProductPropertyValueID == productPropertyValue.ProductPropertyValueID)));
+
+	IEnumerable<ProductProperty> productsWithValueProperties = productsWithValue.SelectMany(p => p.Properties)
+		.Where(prop => prop.ProductPropertyTypeID != TriggerPropertyId);
+	IEnumerable<ProductPropertyValue> productsWithValueValues = productsWithValueProperties.Select(prop => prop.ProductPropertyValue);
+
+	foreach (ProductPropertyType type in applicableProductPropertyTypes)
+	{
+		var variantText = "VariantText_" + Guid.NewGuid().ToString("N");
+		var variantThumbnail = "VariantThumbnail_" + Guid.NewGuid().ToString("N");
+		var variantCheckbox = "VariantCheckbox_" + Guid.NewGuid().ToString("N");
+		var variantRadio = "VariantRadio_" + Guid.NewGuid().ToString("N");
+		var variantDropdown = "VariantDropdown_" + Guid.NewGuid().ToString("N");
+
+		bool isOptional = allChildProducts.Where(p => p.Properties.Any(prop => prop.ProductPropertyTypeID == type.ProductPropertyTypeID)).Count() < allChildProducts.Count();
+		if (isOptional)
+		{
+			optionalAttributeCount++;
+		}
+
+		var property = Model.IsVariantTemplate ? null : Model.Properties.FirstOrDefault(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID);
+
+		var applicableProductPropertyValues = type.ProductPropertyValues
+			.Where(productPropertyValue => allChildProducts.Any(p => p.Properties.Any(prop => prop.ProductPropertyTypeID == type.ProductPropertyTypeID
+				&& prop.ProductPropertyValueID == productPropertyValue.ProductPropertyValueID))).ToList();
+		if (type.ProductPropertyTypeID == TriggerPropertyId && triggerPropertyValues != null && triggerPropertyValues.Count() > 0)
+		{
+			applicableProductPropertyValues = triggerPropertyValues.ToList();
+		}
+
+		var currentPropertyValue = property != null ? property.ProductPropertyValueID : 0;
+		//var currentPropertyValue = property != null ? property.ProductPropertyValueID : applicableProductPropertyValues.Count == 1 ? applicableProductPropertyValues[0].ProductPropertyValueID : 0;
+
+		string currentPath = "";
+		foreach (var propertyValue in type.ProductPropertyValues)
+		{
+			if (propertyValue.ProductPropertyValueID == currentPropertyValue)
+			{
+				currentPath = propertyValue.FilePath.ReplaceFileUploadPathToken();
+				break;
+			}
+
+		}
+		var inputTypes = SmallCollectionCache.Instance.HtmlInputTypes.Where(hit => hit.Active);
+		string htmlInputTypeName = type.HtmlInputTypeID > 0 ? inputTypes.FirstOrDefault(hit => hit.HtmlInputTypeID == type.HtmlInputTypeID) != null ? inputTypes.FirstOrDefault(hit => hit.HtmlInputTypeID == type.HtmlInputTypeID).Name : "" : "";
+		if (htmlInputTypeName == "Text")
+		{ 
+	<div id="@variantText" class="variantText mb20 overflow @(currentPropertyValue > 0 ? "OK" : "")">
+		<input type="hidden" class="productPropertyTypeId" value="@type.ProductPropertyTypeID" />
+		<input class="productId" type="hidden" value="@Model.ProductID"/>
+		<input class="productBaseId" type="hidden" value="@Model.ProductBaseID"/>
+		<label class="variantType block mb10">@type.Name@(isOptional ? "*" : ""):
+		</label>
+		<ul class="inlineNav">
+			@{
+			foreach (var propertyValue in applicableProductPropertyValues)
+			{
+				var propertyValueImagePath = "";
+				if (!String.IsNullOrWhiteSpace(propertyValue.FilePath))
+				{
+					propertyValueImagePath = propertyValue.FilePath.ReplaceFileUploadPathToken();
+				}
+				<li class="mr10">
+					<div class="shell">
+						<div class="frame brdr @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "selected" : "") @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled" : "")">
+							<a href="javascript:void(0);" class="block pad5"><span class="thumbnail inline" style="display:@(type.ShowNameAndThumbnail ? "" : "none");">
+								@if (!String.IsNullOrWhiteSpace(propertyValueImagePath))
+		{ 
+									<img src="@propertyValueImagePath" alt="" width="25" height="25"/> 
+		}
+							</span><span class="inline">@propertyValue.Value</span>
+								<input type="hidden" class="productPropertyValueId" value="@propertyValue.ProductPropertyValueID" />
+							</a>
+							<div class="indicator">
+							</div>
+						</div>
+					</div>
+				</li>
+			}
+			}
+		</ul>
+	</div>
+		}
+		else if (htmlInputTypeName == "Thumbnail")
+		{ 
+	<div id="@variantThumbnail" class="variantThumbnail mb20 overflow @(currentPropertyValue > 0 ? "OK" : "")">
+		<input type="hidden" class="productPropertyTypeId" value="@type.ProductPropertyTypeID" />
+		<input class="productId" type="hidden" value="@Model.ProductID"/>
+		<input class="productBaseId" type="hidden" value="@Model.ProductBaseID"/>
+		<label class="variantType block mb10">@type.Name@(isOptional ? "*" : ""): <span class="variantTitle"></span>
+		</label>
+		<ul class="inlineNav">
+			@{
+			foreach (var propertyValue in applicableProductPropertyValues)
+			{
+				var propertyValueImagePath = "";
+				if (!propertyValue.FilePath.IsNullOrEmpty())
+				{
+					propertyValueImagePath = propertyValue.FilePath.ReplaceFileUploadPathToken();
+				}
+				<li class="mr10">
+					<div class="shell">
+						<div class="frame brdr @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "selected" : "") @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled" : "")">
+							<a href="javascript:void(0);">
+								@if (!String.IsNullOrEmpty(propertyValueImagePath))
+		{ <img src="@propertyValueImagePath" alt="" width="35" height="35" class="block pad5" title="@propertyValue.Value" /> }
+								<span class="block center mr10 mb5 ml10 thumbnail" style="display:@(type.ShowNameAndThumbnail ? "" : "none");">@propertyValue.Value</span>
+								<input type="hidden" class="productPropertyValueId" value="@propertyValue.ProductPropertyValueID" />
+							</a>
+							<div class="indicator">
+							</div>
+						</div>
+					</div>
+				</li>
+			}
+			}
+		</ul>
+	</div>
+		}
+		else if (htmlInputTypeName == "Checkbox")
+		{ 
+	<div id="@variantCheckbox" class="variantCheckbox mb20 overflow @(currentPropertyValue > 0 ? "OK" : "")">
+		<input type="hidden" class="productPropertyTypeId" value="@type.ProductPropertyTypeID" />
+		<input class="productId" type="hidden" value="@Model.ProductID"/>
+		<input class="productBaseId" type="hidden" value="@Model.ProductBaseID"/>
+		<label class="variantType block mb10">@type.Name@(isOptional ? "*" : ""):
+		</label>
+		<ul class="inlineNav">
+			@{
+			foreach (var propertyValue in applicableProductPropertyValues)
+			{
+				var propertyValueImagePath = "";
+				if (!propertyValue.FilePath.IsNullOrEmpty())
+				{
+					propertyValueImagePath = propertyValue.FilePath.ReplaceFileUploadPathToken();
+				}
+				<li class="mr10">
+					<div class="shell">
+						<div class="frame brdr @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "selected" : "") @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled" : "")">
+							<a href="javascript:void(0);" class="overflow block pad5 listItem">
+								<input type="checkbox" class="inline" value="@propertyValue.ProductPropertyValueID" @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "checked='checked'" : "") @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled='disabled'" : "") />
+								<span class="thumbnail inline" style="display:@(type.ShowNameAndThumbnail ? "" : "none");">
+									@if (!String.IsNullOrEmpty(propertyValueImagePath))
+		 { <img src="@propertyValueImagePath" alt="" width="25" height="25"/> }
+								</span><span class="inline ml5">@propertyValue.Value</span> </a>
+							<div class="indicator">
+							</div>
+						</div>
+					</div>
+				</li>
+			}
+			}
+		</ul>
+	</div>
+		}
+		else if (htmlInputTypeName == "Radio")
+		{ 
+	<div id="@variantRadio" class="variantRadio mb20 overflow @(currentPropertyValue > 0 ? "OK" : "")">
+		<input type="hidden" class="productPropertyTypeId" value="@type.ProductPropertyTypeID" />
+		<input class="productId" type="hidden" value="@Model.ProductID"/>
+		<input class="productBaseId" type="hidden" value="@Model.ProductBaseID"/>
+		<label class="variantType block mb10">@type.Name@(isOptional ? "*" : ""):
+		</label>
+		<ul class="inlineNav">
+			@{
+			foreach (var propertyValue in applicableProductPropertyValues)
+			{
+				var propertyValueImagePath = "";
+				if (!propertyValue.FilePath.IsNullOrEmpty())
+				{
+					propertyValueImagePath = propertyValue.FilePath.ReplaceFileUploadPathToken();
+				}
+				<li class="mr10">
+					<div class="shell">
+						<div class="frame brdr @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "selected" : "") @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled" : "")">
+							<a href="javascript:void(0);" class="overflow block pad5 listItem">
+								<input type="radio" class="inline" value="@propertyValue.ProductPropertyValueID" @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "checked='checked'" : "") name="@type.Name" @(type.ProductPropertyTypeID != TriggerPropertyId && !productsWithValueProperties.Any(p => p.ProductPropertyTypeID == type.ProductPropertyTypeID && p.ProductPropertyValueID == propertyValue.ProductPropertyValueID) ? "disabled='disabled'" : "") />
+								<span class="thumbnail inline" style="display:@(type.ShowNameAndThumbnail ? "" : "none");">
+									@if (!String.IsNullOrWhiteSpace(propertyValueImagePath))
+									{ 
+										<img src="@propertyValueImagePath" alt="" width="25" height="25"/> 
+									}
+								</span><span class="inline ml5">@propertyValue.Value</span> </a>
+							<div class="indicator">
+							</div>
+						</div>
+					</div>
+				</li>
+			}
+			}
+		</ul>
+	</div>
+		}
+
+		else if (htmlInputTypeName == "Dropdown")
+		{
+	<div id="@variantDropdown" class="variantDropdown mb20 overflow @(currentPropertyValue > 0 ? "OK" : "")">
+		<input type="hidden" class="productPropertyTypeId" value="@type.ProductPropertyTypeID" />
+		<input class="productId" type="hidden" value="@Model.ProductID"/>
+		<input class="productBaseId" type="hidden" value="@Model.ProductBaseID"/>
+		<label class="variantType block mb10">@type.Name@(isOptional ? "*" : ""): <span class="thumbnail" style="display:@(type.ShowNameAndThumbnail ? "" : "none");">
+			<img src="@(currentPath == "" ? "../../Content/Images/Base/bundleItemPlaceholder.png" : currentPath)" width="25" height="25"/></span></label>
+		<div class="frame mt5">
+			<select class="productPropertyValueId">
+				<option>@Html.Term("Select")</option>
+				@{
+			var productsWithValuePropertyValues = type.ProductPropertyTypeID == TriggerPropertyId ? applicableProductPropertyValues : applicableProductPropertyValues.Where(value => productsWithValueProperties.Any(p => p.ProductPropertyValueID == value.ProductPropertyValueID));
+			foreach (var propertyValue in productsWithValuePropertyValues)
+			{
+					<option value="@propertyValue.ProductPropertyValueID" @(currentPropertyValue == propertyValue.ProductPropertyValueID ? "selected='selected'" : "")>@propertyValue.Value</option>
+			}
+				}
+			</select>
+		</div>
+	</div>
+		}
+	}
+	<div style="display:@(optionalAttributeCount > 0 ? "" : "none");">
+		* @Html.Term("ThisAttributeIsOptional", "This attribute is optional")
+	</div>
+}

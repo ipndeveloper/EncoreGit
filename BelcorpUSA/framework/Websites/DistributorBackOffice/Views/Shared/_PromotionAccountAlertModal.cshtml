@@ -1,0 +1,37 @@
+﻿@using DistributorBackOffice.Models.Promotion
+@model NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo
+@{
+    var vm = new PromotionModel(Model);
+}
+<div class="mb10 pad10 ml10 brdr1 promotionCoupon">
+    <h3 class="mb10 pad5 promotionTitle">@vm.Info.Title</h3>
+    <div class="promotionDetails">
+        @if (vm.Info.ImagePaths != null)
+        {
+            foreach (var item in vm.Info.ImagePaths)
+            {
+                Html.RenderPartial("_PromotionImage", item);
+            }
+        }
+        <div class="FL ml10 splitCol60">
+            <div class="promotionDescription">@vm.Info.Description</div>
+            @if (!string.IsNullOrEmpty(vm.Info.CouponCode))
+            {
+                <a href="@Url.Action("Index", "OrderEntry", new { area = "Orders", promotionCode = vm.Info.CouponCode })" title="@vm.Info.ActionText" class="FL UI-mainBg mt10 pad5 brdrAll promotionCodeBtn">
+                    <span class="block FL mr10 ml10 promotionCode">@vm.Info.CouponCode</span>
+                    <div class="FL UI-icon-container Add">
+                        <span class="UI-icon icon-plus"></span><span class="clr"></span>
+                    </div>
+                </a>
+            }
+        </div>
+        <span class="clr"></span>
+        @if (vm.Info.ExpiredDate.HasValue)
+        {
+            <div class="UI-lightBg mt10 pad2 center">
+                @Html.Term("PromotionExpires", "Promotion Expires"):&nbsp;@vm.ExpirationDateVal
+            </div>
+            <span class="clr"></span>
+        }
+    </div>
+</div>

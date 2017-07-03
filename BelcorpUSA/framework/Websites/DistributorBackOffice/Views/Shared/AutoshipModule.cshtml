@@ -1,0 +1,150 @@
+@model DistributorBackOffice.Models.Home.AutoshipOrderViewModel
+@using NetSteps.Addresses.Common.Models
+
+@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }           
+@if (Model.IsValid && !Model.IsCanceled)
+{
+    <div class="clr mb10 autoship">
+        <h5>
+            @Model.AutoshipSchedule.GetTerm()</h5>
+        <div class="UI-mainBg icon-24 brdrAll GridUtility">
+		@if (Model.IsTemplateEditable)
+  {
+            <a href="@Href("~/Account/Autoships/Edit", Model.AutoshipOrder.AutoshipOrderID)"
+			class="UI-icon-container Edit EditMyAccount" title="@Html.Term("EditThisInformation", "Edit this information")"><span class="UI-icon icon-edit"></span><span>
+                @Html.Term("Edit")</span></a> 
+  }
+                <a href="@Href("~/Account/Autoships/SelectedAutoshipOrder", Model.AutoshipOrder.AutoshipOrderID)"
+			class="UI-icon-container Edit EditMyAccount overlay" id="A1" rel="#EditAccountInfo"><span class="UI-icon icon-search"></span><span>@Html.Term("ViewOrders", "View Orders")</span></a> <span class="clr"></span>
+        </div>
+        <div class="Block brdrAll pad5">
+            <ul class="lr dash flatList clr">
+                <li>
+                    <label class="bold">
+                        @Html.Term("LastRunDate", "Last Run Date"):</label>
+                    @(Model.AutoshipOrder.LastRunDate.HasValue ? Model.AutoshipOrder.LastRunDate.ToDateTime().ToString() : Html.Term("NA", "N/A"))
+                    <br />
+                </li>
+                <li>
+                    <label class="bold">
+                        @Html.Term("NextRunDate", "Next Run Date"):</label>
+                    @(Model.AutoshipOrder.NextRunDate.HasValue ? Model.AutoshipOrder.NextRunDate.Value.ToString("d", CoreContext.CurrentCultureInfo) : Html.Term("NA", "N/A"))
+                    <br />
+                </li>
+            </ul>
+            <ul class="flatList listNav">
+                @foreach (var orderItem in Model.OrderItems)
+				{
+					if (orderItem.ProductID != null)
+					{
+						Product product = inventory.GetProduct(orderItem.ProductID.Value);
+                        <li class="clr">
+                            <span class="Label FL">
+                                @orderItem.Quantity
+                                x
+                                @product.Name
+                                @orderItem.GetAdjustedPrice().ToString(Model.AutoshipOrder.Order.CurrencyID)/@Html.Term("EachAbbreviation", "ea")
+                            </span> 
+                            <span class="FR">
+                                @((orderItem.Quantity * orderItem.GetAdjustedPrice()).ToString(Model.AutoshipOrder.Order.CurrencyID))
+                            </span>
+                        </li>
+					}
+				}
+                <li class="clr total"><span class="Label FL bold">
+                    @Html.Term("Total")</span> <span class="FR">
+                        @Model.AutoshipOrder.Order.GrandTotal.ToDecimal().ToString(Model.AutoshipOrder.Order.CurrencyID)</span> </li>
+            </ul>
+            @if (Model.AutoshipSchedule.AutoshipScheduleTypeID == (int)Constants.AutoshipScheduleType.SiteSubscription)
+			{
+				if (Model.Site != null)
+				{
+                    <p class="clr">
+                        @foreach (SiteUrl siteUrl in Model.Site.SiteUrls)
+						{
+                            <a href="@siteUrl.Url" target="new">@siteUrl.Url.ToCleanString().ToLower().Replace("http://", string.Empty).TrimEnd('/')</a>
+                            <br />
+						}
+                    </p>
+				}
+			}
+            <p class="clr">
+                @{
+			var orderPayment = Model.AutoshipOrder.Order.OrderCustomers[0].OrderPayments.FirstOrDefault();
+			IPayment payment = orderPayment;
+			if (orderPayment != null
+					&& orderPayment.SourceAccountPaymentMethodID.HasValue)
+			{
+				// Show account payment info instead of order payment
+				try
+				{
+					payment = NetSteps.Data.Entities.Account.LoadPaymentMethodAndVerifyAccount(
+							orderPayment.SourceAccountPaymentMethodID.Value,
+							Model.AutoshipOrder.Order.OrderCustomers[0].AccountID
+					);
+				}
+				catch
+				{
+					payment = null;
+				}
+			}
+                }
+                @(payment != null ? Html.Raw(payment.ToDisplay(false, false)) : Html.Raw(Html.Term("NA", "N/A")))
+                <hr />
+                
+                @{
+			var defaultShipment = Model.AutoshipOrder.Order.GetDefaultShipment();
+			IAddress shipment = defaultShipment;
+
+			if (defaultShipment.IsNotNull() && defaultShipment.SourceAddressID.HasValue)
+			{
+				try
+				{
+					shipment = NetSteps.Data.Entities.Account.LoadAddressAndVerifyAccount(
+																defaultShipment.SourceAddressID.Value,
+																Model.AutoshipOrder.Order.OrderCustomers[0].AccountID);
+				}
+				catch
+				{
+					shipment = null;
+				}
+			}
+                }
+
+                @Html.Raw(shipment.ToDisplay(false, true))
+            </p>
+            <span class="clr"></span>
+        </div>
+    </div>
+}
+else if (Model.IsEnrollable)
+{
+    <div class="clr mb10 autoship">
+        <h5>
+            @Model.AutoshipSchedule.GetTerm()</h5>
+        <div class="GridUtility">
+            @{ var var1 = Model.AutoshipSchedule.AutoshipScheduleID; }
+            <a href="@Href("~/Account/Autoships/Edit", new { autoshipScheduleId = Model.AutoshipSchedule.AutoshipScheduleID })"
+               class="IconText Enroll">
+               <span>
+                   @(Model.IsCanceled ? Html.Term("ReactivateNow", "Reactivate Now!") : Html.Term("EnrollNow", "Enroll Now!"))
+               </span>
+            </a> <span class="clr"></span>
+        </div>
+        <div class="Block brdrAll pad5 NotActive">
+            <p>
+                
+                @Html.Term("SomeMarketingTextOnWhatThisIsAndWhyYouShouldBeEnrolled", "Some marketing text on what this is and why you should be enrolled in this autoship program.")
+            </p>  
+				<p class="center">
+                <a href="@Href("~/Account/Autoships/Edit", new { autoshipScheduleId = Model.AutoshipSchedule.AutoshipScheduleID })"
+					   class="Button">
+						<span>
+                        @(Model.IsCanceled ? Html.Term("ReactivateNow", "Reactivate Now!") : Html.Term("EnrollNow", "Enroll Now!"))
+						</span>
+					</a>
+				</p> 
+            <span class="clr"></span>
+        </div>
+    </div>
+}

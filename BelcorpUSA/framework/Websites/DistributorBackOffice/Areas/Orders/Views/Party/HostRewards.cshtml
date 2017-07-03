@@ -1,0 +1,272 @@
+﻿@using DistributorBackOffice.Areas.Orders.Models
+@using DistributorBackOffice.Areas.Orders.Models.Party
+@using NetSteps.Promotions.Service
+@model Party
+@{
+    ViewBag.Title = Html.Term("HostRewards", "Host Rewards");
+	var hostess = Model.Order.GetHostess();
+	var hostessRewardOrderItems = Model.Order.GetHostessRewardOrderItems();
+	var hostessRewardParentOrderItems = hostessRewardOrderItems.Where(oi => oi.ParentOrderItem == null);
+}
+@section head {
+    <style type="text/css">
+        .mt10 .loadingIcon
+        {
+            height: 20px;
+        }
+    </style>
+    <!-- CALL HOST REWARDS SCRIPT PARTIAL -->
+	@Html.Partial("_HostRewardScript", Model);
+}
+@section breadcrumb {
+	<a href="@Href("~/Orders/Party")">@Html.Term("Party", "Party")</a> &gt; <a href="@Href("~/Orders/Party/Cart")">
+		@Html.Term("Workstation_PartyEntry_GuestCarts", "Guest Shopping Bags")</a> &gt;
+	@Html.Term("HostRewards", "Host Rewards")
+}
+@section title {
+	@Html.Term("HostRewards", "Host Rewards")
+}
+@section SavePendingChanges {
+    @Html.Partial("SavePendingChanges")
+}
+@section rail {
+	<div id="Follow">
+		@Html.Partial("PartySummary")
+		<div class="center pad10">
+			<a href="javascript:void(0);" id="btnNext" class="Button FormSubmit waitOnPendingSave"><span>@Html.Term("Continue")</span></a>
+		</div>
+	</div>
+}
+@if (ViewBag.Content != null)
+{
+    @ViewBag.Content.ToDisplay(DistributorBackOffice.Controllers.BaseController.GetCurrentPage().PageID)
+}
+<div class="clr brdrAll brdr1 mb10 partySection-Customers">
+    <div class="brdrYYNN sectionHeader">
+        <div class="UI-bg UI-header pad10">@Html.Term("Cart")</div>
+    </div>               
+    <div class="pad5">
+        <!-- Rewards UI -->
+        @{
+            var HostCredit = ViewBag.HostCreditCollection as HostCreditCollection;
+        }
+        @if (HostCredit != null)
+        {
+            <div class="UI-lightBg @(HostCredit.HostCredit.Rules == null ? "" : "FL splitCol ") brdrAll rewardsHostCredit mt10">
+                @{ Html.RenderPartial("Party/_rewardDivHostCredit", HostCredit.HostCredit); }
+            </div>
+        }
+        @if (HostCredit != null && HostCredit.ProductDiscounts.Rules != null && HostCredit.ProductDiscounts.Rules.Any())
+        {
+            <div class="UI-lightBg FR splitCol brdrAll rewardsDiscounts mt10">
+                <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                    <span class="FL">@Html.Term("ProductDiscounts", "Product Discounts")</span>
+                    @{ Html.RenderPartial("Party/_selectOrSpanRules", HostCredit.ProductDiscounts); }
+                </div>
+                @{
+                    Html.RenderPartial("Party/_cartTools", HostCredit.ProductDiscounts);
+                }
+            </div>
+        }
+        <!--HostCredit UI -->
+        <!--Item Discounts UI -->
+        @if (HostCredit != null && HostCredit.ItemDiscounts != null && HostCredit.ItemDiscounts.Rules.Any())
+        {
+            <div class="UI-lightBg @(ViewBag.ItemDiscounts == null ? "" : "FL splitCol ") brdrAll rewardsDiscounts mt10">
+                <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                    <span class="FL">@Html.Term("HostessItemDiscounts", "Product Discounts")</span>
+                    @{ Html.RenderPartial("Party/_selectOrSpanRules", HostCredit.ItemDiscounts); }
+                    <span class="clr"></span>
+                </div>
+                @{
+                    Html.RenderPartial("Party/_cartTools", HostCredit.ItemDiscounts);
+                }
+            </div>
+        }
+        <!--Item Discounts UI -->
+        <!--Booking Credit UI -->
+        @if (ViewBag.BookingCredit != null && ViewBag.QualifiedBookingCredits > 0)
+        {
+            <div class="UI-lightBg @(ViewBag.ExclusiveProducts != null ? "FR" : "FL") splitCol brdrAll rewardsBookingCredits mt10">
+                <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                    <span class="FL">@Html.Term("BookingCredits", "Booking Credits")</span>
+                    <div class="FR">
+                        <span id="bookingCreditChoice">@Html.Term("BookingCreditsEarned", "Booking Credits Earned"):
+                            @{ var bookingCredit = (HostessRewardRule)ViewBag.BookingCredit; }
+                            @(bookingCredit.ProductDiscount.ToDecimal().ToString("P"))
+                            : <span id="bookingCreditRemaining">@ViewBag.BookingCredit</span>
+                            <input type="hidden" class="bookingCreditRewardRuleId" value="@bookingCredit.HostessRewardRuleID" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+        <!--Booking Credit UI -->
+        <!--Exclusive Credit UI -->
+        @if (ViewBag.ExclusiveProducts != null && ((IEnumerable<HostessRewardRule>)ViewBag.ExclusiveProducts).Any())
+        {
+            <div class="UI-lightBg FL splitCol brdrAll rewardsHostessExclusiveProducts mt10">
+                <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                    <span class="FL">@Html.Term("HostessRewards_ExclusiveProductsTitle", "Exclusive Products")</span>
+                    <div class="FR">
+                        <span id="exclusiveItemChoice">@Html.Term("HostessRewards_ExclusiveProductsRemaining", "Remaining"):
+                            @if (((IEnumerable<HostessRewardRule>)ViewBag.ExclusiveProducts).Count() == 1)
+                            {
+                                var exclusive = ((IEnumerable<HostessRewardRule>)ViewBag.ExclusiveProducts).First();
+                                <span id="exclusiveProductsRemaining">@exclusive.Products</span>
+                                <input type="hidden" class="exclusiveItemRewardRuleId" value="@exclusive.HostessRewardRuleID" />
+                            }
+                            else
+                            {
+                                <select class="exclusiveItemRewardRuleId">
+                                    @foreach (HostessRewardRule exclusive in ViewBag.ExclusiveProducts)
+                                    {
+                                        <option value="@exclusive.HostessRewardRuleID">@exclusive.Products
+                                        </option>
+                                    }
+                                </select>
+                            }
+                        </span>
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                @Html.Partial("_ExclusiveItemProductSelect", Model)
+                <div class="ExclusiveProductsIndicatorDescription">
+                    <span class="ExclusiveProductsIndicator">@Html.Term("ExclusiveProductsIndicator", "*")</span>
+                    @Html.Term("ExclusiveProductsIndicatorDescription", "Exclusive Products are the consultants responsibility.")
+                </div>
+            </div>
+        }
+        @if (ViewBag.FreeItems != null && ((IEnumerable<HostessRewardRule>)ViewBag.FreeItems).Any())
+        {
+            <div class="UI-lightBg FL splitCol brdrAll rewardsHostessFreeItems mt10">
+                <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                    <span class="FL">@Html.Term("HostessRewards_FreeItemsTitle", "Free Items")</span>
+                    <div class="FR">
+                        <span id="freeItemChoice">@Html.Term("HostessRewards_FreeItemsRemaining", "Remaining"):
+                            @if (((IEnumerable<HostessRewardRule>)ViewBag.FreeItems).Count() == 1)
+                            {
+                                var freeItem = ((IEnumerable<HostessRewardRule>)ViewBag.FreeItems).First();
+                                <span id="freeItemsRemaining">@freeItem.Products</span>
+                                <input type="hidden" class="freeItemRewardRuleId" value="@freeItem.HostessRewardRuleID" />
+                            }
+                            else
+                            {
+                                <select class="freeItemRewardRuleId">
+                                    @foreach (HostessRewardRule freeItem in ViewBag.FreeItems)
+                                    {
+                                        <option value="@freeItem.HostessRewardRuleID">@freeItem.Products
+                                        </option>
+                                    }
+                                </select>
+                            }
+                        </span>
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                <div class="brdrNNYY pad5 CartTools">
+                    <div class="FL mr10">
+                        <input id="freeItemProductLookup" type="text" value="" class="TextInput productLookUp" title="@Html.Term("Item")" />
+                        <input id="freeItemProductId" type="hidden" value="" class="productId" />
+                    </div>
+                    <div class="FL mr10">
+                        @* <b>@Html.Term("Quantity")</b>:*@
+                        <input id="freeItemQuantity" type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" readonly="true" title="@Html.Term("Quantity")" />
+                    </div>
+                    <a id="freeItemAddToCart" class="FL UI-icon-container addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+                        <span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+                </div>
+			   
+            </div>
+        }
+        <!--/ End Rewards UI -->
+        <span class="clr"></span>
+        @{
+            var promotionAdjustments = ((Order)Model.Order).OrderAdjustments.Where(adjustment => adjustment.ExtensionProviderKey == PromotionProvider.ProviderKey);
+            var customerAdjustments = promotionAdjustments.Where(adjustment =>
+                adjustment.OrderLineModifications.Any(orderlineMod => ((OrderAdjustmentOrderLineModification)orderlineMod).OrderItem.OrderCustomer == hostess) ||
+                adjustment.OrderModifications.Any(orderMod => ((OrderAdjustmentOrderModification)orderMod).OrderCustomer == hostess) ||
+                adjustment.InjectedOrderSteps.Any(s => s.CustomerAccountID == hostess.AccountID));
+        }
+        <div class="UI-mainBg m1 pad5" id="promotionHeader" style='display:@(customerAdjustments.Any() ? "block" : "none")'>
+            <div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+                @Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions")
+            </div>
+            <div id="promotionList">
+                @foreach (var adjustment in customerAdjustments)
+                {
+                    <div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+                        <span class="UI-icon FL icon-star"></span>
+                        <span class="FL promoItem">@adjustment.Description</span>
+                    </div>
+                }
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table width="100%" cellspacing="0" class="DataGrid">
+            @Html.Partial("PartialCartTableHeader", true)
+            <tbody id="hostOrderItems">
+                <tr class="EmptyCart" style="@(hostess.OrderItems.Any() ? "display:none;" : "")">
+                    <td class="Lawyer" colspan="8">
+                        @Html.Term("CartIsCurrentlyEmpty", "Cart is currently empty")
+                    </td>
+                </tr>
+                @Html.Partial("PartialCartItems", new OrderItemsModel(hostess))
+            </tbody>
+            <tbody id="hostTotals" class="GuestTotals">
+                <tr>
+                    <td colspan="4">
+                    </td>
+                    <td>
+                        <a id="update" href="javascript:void(0);" class="DTL Update updateCart">
+                            @Html.Term("Update")</a>
+                    </td>
+                    <td colspan="3">
+                    </td>
+                </tr>
+                <tr class="GuestTotal">
+                    <td colspan="7" class="bold right">
+                        <span>@Html.Term("Overage")</span>:
+                    </td>
+                    <td>
+                        <span class="hostOverage Total">@Model.Order.HostessOverage.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+                <tr class="GuestTotal">
+                    <td colspan="7" class="bold right">
+                        <span>@Html.Term("Subtotal")</span>:
+                    </td>
+                    <td>
+                        <span class="subtotal Total">@hostess.Subtotal.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+                <tr class="UI-secBg GuestTotal GuestTotalBalance">
+                    <td colspan="7" class="bold right">
+                        <span>@Html.Term("Total"):</span>
+                    </td>
+                    <td class="bold">
+                        <span class="grandTotal Total">@((hostess.Total).ToString(Model.Order.CurrencyID))</span>
+                    </td>
+                </tr>
+                @if (ViewBag.ExclusiveProducts != null && ((IEnumerable<HostessRewardRule>)ViewBag.ExclusiveProducts).Any())
+                { 
+                    <tr class="UI-secBg GuestTotal GuestTotalBalance ExclusiveProductsSubtotal">
+                        <td colspan="7" class="bold right">
+                            <span class="ExclusiveProductsIndicator">@Html.Term("ExclusiveProductsIndicator", "*")</span><span>
+                                                                                                                             @Html.Term("ExclusiveProductsSubtotal", "Exclusive Products Subtotal"):</span>
+                        </td>
+                        <td class="bold">
+                            <span class="Total exclusiveProductsSubtotal">@ViewBag.ExclusiveProductsSubtotal</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="hide rewardAlert" id="RewardsAlert">
+        </div>
+    </div>
+</div>
+@section bodyFooter
+{
+    @Html.Partial("PartyScripts");
+}

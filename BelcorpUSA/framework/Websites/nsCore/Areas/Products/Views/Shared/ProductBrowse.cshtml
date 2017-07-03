@@ -1,0 +1,15 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+@{
+	Html.PaginatedGrid<ProductBaseSearchData>("~/Products/Products/Get")
+		.AutoGenerateColumns()
+		.AddSelectFilter(Html.Term("Status"), "active", new Dictionary<string, string>() {{"", Html.Term("SelectaStatus", "Select a Status...")}, {"true", Html.Term("Active")}, {"false", Html.Term("Inactive")}})
+		.AddSelectFilter(Html.Term("Type"), "type", new Dictionary<string, string>() {{"", Html.Term("SelectaType", "Select a Type...")}}.AddRange(SmallCollectionCache.Instance.ProductTypes.ToDictionary(pt => pt.ProductTypeID.ToString(), pt => pt.GetTerm())))
+		.AddInputFilter(Html.Term("SKUorName", "SKU or Name"), "query", ViewData["Query"])       
+		.AddInputFilter(Html.Term("SAPSKU", "SAP SKU"), "sapSku", ViewData["SAPSKU"])
+		.CanChangeStatus(true, true, "~/Products/Products/ChangeStatus")
+		.CanDelete("~/Products/Products/Delete")
+		.ClickEntireRow()
+		.Render();
+}

@@ -1,0 +1,188 @@
+
+/***********************************
+Customizable Skin Options Start Here
+***********************************/
+
+$customer_name: 'encore';  // this must match the name of the folder in themes/images
+
+$base-color: #777777;
+$base-gradient: 'glossy';
+
+$login_graphic: 'login_img.png'; 
+$startup_img: 'startup_img.png';
+$loginform_top: 50%;
+
+$body_bg_color: #edf6fc;
+$profile_img_size: 30%; //percentage only
+
+// Maximum article thumbnail sizes (tablet & monitor).  Sizes are reduced for phone screens.
+$article_img_width: 200px; 
+$article_img_height:150px;
+
+
+$article_img_size: 30%;
+
+$radius_value: 1.2em;
+$progress-bar_height: 1em;
+$grey_color: #d5d5d5;
+
+$main_nav_text_inactive: #c0c0c0;
+$main_nav_text_active: #ffffff;
+
+/** User Notification Colors **/
+$positive_color: #6db33f;
+$warning_color: #b3d88c;
+$alert_color: #cc3a22;
+$viewed_alert_color: #22a322;
+$destroy_color: #DF4561;
+
+/** Borders **/
+$border_width: 1px;
+$border_style: solid;
+$border_color: #d1d3d4;
+
+
+/** Lists **/
+$list-active-gradient: 'bevel';
+$list-header-bg-color: transparentize(saturate($base-color, 10%), .25);
+$list-header-gradient: 'matte';
+
+
+/** Tabs **/
+$tabs-dark: #111;
+
+
+/*** Buttons ***/
+$button_size: 30px;
+@mixin nice-button {background-image: -webkit-gradient(linear, 10% 0%, 20% 100%, from($positive_color), color-stop(0.02, $positive_color), color-stop(0.3, $positive_color), color-stop(0.65, #6db33f), to($positive_color));}
+@mixin nice-active {}
+@mixin destroy-button {}
+@mixin destroy-active {}
+@mixin button-shadow {-webkit-box-shadow: 0px 0px 4px #000;}
+/*** Txt Links ***/
+$link_color: #6cb33e;
+$light_color: #939598;
+$active_color: $positive_color;
+
+
+@mixin page-gradient {
+background-image:  -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #A6C0E4),
+    color-stop(0.41, #C9E3F7),
+    color-stop(1, #EEF7FD));
+}
+@mixin toolbar-gradient {
+background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.53, rgb(0,101,164)),
+    color-stop(0.51, rgb(20,119,181))
+);
+background-image: -moz-linear-gradient(
+    center bottom,
+    rgb(0,101,164) 53%,
+    rgb(20,119,181) 51%
+);
+}
+@mixin border-style {
+	border: $border_width $border_style $border_color;
+}
+
+@mixin cell-props {
+	vertical-align:top;
+	text-align:left;
+	padding:0;
+}
+
+@mixin text-shadow {
+	$shadow_color: #000000;
+	$blur: 1px;
+	$h: 1px;
+	$v: 1px;
+	text-shadow: $h $v $blur $shadow_color;
+}
+
+@mixin text-inset {
+	$shadow_color: #ffffff;
+	$blur: 0px;
+	$h: 0px;
+	$v: 1px;
+	text-shadow: $h $v $blur $shadow_color;
+}
+
+@mixin top-rounded {
+	border-radius: $radius_value $radius_value 0 0;
+	-moz-border-radius: $radius_value $radius_value 0 0;
+}
+
+@mixin inset-shadow {
+	box-shadow:inset 0 0 10px #8a8a8a;
+	-moz-box-shadow:inset 0 0 10px #8a8a8a;
+	-webkit-box-shadow:inset 0 0 5px #8a8a8a;
+}
+
+@mixin bottom-rounded {
+	border-radius: 0 0 $radius_value $radius_value;
+	-moz-border-radius: 0 0 $radius_value $radius_value;
+}
+
+@mixin nuetral-gradient {
+	background-color:#fff;
+	background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #E0E0E0),
+    color-stop(0.58, #FCFCFC),
+    color-stop(1, #FFFFFF)
+);
+	$nuetral_gradient_text: #666666;
+	color: $nuetral_gradient_text;
+	@include text-inset;
+}
+
+
+@mixin clickable-selected {
+	
+	background: #333;
+	color: #fff;
+	text-shadow: 0 0 1px #CCC;
+}
+@mixin clickable-active {
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(white), color-stop(0.02, #FEFFFE), color-stop(0.3, #F1F6E2), color-stop(0.65, #E1EDC3), to(#CDE19C));
+	box-shadow:none;
+}
+
+@mixin column-header {
+	background-color: #fff;
+	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from(#f7f7f7), color-stop(0.5, #e0e0e0), color-stop(0.51, #cfcfcf), to(#c2c3c5));
+	-webkit-box-shadow: #333 0px 0.1em 0.3em;
+	border-bottom: 1px solid $border_color;
+	border-top: 1px solid #efefef;
+	color:#333;
+}
+@mixin click-icon {
+	background: url(../themes/images/#{$customer_name}/clickIcon.png) no-repeat right;
+}
+
+
+@mixin appStartup-img {
+	background-image:url(../themes/images/#{$customer_name}/#{$startup_img});
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:85%;
+}
+
+@mixin drilldown-button {
+	@include nuetral-gradient;	
+	@include button-shadow;
+}
+/*** theming document ***/
+.EncoreMobileNet {text-decoration:none;}
+
+
+

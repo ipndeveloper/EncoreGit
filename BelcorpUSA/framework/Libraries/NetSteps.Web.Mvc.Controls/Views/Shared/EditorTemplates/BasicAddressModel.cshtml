@@ -1,0 +1,189 @@
+﻿@model NetSteps.Web.Mvc.Controls.Models.Shared.BasicAddressModel
+
+@Html.HiddenFor(m => m.CountryID)
+@Html.HiddenFor(m => m.IsVisible)
+@Html.HiddenFor(m => m.Latitude)
+@Html.HiddenFor(m => m.Longitude)
+
+@{
+    var prefix = Html.HtmlFieldPrefix();
+    string dropDownText = @Html.Term("PleaseEnteraValidZip", "Please enter a valid zip");    
+    bool skipPostalCode = false;
+}
+<script type="text/javascript">
+    function @(prefix)geocodeAddress(callback) {
+        var address =
+            $("#@(prefix)Address1").val() + " "
+            + $("#@(prefix)Address2").val() + " "
+            + $("#@(prefix)City").val() + " "
+            + $("#@(prefix)StateProvinceID option:selected").text() + " "
+            + $("#@(prefix)PostalCode1").val();
+        NS.geocodeAddress(
+            address,
+            function (lat, lng) {
+                $('#@(prefix)Latitude').val(lat);
+                $('#@(prefix)Longitude').val(lng);
+                if(callback !== undefined) {
+                    callback();
+                }
+            }
+        );        
+    }
+</script>
+<div class="@(Model.ISO.PostalCodeLookup.Enabled ? "postalcodelookup-container" : "")"
+    data-postalcodelookup-url="@Model.ISO.PostalCodeLookup.LookupURL.ResolveUrl()"
+    data-postalcodelookup-regex="@Model.ISO.PostalCodeLookup.Regex"
+    data-postalcodelookup-countryid="@Model.CountryID"
+    data-postalcodelookup-city="@Model.City.ToPascalCase()"
+    data-postalcodelookup-county="@Model.County"
+    data-postalcodelookup-stateid="@(Model.StateProvinceID ?? 0)"
+    data-postalcodelookup-dropdowntext="-- @dropDownText --">
+    
+    @foreach (var tag in Model.ISO.Tags)
+    {
+        MvcHtmlString label = null;
+        var inputs = new List<MvcHtmlString>();
+        var attrs = new Dictionary<string, object>();
+        var selectList = new[] { new SelectListItem { Text = string.Format("-- {0} --", dropDownText), Value = string.Empty } }.AsEnumerable();
+
+        if (tag.MaxLengthSpecified)
+        {
+            attrs["maxlength"] = attrs["size"] = tag.MaxLength;
+        }
+
+        if (tag.WidthSpecified)
+        {
+            attrs["style"] = string.Format("width: {0}px;", tag.Width);
+        }
+
+        if (tag.Field.EqualsIgnoreCase("Address1"))
+        {
+            attrs["class"] = "AddressLine";
+            label = Html.LabelFor(m => m.Address1, tag.LabelTermName, tag.DefaultLabel);
+            inputs.Add(Html.TextBoxFor(m => m.Address1, attrs));
+            inputs.Add(Html.ValidationMessageFor(m => m.Address1));
+        }
+        else if (tag.Field.EqualsIgnoreCase("Address2"))
+        {
+            attrs["class"] = "AddressLine";
+            label = Html.LabelFor(m => m.Address2, tag.LabelTermName, tag.DefaultLabel);
+            inputs.Add(Html.TextBoxFor(m => m.Address2, attrs));
+            inputs.Add(Html.ValidationMessageFor(m => m.Address2));
+        }
+        else if (tag.Field.EqualsIgnoreCase("PostalCode"))
+        {
+            attrs["class"] = "postalcodelookup-postalcode";
+
+            var postalCodeFields = Model.ISO.Tags.Where(x => x.Field.EqualsIgnoreCase("PostalCode")).ToArray();
+            if (postalCodeFields.Count() > 1)
+            {
+                if (!skipPostalCode)
+                {
+                    skipPostalCode = true;
+
+                    label = Html.LabelFor(m => m.PostalCode1, tag.LabelTermName, tag.DefaultLabel);
+
+                    // First postal code field
+                    inputs.Add(Html.TextBoxFor(m => m.PostalCode1, attrs));
+                    inputs.Add(Html.ValidationMessageFor(m => m.PostalCode1));
+
+                    // Second postal code field
+                    var tag2 = postalCodeFields[1];
+                    var attrs2 = new Dictionary<string, object>();
+                    if (tag2.MaxLengthSpecified)
+                    {
+                        attrs2["maxlength"] = attrs2["size"] = tag2.MaxLength;
+                    }
+                    if (tag2.WidthSpecified)
+                    {
+                        attrs2["style"] = string.Format("width: {0}px;", tag2.Width);
+                    }
+                    attrs2["class"] = "postalcodelookup-postalcode";
+                    inputs.Add(new MvcHtmlString("&nbsp;-&nbsp;"));
+                    inputs.Add(Html.TextBoxFor(m => m.PostalCode2, attrs2));
+                    inputs.Add(new MvcHtmlString("<img class='postalcodelookup-loading' src='" + Url.Content("~/Content/Images/Icons/loading-blue.gif") + "' style='height:15px;display:none;' />"));
+                    inputs.Add(Html.ValidationMessageFor(m => m.PostalCode2));
+                }
+            }
+            else
+            {
+                label = Html.LabelFor(m => m.PostalCode, tag.LabelTermName, tag.DefaultLabel);
+                inputs.Add(Html.TextBoxFor(m => m.PostalCode, attrs));
+                inputs.Add(new MvcHtmlString("<img class='postalcodelookup-loading' src='" + Url.Content("~/Content/Images/Icons/loading-blue.gif") + "' style='height:15px;display:none;' />"));
+                inputs.Add(Html.ValidationMessageFor(m => m.PostalCode));
+            }
+        }
+        else if (tag.Field.EqualsIgnoreCase("City"))
+        {
+            attrs["class"] = "postalcodelookup-city";
+
+            label = Html.LabelFor(m => m.City, tag.LabelTermName, tag.DefaultLabel);
+
+            if (Model.ISO.PostalCodeLookup.Enabled)
+            {
+                inputs.Add(Html.DropDownListFor(m => m.City, selectList, attrs));
+            }
+            else
+            {
+                inputs.Add(Html.TextBoxFor(m => m.City, attrs));
+            }
+
+            inputs.Add(Html.ValidationMessageFor(m => m.City));
+        }
+        else if (tag.Field.EqualsIgnoreCase("County"))
+        {
+            attrs["class"] = "postalcodelookup-county";
+
+            label = Html.LabelFor(m => m.County, tag.LabelTermName, tag.DefaultLabel);
+
+            if (Model.ISO.PostalCodeLookup.Enabled)
+            {
+                inputs.Add(Html.DropDownListFor(m => m.County, selectList, attrs));
+            }
+            else
+            {
+                inputs.Add(Html.TextBoxFor(m => m.County, attrs));
+            }
+
+            inputs.Add(Html.ValidationMessageFor(m => m.County));
+        }
+        else if (tag.Field.EqualsIgnoreCase("State"))
+        {
+            attrs["class"] = "postalcodelookup-state";
+
+            label = Html.LabelFor(m => m.StateProvinceID, tag.LabelTermName, tag.DefaultLabel);
+
+            if (Model.ISO.PostalCodeLookup.Enabled)
+            {
+                inputs.Add(Html.DropDownListFor(m => m.StateProvinceID, selectList, attrs));
+            }
+            else
+            {
+                selectList = SmallCollectionCache.Instance.StateProvinces.ToSelectListItemsForProvince(Model.CountryID, Model.ISO.ProvinceValueToUse.UseProvinceName);
+
+                inputs.Add(Html.DropDownListFor(m => m.StateProvinceID, selectList, attrs));
+            }
+
+            inputs.Add(Html.ValidationMessageFor(m => m.StateProvinceID));
+        }
+
+        if (label != null || inputs.Any())
+        {
+            <div class="FRow">
+                @if (label != null)
+                {
+                    <div class="FLabel">@label:</div>
+                }
+                @if (inputs.Any())
+                {
+                    <div class="FInput">
+                        @foreach (var input in inputs)
+                        {
+                            @input
+                        }
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

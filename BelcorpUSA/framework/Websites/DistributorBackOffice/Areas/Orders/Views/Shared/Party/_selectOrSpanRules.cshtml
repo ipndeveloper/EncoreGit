@@ -1,0 +1,24 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.HostCreditItem
+<div class="FR">
+    <span id="@Model.HeaderPrefix.GetId("Choice")">@Model.Title:
+        @if (Model.Rules.Count() == 1)
+        {
+            var discount = Model.Rules.First();
+            @discount.ProductDiscount.ToDecimal().ToString("P")<text>: </text>@discount.Products
+            <input type="hidden" class="@Model.HiddenClass" value="@discount.HostessRewardRuleID" />
+        }
+        else
+        {
+            <select class="hostRewardRuleId">
+                @foreach (HostessRewardRule discount in Model.Rules)
+                {
+                    <option value="@discount.HostessRewardRuleID">@discount.ProductDiscount.ToDecimal().ToString("P"):
+                        @discount.Products
+                    </option>
+                }
+            </select>
+        }
+    </span>
+</div>
+<span class="clr"></span>
+

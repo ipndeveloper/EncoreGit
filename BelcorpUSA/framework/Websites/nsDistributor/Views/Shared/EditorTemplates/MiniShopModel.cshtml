@@ -1,0 +1,1463 @@
+﻿
+@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components;
+@using NetSteps.Web.Mvc.Controls.Models;
+@using NetSteps.Web.Mvc.Models
+@model nsDistributor.Models.Shared.MiniShopModel
+@using nsDistributor.Areas.Enroll.Models.Products;
+@using nsDistributor.Areas.Enroll.Models.Shared;
+@*@model nsDistributor.Areas.Enroll.Models.Shared.IOrderEntryModel*@
+       
+@{
+    
+    var autoshipSchedule = (ViewData["AutoshipSchedule"] as NetSteps.Data.Entities.AutoshipSchedule);
+    var modelName = "orderEntryModel";
+    string baseUrl = "~/".ResolveUrl() + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";
+    var order = Session["Order"] as Order;
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/jsonSuggest.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>    
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/jsonSuggest.js")"></script> 
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Shared/CartModel.js")"></script>
+	<script type="text/javascript">
+    
+    self.isUpdating = ko.observable(false);
+    self.isRemoving = ko.observable(false);
+    self.isRemoveHovering = ko.observable(false);
+    
+      
+        var @(modelName);
+		$(function () {
+			var orderEntryModelOptions = @Model.OptionsJsonModel;
+			var orderEntryModelData = @Model.DataJsonModel;
+			@(modelName) = new OrderEntryModel(orderEntryModelOptions, orderEntryModelData);
+          
+		}); 
+        function OrderEntryModel(options, data) {
+            var self = this;
+	        var defaults = {};
+	        var settings = $.extend({}, defaults, options);
+	        var mapping = {
+		    'OrderItemModels': {
+			    create: function (options) {
+				    return new OrderItemModel(settings, options.data, self);
+			    }
+		    }
+	    };
+        
+         self.raiseCartItemAdding = function (addToCartData) {
+     
+//		var event = jQuery.Event('cartItemAdding');
+//		$(self).trigger(event, addToCartData);
+//		return event;
+	};
+
+
+    }
+
+    </script>
+
+<script type="text/javascript">
+
+    var _resultado = false;
+    function formatMoney(value) {   return '$' + value.toFixed(2);  };
+
+	var miniShopModel = ko.mapping.fromJS(
+		@Html.Raw(Json.Encode(Model))
+	); 
+
+    
+    function applyPayment () {
+       
+        var validPayments = $('#hdnValidarApplyPayment').val();
+        
+         var selecPaymentMethod = '';
+         var selecPaymentMethodHtml = '';
+
+        if ('@Session["GeneralParameterVal"]' == 'N') {
+            selecPaymentMethod = $('#MiniShop_sPaymentMethod').val();
+            selecPaymentMethodHtml = $('#MiniShop_sPaymentMethod option:selected').html();
+        } else {
+            selecPaymentMethod = $('#sPaymentMethod02').val();
+            selecPaymentMethodHtml = $('#sPaymentMethod02 option:selected').html();
+        }
+
+         var GiftCardCode = 0
+        if ($('#GiftCardCode').val()) {
+            GiftCardCode = $('#GiftCardCode').val();
+        } else {
+            GiftCardCode = 0;                
+        }
+    
+       
+        if (selecPaymentMethod!="0" && validPayments < 0 ) {
+            $('#btnApplyPayment').hide();
+            $('#loaderApplyPayment').show();
+            $.post('@Href("~/Products/ApplyPayment")', {NameOnCard: selecPaymentMethodHtml,
+                                              paymentMethodId: selecPaymentMethod, 
+                                              amountConfiguration: $('#hdnValidarApplyPayment').val(), 
+                                              giftCardCode: GiftCardCode },
+            function (results) {
+                $('#btnApplyPayment').show();
+                $('#loaderApplyPayment').hide();
+                if (results.result) {
+                    $('#GiftCardCode').val('');
+                    $('#GiftCardBalance').html('-');
+                    $('#noPaymentsRow').hide();
+                    $('#paymentsGridContainer').html(results.paymentsGrid);
+                    updateCartAndTotals(results);
+                    BalanceCredit(results);
+           
+                  
+                }
+                else {
+                    showMessage(results.message, true);
+                }
+            });
+        }
+    } 
+    
+    /*CS:21AB2016.Inicio*/
+    var valorCantidadActual=0;
+
+    //onfocus
+    function GetValueQuantity(Quantity){
+        valorCantidadActual=Quantity;
+        document.getElementById("Quantity").style.backgroundColor = "#FFFFB2"; 
+    }
+
+    //onblur
+    function UpdateQuantity(Quantity){
+        if(Quantity == valorCantidadActual)
+        {
+            document.getElementById("Quantity").style.backgroundColor = "white"; 
+            return;
+        }
+        UpdateCart();
+    }
+    /*CS:21AB2016.Fin*/
+
+    $('#btnUpdateCart').click(function () {
+        $('#ProductLoad').show();
+        var data = {};
+         $('#products tbody:first tr:not(.BundlePack,.BundleItem,.BundleCategoryRow)[id^="oi"]').each(function (i) {
+                data['products[' + i + '].ProductID'] = $('.productId', this).val();
+                data['products[' + i + '].Quantity'] = $('.quantity', this).val();
+            }); 
+        $.post('@Href("~/Products/Update")', data, function (results) {
+            if (results.result) {
+                updateCartAndTotals(results);
+               
+                //					showMessage('The cart has been updated.', false);
+
+                if (results.message !== undefined && results.message.length > 0) {
+                    showMessage(results.message, true);
+                }
+                //updateBundleOptions(results.BundleOptionsSpanHTML);
+                //$('#lblCreditAvailable')[0].innerHTML = results.resultCreditAvailable;
+                //                    if ('@Convert.ToInt32(Session["AccountNumber"])' != 2) {
+                //                        $('#lblQualificationTotal')[0].innerHTML = results.resultQualificationTotal;
+                //                        $('#lblCommissionableTotal')[0].innerHTML = results.resultCommisionableTotal;
+                //                    }
+                //BalanceCredit(results);
+                document.getElementById("Quantity").style.backgroundColor = "white"; 
+               // $('#txtPaymentAmount').val(results.totals.subtotal);
+
+            }
+            else {
+                showMessage('@Html.Term("ErrorUpdatingCart", "The cart could not be updated"): ' + results.message, true);
+            }
+        })
+        .fail(function () {
+            showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+        })
+        .always(function () {
+            $('#ProductLoad').hide();
+            $('#loaderApplyPayment').hide();
+        });
+    });
+    function UpdateCart()
+    { 
+        $('#ProductLoad').show();
+        var data = {};
+        
+         $('#products tbody:first tr:not(.BundlePack)').each(function (i) { 
+                data['products[' + i + '].ProductID'] = $('.productId', this).val();
+                data['products[' + i + '].Quantity'] = $('.quantity', this).val();
+            }); 
+
+        $.post('@Href("~/Products/Update")', data, function (results) {
+            if (results.result) {
+         
+               
+                updateCartAndTotals(results);
+                updPayments(results);// Actualizar Prod
+                //					showMessage('The cart has been updated.', false);
+
+                if (results.message !== undefined && results.message.length > 0) {
+                    showMessage(results.message, true);
+                }
+                //updateBundleOptions(results.BundleOptionsSpanHTML);
+                //$('#lblCreditAvailable')[0].innerHTML = results.resultCreditAvailable;
+                //                    if ('@Convert.ToInt32(Session["AccountNumber"])' != 2) {
+                //                        $('#lblQualificationTotal')[0].innerHTML = results.resultQualificationTotal;
+                //                        $('#lblCommissionableTotal')[0].innerHTML = results.resultCommisionableTotal;
+                //                    }
+                //BalanceCredit(results);
+
+            }
+            else {
+                showMessage('@Html.Term("ErrorUpdatingCart", "The cart could not be updated"): ' + results.message, true);
+            }
+        })
+        .fail(function () {
+            showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+        })
+        .always(function () {
+            $('#ProductLoad').hide();
+            $('#loaderApplyPayment').hide();
+        });
+    }
+    
+    function removePayment(id, vindice) {
+        $('#pmtLoader' + id).show();
+        $('#pmtRemove' + id).hide();
+        $.post('@Href("~/Products/RemovePayment")', { paymentId: id , indice:vindice}, function (results) {
+            $('#pmtLoader' + id).hide();
+            $('#pmtRemove' + id).show();
+            if (results.result) {
+                var payment = $('#pmt' + id);
+                if (payment.length) {
+                    payment.remove();
+                }
+                if (!$('#payments .paymentItem').length)
+                    $('#noPaymentsRow').show();
+
+                updateCartAndTotals(results);
+               $("#btnApplyPayment").removeClass("ButtonOff");                
+               $("#btnSubmitOrder").addClass("ButtonOff");
+               $('#DivBtnSubmitOrder').css("display", "none");
+               $('#MiniShop_sPaymentMethod').attr('disabled', false);	
+               $('#tbPayentAmountToApply').css("display", "block");
+
+               $('#MiniShop_sPaymentMethod').val('0');
+               $("#txtMsg").val('');
+             //   HabBoton(results);
+
+
+
+            }
+            else {
+                showMessage('@Html.Term("ErrorRemovingPayment", "There was a problem removing the payment"): ' + results.message, true);
+            }
+        }, 'json');
+    }
+
+
+  function removeItem(orderItemId) {
+        $('#ProductLoad').show();
+
+        //--
+        var data = { orderItemGuid: orderItemId };
+
+        $.post('@Href("~/Products/Remove")', data, function (results) {
+            if (results.result) {
+
+                var row = $('#oi' + orderItemId);
+                row.nextAll('tr').each(function () {
+                    if ($(this).attr("id") != "" && $(this).attr("id") != "undefined" && $(this).attr("id") != undefined) {
+                        return false;
+                    }
+                    $(this).remove();
+                });
+                row.remove();
+               
+                updateCartAndTotals(results);
+                updPayments(results);//Remove Prod
+                if (results.message !== undefined && results.message.length > 0) {
+                    showMessage(results.message, true);
+                }
+                //updateBundleOptions(results.BundleOptionsSpanHTML);
+                //BalanceCredit(results);
+            }
+            else {
+                showMessage('@Html.Term("ErrorRemovingProduct", "The product could not be removed"): ' + results.message, true);
+            }
+        })
+            .fail(function () {
+                showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+            })
+            .always(function () {
+                $('#ProductLoad').hide();
+            });
+    };
+
+     
+      function updPayments(results)
+    {
+ 
+      // solo invocarlo para los item(products) remove, update,  y para cuando eliminemos payment
+  
+     $("#lblTargetCredit").hide();
+     $('#MiniShop_sPaymentMethod').val('0');
+    
+   $('#paymentsGridContainer').html(results.paymentsGrid);
+    //   HabBotonesSubmitOrderSaveOrder(results);
+    BalanceCredit(results);
+    }
+
+    //Actualiz  color del Balance,ehabiltar el metodode pago, mostrar el botonn del submit
+ function BalanceCredit(results) { 
+                if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) { 
+                   $('#DivBtnSubmitOrder').css("display", "block");
+
+                }
+                else { 
+                   $('#DivBtnSubmitOrder').css("display", "none");
+
+                }
+              
+                if (parseFloat(results.totals['balanceAmount']) >= 0) {
+                      $('.balanceDue').css('color', 'green');
+                    $('#btnApplyPayment').addClass("ButtonOff");    
+
+                      $('#txtPaymentAmount').attr('disabled', 'disabled');
+                  
+                     $('#MiniShop_sPaymentMethod').attr('disabled', 'disabled');             
+                }
+                else {
+                 $('.balanceDue').css('color', 'red');   
+                    $('#btnApplyPayment').removeClass("ButtonOff");   
+                    $('#txtPaymentAmount').attr('disabled', false);
+                    $('#MiniShop_sPaymentMethod').attr('disabled', false); 
+                }
+            
+        };
+
+    function updateCartAndTotals(results) {
+
+    if (results.OrderEntryModelData) {
+        //@(modelName).updateFromJS(results.OrderEntryModelData);            
+    }
+    if (results.OrderEntryModelData) { 
+//        alert(results.totals.validTotalQv)
+        if (!results.totals.validTotalQv ){ 
+        $('#UrlRequiredTrue').hide();
+        } else {
+        $('#UrlRequiredTrue').show();
+        }
+
+        var itemsHtml = '';
+        var orderItem, i;
+        var itemsHtmlFooter = '';
+        var orderItemFoter, j;
+        var orderItemKitHtml = "";
+        var promotionHeader = "";
+        var promotionHeaderTexto = "";
+        var header = "";
+        var txtDetails = "";
+        
+        if (results.promotions != null) {
+            if (results.promotions.length > 0) {
+                promotionHeaderTexto = '@Html.Term("Enroll_PromotionsTitle") <hr>';
+                promotionHeader = promotionHeader + '<div class="UI-mainBg m1 pad5" id="promotionHeader">'; //Inicio01
+
+                promotionHeader = promotionHeader + '<div class="UI-mainBg pad5 brdrYYNN">'; //Inicio02
+                promotionHeader = promotionHeader + '@Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions: ")';
+                promotionHeader = promotionHeader + '</div>'; //Fin02
+
+                //promotionHeader = promotionHeader + '<div id="promotionList">';//IniciopromotionList
+                promotionHeader = promotionHeader + '<div class="UI-mainBg pad5 brdrYYNN">'; //Inicioyyy
+                for (var index = 0; index < results.promotions.length; index++) {
+
+                    if (results.promotions[index].PromotionOutOfStock) {
+                        promotionHeader = promotionHeader + results.promotions[index].Description;                       
+                    }
+                    else {                        
+                        promotionHeader = promotionHeader + '<div class="UI-mainBg pad5 brdrYYNN">' + results.promotions[index].Description + '</div>';
+                        if (results.promotions[index].StepID) {
+                            promotionHeader = promotionHeader + '@Html.Term("Cart_SelectFreeGiftLinkText", "Select Free Gift >")';
+                        }                        
+                    }
+                }
+
+                promotionHeader = promotionHeader + '</div>'; //Finyyy
+                promotionHeader = promotionHeader + '</div>'; //FinpromotionList
+                promotionHeader = promotionHeader + '</div>'; //Fin01
+            }
+        }
+
+        for (i = 0; i < results.OrderEntryModelData.OrderItemModels.length; i++) {
+            if (i == 0) {
+                header = '<td><a href="javascript:void(0);" title="Remove" class="UI-icon icon-star"></a></td>'
+            } else {
+                header = '<td><a href="javascript:void(0);" title="Remove" class="UI-icon icon-x RemoveOrderItem"  onclick=removeItem("' + results.OrderEntryModelData.OrderItemModels[i].Guid.toString() + '");></a></td>'
+            }
+
+            if (i == 0) {
+
+                txtDetails = '<td><input type="text" style="width: 50px;" readonly="readonly" class="quantity" value="' + results.OrderEntryModelData.OrderItemModels[i].Quantity + '" /></td>'
+            } else {
+
+                txtDetails = '<td><input type="text" style="width: 50px;" class="quantity" id="Quantity" onfocus="GetValueQuantity(value);" onblur="UpdateQuantity(value);" value="' + results.OrderEntryModelData.OrderItemModels[i].Quantity + '" /></td>'
+            }
+
+            if (!results.OrderEntryModelData.OrderItemModels[i].IsStaticKit) {
+
+                itemsHtml = itemsHtml + ('<tr id="' + results.OrderEntryModelData.OrderItemModels[i].Guid.toString() + '">'
+                        + header
+                        + '<td><input type="hidden" class="productId" value="' + results.OrderEntryModelData.OrderItemModels[i].ProductID + '"/>' + results.OrderEntryModelData.OrderItemModels[i].SKU + '</td>'
+                        + '<td>' + results.OrderEntryModelData.OrderItemModels[i].ProductName + '</td>'
+                        + '<td>' + results.OrderEntryModelData.OrderItemModels[i].retailPricePerItem + '</td>');
+
+
+
+                if (results.OrderEntryModelData.OrderItemModels[i].SamePrice) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].OriginalUnitPrice + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalUnitPrice + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedUnitPrice
+                                    + '</span></td>');
+                }
+
+
+                //+ '<td>'+ results.OrderEntryModelData.OrderItemModels[i].OriginalCommissionableTotal +'</td>' + txtDetails);
+                if ('@Session["GeneralParameterOcultarCV"]' == 'S') {
+                    if (results.OrderEntryModelData.OrderItemModels[i].SameCommissionableTotal) {
+                        itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].OriginalCommissionableTotal + '</td>');
+                    }
+                    else {
+                        itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalCommissionableTotal + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedCommissionableTotal
+                                    + '</span></td>');
+                    }
+                }
+                itemsHtml = itemsHtml + txtDetails;
+
+                //+'<td>'+ results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency +'</td>'
+                if (results.OrderEntryModelData.OrderItemModels[i].TotalQV) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency + '</span></td>');
+                }
+
+
+
+
+
+                //+ ('<td>'+ results.OrderEntryModelData.OrderItemModels[i].OriginalTotal +'</td>'
+                if (results.OrderEntryModelData.OrderItemModels[i].SameTotal) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].AdjustedTotal + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalTotal + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedTotal
+                                    + '</span></td>');
+                }
+
+                itemsHtml = itemsHtml
+                        + ('</tr>');
+            } else {                
+                orderItemKitHtml = "";
+                for (var k = 0; k < results.OrderEntryModelData.OrderItemModels[i].KitItemsModel.KitItemModels.length; k++) {
+                    orderItemKitHtml = orderItemKitHtml + ('<tbody><tr class="BundlePack">'
+                        + '<th></th>'
+                        + '<th>' + results.OrderEntryModelData.OrderItemModels[i].KitItemsModel.KitItemModels[k].SKU + '</th>'
+                        + '<th>' + results.OrderEntryModelData.OrderItemModels[i].KitItemsModel.KitItemModels[k].ProductName + '</th>'
+                        + '<th>' + results.OrderEntryModelData.OrderItemModels[i].KitItemsModel.KitItemModels[k].Quantity + '</th>'
+                        + '</tr><tbody>');
+                }
+                itemsHtml = itemsHtml + ('<tr id="' + results.OrderEntryModelData.OrderItemModels[i].Guid.toString() + '"> '
+                        + header
+                        + '<td><input type="hidden" class="productId" value="' + results.OrderEntryModelData.OrderItemModels[i].ProductID + '"/>' + results.OrderEntryModelData.OrderItemModels[i].SKU + '</td>'
+                        + '<td>' + results.OrderEntryModelData.OrderItemModels[i].ProductName
+                        + '</td>'
+                        + '<td>' + results.OrderEntryModelData.OrderItemModels[i].retailPricePerItem + '</td>');
+
+                if (results.OrderEntryModelData.OrderItemModels[i].SamePrice) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].OriginalUnitPrice + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalUnitPrice + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedUnitPrice
+                                    + '</span></td>');
+                }
+                if ('@Session["GeneralParameterOcultarCV"]' == 'S') {
+                    if (results.OrderEntryModelData.OrderItemModels[i].SameCommissionableTotal) {
+                        itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].OriginalCommissionableTotal + '</td>');
+                    }
+                    else {
+                        itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalCommissionableTotal + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedCommissionableTotal
+                                    + '</span></td>');
+                    }
+                }
+
+                itemsHtml = itemsHtml + txtDetails;
+
+                //+'<td>'+ results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency +'</td>'
+                if (results.OrderEntryModelData.OrderItemModels[i].TotalQV) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                            + results.OrderEntryModelData.OrderItemModels[i].TotalQV_Currency + '</span></td>');
+                }
+
+
+                ///+ ('<td>'+ results.OrderEntryModelData.OrderItemModels[i].OriginalTotal +'</td>'
+
+                if (results.OrderEntryModelData.OrderItemModels[i].SameTotal) {
+                    itemsHtml = itemsHtml + ('<td>' + results.OrderEntryModelData.OrderItemModels[i].AdjustedTotal + '</td>');
+                }
+                else {
+                    itemsHtml = itemsHtml + ('<td><span class="block originalPrice strikethrough">'
+                                    + results.OrderEntryModelData.OrderItemModels[i].OriginalTotal + '</span>'
+                                    + '<span class="block discountPrice">' + results.OrderEntryModelData.OrderItemModels[i].AdjustedTotal
+                                    + '</span></td>');
+                }
+
+                itemsHtml = itemsHtml
+
+                        + ('</tr>'
+                        + '</tr>'
+                        + '<tr class="BundlePack">'
+                        + '<td></td>'
+                        + '<td colspan="2">'
+                        + '<span class="ClearAll"></span><a href="javascript:void(0);" class="ViewKitContents TextLink Add">@Html.Term("ViewKitContents", "View Kit Contents")</a>'
+                        + '<div class="KitContents" style="display: none;">'
+                        + '<table width="100%" cellspacing="0">'
+                        + '<thead>'
+                        + '<tr class="BundlePack">'
+                        + '<th></th>'
+                        + '<th>CUV</th>'
+                        + '<th>Product Names</th>'
+                        + '<th>Qty</th>'
+                        + '</tr>'
+                        + '</thead>'
+                        + orderItemKitHtml
+                        + '</table> </div></td>'
+
+
+                        );
+            }
+
+        }
+
+
+        $('#Textopromotion').html(promotionHeaderTexto);
+        $('#promotionHeader').html(promotionHeader);
+
+        $('#CartItems').html(itemsHtml).find('.quantity').numeric({ allowNegative: false, allowDecimal: false });
+
+        itemsHtmlFooter = ('<tr>'
+                        + '<td></td>'
+                        + '<td></td>'
+                        + '<td></td>'
+        //+'<td style="text-align: right;"> <a  onclick="UpdateCart()" href="javascript:void(0);" class="DTL Update OverrideDisable"> @Html.Term("Update")</a></td>'@*CS:21AB2016:Comentado*@
+                        + '<td style="text-align: right;"></td>'
+                        + '<td></td>');
+        if ('@Session["GeneralParameterOcultarCV"]' == 'S') {
+            itemsHtmlFooter = itemsHtmlFooter + ('<td><b>' + results.totals.commissionableTotal + '(CV.T)</b></td>');
+        }
+        itemsHtmlFooter = itemsHtmlFooter + ('<td style="text-align: center;"></td>'
+        /*CS.03JUL2016.Comentado.Inicio*/
+        //+'<td><b>'+ results.totals.qualificationTotal +'<br>(QV.T)</b></td>'
+        /*CS.03JUL2016.Comentado.Fin*/
+                        + '<td><b>' + results.totals.qualificationTotal + '</b></td>'
+                        + '<td><b>' + results.totals.subtotal + '</b></td>'
+                        + '</tr>');
+        $('#txtPaymentAmount').val(results.totals.subtotal);
+        $('#CartFooter').html(itemsHtmlFooter);
+
+    }
+    if (results.outOfStockItems && results.outOfStockItems.length > 0 && results.showOutOfStockMessage) {
+        $('#outOfStockProducts li').remove();
+        $('#outOfStockMessage').show();
+        for (var i = 0; i < results.outOfStockItems.length; i++) {
+            $('#outOfStockProducts').append('<li>' + results.outOfStockItems[i] + '</li>');
+        }
+    }
+    else {
+        $('#outOfStockMessage').hide();
+    }
+    $('.isSubtotalModified').text(results.totals.subtotalAdjusted);
+
+    updateLabels();
+    $.each(['isSubtotalModified', 'commissionableTotal', 'qualificationTotal', 'taxTotal', 'shippingTotal', 'handlingTotal', 'grandTotal', 'balanceDue', 'paymentTotal'], function (i, item) {
+
+        $('.' + item).text(results.totals[item]);
+    });
+
+    var submitButton = $('.Submit');
+    if (!submitButton.hasClass('ButtonOff'))
+        submitButton.addClass('ButtonOff');
+
+
+    if (results.totals['balanceAmount'] < 0) {
+        $('.balanceDue').css('color', 'red');
+    } else {
+        $('.balanceDue').css('color', 'green');
+
+        if ($('#sShippingAddress').val())
+            submitButton.removeClass('ButtonOff');
+    }
+
+    if (results.totals['balanceAmount'] < 0) { 
+
+//    
+
+
+         var cultura_name = $('#currentCulture').val();
+       
+
+        $('#txtPaymentAmount').val((results.totals['balanceAmount']).toFixed(2) * (-1));
+
+        // inicio : 22052017 =>agregado para solucionar el problema de formato númerico por cultureinfo
+        var AmountConvert = parseFloat($('#txtPaymentAmount').val());
+        var monto = new Intl.NumberFormat(cultura_name).format(AmountConvert);
+         // fin  : 22052017
+        var Amount = $('#txtPaymentAmount').val();
+
+
+ 
+////        var spl = Amount.split('.');
+////        var Amount = spl[0] + ',' + (spl[1] == null ? '00' : spl[1]);
+
+
+        $('#txtPaymentAmount').val(monto);
+        $('#hdnValidarApplyPayment').val(monto);
+
+
+//        $('#txtPaymentAmount').val(Amount);
+//        $('#hdnValidarApplyPayment').val(Amount);
+
+        $('#tbPayentAmountToApply').css("display", "block");
+
+        $('#MiniShop_sPaymentMethod').attr('disabled', false);
+        $('#MiniShop_sPaymentMethod').val(0);
+    }
+    else {
+        $('#txtPaymentAmount').val('');
+        $('#hdnValidarApplyPayment').val('');
+    }
+    
+    toggleSidePromotions();
+
+    $('#shippingMethods').html(results.shippingMethods);
+    $('.quantity').numeric();
+}
+    function toggleSidePromotions() {
+                   $("div[id^='appliedPromotion']").each(function () {
+                    var code = $(this).attr('id').replace("appliedPromotion", "");
+                       var $containerSpan = $('#PromotionsContainer span.block').filter(':contains(' + code + ')');
+                       if($containerSpan.parents('div.promotionCoupon').is(':visible')) {
+                        $containerSpan.parents('div.promotionCoupon').toggle();                           
+                       }
+                    });
+    }
+
+    
+        function updateLabels() {
+            $('#ContentColumn').find('table').each(function () {
+                var $table = $(this),
+                $topRow = $table.find('tr:eq(0)'),
+                $secondRow = $table.find('tr:eq(1)'),
+                $dataBody,
+                arr = [];
+                if ($secondRow.is(':visible')) {
+                    $dataBody = $secondRow.parent();
+                }
+                else {
+                    $dataBody = $table.find('tr:eq(2)').parent();
+                }
+                $topRow.find('th').each(function () {
+                    arr.push($(this).html().trim());
+                });
+                $dataBody.find('tr').each(function (i, row) {
+                    $(row).children('td').each(function (j, cell) {
+                        $(cell).attr({ 'data-label': arr[j] });
+                    });
+                });
+            });
+        }
+
+	miniShopModel.post = function (url, data) {
+		var self = this;
+		NS.post({
+			url: url,
+			data: ko.toJS(data),
+			showLoading: '#MiniShopShowLoading',
+			success: function (response) {
+				if (response.success === undefined) {
+                    _resultado = false;
+                    $("#wait").css("display", "none");
+					ko.mapping.fromJS(response, self);
+				} 
+                else 
+                {
+                    _resultado = true;
+                    //CSTI(mescobar)- 28/01/2016-Inicio
+                    if(response.validrule){
+                        var strReplaceAll = response.message;
+                        var intIndexOfMatch = strReplaceAll.indexOf("|n");
+                        while (intIndexOfMatch != -1) {
+                            strReplaceAll = strReplaceAll.replace("|n", String.fromCharCode(10))
+                            intIndexOfMatch = strReplaceAll.indexOf("|n");
+                        }
+                        $("#PopUpGenericPreViewMessage").html(strReplaceAll)
+                        $('.fadeInbox').jqmShow();
+                    //CSTI(mescobar)- 28/01/2016-Fin
+                    }
+                    else 
+                    {
+					    showMessage(response.message, !response.success);
+                    }
+				}
+			}
+		});
+	};
+
+    @*CSTI(mescobar)- 28/01/2016-Inicio*@
+     miniShopModel.validateRules = function(){
+        this.post('@Url.Action("ValidateRule", "Products")', '');
+    };
+    @*CSTI(mescobar)- 28/01/2016-Fin*@
+	miniShopModel.getProducts = function (category) {
+		this.post('@Model.GetProductsUrl', category);
+	};
+
+	miniShopModel.add = function (product) {
+    $("#wait").css("display", "block");  
+    this.postAdd('@Model.AddOrderItemUrl', product); 
+	};
+
+    miniShopModel.postAdd = function (url, data) {
+		var self = this;
+		NS.post({
+			url: url,
+			data: ko.toJS(data),
+			showLoading: '#MiniShopShowLoading',
+			success: function(results) {
+                    if (results.result) {
+                    //ko.mapping.fromJS(response, self);
+                    $("#wait").css("display", "none"); 
+                    $('#lblDateEstimated').html(results.dateEstimated); 
+                        $(".quantityText").val("0");
+                        updateCartAndTotals(results);
+                        //Poner en 0
+                        if (results.isBundle) {
+                            var queryString = "?productId=" + results.productId + "&bundleGuid=" + results.bundleGuid;
+                            window.location.href = '@Url.Content(baseUrl + "BundlePackItems")' + queryString;
+                        }
+					    if (results.message) {
+                            showMessage(results.message, true);
+                        }
+				} 
+                else 
+                {
+                    $("#wait").css("display", "none");
+                    _resultado = true;
+                    //CSTI(mescobar)- 28/01/2016-Inicio
+//                    if(response.validrule){
+//                        var strReplaceAll = response.message;
+//                        var intIndexOfMatch = strReplaceAll.indexOf("|n");
+//                        while (intIndexOfMatch != -1) {
+//                            strReplaceAll = strReplaceAll.replace("|n", String.fromCharCode(10))
+//                            intIndexOfMatch = strReplaceAll.indexOf("|n");
+//                        }
+//                        $("#PopUpGenericPreViewMessage").html(strReplaceAll)
+//                        $('.fadeInbox').jqmShow();
+//                    //CSTI(mescobar)- 28/01/2016-Fin
+//                    }
+//                    else 
+//                    {
+					    showMessage(results.message, !results.success);
+                    //}
+				}
+			}
+		});
+	};
+       
+	miniShopModel.remove = function (orderItem) {
+    $("#wait").css("display", "block");
+		this.post('@Model.RemoveOrderItemUrl', orderItem);
+	}
+
+    miniShopModel.update = function () {
+    $("#wait").css("display", "block");
+    this.post2('@Model.UpdateOrderItemsUrl', self.getUpdateQuantitiesData());
+    }
+
+   
+
+        miniShopModel.post2 = function (url, data) {
+		var self = this;
+		NS.post({
+
+        //$.ajax({
+            url: '@Model.UpdateOrderItemsUrl',
+            type: 'post',
+            //data: JSON.stringify(self.getUpdateQuantitiesData()),
+            data: JSON.stringify(data),
+            dataType: 'JSON',
+            contentType: 'application/json',
+           success: function (response) {
+				if (response.success === undefined) {
+                    $("#wait").css("display", "none");
+					ko.mapping.fromJS(response, self);
+                 }else {
+				    showMessage(response.message, !response.success);
+                 }
+            },
+            error: function () {
+                
+            }
+        });
+    }
+
+        self.getUpdateQuantitiesData = function () {
+        var TableData = new Array();
+        var ultimaFila = $('#contactosTable >tbody >tr').length;
+        
+        $('#contactosTable tr').each(function (row, tr) {
+        if(row > 0 && row < ultimaFila)
+        {
+                TableData[row-1] = {
+                           "ProductID": $('td:eq(0) input',this).val()
+                         , "Quantity": $('td:eq(4) input',this).val()
+                }
+            }
+        });
+        return TableData;
+    }
+
+   
+
+	$(function () {
+		ko.applyBindings(miniShopModel);
+	});
+
+    $('a.ViewKitContents').live('click', function () {
+        var t = $(this);
+        if (t.hasClass('Minimize')) {
+            t.text('@Html.Term("ViewKitContents", "View Kit Contents")').removeClass('Minimize').next().slideUp('fast');
+        } else {
+            t.text('@Html.Term("Close")').addClass('Minimize').next().slideDown('fast');
+        }
+    });
+</script>
+
+<style> 
+    .not-active 
+	{
+	    pointer-events: none;
+	    cursor: default;
+	}
+    div.jsonSuggestResults div.resultItem.hover { background: #E0E0E0; color: #fff; }
+    
+    H2o { 
+    font: bold; 
+    font-size: 9pt;
+    line-height: 10pt; 
+    font-family: Arial; 
+    text-align:right;
+  }
+  
+    #div-border { 
+    border-left: 1px solid #ccc; 
+    width:1px; 
+    height:500px;
+} 
+
+.remove-hover
+    {
+        background-color: #FFD1D1;
+    }
+    
+    .add:before
+    {
+        content: "\271A";
+        font-size: 2em;
+        font-family: 'encoreWkstnIcons';
+        speak: none;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        color: #4b0653;
+    }
+    
+    .addtext
+    {
+        color: #4b0653;
+        font-size: 17px;
+        font-family: 'Times New Roman' , Times, serif;
+    }
+</style> 
+
+
+<div id="orderEntryArea" class="PersonalOrderDetails @(ViewData["AvailablePromotionsList"] != null ? "FL splitCol70" : "")">
+ @{int countryId = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EnvironmentCountry_Aux"]);
+       if (countryId == (int)Constants.Country.UnitedStates)
+       {
+           Html.RenderPartial("_PartialAddURLs", Model);
+       }
+}
+
+
+@{Html.RenderPartial("_EnrollProductsSearch");}
+@{Html.RenderPartial("_EnrollProductsSearchEvent");}
+<img id="ProductLoad" src="@Href("~/Resource/Content/Images/processing.gif")"alt="@Html.Term("loading", "loading...")" data-bind="visible: isUpdating" />
+</div>
+
+<hr /> 
+
+  <div id="MiniShopShowLoading"></div>
+<div class="FL brdr splitCol100">
+  <div class="FL splitCol30 ShopNav">
+    <ul data-bind="foreach: Categories">
+      <li>
+        <a href="javascript:void(0);" data-bind="click: function () { miniShopModel.getProducts($data); }, text: Name"></a>
+        <ul data-bind="foreach: Subcategories">
+          <li>
+            <a href="javascript:void(0);" data-bind="click: function () { miniShopModel.getProducts($data); }, text: Name"></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="FR splitCol70 ProductThumbRows" data-bind="foreach: Products" style="overflow-y: scroll; height: 700px">
+    <div class="brdr brdrAll ProductThumbBox @*@(ViewBag.IsPromotion ? "promoItem" : "")*@">
+      @*If this is a promotion item show the following*@
+        @*<div id="SaleItemImg">@Html.Term("ProductThumbBox_Sale", "Sale")</div>*@
+      @*End if*@
+      <div class="pad1">
+       <div class="ProductInfo">
+          <span class="UI-secBg brdrAll pad2 productName" data-bind="text: Name"></span>
+          <span class="FR RetailPrice">
+          <span>@Html.Term("RetailPrice", "Retail Price"):</span>
+          <span data-bind="text: RetailPrice"></span>
+          </span>
+          <span class="FL imagewrapper"><img alt="" data-bind="attr: { src: ImageUrl }"/></span>
+                    @* data-bind="attr: { src: ImageUrl }*@
+          <div class="FR productLongDescription">
+              <p data-bind="text: Description" style="font-size:15px"></p>
+          </div>
+          <span class="clr"></span>
+        </div>
+        </div>
+      
+          <div class="UI-lightBg brdrAll AddToAutoship">
+              <span class="pad2 bold productPrice">
+                @if (Model.ShowVolume)
+          {
+                  <span class="FR price volume">
+                    <span>(@Html.Term("Volume"):</span>
+                    <span data-bind="text: Volume"></span>
+                    <span>)</span>
+                  </span>
+          }
+                <span class="FL">
+                  <span>@Html.Term("YourPrice", "Your Price"):</span>
+                  <span data-bind="text: YourPrice"></span>
+                </span>
+
+                <span class="clr"></span>
+              </span>
+                        
+                        <span>@Html.Term("UnitsToBuy", "Units"):</span>
+                        <input type="text" class="quantityText" id ="txtQuantity" data-bind="value: $data.Quantity" onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" maxlength="3"  style="width:30px; margin-top:5px; height:15px;"  />
+
+                        <a href="javascript:void(0);" class="FR Button MinorButton m5" data-bind="click: function () { miniShopModel.add($data); }">
+                        <span>
+                        @Model.AddOrderItemLabel
+                        </span>
+                        </a>
+                        @* <a id="btnQuickAdd2" href="javascript:void(0);" class="UI-icon-container" title="@Html.Term("Add", "Add")">
+                            <div style="padding-top:5px">
+                                <span class="add"></span>
+                                <span class="addtext">@Html.Term("Add", "Add")</span>
+                            </div>
+                        </a>*@
+        </div>
+      </div>
+    </div>
+</div>
+<input type="hidden"  id="hdnBalance" value="@(order.Balance)" />
+<input type="hidden" id="currentCulture" value="@CoreContext.CurrentCultureInfo.Name"/>
+<span class="clr"></span>
+
+<span class="clr"></span>
+<hr /> 
+
+    @{Html.RenderPartial("_EnrollOrderDetailsGridEvent");}
+    @{Html.RenderPartial("_EnrollOrderDetailsGrid");} 
+    @{Html.RenderPartial("_PartialShippingMethod");}
+<hr />  
+<div id="DivBtnSubmitOrder" style="display:none">
+<a class="FR Button MinorButton m5" href="javascript:void(0);"  id="btnSubmitOrder" >
+@Html.Term("MakePayment_CompleteOrder", "Make Payment - Complete Order")
+</a>
+</div>
+
+<!-- Modificacion para el manejo de la pasarela de pago con PayPal (jmorales-csti)-->
+<script type="text/javascript" src="@Href("~/Scripts/ga.js")"></script>
+<script type="text/javascript" src="@Href("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+<script src="https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js"
+    type="text/javascript"></script>
+<div id="PayPalPrePayment" class="jqmWindow LModal Overrides" style="width: 800px;
+    position: fixed; z-index: 500000";>
+    <div class="mContent">
+        <div id="prepaymentForm">
+            <div id="prepaymentWait">
+                @Html.Term("PleaseWaitWhileWeProcessYourOrder", "Please wait while we process your order...")
+                <br />
+                <img src="@Href("~/Resource/Content/Images/loading.gif")" alt="@Html.Term("Processing", "processing...")" />
+            </div>
+        </div>
+        
+        <span style="text-align: center;">
+            <img id="PrePayPalLoadImg" src='@Href("~/Resource/Content/Images/loading.gif")' alt="@Html.Term("loading", "loading...")" class="FR" /></span>
+        <div id="paypalForm">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+    function makePay() {
+        $('#PayPalPrePayment').jqmShow();
+        $('#prepaymentForm').load('@Href("~/EntryPaypal/PreparePayment")');
+        $('#PrePayPalLoadImg').hide();
+
+    }
+
+
+
+
+    $('#PayPalPrePayment').jqm({ modal: true, onShow: function (h) {
+        h.w.css({
+            top: '0px',
+            left: '550px'
+        }).fadeIn();
+    }
+    });
+
+    $('#lnkClosePopup').click(function () {
+        $('#PayPalPrePayment').jqmHide();
+    });
+
+    function closeFunc() {
+        $('#PayPalPrePayment').jqmHide();
+    }
+</script>
+
+
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    
+}
+
+<script type="text/javascript">
+
+
+
+    /*CSTI(mescobar)- 28/01/2016-Inicio*/
+    $(document).ready(function () {
+
+        var balance = $("#hdnBalance").val();
+        if (parseFloat(balance) < 0) {
+
+            $('#MiniShop_sPaymentMethod').attr('disabled', false);
+            $('#tbPayentAmountToApply').css("display", "block");
+            $('#DivBtnSubmitOrder').css("display", "none");
+        }
+        else {
+
+            $('#MiniShop_sPaymentMethod').attr('disabled', true);
+            $('#tbPayentAmountToApply').css("display", "none");
+            $('#DivBtnSubmitOrder').css("display", "block");
+        }
+
+        //        if ('@Session["GeneralParameterVal"]' == 'S') {
+
+        //            //            $("#AddNewPaymentMethod").show();           
+        //            $('#dvBtnApplyPayment').css("display", "block");
+        //        } else {
+
+        //            $("#AddNewPaymentMethod").hide();
+
+        $('#dvBtnApplyPayment').css("display", "none");
+        $('#txtPaymentAmount').attr('disabled', 'disabled');
+        //}
+
+        $('#btnContinue').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $('#btnContinue').click(btnContinue_Click);
+
+        function btnContinue_Click() {
+            miniShopModel.validateRules();
+        }
+
+        //$('#btnSubmitOrder').addClass("ButtonOff");
+
+        $('#btnApplyPayment').click(function () {
+            var selecPaymentMethod = '';
+            var selecPaymentMethodHtml = '';
+
+            //if ('@Session["GeneralParameterVal"]' == 'N') {
+
+            selecPaymentMethod = $('#MiniShop_sPaymentMethod').val();
+            selecPaymentMethodHtml = $('#MiniShop_sPaymentMethod option:selected').html();
+            //            } else {
+
+            //                selecPaymentMethod = $('#sPaymentMethod02').val();
+            //                selecPaymentMethodHtml = $('#sPaymentMethod02 option:selected').html();
+            //            }
+
+
+            var NumberCuota = 0;
+            if ($("#txtNumberCuotas").val() != 0) {
+                NumberCuota = $("#txtNumberCuotas").val();
+            }
+            var GiftCardCode = 0
+            if ($('#GiftCardCode').val()) {
+                GiftCardCode = $('#GiftCardCode').val();
+            } else {
+                GiftCardCode = 0;
+            }
+
+
+            if (selecPaymentMethod != 0) {
+
+                $('#btnApplyPayment').hide();
+                $('#loaderApplyPayment').show();
+
+                $.post('@Href("~/Products/ApplyPayment")', {
+                    paymentMethodId: selecPaymentMethod,
+                    NameOnCard: selecPaymentMethodHtml,
+                    amount: parseFloat($('#txtPaymentAmount').val()),
+                    AmountConfiguration: $('#txtPaymentAmount').val(),
+                    NumberCuota: NumberCuota,
+                    giftCardCode: GiftCardCode
+                },
+                                   function (results) {
+
+                                       $('#btnApplyPayment').show();
+                                       $('#loaderApplyPayment').hide();
+
+                                       if (results.result) {
+
+
+                                           $('#GiftCardCode').val('');
+                                           $('#GiftCardBalance').html('-');
+                                           $('#paymentsGridContainer').html(results.paymentsGrid);
+                                           updateTotals(results);
+
+                                           BalanceCredit(results);
+
+
+                                       }
+                                       else {
+                                           showMessage(results.message, true);
+                                       }
+
+                                   });
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        function HabBoton(results) {
+
+
+            if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) {
+                $('#btnSubmitOrder').removeClass("ButtonOff");
+                //$('#sPaymentMethod').attr('disabled', true);	    
+
+            }
+            else {
+                $('#btnSubmitOrder').addClass("ButtonOff");
+                //  $("#lblTargetCredit").hide();
+                //$('#sPaymentMethod').attr('disabled', false);
+            }
+
+            $('#sPaymentMethod').val('0');
+
+        }
+
+        function updateTotals(results) {
+            updateLabels();
+            $.each(['subtotal', 'commissionableTotal', 'qualificationTotal', 'taxTotal', 'shippingTotal', 'handlingTotal', 'grandTotal', 'balanceDue', 'paymentTotal'], function (i, item) {
+                $('.' + item).text(results.totals[item]);
+            });
+
+            var submitButton = $('#btnSubmitOrder');
+            if (!submitButton.hasClass('ButtonOff'))
+                submitButton.addClass('ButtonOff');
+            if (results.totals['balanceAmount'] == 0) {
+                $('.balanceDue').css('color', 'green');
+                if ($('#sShippingAddress').val())
+                    submitButton.removeClass('ButtonOff');
+            } else {
+                $('.balanceDue').css('color', 'red');
+            }
+
+            if (results.totals['balanceAmount'] < 0) {
+
+                $('#hdnValidarApplyPayment').val((results.totals['balanceAmount']).toFixed(2) * (-1));
+                var Amount = $('#hdnValidarApplyPayment').val();
+                ////var spl = Amount.split('.');
+                ////var Amount = spl[0] + ',' + (spl[1] == null ? '00' : spl[1]);
+                $('#hdnValidarApplyPayment').val(Amount);
+                $('#txtPaymentAmount').val(Amount);
+
+                $('#tbPayentAmountToApply').css("display", "block");
+            }
+            else {
+                $('#txtPaymentAmount').val('');
+                $('#hdnValidarApplyPayment').val('');
+                $('#tbPayentAmountToApply').css("display", "none");
+
+            }
+
+
+
+            toggleSidePromotions();
+        }
+        function updateLabels() {
+            $('#ContentColumn').find('table').each(function () {
+                var $table = $(this),
+                $topRow = $table.find('tr:eq(0)'),
+                $secondRow = $table.find('tr:eq(1)'),
+                $dataBody,
+                arr = [];
+                if ($secondRow.is(':visible')) {
+                    $dataBody = $secondRow.parent();
+                }
+                else {
+                    $dataBody = $table.find('tr:eq(2)').parent();
+                }
+                $topRow.find('th').each(function () {
+                    arr.push($(this).html().trim());
+                });
+                $dataBody.find('tr').each(function (i, row) {
+                    $(row).children('td').each(function (j, cell) {
+                        $(cell).attr({ 'data-label': arr[j] });
+                    });
+                });
+            });
+        }
+
+        $('#btnSubmitOrder').click(function () {
+
+            if ($("#MiniShop_Subdomain").length > 0) {
+                $("#btnCheckUrlAvailability").click();
+            }
+
+            var validUrl = $("#pwsUrl").hasClass("notAvailable");
+            if (validUrl == true || ($("#MiniShop_Subdomain").length > 0 && !$("#MiniShop_Subdomain").valid())) {
+                showMessage("Url Invalid", false);
+                return false;
+            }
+
+            var payment = $('#MiniShop_sPaymentMethod').val();
+            $('#DivBtnSubmitOrder').css("display", "none");
+            $.ajax({
+                url: '@Href("~/EntryPaypal/validaPaymentGatewayID")',
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                data: {
+                    'paymentConfigurationID': payment,
+                    'paymentGatewayID': '5'
+                },
+                success: function (data) {
+                    // csti(mescoobar)-EB-486-Inicio
+                    if (data.validrule) {
+                        updateCartAndTotals(data);
+                        updPayments(data);
+
+                        var strReplaceAll = data.message;
+                        var intIndexOfMatch = strReplaceAll.indexOf("|n");
+                        while (intIndexOfMatch != -1) {
+                            strReplaceAll = strReplaceAll.replace("|n", String.fromCharCode(10))
+                            intIndexOfMatch = strReplaceAll.indexOf("|n");
+                        }
+                        $("#PopUpGenericPreViewMessage").html(strReplaceAll)
+                        $('.fadeInbox').jqmShow();
+
+                    } else {
+
+                        if (data.result) {
+                            makePay();
+
+                        } else {
+                            $('#orderWait').jqmShow();
+
+                            var res = "";
+                            if ($("#MiniShop_Subdomain").length > 0) {
+                                res = $('#MiniShop_Subdomain').val();
+                            }
+
+                            var data = {
+                                invoiceNotes: $('#txtInvoiceNotes').val(),
+                                email: $('#email').val(),
+                                url: res
+                            };
+                            $.post('@Href("~/Products/SubmitOrder")', data, function (response) {
+                                if (response.result) {
+                                    '@Html.AntiForgeryToken()'
+                                    window.location.href = '@Url.Content("~/Enroll/Receipt")';
+                                }
+                                else {
+                                    showMessage(response.message, true);
+                                    //PayPal_001
+                                    //Se agrega esto para que vuelva elegir medio de pago
+                                    //Author: JMorales 
+                                    //Date: 01/09/2016 
+                                    var sid = $("#hdid").val();
+                                    var sindice = $("#hdindice").val();
+                                    removePayment(sid, sindice);
+                                    //End PayPal_001 
+                                    $('#paymentsGrid').html(response.paymentsGrid);
+                                }
+                                return false;
+                                // csti(mescoobar)-EB-486-Fin
+                                //                            }
+                            });
+                        }
+                    } //  fin del else de 'validrule'
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+        function HabBoton(results) {
+
+            if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) {
+                $('#btnSubmitOrder').removeClass("ButtonOff");
+                $('#MiniShop_sPaymentMethod').attr('disabled', true);
+
+            }
+            else {
+                $('#btnSubmitOrder').addClass("ButtonOff");
+                //  $("#lblTargetCredit").hide();
+                $('#MiniShop_sPaymentMethod').attr('disabled', false);
+            }
+
+            $('#MiniShop_sPaymentMethod').val('0');
+
+        }
+
+        $("#MiniShop_sPaymentMethod").change(function () {
+            $('#hdnPaymentAmount').val($('#txtPaymentAmount').val());
+            $.ajax({
+                type: 'POST',
+                url: '@Href("~/Products/IsCreditCard/")',
+                data: (
+                        {
+                            CollectionEntityID: $("#MiniShop_sPaymentMethod").val()
+                        }),
+                asyn: false,
+                success: function (data) {
+                    if (data.result == true) {
+
+                        if (data.IsBoleta) {
+                            $("#lblTargetCredit").hide();
+
+                            //===================================================//
+                            // Boleto anticipado se  hace  un solo pago( solo se debe de ingresar un metodo de pago con el monto  total(balanceAmount)
+                            if (data.totals["balanceAmount"] < 0) {
+                                //   $('#txtPaymentAmount').val(data.totals["balanceAmount"] * (-1));
+                            }
+                            else {
+                                $('#txtPaymentAmount').val('');
+                            }
+                            //===================================================//
+                            $("#txtPaymentAmount").prop("readonly", true);
+                        } else {
+                            $("#txtNumberCuotas").val(data.numberTarget);
+                            calMsg();
+                            //Solo se habilita el txtPaymentAmount cuando es Tarjeta de Credito: "readonly", false.
+                            $("#txtPaymentAmount").prop("readonly", false);
+                        }
+                    } else {
+                        $("#lblTargetCredit").hide();
+                        $("#txtPaymentAmount").prop("readonly", true);
+
+                    }
+                }
+            });
+
+
+
+            //if ('@Session["GeneralParameterVal"]' == 'N') {
+            $('#btnApplyPayment').click();
+            //}
+
+        });
+
+
+        function calMsg() {
+
+            if ($("#MiniShop_sPaymentMethod").val() != 0 && $('#hdnPaymentAmount').val() != '') {
+
+                var total = $('#hdnPaymentAmount').val(); // $('#txtPaymentAmount').val()   
+                var spl = total.split(',');
+                total = spl[0] + '.' + (spl[1] == null ? '00' : spl[1]);
+                var num = $("#txtNumberCuotas").val();
+                var div = parseFloat(parseFloat(total) / parseFloat(num));
+                var name = $('#txtNamePayment').val();
+                $("#txtMsg").val(name + '  ' + num + '  ' + '@Html.Term("EachByValue ", "each by value ") ' + div.toFixed(2));
+                $("#lblTargetCredit").show();
+            } else {
+                $("#txtMsg").val('');
+            }
+
+
+        }
+
+        $('#txtQuickAddSearch').jsonSuggest('@Url.Resolve("~/Enroll/Products/SearchProducts")', {
+            minCharacters: 3,
+            source: $('#txtQuickAddSearch'),
+            ajaxResults: true,
+            width: 700,
+            onSelect: function (item) {
+                $('#hQuickAddProductId').val(item.id).clearError();
+                if (item.isDynamicKit) {
+                    $('#txtQuickAddQuantity').val('1').clearError();
+                    $('#txtQuickAddQuantity').attr("disabled", "disabled");
+                } else {
+                    $('#txtQuickAddQuantity').val('1').clearError();
+                    $('#txtQuickAddQuantity').removeAttr("disabled");
+                }
+                $('#hQuickAddNeedsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+            }
+        });
+    });
+    /*CSTI(mescobar)- 28/01/2016-Fin*/
+
+</script> 
+
+
+@{Html.RenderPartial("_PopUpGeneric");} 

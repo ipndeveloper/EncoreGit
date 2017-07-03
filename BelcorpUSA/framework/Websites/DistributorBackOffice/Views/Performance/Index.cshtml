@@ -1,0 +1,261 @@
+@model DistributorBackOffice.Models.Performance.PerformanceOverviewViewModel
+@{
+	var periods = Model.CurrentAndPastPeriods;
+	var periodsDictionary = periods.ToDictionary(os => os.PeriodId.ToString(), os => os.Description ?? (String.Format("{0}-{1}", os.PeriodId.ToString().Substring(0, 4), os.PeriodId.ToString().Substring(4, 2))));
+}
+
+@section head {
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/FusionCharts.js")"></script>
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/FusionCharts.jqueryplugin.js")"></script>
+    @*<script type="text/javascript" src="@Href("~/Resource/Scripts/jquery.10.2.min.js")"></script>*@
+    
+
+	<script type="text/javascript">
+	    var CodeBonus = "";
+	    function SetearCodigoBonus(value) {
+	        CodeBonus = value;
+	    };
+
+	    $(function () {
+	        $('#statusSelectFilter').parent().hide();
+	        $('#statusSelectFilter').change(function () {
+	            var p = $('#kpiHolder');
+	            showLoading(p, { height: 'auto' });
+	            $.get('@Href("~/Performance/GetPerformanceOverview")', { periodId: $(this).val(), showPerformanceWidgets: true }, function (response) {
+	                if (response.result) {
+	                    $('#nameValueBody').html(response.data);
+	                } else {
+	                    showMessage(response.message, true);
+	                }
+	            })
+				.fail(function () {
+				    showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+				})
+				.always(function () {
+				    hideLoading(p);
+				});
+	        }).one('change', function () {
+	            if ($('#statusSelectFilter option').length > 0) {
+	                $('#statusSelectFilter').parent().show();
+	            }
+	        });
+	        $('.changeViewIcon').click(function () {
+	            swapView($(this));
+	        });
+	        // qmark
+	        $("a[content-qmark]").each(function () { var e = $(this).attr("content-qmark"); $(this).append('<span class="qmark UI-darkBg pad10 brdr1 brdrAll">' + e + '<a href="javascript(void);" class="icon-xsm qmark_close" data-icon="&#xe02a;"></a></span>') }); $("a[content-qmark]").toggle(function () { $(this).find(".qmark").animate({ opacity: .9, marginTop: "-15px" }, 200); var e = $(this).width(); var t = $(this).find(".qmark").outerWidth(); var n = $(this).find(".qmark").outerHeight(); $(this).find(".qmark").css({ "top": -n, "display": "block" }) }, function () { $(this).find(".qmark").animate({ opacity: 0, marginTop: "0px" }, 200); $(this).find(".qmark").css({ "display": "none" }) })
+	        //End qmArk
+	    });
+
+	    function ShowPopUp(code, title) {
+	        window.scrollTo(0, 0);
+	        $("#TitleModal").html(""); //vaciar titulo
+	        var modalDom = $("#modalContentReport");
+	        showLoading(modalDom);
+	        $('#noteModal').jqm({ modal: true, overlay: 0, overlayClass: 'HModalOverlay' }).jqmShow();
+	        $.get('@Href("~/Performance/GetVolumenDetail")', { periodId: $("#statusSelectFilter").val(), code: code }, function (response) {
+	            if (response.result) {
+	                $("#TitleModal").html(title);
+	                hideLoading(modalDom);
+	                modalDom.html(response.data);
+	            } else {
+	                showMessage(response.message, true);
+	            }
+	        });
+	    }
+
+	    function Exportar() {
+
+	        _periodId = $("#statusSelectFilter").val();
+	        _kpiCode = $("#Codigo").val();
+
+	        var product =
+            {
+                "periodId": _periodId
+                , "code": _kpiCode
+            }
+	        $.ajax({
+	            url: '@Url.Action("ExportToExcel","Performance")',
+	            type: 'post',
+	            data: JSON.stringify(product),
+	            //data: JSON.stringify(data),
+	            dataType: 'JSON',
+	            contentType: 'application/json',
+	            success: function (response) {
+	                if (response.success === undefined) {
+	                } else {
+	                    showMessage(response.message, !response.success);
+	                }
+	            }
+
+	        });
+
+	    }
+
+	    function cancelar() {
+	        $('#noteModal').jqmHide();
+	    }
+
+	    function swapView($e) {
+	        var itemID = $e.attr('id'),
+				$viewDiv,
+				$viewChart;
+	        $e.toggleClass('active', '').siblings().removeClass('active');
+	        itemID = itemID.replace('_Button', '');
+	        $viewDiv = $e.closest('.PerfKPI').find('#' + itemID + '_View');
+	        $viewDiv.show().siblings('[id*=_View]').hide();
+	        $viewChart = $viewDiv.find('[id*=' + itemID + '_Chart]');
+	        if ($viewChart.length > 0) {
+	            refreshFusionChart($viewChart);
+	        }
+	    }
+
+	    function refreshFusionChart($chart) {
+	        var chartType = '';
+	        $chart.each(function () {
+	            chartType = $(this).children(':first').attr('id');
+	            chartType = chartType.substring(0, chartType.indexOf('_'));
+	            $(this).updateFusionCharts({ 'swfUrl': chartType });
+	        });
+	    }
+
+	    function rgb2hex(rgb) {
+	        if (rgb.substr(0, 1) === '#') {
+	            return rgb;
+	        }
+	        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	        function hex(x) {
+	            return ("0" + parseInt(x, 10).toString(16)).slice(-2);
+	        }
+	        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	    }
+
+//	    $("#btnExport").click(function (e) {
+//	        window.open('data:application/vnd.ms-excel,' + $('#dvData').html());
+//	        e.preventDefault();
+//	    });
+
+	    function Export(e) {
+	        window.open('data:application/vnd.ms-excel,' + $('#ResultList').html());
+	        e.preventDefault();
+	    }
+
+    </script>
+
+    <style type="text/css">
+            table.tableModal tr:first-child{
+                background-color: #f1f1f1;
+                font-weight: bold;
+            }
+        
+            .tableModal tr th{
+                border: 1px solid gray;
+            }
+            .tableModal tr td{
+                border: 1px solid gray;
+            }
+            table.tableModal {
+                border: 1px solid gray;
+                border-collapse: collapse;
+            }
+            .tableModal tr td:first-child{
+                padding-left: 1rem;    
+            }
+            .tableModal tr th{
+                padding: 0px 1rem;    
+            }
+
+            .tableModal tr td{
+                padding: 0px 0px 0px 1rem;    
+            }
+            
+             
+        </style>
+}
+@section breadcrumb {
+}
+@section title {
+	@Html.Term("PerformanceDashboard", "Performance Dashboard")
+}
+<!-- Period selection, changes all widgets -->
+<div class="UI-lightBg brdrAll GridFilters PerformanceLandingFilters" id="paginatedGridFiltersOrders">
+	<div class="FL FilterSet">
+		<div class="FL">
+			<label>
+				@Html.Term("Period"):</label>
+			<select class="Filter" id="statusSelectFilter">
+				@foreach (var key in periodsDictionary.Keys)
+	{
+					<option value="@key">@periodsDictionary[key]</option>
+	}
+			</select>
+		</div>
+	</div>
+	<span class="clr"></span>
+</div>
+<div class="PerfKPIHold" id="kpiHolder">
+	<!-- Title Progress Widget-->
+	@if (Model.ShowPerformanceTitleProgressionWidget)
+	{
+		if (Model.UseAdvancedPerformanceTitleProgressionWidget)
+		{
+			@Html.Partial("_TitleProgressionWidgetAdvanced")
+		}
+		else
+		{
+			@Html.Partial("_TitleProgressionWidgetView")
+		}
+	}
+	<!-- /Title Progress Widget-->
+	<!-- Volume Widget-->
+	@if (Model.ShowPerformanceVolumeWidget)
+	{
+		@Html.Partial("_VolumeWidgetView")
+	}
+	<!-- /Volume Widget-->
+	<!-- Incentive Widget (nothing)-->
+	@{Html.RenderPartial("IncentiveWidget");}
+	<!-- /Incentive Widget-->
+	@Html.Partial("_NameValueWidgetView")
+	@Html.Partial("CustomWidgets")
+	<span class="clr"></span>
+</div>
+<!--/ end widget container -->
+<!-- PopUp  -->
+     <div id="noteModal" class="jqmWindow LModal" style="left: 55%;">
+        <div class="mContent">
+           <div style="margin: 8px;">
+                <strong style="font-size: medium; color:Red;"  id="TitleModal">Observacion</strong>
+            </div>    
+            <div id="noteErrors">
+            </div>
+            <div class="FormStyle2" id="modalContentReport">
+               
+            </div>
+            <br />
+            <p>
+                <a href="javascript:void(0);" class="Button LinkCancel jqmClose"
+                        onclick="cancelar()" id="btnCancelObservacion">
+                        @Html.Term("OK")</a>
+
+                        @*<a href="javascript:void(0);" onclick="Exportar();" id="btnExport">@Html.Term("Exportar")</a>*@
+
+                        @*<input type="button" id="btnExport" value=" Export Table data into Excel" onclick="Exportar();" />*@
+            </p>
+
+            <span class="ClearAll"></span>
+        </div>
+        <div class="PModal WaitWin">
+			<span>
+				@Html.Term("OneMomentPlease", "One moment please...")
+			</span>
+			<br />
+			<img src="@Href("~/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+		</div>
+    </div>
+    <!-- END PopUp  -->
+    <div id="cultures" style="display:none">
+     @ViewData["contextCore"] 
+    <br />
+    @ViewData["contextCurrent"]
+</div>

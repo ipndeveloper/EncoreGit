@@ -1,0 +1,432 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.SummaryModel
+@using nsDistributor.Areas.Enroll.Extensions
+@using NetSteps.Data.Entities.Business.HelperObjects.SearchData
+
+@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }
+
+<div class="brdr brdrAll pad10 m5 EnrollmentReview">
+    <div class="FL splitCol65">
+        @if (Model.ShowEditLinks)
+        { @Html.EditActionLink("BasicInfo", "AccountInfo") }
+        @*<h2>@Html.Term("PersonalInformation", "Personal Information")</h2>*@
+        <div class="FL splitCol">
+            <p>
+                <strong>@Html.Term("AccountInfo", "Account Info"):</strong><br />
+                @Html.Term("Name", "Name"): @Model.FullName
+                <br />
+                @Html.Term("PersonalEmail", "Personal Email"): @Model.PersonalEmail
+                <br/>
+				@if(Model.DisplayUsername)
+				{
+                @Html.Term("Username", "Username")@:: @Model.UserName
+                <br />
+				}
+                @if (!String.IsNullOrEmpty(Model.MailAccountEmail))
+                {
+                    <span>@Html.Term("Email", "Email"):</span>
+                    @Model.MailAccountEmail
+                }
+            </p>
+        </div>
+        <div class="FR splitCol">
+            <p>
+                <strong>@Html.Term("MainAddress", "Main Address"):</strong><br />
+                @Model.MainAddressHtml
+            </p>
+        </div>
+        <hr class="ClearAll" />
+        <!--<div>
+            <p>
+                <strong>@Html.Term("Settings"):</strong>
+                @Html.Term("LanguagePreference", "Language Preference") - @Model.Language
+            </p>
+        </div> -->
+        @if (!string.IsNullOrWhiteSpace(Model.PWSUrl))
+        {
+            <hr />
+            <div>
+                @if (Model.ShowEditLinks)
+                { @Html.EditActionLink("Website", "AccountInfo") }
+                <p>
+                    <strong>@Html.Term("PWSURL", "PWS URL"):</strong>
+                    @Model.PWSUrl
+                </p>
+            </div>
+        }
+    </div>
+    @if (Model.ShowSponsor)
+    {
+    <div class="FR splitCol30 brdr brdrAll UI-whiteBg pad5">
+        @if (Model.ShowSponsorEditLink)
+        { @Html.EditActionLink("Index", "Sponsor") }
+        <div class="pad10 center">
+            @Model.SponsorPhotoHtml
+            <h2>
+                <span>@Model.SponsorFullName</span><br />
+                @Model.SponsorText
+            </h2>
+        </div>
+    </div>
+    }
+</div>
+<div class="brdr brdrAll pad10 m5 EnrollmentReview" style="font-size: 1.4em;color: #585858;">
+    <div class="">
+        <div class="">
+            @if (Model.ShowEditLinks && Model.ShowShippingEditLink)
+            { @Html.EditActionLink("Shipping", "AccountInfo") }
+            <strong>@Html.Term("ShippingTo", "Shipping to")</strong>
+        </div>
+        <div class="FL splitCol">
+            @Model.ShippingAddressHtml
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="FR splitCol Billing Confirm">
+    <div class="pad5">
+        <div class="UI-darkBg brdrAll pad5">
+            @if (Model.ShowEditLinks)
+            { @Html.EditActionLink("Billing", "AccountInfo") }
+            <span class="label">@Html.Term("BillingTo", "Billing to")</span>
+        </div>
+       @* <div class="FL pad5 addressDisplay">
+            @Model.NameOnCard<br />
+            @if (Model.CreditCardExpirationDate != null)
+            {
+                @Model.CreditCardExpirationDate.Value.ToString("MM/yyyy")<br />
+            }
+            @Model.MaskedCreditCardNumber<br />
+            @Model.BillingAddressHtml
+        </div>*@
+        <span class="clr"></span>
+    </div>
+</div>
+<hr class="ClearAll" />
+@if (Model.ShowOrderSummary)
+{
+    <h2>@Html.Term("OrderSummary", "Order Summary")</h2>
+    <div class="clr TablePane brdr pad2">
+        @if (Model.ShowInitialOrder)
+        {
+            var order = Model.InitialOrder;
+            <table width="100%" class="DataGrid">
+                <thead>
+                    <tr>
+                        <th>@Html.Term("SKU")</th> 
+                        <th>@Html.Term("Product")</th> 
+                        <th>@Html.Term("Price")</th>
+                        <th class="center cartQty">@Html.Term("Quantity")</th>
+                        <th class="right">@Html.Term("Total")</th>
+                    </tr>
+                </thead>
+                <tbody id="CartItems">
+                    <tr class="UI-secBg">
+                        <td colspan="7">
+                            @Html.Term("EnrollmentOrderSummaryHeader", "Enrollment Order")
+                            @if (Model.ShowEditInitialOrderLink)
+                            {
+                                <div class="FR">
+                                    <a class="Button MinorButton editCartContents" href="@Url.Action(Model.EditInitialOrderAction, Model.EditInitialOrderController, new { returnUrl = Request.Path })"><span>@Html.Term("EditEnrollmentOrder", "Edit Enrollment Order")</span></a>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    @foreach (var item in order.OrderCustomers[0].OrderItems)
+                    {
+                        if (item.ParentOrderItemID == null )
+                        {
+                        <tr class="">
+                            <td>@item.SKU</td>
+                            @*<td class="center CartThumb">
+                                @{
+                            Product product = null;
+                            if (item.ProductID != null)
+                            {
+                                product = inventory.GetProduct(item.ProductID.Value);
+                            }
+                                }
+                                @if (product != null && product.MainImage != null)
+                                {
+                                    <img width="25" alt="" src="@product.MainImage.FilePath.ReplaceFileUploadPathToken()" />
+                                }
+                            </td>*@
+                            <td>@item.ProductName</td>
+                            @*<td><span class="savings"></span></td>*@
+                            <td>@((item.ParentOrderItem == null ? item.GetAdjustedPrice() : 0.0M).ToString(Model.CurrencyID))</td>
+                            <td class="center cartQty">@item.Quantity</td>
+                            <td class="right">
+                                @*<span class="block strikethrough price OriginalPrice"></span>*@
+                                @((item.ParentOrderItem == null ? item.GetAdjustedPrice() * item.Quantity : 0.0M).ToString(Model.CurrencyID))
+                                @*<span class="block price PromotionalPrice"></span>*@
+                            </td>
+                        </tr>
+                           
+                            if (item.ChildOrderItems.Count > 0)
+                            {
+                               
+                                <tr>
+                                <td></td>
+                                <td><table><thead>
+                                            <tr>
+                                                <th>@Html.Term("SKU")</th>                                                
+                                                <th>@Html.Term("Product")</th> 
+                                                <th class="center cartQty">@Html.Term("Quantity")</th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                         @foreach (var itemChlid in item.ChildOrderItems)
+                                            {<tr> 
+                                            <td>@itemChlid.SKU</td>
+                                            <td>@itemChlid.ProductName</td>
+                                            <td>@itemChlid.Quantity</td>
+                                        </tr>
+                                            }
+                                        </tbody>
+                                </table></td>
+                                </tr>
+                                
+                            }
+                        } //if (product.IsDynamicKit())
+                    }
+                </tbody>
+            </table>
+            <hr class="ClearAll" />
+                   <h2>@Html.Term("cart_Dispatch","Free Dispatch")</h2>
+            <td>
+              <table>
+                 <thead align = "left">
+                        <tr>
+                            <th style="text-align: left;">@Html.Term("SKU")</th>                                                
+                            <th style="text-align: left;">@Html.Term("Product")</th> 
+                            <th style="text-align: left;">@Html.Term("Quantity")</th> 
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                 </thead>
+                 <tbody>
+                        @{var lstProductsVal = (List<DispatchProducts>)Session["sitemsProductsDispatch"];
+                          if (lstProductsVal != null)
+                          {
+                             foreach (var items in lstProductsVal)
+                                {<tr> 
+                                    <td align = "center">@items.SKU</td>
+                                    <td align = "center">@items.Name</td>
+                                    <td align = "center">@items.Quantity</td>
+                                    <td align = "center">@Html.Term("Cart_FREE", "FREE")</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    </tr>
+                                }
+                           }
+                         }  
+                 </tbody>
+               </table>
+             </td>
+             <hr class="ClearAll" />
+            <div class="UI-lightBg pad5 shippingMethodSummary">
+                <div>
+                   @* <span class="FL Label">@Html.Term("ShippingMethod", "Shipping Method"): @Html.Term(order.OrderShipments[0].ShippingMethodName)</span>*@
+                </div>
+                <span class="clr"></span>
+            </div>
+            @Html.Partial("_SummaryOrderTotals", order)
+        }
+        @if (Model.ShowAutoshipOrder)
+        {
+            var order = Model.AutoshipOrder.Order;        
+            <table width="100%" class="DataGrid">
+                <thead>
+                    <tr>
+                        <th>@Html.Term("SKU")</th>
+                        <th></th>
+                        <th>@Html.Term("Product")</th>
+                        @*<th>@Html.Term("Savings")</th>*@
+                        <th>@Html.Term("Price")</th>
+                        <th class="center cartQty">@Html.Term("Quantity")</th>
+                        <th class="right">@Html.Term("Total")</th>
+                    </tr>
+                </thead>
+                <tbody id="CartItems">
+                    <tr class="UI-secBg">
+                        <td colspan="7">
+                            <span class="AutoshipHeader">@Html.Term("AutoshipSummaryHeader", "Autoship")</span>
+                            @if (Model.ShowEditAutoshipLink)
+                            {
+                                <div class="FR">
+                                    <a class="Button MinorButton editCartContents" href="@Url.Action(Model.EditAutoshipAction, Model.EditAutoshipController, new { returnUrl = Request.Path })"><span>@Html.Term("EditAutoship", "Edit Autoship")</span></a>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    @foreach (var item in order.OrderCustomers[0].OrderItems)
+                    {
+                        <tr class="">
+                            <td>@item.SKU</td>
+                            @*<td class="center CartThumb">
+                                @{
+                        Product product = null;
+                        if (item.ProductID != null)
+                        {
+                            product = inventory.GetProduct(item.ProductID.Value);
+                        }
+                                }
+                                @if (product != null && product.MainImage != null)
+                                {
+                                    <img width="25" alt="" src="@product.MainImage.FilePath.ReplaceFileUploadPathToken()" />
+                                }
+                            </td>*@
+                            <td>@item.ProductName</td>
+                            @*<td><span class="savings"></span></td>*@
+                            <td>@item.ItemPrice.ToString(Model.CurrencyID)</td>
+                            <td class="center cartQty">@item.Quantity</td>
+                            <td class="right">
+                                <span class="block strikethrough price OriginalPrice"></span>
+                                @((item.GetAdjustedPrice() * item.Quantity).ToString(Model.CurrencyID))
+                                <span class="block price PromotionalPrice"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="UI-lightBg pad5 finalOrderTotals">
+                <div class="FR">
+                    <div style="width: 290px">
+                        <p>
+                            <span class="FL Label">@Html.Term("Subtotal")</span> <span class="FR">@order.Subtotal.ToString(Model.CurrencyID)</span>
+                            <span class="clr"></span>
+                        </p>
+                        <p><span class="FL Label">@Html.Term("Tax")</span> <span class="FR">@order.TaxAmountTotal.ToString(Model.CurrencyID)</span></p>
+                        <p><span class="FL Label">@Html.Raw(Html.Term("ShippingAndHandling", "Shipping & Handling"))</span> <span class="FR">@((order.ShippingTotal + order.HandlingTotal).ToString(Model.CurrencyID))</span></p>
+                        @*<p><span class="FL Label">@Html.Term("Savings")</span> <span class="FR">-@(((decimal)0).ToString(Model.CurrencyID))</span></p>*@
+                        <p><span class="FL Label">@Html.Term("AutoshipTotal", "Autoship Total")</span> <span class="FR">@order.GrandTotal.ToString(Model.CurrencyID)</span></p>
+                    </div>
+                </div>
+                <span class="clr"></span>
+            </div>
+        }
+        @if (Model.ShowSubscriptionOrder)
+        {
+            var order = Model.SiteSubscriptionAutoshipOrder.Order;        
+            <table width="100%" class="DataGrid">
+                <thead>
+                    <tr>
+                        <th>@Html.Term("SKU")</th>
+                        <th></th>
+                        <th>@Html.Term("Product")</th>
+                        @*<th>@Html.Term("Savings")</th>*@
+                        <th>@Html.Term("Price")</th>
+                        <th class="center cartQty">@Html.Term("Quantity")</th>
+                        <th class="right">@Html.Term("Total")</th>
+                    </tr>
+                </thead>
+                <tbody id="CartItems">
+                    <tr class="UI-secBg">
+                        <td colspan="7">
+                            <span class="AutoshipHeader">@Html.Term("AutoshipSummaryHeader", "Autoship")</span>
+                            @if (Model.ShowEditAutoshipLink)
+                            {
+                                <div class="FR">
+                                    <a class="Button MinorButton editCartContents" href="@Url.Action(Model.EditAutoshipAction, Model.EditAutoshipController, new { returnUrl = Request.Path })"><span>@Html.Term("EditAutoship", "Edit Autoship")</span></a>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    @foreach (var item in order.OrderCustomers[0].OrderItems)
+                    {
+                        <tr class="">
+                            <td>@item.SKU</td>
+                            <td class="center CartThumb">
+                                @{
+                        Product product = null;
+                        if (item.ProductID != null)
+                        {
+                            product = inventory.GetProduct(item.ProductID.Value);
+                        }
+                                }
+                                @if (product != null && product.MainImage != null)
+                                {
+                                    <img width="25" alt="" src="@product.MainImage.FilePath.ReplaceFileUploadPathToken()" />
+                                }
+                            </td>
+                            <td>@item.ProductName</td>
+                            @*<td><span class="savings"></span></td>*@
+                            <td>@item.ItemPrice.ToString(Model.CurrencyID)</td>
+                            <td class="center cartQty">@item.Quantity</td>
+                            <td class="right">
+                                <span class="block strikethrough price OriginalPrice"></span>
+                                @((item.GetAdjustedPrice() * item.Quantity).ToString(Model.CurrencyID))
+                                <span class="block price PromotionalPrice"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="UI-lightBg pad5 finalOrderTotals">
+                <div class="FR">
+                    <div style="width: 290px">
+                        <p>
+                            <span class="FL Label">@Html.Term("Subtotal")</span> <span class="FR">@order.Subtotal.ToString(Model.CurrencyID)</span>
+                            <span class="clr"></span>
+                        </p>
+                        <p><span class="FL Label">@Html.Term("Tax")</span> <span class="FR">@order.TaxAmountTotal.ToString(Model.CurrencyID)</span></p>
+                        <p><span class="FL Label">@Html.Raw(Html.Term("ShippingAndHandling", "Shipping & Handling"))</span> <span class="FR">@((order.ShippingTotal + order.HandlingTotal).ToString(Model.CurrencyID))</span></p>
+                        @*<p><span class="FL Label">@Html.Term("Savings")</span> <span class="FR">-@(((decimal)0).ToString(Model.CurrencyID))</span></p>*@
+                        <p><span class="FL Label">@Html.Term("AutoshipTotal", "Autoship Total")</span> <span class="FR">@order.GrandTotal.ToString(Model.CurrencyID)</span></p>
+                    </div>
+                </div>
+                <span class="clr"></span>
+            </div>
+        }
+        @* Removed combined totals to avoid confusion. *@
+        @*
+        @{
+            decimal subtotal = 0, tax = 0, shipping = 0, savings = 0, total = 0;
+            if (Model.ShowInitialOrder)
+            {
+                var order = Model.InitialOrder;
+                subtotal += order.Subtotal ?? 0;
+                tax += order.TaxAmountTotal ?? 0;
+                shipping += order.ShippingTotal ?? 0;
+                //savings += 0;
+                total += order.GrandTotal ?? 0;
+            }
+            if (Model.ShowAutoshipOrder)
+            {
+                var order = Model.AutoshipOrder.Order;
+                subtotal += order.Subtotal ?? 0;
+                tax += order.TaxAmountTotal ?? 0;
+                shipping += order.ShippingTotal ?? 0;
+                //savings += 0;
+                total += order.GrandTotal ?? 0;
+            }
+        }
+        <div class="UI-mainBg pad5 finalOrderTotals">
+            <div class="FL"><h3>@Html.Term("GrandTotal", "Grand Total")</h3></div>
+            <div class="FR">
+                <div style="width: 290px">
+                    <p>
+                        <span class="bold FL Label">@Html.Term("Subtotal")</span> <span class="FR">@subtotal.ToString(Model.CurrencyID)</span> 
+                        <span class="clr"></span>
+                    </p>
+                    <p><span class="bold FL Label">@Html.Term("Tax")</span> <span class="FR">@tax.ToString(Model.CurrencyID)</span></p>
+                    <p><span class="bold FL Label">@Html.Term("ShippingAndHandling", "Shipping & Handling")</span> <span class="FR">@shipping.ToString(Model.CurrencyID)</span></p>
+                    <!--<p><span class="bold FL Label">@Html.Term("Savings")</span> <span class="FR">-@savings.ToString(Model.CurrencyID)</span></p>-->
+                    <p><span class="bold FL Label">@Html.Term("Total")</span> <span class="FR">@total.ToString(Model.CurrencyID)</span></p>
+                </div>
+            </div>
+            <span class="clr"></span>
+        </div>
+        *@
+    </div>
+}

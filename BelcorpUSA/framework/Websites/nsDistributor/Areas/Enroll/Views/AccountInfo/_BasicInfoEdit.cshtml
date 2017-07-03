@@ -1,0 +1,1747 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.BasicInfoModel
+<script src="@Url.Content("~/Scripts/address-validation.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/json2.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    
+    var validationPIS = false;
+
+    $(function() {
+
+     if($('#MainPhone_Substrings_0__Text').val()=="")    {
+       $('#MainPhone_Substrings_0__Text').val("0");
+     }
+	    $(".justNumbers").keydown(function (event) {
+	        if (event.shiftKey) event.preventDefault();
+	        if (event.keyCode == 46 || event.keyCode == 8) {
+	        }
+	        else {
+	            if (event.keyCode < 95) {
+	                if (event.keyCode < 48 || event.keyCode > 57) event.preventDefault();
+	            }
+	            else {
+	                if (event.keyCode < 96 || event.keyCode > 105) event.preventDefault();
+	            }
+	        }
+	    });
+
+		$('.toggleEntityButton').click(function() {
+			var id = $(this).attr('id');
+			$('div[data-toggle-entity-button]').hide().filter('[data-toggle-entity-button=#' + id + ']').show();
+		});
+
+        $('#btnBasicInfoSubmit').unbind("click");
+
+        var countryId = '@Model.CountryID';
+
+        function ValidBrasil()
+        {
+
+         var isValid = true; 
+                if (!ValidateDOB())
+                    isValid = false
+                
+                    if (!ValidateIssueDate())
+                        isValid = false;
+                
+                    if (!ValidateMainPhone())
+                        isValid = false;
+                
+                    if (!ValidateMobilePhone())
+                        isValid = false;
+
+                    if (!ValidateCommercialPhone())
+                        isValid = false;
+
+                    if (!ValidateMessagesPhone())
+                        isValid = false;
+                        return isValid;
+        }
+        
+       $('#btnBasicInfoSubmit').click(function() {
+        var validRDB = true; 
+        if ($('#contentTrue').is(':hidden'))
+           validRDB = true;
+        else
+        validRDB = false; 
+            var isValid = true;  
+                if (countryId == 73) 
+                {
+                    ValidBrasil();
+                    if (isValid){ 
+	                ValidateAddress(); 
+	                $('#MainAddress .FRow').each(function() {
+	                var t = $(this),requiredChk = t.html();
+	                if (requiredChk.indexOf('is required') >= 0 && !t.find('.requiredMarker').length) {
+				                   $('label', this).parent().prepend('<span class="requiredMarker">*</span> \n');
+	                        }
+	                    });
+	                } 
+                }else{
+        var SSN_0 = $("#SSN_Substrings_0__Text").val();
+        var SSN_1 = $("#SSN_Substrings_1__Text").val();
+        var SSN_2 = $("#SSN_Substrings_2__Text").val();
+        var totals = SSN_0 + "" + SSN_1 + "" + SSN_2
+        if ( validRDB == false) 
+        {
+            if (totals.length == 9) 
+            { 
+            $("#EIN_Substrings_0__Text").removeClass("valid input-validation-error");
+            $("#EIN_Substrings_1__Text").removeClass("valid input-validation-error");
+
+            $('.field-validation-error').remove();  
+                    isValid = estaValidandoSSN; 
+                    if (isValid)
+                    {  
+                        ValidateAddress(); 
+                        $('#MainAddress .FRow').each(function() {
+				            var t = $(this),requiredChk = t.html();
+                            if (requiredChk.indexOf('is required') >= 0 && !t.find('.requiredMarker').length) {
+                                $('label', this).parent().prepend('<span class="requiredMarker">*</span> \n');
+                            }
+                        });
+                    }  
+             }else
+			 {
+				$("#SSN_Substrings_0__Text").ErrorValid("Invalid SSN", [9, 3]);  
+             }
+		}
+        else 
+        {  
+        var EIN_0 = $("#EIN_Substrings_0__Text").val();
+        var EIN_1 = $("#EIN_Substrings_1__Text").val();
+        var totals = EIN_0 + "" + EIN_1
+        if (totals.length == 9) { 
+        
+        $("#SSN_Substrings_0__Text").removeClass("valid input-validation-error");
+        $("#SSN_Substrings_1__Text").removeClass("valid input-validation-error");
+        $("#SSN_Substrings_2__Text").removeClass("valid input-validation-error"); 
+
+        $('.field-validation-error').remove();  
+			isValid = estaValidandoSSN; 
+                    if (isValid)
+                    {  
+                        ValidateAddress(); 
+                        $('#MainAddress .FRow').each(function() {
+				            var t = $(this),requiredChk = t.html();
+                            if (requiredChk.indexOf('is required') >= 0 && !t.find('.requiredMarker').length) {
+                                $('label', this).parent().prepend('<span class="requiredMarker">*</span> \n');
+                            }
+                        });
+                    }  
+             }else{
+                $("#EIN_Substrings_1__Text").ErrorValid("Invalid EIN", [9, 3]);  
+             }
+        }}
+        }); 
+		$(document).bind("validAddressFound", function(event, address) {
+			$('#MainAddress_Address1').val(address.address1);
+			$('#MainAddress_Address2').val(address.address2);
+			//$('#MainAddress_City :selected').text(address.city);
+            $('#MainAddress_City').val(address.city);
+			//$('#MainAddress_StateProvinceID :selected').text(address.state);
+            $('#MainAddress_StateProvinceID').val(address.state);
+			@{
+                @Html.Raw("$('#MainAddress_PostalCode').val(address.postalCode);");
+			}
+
+            var estaValidandoPendiente= estaValidandoPIS || estaValidandoCPF  || estaValidandoEdad || estaValidandoSSN
+      
+           if(estaValidandoPendiente)
+           {
+            return false;
+           }
+
+               validarreq() ;
+            var invalidsInput=$(".input-validation-error").length;
+            if(invalidsInput>0)
+            {
+                return false;
+            }
+			var submitFormBtn = $('#btnBasicInfoSubmit');
+
+
+			var formId = submitFormBtn.attr('data-click-submit');
+             
+			if ((formId !== undefined) && (formId.length !== 0)) 
+            { 
+                if (formId.toLowerCase() == 'parent') {
+					submitFormBtn.closest('form').submit();
+				} else {
+					$(formId).submit();
+				}
+			}
+        });
+    });
+ 
+
+    function ValidateAddress() {
+            var validation = abstractAddressValidation({
+            address1: $('#MainAddress_Address1').val(),
+            address2: $('#MainAddress_Address2').val(),
+            address3: $('#MainAddress_Address3').val(),
+            //city: $("#MainAddress_City :selected").text() == "" ? $("#MainAddress_City").val() : $("#MainAddress_City :selected").text(), // in case Country is not US, it is a simple text input,
+            city: $("#MainAddress_City").val() == "" ? $("#MainAddress_City").val() : $("#MainAddress_City").val(), // in case Country is not US, it is a simple text input,
+            //state: $('#MainAddress_StateProvinceID :selected').val(),
+            state: $('#MainAddress_StateProvinceID').val(),
+            postalCode: $('#MainAddress_PostalCode1').val() == undefined ? $('#MainAddress_PostalCode').val() : $('#MainAddress_PostalCode1').val(),
+            //postalCode: $('#MainAddress_Zip').val() + $('#MainAddress_ZipPlusFour').val(),// : $('#MainAddress_PostalCode1').val(),
+            country: "@SmallCollectionCache.Instance.Countries.GetById(Model.CountryID).CountryCode" 
+            
+    });
+
+        validation.init();
+
+        $(document).bind("validAddressFound", function(event, address) {
+
+
+            $('#MainAddress_Address1').val(address.address1);
+            $('#MainAddress_Address2').val(address.address2);
+            $('#MainAddress_Address3').val(address.address3);
+            //$('#MainAddress_City :selected').val(address.city);
+            $('#MainAddress_City').val(address.city);
+
+            //$('#MainAddress_County').val(address.county);
+            //$('#MainAddress_Street').val(address.street);
+
+            //$('#MainAddress_StateProvinceID :selected').text(address.state);
+            $('#MainAddress_StateProvinceID').val(address.state);
+            //$('#MainAddress_State').val(address.state);
+            @{
+//                if (Model.CountryID == 1)
+//                {
+//                    @Html.Raw("$('#MainAddress_PostalCode1').val(address.postalCode.substring(0, 5));");
+//                    @Html.Raw("$('#MainAddress_PostalCode2').val(address.postalCode.substring(5, address.postalCode.length));");
+//                }
+//                else
+//                {
+//                    @Html.Raw("$('#MainAddress_PostalCode').val(address.postalCode);");
+//                }
+
+                @Html.Raw("$('#MainAddress_PostalCode').val(address.postalCode);");
+            }
+
+        var estaValidandoPendiente= estaValidandoPIS || estaValidandoCPF || estaValidandoEdad
+      
+           if(estaValidandoPendiente)
+           {
+            return false;
+           }
+            validarreq() ;
+            var invalidsInput=$(".input-validation-error").length;
+            if(invalidsInput>0)
+            {
+               return false;
+            }
+            var submitFormBtn = $('#btnBasicInfoSubmit');
+            var formId = submitFormBtn.attr('data-click-submit');
+            if ((formId !== undefined) && (formId.length !== 0)) {
+                if (formId.toLowerCase() == 'parent') {
+                    submitFormBtn.closest('form').submit();
+                } else {
+                    $(formId).submit();
+                }
+            }
+        });
+    }
+
+    function basicInfoEditFormSubmit(e) {
+	        showLoading($('[data-click-submit]', e)); 
+            //@(Html.HtmlFieldPrefix())MainAddress_geocodeAddress(function() { 
+	            e.submit();
+	        //});
+	    }
+</script>
+<script>
+
+
+    (function ($) {
+        jQuery.fn.ErrorValid = function (MensajeError, lstSize, lstValid) { 
+            var $this = $(this).parent("div").find("input:text:last");
+            var id = $this.attr("id");
+            var camposIncompletos = 0;
+            var index = 0;
+            $(this).parent("div").find("input:text").each(function () {
+                var $this_ = $(this);
+                var value = $.trim($this_.val());
+                var length = lstSize[index];
+
+
+                var sizeCurrent = value.length;
+                if (length < 0) {
+
+                }
+                if (!$this_.hasClass("input-validation-error")) {
+                    if (((sizeCurrent == 0 || sizeCurrent < length) && (length != 0)) || (sizeCurrent == 0 && length == -1)) {
+                        $this_.addClass("input-validation-error");
+
+                        camposIncompletos++;
+                    }
+                } else {
+                    if (((sizeCurrent == 0 || sizeCurrent < length) && (length != 0)) || (sizeCurrent == 0 && length == -1)) {
+                        camposIncompletos++;
+                    }
+                    if (((sizeCurrent == length) || (length == 0))) {
+                        $this_.removeClass("input-validation-error");
+                    }
+                }
+                index++;
+            });
+            var span1 = $this.next("span").length == 0 ? document.createElement("span") : $this.next("span")[0];
+
+
+
+            if (camposIncompletos != 0) {
+                span1.setAttribute("class", "field-validation-error");
+            } else {
+                span1.setAttribute("class", "field - validation - valid");
+            }
+            span1.setAttribute("data-valmsg-for", id);
+            span1.setAttribute("data-valmsg-replace", "true");
+
+            var span = $this.next("span").find("span").length == 0 ? document.createElement("span") : $this.next("span").find("span")[0];
+            span.setAttribute("for", id);
+
+            if ($this.next("span").length == 0) {
+                span1.appendChild(span);
+                $this.after(span1);
+            } else {
+                if ($this.next("span").find("span").length == 0) {
+
+                    if (camposIncompletos != 0) {
+                        var texto = document.createTextNode(MensajeError);
+                        span.appendChild(texto);
+                        $this.next("span").append(span)
+                    }
+
+                } else {
+                    if (camposIncompletos != 0) {
+                        $this.next("span").find("span").text(MensajeError);
+                    } else {
+                        $this.next("span").find("span").remove();
+                    }
+                }
+            }
+        }
+
+        jQuery.fn.Valid = function () {
+            var $this = $(this).parent("div").find("input:text:last");
+            var id = $this.attr("id");
+            $(this).parent("div").find("input:text").each(function () {
+
+                if ($(this).hasClass("input-validation-error")) {
+                    $(this).removeClass("input-validation-error");
+                    if (!$(this).hasClass("valid")) {
+                        $(this).addClass("valid");
+                    }
+                }
+                if (!$(this).hasClass("valid")) {
+                    $(this).addClass("valid");
+                }
+
+            });
+
+            var span1 = $this.next("span").length == 0 ? document.createElement("span") : $this.next("span")[0];
+            span1.setAttribute("class", "field-validation-valid");
+            span1.setAttribute("data-valmsg-for", id);
+            span1.setAttribute("data-valmsg-replace", "true");
+            $this.next("span").find("span").remove();
+        }
+
+
+    })(jQuery);
+
+
+    function validacionPISOnBlur() {
+        var pisPart1 = $("#PIS_Substrings_0__Text");
+        var pisPart2 = $("#PIS_Substrings_1__Text");
+
+        var total = pisPart1.val() + "" + pisPart2.val()
+        if (total.length == 11) {
+            ValidarPIS(total);
+        }
+        else {
+            pisPart1.removeAttr('class');
+            pisPart2.removeAttr('class');
+            var divPis = pisPart2.closest('div');
+
+            divPis.find('span').each(function () {
+                $(this)[0].outerHTML = '';
+            });
+
+            validationPIS = false;
+        }
+    }
+    function validacionCPFOnBlur() {
+        var CPF_0 = $("#CPF_Substrings_0__Text").val();
+        var CPF_1 = $("#CPF_Substrings_1__Text").val();
+        var total = CPF_0 + "" + CPF_1
+        if (total.length == 11) {
+            ValidarCPF(total);
+        }
+    }
+
+    function validarSSNOnBlur() {
+        var SSN_0 = $("#SSN_Substrings_0__Text").val();
+        var SSN_1 = $("#SSN_Substrings_1__Text").val();
+        var SSN_2 = $("#SSN_Substrings_2__Text").val(); 
+        var totals = SSN_0 + "" + SSN_1 + "" + SSN_2
+        if (totals.length == 9) { 
+            ValidarSSN(totals); 
+        }
+    } 
+
+    function validarSSNOnValid() {
+        var SSN_0 = $("#SSN_Substrings_0__Text").val();
+        var SSN_1 = $("#SSN_Substrings_1__Text").val();
+        var SSN_2 = $("#SSN_Substrings_2__Text").val();
+        var totals = SSN_0 + "" + SSN_1 + "" + SSN_2
+        if (totals.length == 9) {        
+            } else {  
+            $("#SSN_Substrings_0__Text").ErrorValid("Invalid SSN", [9, 3]); 
+        }
+    }
+
+    function validarEINOnBlur() {
+        var EIN_0 = $("#EIN_Substrings_0__Text").val();
+        var EIN_1 = $("#EIN_Substrings_1__Text").val();
+        var totals = EIN_0 + "" + EIN_1
+        if (totals.length == 9) { 
+            ValidarEIN(totals);
+        }
+    }
+    function validarEINOnValid() {
+        var EIN_0 = $("#EIN_Substrings_0__Text").val();
+        var EIN_1 = $("#EIN_Substrings_1__Text").val();
+        var totals = EIN_0 + "" + EIN_1
+        if (totals.length == 9) { 
+        } else {
+            $("#EIN_Substrings_1__Text").ErrorValid("Invalid EIN", [9, 3]);
+        }
+    }
+
+    function validacionFechaNacimientoOnBlur() {
+        var FechaNac_0 = $("#Birthday_Month").val();
+        var FechaNac_1 = $("#Birthday_Day").val();
+        var FechaNac_2 = $("#Birthday_Year").val();
+
+        var total = FechaNac_0 + "" + FechaNac_1 + "" + FechaNac_2
+        if (total.length == 8) {
+
+            total = FechaNac_0 + "/" + FechaNac_1 + "/" + FechaNac_2
+            ValidarEdad(total);
+        }
+    }
+
+    function validarreq() {
+        $("#RG").ErrorValid('@Html.Term("RGRequired", "RG is Required")', [-1]);
+        $("#CPF_Substrings_0__Text").ErrorValid('@Html.Term("CPFRequired", "CPF is Required")', [9, 2]);
+        //        $("#PIS_Substrings_0__Text").ErrorValid('@Html.Term("PISRequired", "PIS is Required")', [9, 2]);
+        //        $("#Birthday_Month").ErrorValid('@Html.Term("MonthRequired", "Month is Required")', [2, 2, 4]);
+        //        $("#Birthday_Day").ErrorValid('@Html.Term("DayRequired", "Day is Required")', [2, 2, 4]);
+        //        $("#Birthday_Year").ErrorValid('@Html.Term("YearRequired", "Year is Required")', [2, 2, 4]);
+    }
+    $(function () {
+
+        $("#MainPhone_Substrings_0__Text").blur(function () {
+            ValidateMainPhone();
+        });
+
+        $("#MainPhone_Substrings_1__Text").blur(function () {
+            ValidateMainPhone();
+        });
+
+        $("#MainPhone_Substrings_2__Text").blur(function () {
+            ValidateMainPhone();
+        });
+
+        $("#MobilePhone_Substrings_0__Text").blur(function () {
+            ValidateMobilePhone();
+        });
+
+        $("#MobilePhone_Substrings_1__Text").blur(function () {
+            ValidateMobilePhone();
+        });
+
+        $("#MobilePhone_Substrings_2__Text").blur(function () {
+            ValidateMobilePhone();
+        });
+
+        $("#CommercialPhone_Substrings_0__Text").blur(function () {
+            ValidateCommercialPhone();
+        });
+
+        $("#CommercialPhone_Substrings_1__Text").blur(function () {
+            ValidateCommercialPhone();
+        });
+
+        $("#CommercialPhone_Substrings_2__Text").blur(function () {
+            ValidateCommercialPhone();
+        });
+
+        $("#MessagesPhone_Substrings_0__Text").blur(function () {
+            ValidateMessagesPhone();
+        });
+
+        $("#MessagesPhone_Substrings_1__Text").blur(function () {
+            ValidateMessagesPhone();
+        });
+
+        $("#MessagesPhone_Substrings_2__Text").blur(function () {
+            ValidateMessagesPhone();
+        });
+
+
+        $("#RG").blur(function () {
+            $(this).ErrorValid('@Html.Term("RGRequired", "RG is Required")', [-1]);
+
+            validarRGOnBlur();
+        });
+
+        $("#CPF_Substrings_0__Text").blur(function () {
+            $(this).ErrorValid('@Html.Term("CPFRequired", "CPF is Required")', [9, 2]);
+
+
+            validacionCPFOnBlur();
+        });
+        //        $("#SSN_Substrings_0__Text").blur(function () {
+        //            validarSSNOnBlur();
+        //        });
+        //        $("#SSN_Substrings_1__Text").blur(function () {
+        //            validarSSNOnBlur();
+        //        });
+        //        $("#SSN_Substrings_2__Text").blur(function () {
+        //            validarSSNOnBlur();
+        //        });
+
+        $("#CPF_Substrings_1__Text").blur(function () {
+            $(this).ErrorValid('@Html.Term("CPFRequired", "CPF is Required")', [9, 2]);
+
+
+            validacionCPFOnBlur();
+        });
+
+        $("#PIS_Substrings_0__Text, #PIS_Substrings_1__Text").blur(function () {
+
+            var pisPart1 = $("#PIS_Substrings_0__Text");
+            var pisPart2 = $("#PIS_Substrings_1__Text");
+
+            pisPart1.removeAttr('class');
+            pisPart2.removeAttr('class');
+        });
+
+        $("#CPF_Substrings_0__Text").keyup(function () {
+            validacionCPFOnBlur();
+        });
+        $("#CPF_Substrings_1__Text").keyup(function () {
+            validacionCPFOnBlur();
+        });
+
+        $("#SSN_Substrings_0__Text").keyup(function () {
+            validarSSNOnBlur();
+        });
+
+        $("#SSN_Substrings_1__Text").keyup(function () {
+            validarSSNOnBlur();
+        });
+
+        $("#SSN_Substrings_2__Text").keyup(function () {
+            validarSSNOnBlur();
+            validarSSNOnValid();
+        });
+
+        $("#SSN_Substrings_1__Text").keyup(function () {
+            validarSSNOnBlur();
+            validarSSNOnValid();
+        });
+
+        $("#SSN_Substrings_0__Text").keyup(function () {
+            validarSSNOnBlur();
+            validarSSNOnValid();
+        });
+
+        $("#EIN_Substrings_0__Text").keyup(function () {
+            validarEINOnBlur();
+            validarEINOnValid();
+        });
+        $("#EIN_Substrings_1__Text").keyup(function () {
+            validarEINOnBlur();
+            validarEINOnValid();
+        });
+
+        $("#PIS_Substrings_0__Text, #PIS_Substrings_1__Text").keyup(function () {
+
+            var pisPart1 = $("#PIS_Substrings_0__Text");
+            var pisPart2 = $("#PIS_Substrings_1__Text");
+
+            pisPart1.removeAttr('class');
+            pisPart2.removeAttr('class');
+
+            validacionPISOnBlur();
+
+        }).blur(function () {
+
+            var pisPart1 = $("#PIS_Substrings_0__Text");
+            var pisPart2 = $("#PIS_Substrings_1__Text");
+
+            pisPart1.removeAttr('class');
+            pisPart2.removeAttr('class');
+        }).keydown(function () {
+
+            var pisPart1 = $("#PIS_Substrings_0__Text");
+            var pisPart2 = $("#PIS_Substrings_1__Text");
+
+            pisPart1.removeAttr('class');
+            pisPart2.removeAttr('class');
+        });
+
+        $("#RG").focus(function () {
+            valorRGSeleccionado = $(this).val();
+        });
+        ///
+
+
+
+        $("#Password").keyup(function () {
+            if ($(this).val() != '') {
+                $('#PasswordImg').attr('title', 'Current Password: ' + $(this).val());
+            }
+            else {
+                $('#PasswordImg').attr('title', 'Enter a Password first.');
+            }
+        });
+
+    });
+
+    $(document).ready(function () {
+
+
+        var textarea = $("<textarea></textarea>").attr({
+            class: $('#MainAddress_Street').prop("class"),
+            id: $('#MainAddress_Street').prop("id"),
+            name: $('#MainAddress_Street').prop("name"),
+            type: $('#MainAddress_Street').prop("type"),
+            readonly: 'readonly',
+            style: "background-color: rgb(222, 222, 222)",
+            rows: "2"
+        });
+        textarea.attr('data-val', true);
+        textarea.attr('data-val-required', 'Rua &amp;#233; necess&amp;#225;ria.')
+
+        $('.FInput #MainAddress_Street').replaceWith(textarea);
+
+        textarea = $("<textarea></textarea>").attr({
+            class: $('#MainAddress_County').prop("class"),
+            id: $('#MainAddress_County').prop("id"),
+            name: $('#MainAddress_County').prop("name"),
+            type: $('#MainAddress_County').prop("type"),
+            readonly: 'readonly',
+            style: "background-color: rgb(222, 222, 222)",
+            rows: "2"
+        });
+        textarea.attr('data-val', true);
+        textarea.attr('data-val-required', 'County &#233; necess&#225;ria.')
+
+        $('.FInput #MainAddress_County').replaceWith(textarea);
+
+        //Address
+        var divAddress = $('#MainAddress_PostalCode1').closest('div');
+        var divSpan = '<div class="FRow">';
+
+        divAddress.find('span').each(function () {
+            divSpan += $(this)[0].outerHTML;
+        });
+
+        divSpan += '</div>';
+
+        divAddress.find("span").remove();
+        divAddress.parent().after(divSpan);
+
+        //        var divDOB = $('#Birthday_Month').closest('div');
+
+        //        var dayDOB = divDOB.find('#Birthday_Day')[0].outerHTML;
+        //        var MonthDOB = divDOB.find('#Birthday_Month')[0].outerHTML;
+
+        //        divDOB.find('#Birthday_Month').attr("id", "Birthday_MonthTemp");
+        //        divDOB.find('#Birthday_Day')[0].outerHTML = MonthDOB;
+        //        divDOB.find('#Birthday_MonthTemp')[0].outerHTML = dayDOB;
+
+        // ********************************************************************************************************* */
+        /*  add IPN  para resolver el formato de fechas */
+
+        var cultureInfo = $('#culture').val();
+
+        if (cultureInfo === 'en-US') {
+            //$('#dateOfBirth').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+            //[
+            //
+            //    { id: 'Birthday_Month', name: 'Birthday.Month', length: 2, size: 2 },
+            //    { id: 'Birthday_Day', name: 'Birthday.Day', length: 2, size: 2 },
+            //    { id: 'Birthday_Year', name: 'Birthday.Year', length: 4, size: 4 }
+            //]
+            //});
+
+            $('#issueDate').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+            [
+                { id: 'RGIssueDate_Month', name: 'RGIssueDate.Month', length: 2, size: 2 },
+                { id: 'RGIssueDate_Day', name: 'RGIssueDate.Day', length: 2, size: 2 },
+                { id: 'RGIssueDate_Year', name: 'RGIssueDate.Year', length: 4, size: 4 }
+            ]
+            });
+
+        }
+
+        else if ((cultureInfo === 'es-US') || (cultureInfo === 'pt-BR')) {
+
+            $('#dateOfBirth').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+            [
+                { id: 'Birthday_Day', name: 'Birthday.Day', length: 2, size: 2 },
+                { id: 'Birthday_Month', name: 'Birthday.Month', length: 2, size: 2 },
+                { id: 'Birthday_Year', name: 'Birthday.Year', length: 4, size: 4 }
+            ]
+            });
+
+            $('#issueDate').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+            [
+                { id: 'RGIssueDate_Day', name: 'RGIssueDate.Day', length: 2, size: 2 },
+                { id: 'RGIssueDate_Month', name: 'RGIssueDate.Month', length: 2, size: 2 },
+                { id: 'RGIssueDate_Year', name: 'RGIssueDate.Year', length: 4, size: 4 }
+            ]
+            });
+
+        }
+
+        /*  Fin de codigo añadido    */
+
+
+
+
+
+        //  comentado por IPN => Inicio => 12042017
+
+        //        $('#dateOfBirth').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+        //            [
+        //                { id: 'Birthday_Day', name: 'Birthday.Day', length: 2, size: 2 },
+        //                { id: 'Birthday_Month', name: 'Birthday.Month', length: 2, size: 2 },
+        //                { id: 'Birthday_Year', name: 'Birthday.Year', length: 4, size: 4 }
+        //            ]
+        //        });
+
+        // =>fin 
+
+        $("#Birthday_Day").blur(function () {
+            ValidateDOB();
+        }).watermark('dd').prop('name', 'Birthday.Day').val('@Model.Birthday.Day');
+
+        $("#Birthday_Month").blur(function () {
+            ValidateDOB();
+        }).watermark('mm').prop('name', 'Birthday.Month').val('@Model.Birthday.Month');
+
+        $("#Birthday_Year").blur(function () {
+            ValidateDOB();
+        }).watermark('dd').watermark('yyyy').prop('name', 'Birthday.Year').val('@Model.Birthday.Year');
+
+//        $('#issueDate').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes:
+//            [
+//                { id: 'RGIssueDate_Day', name: 'RGIssueDate.Day', length: 2, size: 2 },
+//                { id: 'RGIssueDate_Month', name: 'RGIssueDate.Month', length: 2, size: 2 },
+//                { id: 'RGIssueDate_Year', name: 'RGIssueDate.Year', length: 4, size: 4 }
+//            ]
+//        });
+
+        var mes = null;
+        $("#RGIssueDate_Month").blur(function () {
+            ValidateIssueDate();
+            if ('@Model.RGIssueDate.Month' == null || '@Model.RGIssueDate.Month' == "1") {
+                mes = null;
+            }
+            else {
+                mes = '@Model.RGIssueDate.Month';
+            }
+        }).watermark('mm').prop('name', 'RGIssueDate.Month').val(mes);
+
+
+        var dia = null;
+        $("#RGIssueDate_Day").blur(function () {
+            ValidateIssueDate();
+            if ('@Model.RGIssueDate' == null || '@Model.RGIssueDate.Day' == "1") {
+                dia = "";
+            }
+            else {
+                dia = '@Model.RGIssueDate.Day';
+            }
+        }).watermark('dd').prop('name', 'RGIssueDate.Day').val(dia);
+
+
+        var year = null;
+        $("#RGIssueDate_Year").blur(function () {
+            ValidateIssueDate();
+
+            if ('@Model.RGIssueDate' != null || '@Model.RGIssueDate.Year' == "1") {
+                year = '@Model.RGIssueDate.Year';
+            }
+            else {
+                year = null;
+            }
+        }).watermark('yyyy').prop('name', 'RGIssueDate.Year').val(year);
+
+
+        $('#divPhone1 input:text, #divPhone2 input:text, #divPhone3 input:text, #divPhone4 input:text').keyup(function () {
+            $(this).closest('div[id^=divPhone]').find('input:text').attr('class', 'valid');
+        });
+        //        $("#MobilePhone_Substrings_1__Text").prop('maxlength', 4);
+    });
+
+    function ValidateDOB() {
+
+        var isValid = false;
+
+        var Birthday_Day = $('#Birthday_Day');
+        var Birthday_Month = $('#Birthday_Month');
+        var Birthday_Year = $('#Birthday_Year');
+
+        Birthday_Day.clearError();
+        Birthday_Month.clearError();
+        Birthday_Year.clearError();
+
+        isValid = CheckValidDate(Birthday_Day.val(), Birthday_Month.val(), Birthday_Year.val());
+         
+        if (!isValid) {
+            Birthday_Day.showError("");
+            Birthday_Month.showError("");
+            Birthday_Year.showError('@Html.JavascriptTerm("InvalidDOB", "Please enter a valid DOB")');
+        }
+        else {
+            isValid = CheckValidAge(Birthday_Day.val(), Birthday_Month.val(), Birthday_Year.val());
+
+            if (!isValid) {
+                Birthday_Day.showError("");
+                Birthday_Month.showError("");
+                Birthday_Year.showError('@Html.JavascriptTerm("DOBInValidYear", "Age should be greater than 18")');
+            }
+        }
+
+        return isValid;
+    }
+
+    function CheckValidDateCurrent(dayfield, monthfield, yearfield) {
+        var isDateValid = false;
+        var mydate = new Date();
+        var passedDate = new Date(yearfield, monthfield - 1, dayfield)
+        var minRequiredCurrdate = new Date();
+
+        isDateValid = passedDate > minRequiredCurrdate;
+        return !isDateValid;
+    }
+
+    function ValidateIssueDate() {
+
+        var isValid = true;
+        var RGIssueDate_Day = $('#RGIssueDate_Day');
+        var RGIssueDate_Month = $('#RGIssueDate_Month');
+        var RGIssueDate_Year = $('#RGIssueDate_Year');
+
+        RGIssueDate_Day.clearError();
+        RGIssueDate_Month.clearError();
+        RGIssueDate_Year.clearError();
+
+      
+        if (RGIssueDate_Day.val() != '' || RGIssueDate_Month.val() != '' || RGIssueDate_Year.val() != '') {
+            isValid = CheckValidDate(RGIssueDate_Day.val(), RGIssueDate_Month.val(), RGIssueDate_Year.val());
+
+            if (!isValid) {
+                RGIssueDate_Day.showError("");
+                RGIssueDate_Month.showError("");
+                RGIssueDate_Year.showError('@Html.JavascriptTerm("InvalidIssueDate", "Please enter a valid Issue Date")');
+            }
+            else {
+
+                var isAgeValidIssue = CheckValidDateCurrent($("#RGIssueDate_Day").val(), $("#RGIssueDate_Month").val(), $("#RGIssueDate_Year").val());
+                if (!isAgeValidIssue) {
+                    RGIssueDate_Day.showError("");
+                    RGIssueDate_Month.showError("");
+                    RGIssueDate_Year.showError('@Html.JavascriptTerm("TheDateShouldnotExceedTheCurrentDate", "The Date should not exceed the current date.")');
+                    //$('#RGIssueDate_Month').focus();
+                    isValid = false; //  return false;
+                }
+                else {
+                    RGIssueDate_Day.clearError();
+                    RGIssueDate_Month.clearError();
+                    RGIssueDate_Year.clearError();
+                }
+            }
+        }
+        else {
+            RGIssueDate_Day.clearError();
+            RGIssueDate_Month.clearError();
+            RGIssueDate_Year.clearError();
+        }
+
+
+
+        return isValid;
+    }
+
+    
+
+    function ValidateMainPhone() {
+
+        var isValid = true;
+        var MainPhone_Substrings_0 = $('#MainPhone_Substrings_0__Text').val();
+        var MainPhone_Substrings_1 = $('#MainPhone_Substrings_1__Text').val();
+        var MainPhone_Substrings_2 = $('#MainPhone_Substrings_2__Text').val();
+
+        $('#MainPhone_Substrings_0__Text').clearError();
+        $('#MainPhone_Substrings_1__Text').clearError();
+        $('#MainPhone_Substrings_2__Text').clearError();
+
+        //if (MainPhone_Substrings_0 != '' || MainPhone_Substrings_1 != '' || MainPhone_Substrings_2 != '') {
+
+
+        if (MainPhone_Substrings_0.toString().length > 0 || MainPhone_Substrings_1.toString().length > 0 || MainPhone_Substrings_2.toString().length > 0) {
+            if (MainPhone_Substrings_0.toString() != "0" || MainPhone_Substrings_1.toString().length > 0 || MainPhone_Substrings_2.toString().length > 0) {
+                    if (MainPhone_Substrings_0.toString().length != 3) {
+                        $('#MainPhone_Substrings_0__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredThreeDigits", "Is required three digits.")');
+                        isValid = false;
+                        return isValid;
+                    }
+                }
+            }
+
+            if (MainPhone_Substrings_0.toString() != "0" || MainPhone_Substrings_0.toString().length > 0 || MainPhone_Substrings_2.toString().length > 0) {
+                if (MainPhone_Substrings_1.toString().length > 0 || MainPhone_Substrings_0.toString().length > 0 || MainPhone_Substrings_2.toString().length > 0) {
+                    if (MainPhone_Substrings_1.toString().length < 4) {
+                        $('#MainPhone_Substrings_1__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourOrFiveDigits", "Is required three or Four digits.")');
+                        isValid = false;
+                        return isValid;
+                    }
+                }
+            }
+
+            if (MainPhone_Substrings_2.toString().length > 0 || MainPhone_Substrings_0.toString().length > 0 || MainPhone_Substrings_1.toString().length > 0) {
+                if (MainPhone_Substrings_2.toString().length != 4) {
+                    $('#MainPhone_Substrings_2__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourDigits", "Is required four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+
+//        }
+//        else {
+//            $('#MainPhone_Substrings_0__Text').clearError();
+//            $('#MainPhone_Substrings_1__Text').clearError();
+//            $('#MainPhone_Substrings_2__Text').clearError();
+//        }
+        return isValid;
+    }
+
+    function ValidateMobilePhone() {
+
+        var isValid = true;
+        var MobilePhone_Substrings_0 = $('#MobilePhone_Substrings_0__Text').val();
+        var MobilePhone_Substrings_1 = $('#MobilePhone_Substrings_1__Text').val();
+        var MobilePhone_Substrings_2 = $('#MobilePhone_Substrings_2__Text').val();
+
+        $('#MobilePhone_Substrings_0__Text').clearError();
+        $('#MobilePhone_Substrings_1__Text').clearError();
+        $('#MobilePhone_Substrings_2__Text').clearError();
+
+//        if (MobilePhone_Substrings_0 != '' || MobilePhone_Substrings_1 != '' || MobilePhone_Substrings_2 != '') {
+
+        if (MobilePhone_Substrings_0.toString().length > 0 || MobilePhone_Substrings_1.toString().length > 0 || MobilePhone_Substrings_2.toString().length > 0) {
+            if (MobilePhone_Substrings_0.toString() != "0" || MobilePhone_Substrings_1.toString().length > 0 || MobilePhone_Substrings_2.toString().length > 0) {
+                if (MobilePhone_Substrings_0.toString().length != 3) {
+                    $('#MobilePhone_Substrings_0__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredThreeDigits", "Is required three digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (MobilePhone_Substrings_0.toString() != "0" || MobilePhone_Substrings_1.toString().length > 0 || MobilePhone_Substrings_2.toString().length > 0) {
+            if (MobilePhone_Substrings_1.toString().length > 0 || MobilePhone_Substrings_0.toString().length > 0 || MobilePhone_Substrings_2.toString().length > 0) {
+                if (MobilePhone_Substrings_1.toString().length < 4) {
+                    $('#MobilePhone_Substrings_1__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourOrFiveDigits", "Is required three or Four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (MobilePhone_Substrings_0.toString() != "0" || MobilePhone_Substrings_1.toString().length > 0 || MobilePhone_Substrings_2.toString().length > 0) {
+            if (MobilePhone_Substrings_2.toString().length > 0 || MobilePhone_Substrings_0.toString().length > 0 || MobilePhone_Substrings_1.toString().length > 0) {
+                if (MobilePhone_Substrings_2.toString().length != 4) {
+                    $('#MobilePhone_Substrings_2__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourDigits", "Is required four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+//        }
+//        else {
+//            $('#MobilePhone_Substrings_0__Text').clearError();
+//            $('#MobilePhone_Substrings_1__Text').clearError();
+//            $('#MobilePhone_Substrings_2__Text').clearError();
+//        }
+        return isValid;
+    }
+
+    function ValidateCommercialPhone() {
+
+        var isValid = true;
+        var CommercialPhone_Substrings_0 = $('#CommercialPhone_Substrings_0__Text').val();
+        var CommercialPhone_Substrings_1 = $('#CommercialPhone_Substrings_1__Text').val();
+        var CommercialPhone_Substrings_2 = $('#CommercialPhone_Substrings_2__Text').val();
+
+        $('#CommercialPhone_Substrings_0__Text').clearError();
+        $('#CommercialPhone_Substrings_1__Text').clearError();
+        $('#CommercialPhone_Substrings_2__Text').clearError();
+
+        //if (CommercialPhone_Substrings_0 != '' || CommercialPhone_Substrings_1 != '' || CommercialPhone_Substrings_2 != '') {
+
+        if (CommercialPhone_Substrings_0.toString().length > 0 || CommercialPhone_Substrings_1.toString().length > 0 || CommercialPhone_Substrings_2.toString().length > 0) {
+            if (CommercialPhone_Substrings_0.toString() != "0" || CommercialPhone_Substrings_1.toString().length > 0 || CommercialPhone_Substrings_2.toString().length > 0) {
+                if (CommercialPhone_Substrings_0.toString().length != 3) {
+                    $('#CommercialPhone_Substrings_0__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredThreeDigits", "Is required three digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (CommercialPhone_Substrings_0.toString() != "0" || CommercialPhone_Substrings_1.toString().length > 0 || CommercialPhone_Substrings_2.toString().length > 0) {
+            if (CommercialPhone_Substrings_1.toString().length > 0 || CommercialPhone_Substrings_0.toString().length > 0 || CommercialPhone_Substrings_2.toString().length > 0) {
+                if (CommercialPhone_Substrings_1.toString().length < 4) {
+                    $('#CommercialPhone_Substrings_1__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourOrFiveDigits", "Is required three or Four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (CommercialPhone_Substrings_0.toString() != "0" || CommercialPhone_Substrings_1.toString().length > 0 || CommercialPhone_Substrings_2.toString().length > 0) {
+            if (CommercialPhone_Substrings_2.toString().length > 0 || CommercialPhone_Substrings_0.toString().length > 0 || CommercialPhone_Substrings_1.toString().length > 0) {
+                if (CommercialPhone_Substrings_2.toString().length != 4) {
+                    $('#CommercialPhone_Substrings_2__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourDigits", "Is required four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+//        }
+//        else {
+//            $('#CommercialPhone_Substrings_0__Text').clearError();
+//            $('#CommercialPhone_Substrings_1__Text').clearError();
+//            $('#CommercialPhone_Substrings_2__Text').clearError();
+//        }
+        return isValid;
+    }
+
+    function ValidateMessagesPhone() {
+
+        var isValid = true;
+        var MessagesPhone_Substrings_0 = $('#MessagesPhone_Substrings_0__Text').val();
+        var MessagesPhone_Substrings_1 = $('#MessagesPhone_Substrings_1__Text').val();
+        var MessagesPhone_Substrings_2 = $('#MessagesPhone_Substrings_2__Text').val();
+
+        $('#MessagesPhone_Substrings_0__Text').clearError();
+        $('#MessagesPhone_Substrings_1__Text').clearError();
+        $('#MessagesPhone_Substrings_2__Text').clearError();
+
+        //if (MessagesPhone_Substrings_0 != '' || MessagesPhone_Substrings_1 != '' || MessagesPhone_Substrings_2 != '') {
+
+               if (MessagesPhone_Substrings_0.toString().length > 0 || MessagesPhone_Substrings_1.toString().length > 0 || MessagesPhone_Substrings_2.toString().length > 0) {
+            if (MessagesPhone_Substrings_0.toString() != "0" || MessagesPhone_Substrings_1.toString().length > 0 || MessagesPhone_Substrings_2.toString().length > 0) {
+                if (MessagesPhone_Substrings_0.toString().length != 3) {
+                    $('#MessagesPhone_Substrings_0__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredThreeDigits", "Is required three digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (MessagesPhone_Substrings_0.toString() != "0" || MessagesPhone_Substrings_1.toString().length > 0 || MessagesPhone_Substrings_2.toString().length > 0) {
+            if (MessagesPhone_Substrings_1.toString().length > 0 || MessagesPhone_Substrings_0.toString().length > 0 || MessagesPhone_Substrings_2.toString().length > 0) {
+                if (MessagesPhone_Substrings_1.toString().length < 4) {
+                    $('#MessagesPhone_Substrings_1__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourOrFiveDigits", "Is required three or Four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        if (MessagesPhone_Substrings_0.toString() != "0" || MessagesPhone_Substrings_1.toString().length > 0 || MessagesPhone_Substrings_2.toString().length > 0) {
+            if (MessagesPhone_Substrings_2.toString().length > 0 || MessagesPhone_Substrings_0.toString().length > 0 || MessagesPhone_Substrings_1.toString().length > 0) {
+                if (MessagesPhone_Substrings_2.toString().length != 4) {
+                    $('#MessagesPhone_Substrings_2__Text').showError('@Html.JavascriptTerm("PhoneNumberRequiredFourDigits", "Is required four digits.")');
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+//        }
+//        else {
+//            $('#MessagesPhone_Substrings_0__Text').clearError();
+//            $('#MessagesPhone_Substrings_1__Text').clearError();
+//            $('#MessagesPhone_Substrings_2__Text').clearError();
+//        }
+        return isValid;
+    }
+
+
+    function CheckValidDate(dayfield, monthfield, yearfield) {
+        var dayobj = new Date(yearfield, monthfield - 1, dayfield)
+        if ((dayobj.getMonth() + 1 != monthfield) || (dayobj.getDate() != dayfield) || (dayobj.getFullYear() != yearfield))
+            return false;
+        else
+            return true;
+    }
+
+    function CheckValidAge(dayfield, monthfield, yearfield) {
+        var age = 18;
+        var isAgeValid = false;
+        var mydate = new Date();
+        var passedDate = new Date(yearfield, monthfield - 1, dayfield)
+        var minRequiredCurrdate = new Date();
+        minRequiredCurrdate.setFullYear(minRequiredCurrdate.getFullYear() - age);
+
+        isAgeValid = passedDate <= minRequiredCurrdate;
+        return isAgeValid;
+    }
+
+    var valorRGSeleccionado = "";
+    function validarRGOnBlur() {
+        var rg = $("#RG").val();
+        if (rg.length > 20) {
+            $("#RG").focus();
+            $("#RG").val("");
+            //            if (rg != valorRGSeleccionado)
+            //                {
+//            ValidarRG(rg);
+            //                }
+
+        }
+    }
+    var estaValidandoPIS = false;
+    var estaValidandoCPF = false;
+    var estaValidandoEdad = false;
+    function ValidarCPF(texto) {
+        var url = '@Url.Content("~/Enroll/AccountInfo/swValidarCPF")';
+        var data = JSON.stringify({ CPFTextoInput: texto });
+        estaValidandoCPF = true;
+        $.ajax({
+            data: data,
+            async: false,
+            url: url,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                estaValidandoCPF = false;
+                var resultado = response;
+                if (!resultado.Estado) {
+                    $("#CPF_Substrings_0__Text").ErrorValid(resultado.mensaje, [9, 3]);
+                    $("#CPF_Substrings_1__Text").ErrorValid(resultado.mensaje, [9, 3])
+                }
+
+            }
+        });
+    } 
+
+    var estaValidandoEIN = true;
+    function ValidarEIN(texto) {
+        var url = '@Url.Content("~/Enroll/AccountInfo/swValidarINN")';
+        var data = JSON.stringify({ SSN: texto });
+        estaValidandoEIN = true;
+        $.ajax({
+            data: data,
+            async: false,
+            url: url,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                var resultado = response;
+                if (!resultado.Estado) {
+                    estaValidandoSSN = false;
+                    $("#EIN_Substrings_0__Text").ErrorValid(resultado.mensaje, [9, 3]);
+                    $("#EIN_Substrings_1__Text").ErrorValid(resultado.mensaje, [9, 3]) 
+                } else {
+                    estaValidandoSSN = true;
+                    $('.field-validation-error').remove();
+                }
+
+            }
+        });
+    }
+
+    var estaValidandoSSN = true;
+    function ValidarSSN(texto) {
+        var url = '@Url.Content("~/Enroll/AccountInfo/swValidarSSN")';
+        var data = JSON.stringify({ SSN: texto });
+        estaValidandoSSN = true;
+        $.ajax({
+            data: data,
+            async: false,
+            url: url,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                var resultado = response;
+                if (!resultado.Estado) { 
+                    estaValidandoSSN = false;
+                    $("#SSN_Substrings_0__Text").ErrorValid(resultado.mensaje, [9, 3]);
+                    $("#SSN_Substrings_1__Text").ErrorValid(resultado.mensaje, [9, 3])
+                    $("#SSN_Substrings_2__Text").ErrorValid(resultado.mensaje, [9, 3])
+                } else {
+                    //remover el span
+                    estaValidandoSSN = true;
+                    $('.field-validation-error').remove();
+                }
+
+            }
+        });
+    }
+
+    function ValidarPIS(texto) {
+        var url = '@Url.Content("~/Enroll/AccountInfo/swValidarPIS")';
+        estaValidandoPIS = true;
+        var data = JSON.stringify({ TextoInputPIS: texto });
+        $.ajax({
+            data: data,
+            async: false,
+            url: url,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                estaValidandoPIS = false;
+                var resultado = response;
+
+                if (!resultado.Estado) {
+                    validationPIS = false;
+                    $("#PIS_Substrings_0__Text").ErrorValid(resultado.mensaje, [9, 3]);
+                    $("#PIS_Substrings_1__Text").ErrorValid(resultado.mensaje, [9, 3])
+                }
+                else {
+                    validationPIS = true;
+                }
+            }
+        });
+    }
+//    function ValidarRG(texto) {
+//        var url = '@Url.Content("~/Enroll/AccountInfo/EditswValidarRG")';
+//        var data = JSON.stringify({ TextoRG: texto });
+
+//        $.ajax({
+//            data: data,
+//            async: false,
+//            url: url,
+//            dataType: "json",
+//            type: "POST",
+//            contentType: "application/json",
+//            success: function (response) {
+//                var resultado = response;
+//                if (!resultado.Estado) {
+//                    var RGLength = $("#RG").val().length;
+//                    $("#RG").ErrorValid(resultado.mensaje, [RGLength + 1]);
+//                }
+
+//            }
+//        });
+
+
+//    }
+
+    function ValidarEdad(texto) {
+        estaValidandoEdad = true;
+        var url = '@Url.Content("~/Enroll/AccountInfo/swValidarEdad")';
+        var data = JSON.stringify({ fechaNacimiento: texto });
+
+        $.ajax({
+            data: data,
+            async: false,
+            url: url,
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                var resultado = response;
+                estaValidandoEdad = false;
+                if (!resultado.Estado) {
+                    $("#Birthday_Month").ErrorValid(resultado.mensaje, [3]);
+                    $("#Birthday_Day").ErrorValid(resultado.mensaje, [3]);
+                    $("#Birthday_Year").ErrorValid(resultado.mensaje, [5]);
+                }
+
+            }
+        });
+
+
+    }
+</script>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_function = "basicInfoEditFormSubmit" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.CountryID)
+    @Html.HiddenFor(m => m.ShowTaxNumber)
+    
+    // Add por IPN : obtener la configuración de cultura inicio 12042017
+    @Html.Hidden("culture", CoreContext.CurrentCultureInfo.Name);
+    // fin 12042017
+    
+    <div class="FormContainer splitCol pad5 FL basicInfo">
+        <h2>@Html.Term("Enrollment_AccountInfo_BasicInfo_AccountInfoTitle", "Account Info")</h2> 
+        @if (Model.ParameterCountries.Where(x => x.Controls == "FirstName").FirstOrDefault().Active == true)
+        {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.FirstName):
+                </div>
+                <div class="FInput">
+                    @Html.TextBoxFor(m => m.FirstName)@Html.ValidationMessageFor(m => m.FirstName)
+                </div>
+            </div>
+        }
+        @if (Model.ParameterCountries.Where(x => x.Controls == "LastName").FirstOrDefault().Active == true)
+        {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.LastName):
+                </div>
+                <div class="FInput">
+                    @Html.TextBoxFor(m => m.LastName)@Html.ValidationMessageFor(m => m.LastName)
+                </div>
+            </div>
+        }
+        @if (Model.ParameterCountries.Where(x => x.Controls == "CPF").FirstOrDefault().Active == true)
+        {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.CPF):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.CPF)@Html.ValidationMessageFor(m => m.CPF)
+                </div>
+            </div>
+        }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "PIS").FirstOrDefault().Active == true)
+         {
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.PIS):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.PIS)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "RG").FirstOrDefault().Active == true)
+         {
+            <div class="FRow pis">
+                @Html.Term("Enrollment_AccountInfo_BasicInfo_PISInfo")
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.RG):
+                </div>
+                <div class="FInput">
+                    @Html.TextBoxFor(m => m.RG, new { @class = "justNumbers" })@Html.ValidationMessageFor(m => m.RG)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "OrgExp").FirstOrDefault().Active == true)
+         {
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.OrgExp):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.OrgExp)@Html.ValidationMessageFor(m => m.OrgExp)
+                </div>
+            </div>
+         }
+        @if (Model.ParameterCountries.Where(x => x.Controls == "RGIssueDate").FirstOrDefault().Active == true)
+        {
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.RGIssueDate):
+                </div>
+                <div class="FInput" id="issueDate">
+                    @*@Html.EditorFor(m => m.RGIssueDate)@Html.ValidationMessageFor(m => m.RGIssueDate)*@
+                </div>
+            </div>
+        }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "GenderBRA").FirstOrDefault().Active == true)
+          {
+            <div class="FRow">
+                <div class="FLabel radioOptions" style="width: auto;">
+                    @Html.LabelFor(m => m.Gender): <span class="ml10">@Html.RadioButtonFor(m => m.Gender, Constants.Gender.Male, new { id = "btnGenderMale" })</span>
+                    @Html.Label("btnGenderMale", "Male", "Male")
+                    @Html.RadioButtonFor(m => m.Gender, Constants.Gender.Female, new { id = "btnGenderFemale" })
+                    @Html.Label("btnGenderFemale", "Female", "Female")
+                    @Html.ValidationMessageFor(m => m.Gender)
+                </div>
+                <span class="clr"></span>
+            </div>
+          }
+         
+            @if (Model.ParameterCountries.Where(x => x.Controls == "BirthdayBRA").FirstOrDefault().Active == true)
+            {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.Birthday):
+                </div>
+                <div class="FInput" id="dateOfBirth">
+					@*@Html.EditorFor(m => m.Birthday)@Html.ValidationMessageFor(m => m.Birthday)*@
+                </div>
+            </div>
+            }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "NationalityBRA").FirstOrDefault().Active == true)
+          {
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.Nationality):
+                </div>
+                <div class="FInput">
+                    @{                                    
+              var selectListNationality = new[] { new SelectListItem { Value = string.Empty } }.AsEnumerable();
+              selectListNationality = AccountPropertyValue.Repository.LoadAllFull().Where(a => a.AccountPropertyTypeID == 1010).Select(x => new SelectListItem { Text = x.Name, Value = x.AccountPropertyValueID.ToString() });
+                                    @Html.DropDownListFor(m => m.Nationality, selectListNationality);
+
+                    }
+                </div>
+            </div>
+          }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "MaritalStatusBRA").FirstOrDefault().Active == true)
+          {           
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.MaritalStatus):
+                </div>
+                <div class="FInput">
+                    @{  var selectListMaritalStatus = new[] { new SelectListItem { Value = string.Empty } }.AsEnumerable();
+                        selectListMaritalStatus = AccountPropertyValue.Repository.LoadAllFull().Where(a => a.AccountPropertyTypeID == 1009).Select(x => new SelectListItem { Text = x.Name, Value = x.AccountPropertyValueID.ToString() });
+                        @Html.DropDownListFor(m => m.MaritalStatus, selectListMaritalStatus);
+                    }
+                </div>
+            </div>
+          }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "OccupationBRA").FirstOrDefault().Active == true)
+          {    
+            <div class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.Occupation):
+                </div>
+                <div class="FInput">
+                    @{  var inputs = new List<MvcHtmlString>();
+                        var selectListOccupation = new[] { new SelectListItem { Value = string.Empty } }.AsEnumerable();
+                        selectListOccupation = AccountPropertyValue.Repository.LoadAllFull().Where(a => a.AccountPropertyTypeID == 1011).Select(x => new SelectListItem { Text = x.Name, Value = x.AccountPropertyValueID.ToString() });
+                        @Html.DropDownListFor(m => m.Occupation, selectListOccupation);
+
+                    }
+                </div>
+            </div>
+          }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "PasswordBRA").FirstOrDefault().Active == true)
+          { 
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.Password):
+                </div>
+                <div class="FInput">
+                    @Html.PasswordFor(m => m.Password, new { value = Model.Password })@Html.ValidationMessageFor(m => m.Password)
+                </div>
+                <div class="FInput" style="height:36px;">
+                    <img id="PasswordImg" src="@Url.Content("~/Content/Images/exclamation.png")" alt="" title="Enter a Password first." style="padding-left: 10px; padding-top: 10px; cursor: pointer;"/>
+                </div>
+            </div>
+          }
+            @if (Model.ParameterCountries.Where(x => x.Controls == "ConfirmPasswordBRA").FirstOrDefault().Active == true)
+            { 
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.ConfirmPassword):
+                    </div>
+                    <div class="FInput">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { value = Model.Password })@Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+            }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "SSN").FirstOrDefault().Active == true)
+         {
+             if (Model.ShowTaxNumber)
+             {
+                <div class="FRow">
+                    <div class="FLabel" style="width: auto">
+                    @Html.LabelFor(m => m.IsEntity): <span class="ml10">@Html.RadioButtonFor(m => m.IsEntity, false, new { id = "btnIsEntityFalse", @class = "toggleEntityButton" })</span>
+                    @Html.Label("btnIsEntityFalse", "Individual", "Individual")
+                    <span class="ml10">@Html.RadioButtonFor(m => m.IsEntity, true, new { id = "btnIsEntityTrue", @class = "toggleEntityButton" })</span>
+                    @Html.Label("btnIsEntityTrue", "BusinessEntity", "Business Entity")
+                </div>
+                </div>
+                <div id="contentTrue" data-toggle-entity-button="#btnIsEntityFalse" style="@(Model.IsEntity ? "display:none" : "")">
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.SSN):
+                    </div>
+                    <div class="FInput">
+                        @Html.EditorFor(m => m.SSN)@Html.ValidationMessageFor(m => m.SSN)
+                    </div>
+                </div>
+            </div>
+                <div id="contentFalse" data-toggle-entity-button="#btnIsEntityTrue" style="@(Model.IsEntity ? "" : "display:none")">
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.EntityName):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(m => m.EntityName)@Html.ValidationMessageFor(m => m.EntityName)
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.EIN):
+                    </div>
+                    <div class="FInput">
+                        @Html.EditorFor(m => m.EIN)@Html.ValidationMessageFor(m => m.EIN)
+                    </div>
+                </div>
+            </div>
+             }
+         }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "GenderUSA").FirstOrDefault().Active == true)
+          {
+              <div class="FRow">
+                <div class="FLabel radioOptions" style="width: auto;">
+                    @Html.LabelFor(m => m.Gender): <span class="ml10">@Html.RadioButtonFor(m => m.Gender, Constants.Gender.Male, new { id = "btnGenderMale" })</span>
+                    @Html.Label("btnGenderMale", "Male", "Male")
+                    @Html.RadioButtonFor(m => m.Gender, Constants.Gender.Female, new { id = "btnGenderFemale" })
+                    @Html.Label("btnGenderFemale", "Female", "Female")
+                    @Html.RadioButtonFor(m => m.Gender, Constants.Gender.NotSet, new { id = "btnGenderNotSet" })
+                    @Html.Label("btnGenderNotSet", "PreferNotToSay", "Prefer not to say")
+                    @Html.ValidationMessageFor(m => m.Gender)
+                </div>
+                <span class="clr"></span>
+                </div>
+          } 
+          @if (Model.ParameterCountries.Where(x => x.Controls == "Birthday").FirstOrDefault().Active == true)
+          {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.Birthday):
+                </div>
+                <div class="FInput" id="dateOfBirth">
+                    @Html.EditorFor(m => m.Birthday)@Html.ValidationMessageFor(m => m.Birthday)
+                </div>
+            </div>
+          }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "MainPhoneUSA").FirstOrDefault().Active == true)
+          {
+              <div  id="divPhone1"  class="FRow">
+                <div class="FLabel">
+                   <span class="requiredMarker">*</span>
+                   @Html.LabelFor(m => m.MainPhone):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.MainPhone)@Html.ValidationMessageFor(m => m.MainPhone)
+                </div>
+            </div>
+              
+               @*<div id="divPhone1" class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.MainPhone):
+                    </div>
+                    <div class="FInput">
+                        @Html.EditorFor(m => m.MainPhone)@Html.ValidationMessageFor(m => m.MainPhone)
+                    </div>
+                </div>*@
+          } 
+          @if (Model.ParameterCountries.Where(x => x.Controls == "EmailUSA").FirstOrDefault().Active == true)
+          {
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.Email):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(m => m.Email)@Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+          }
+       
+           @if (Model.ParameterCountries.Where(x => x.Controls == "PasswordUSA").FirstOrDefault().Active == true)
+           { 
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.Password):
+                </div>
+                <div class="FInput">
+                    @Html.PasswordFor(m => m.Password, new { value = Model.Password })@Html.ValidationMessageFor(m => m.Password)
+                </div>
+                <div class="FInput" style="height:36px;">
+                    <img id="PasswordImg" src="@Url.Content("~/Content/Images/exclamation.png")" alt="" title="Enter a Password first." style="padding-left: 10px; padding-top: 10px; cursor: pointer;"/>
+                </div>
+            </div>
+           }
+            @if (Model.ParameterCountries.Where(x => x.Controls == "ConfirmPasswordUSA").FirstOrDefault().Active == true)
+            { 
+                <div class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.ConfirmPassword):
+                    </div>
+                    <div class="FInput">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { value = Model.Password })@Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+            }
+             <table width="100%" cellspacing="0" class="FormTable">
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x.AuthNetworkData, new { @checked = "checked" })
+                    <label for="AuthNetworkData">
+                        @Html.Term("AuthNetworkData", "Autorizo compartilhar meus dados de contato (e-mail, telefone) con minha rede.")</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x.AuthEmailSend, new { @checked = "checked" })
+                    <label for="AuthEmailSend">
+                        @Html.Term("AuthEmailSend", "Aceito receber e-mails da Belcorp.")</label>
+                </td>
+            </tr> 
+        </table>
+    </div> 
+    
+    <div id="MainAddress" class="FormContainer splitCol pad5 FR">
+    
+      @if (Model.ParameterCountries.Where(x => x.Controls == "ContactInfoBRA").FirstOrDefault().Active == true)
+      { 
+        <h2>@Html.Term("Enrollment_AccountInfo_BasicInfo_ContactInfoTitle", "Contact Info")</h2> 
+      }
+          @if (Model.ParameterCountries.Where(x => x.Controls == "MainAddressUSA").FirstOrDefault().Active == true)
+          {  
+               <h2>@Html.Term("Enrollment_AccountInfo_BasicInfo_MainAddressTitle", "Main Address")</h2>
+        @Html.EditorFor(m => m.MainAddress)
+          }
+          
+    <span class="ClearAll"></span>
+         @if (Model.ParameterCountries.Where(x => x.Controls == "MainPhoneBRA").FirstOrDefault().Active == true)
+         {         
+                <div id="divPhone1" class="FRow">
+                    <div class="FLabel">
+                        <span class="requiredMarker">*</span>
+                        @Html.LabelFor(m => m.MainPhone):
+                    </div>
+                    <div class="FInput">
+                        @Html.EditorFor(m => m.MainPhone)@Html.ValidationMessageFor(m => m.MainPhone)
+                    </div>
+                </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "MobilePhoneBRA").FirstOrDefault().Active == true)
+         {   
+            <div id="divPhone2" class="FRow">
+                <div class="FLabel">
+                   @* <span class="requiredMarker">*</span>*@
+                    @Html.LabelFor(m => m.MobilePhone):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.MobilePhone)@Html.ValidationMessageFor(m => m.MobilePhone)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "CommercialPhoneBRA").FirstOrDefault().Active == true)
+         {
+            <div id="divPhone3" class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.CommercialPhone):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.CommercialPhone)@Html.ValidationMessageFor(m => m.CommercialPhone)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "MessagesPhoneBRA").FirstOrDefault().Active == true)
+         {
+            <div id="divPhone4" class="FRow">
+                <div class="FLabel">
+                    @Html.LabelFor(m => m.MessagesPhone):
+                </div>
+                <div class="FInput">
+                    @Html.EditorFor(m => m.MessagesPhone)@Html.ValidationMessageFor(m => m.MessagesPhone)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "EmailBRA").FirstOrDefault().Active == true)
+         {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.Email):
+                </div>
+                <div class="FInput">
+                    @Html.TextBoxFor(m => m.Email)@Html.ValidationMessageFor(m => m.Email)
+                </div>
+            </div>
+         }
+         @if (Model.ParameterCountries.Where(x => x.Controls == "EmailConfirmationBRA").FirstOrDefault().Active == true)
+         {
+            <div class="FRow">
+                <div class="FLabel">
+                    <span class="requiredMarker">*</span>
+                    @Html.LabelFor(m => m.EmailConfirmation):
+                </div>
+                <div class="FInput">
+                    @Html.TextBoxFor(m => m.EmailConfirmation)@Html.ValidationMessageFor(m => m.EmailConfirmation)
+                </div>
+            </div>
+         }
+        @if (Model.ParameterCountries.Where(x => x.Controls == "MainAddressUSA").FirstOrDefault().Active == true)
+        {
+            Html.EditorFor(m => m.MainAddress);
+         <!--R2709 - CGI(JICM) - INI-->
+         <div class="FRow">
+              <h2>@Html.Term("Enroll_AccountInfo_BasicInfo_Language", "LANGUAGE PREFERENCE")</h2>       
+              <div class="FInput">
+               @Html.DropDownListFor(m => m.CustomLanguageID, new SelectList(SmallCollectionCache.Instance.Languages.Where(y => y.Active).Select(x => new { x.LanguageID, Name = x.GetTerm() }), "LanguageID", "Name", Model.CustomLanguageID))
+              </div>
+          </div>
+        } 
+        @if (Model.ParameterCountries.Where(x => x.Controls == "MainAddressBRA").FirstOrDefault().Active == true)
+        {
+         <!--R2709 - CGI(JICM) - INI-->
+         <div class="FRow">
+               <h2>@Html.Term("Enrollment_AccountInfo_BasicInfo_MainAddressTitle", "Main Address")</h2>
+        @Html.EditorFor(m => m.MainAddress) 
+          </div>
+        } 
+    <span class="ClearAll"></span>
+    
+         <!--R2709 - CGI(JICM) - FIN-->
+    </div>
+    <span class="ClearAll"></span>
+    
+    <p class="FormSubmit">
+        <span class="FR"><a class="Button" id="btnBasicInfoSubmit" href="javascript:void(0);"
+            data-click-submit="parent"><span>@Html.Term("Next")</span> </a></span>
+    </p>
+    @Html.AntiForgeryToken()
+}
+@Html.Partial("_AddressValidation")

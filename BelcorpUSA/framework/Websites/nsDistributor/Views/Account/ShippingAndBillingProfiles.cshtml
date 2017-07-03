@@ -1,0 +1,71 @@
+@model NetSteps.Data.Entities.Account
+@{
+    ViewBag.Title = Html.Term("ShippingAndBillingProfiles", "Shipping and Billing Profiles");
+}
+@section head {
+}
+<div class="pageTitle">
+    <div class="breadCrumb">
+        <a href="@Url.Resolve("~/Account")"><span>@Html.Term("MyAccount", "My Account")</span></a>
+    </div>
+    <h1>@Html.Term("ShippingAndBillingProfiles", "Shipping and Billing Profiles")</h1>
+</div>
+<div class="Profiles">
+    <div class="FL splitCol shippingCol">
+        <h3>
+            @Html.Term("ShippingProfiles", "Shipping Profile")</h3>
+        <div class="UI-mainBg pad5 brdrAll GridUtility">
+            <a id="btnAddShippingProfile" href="@Url.Resolve("~/Account/EditShippingProfile")" class="UI-icon-container ShippingProfile">
+                <span class="UI-icon icon-plus"></span><span>@Html.Term("Add")</span></a> <span class="clr">
+                </span>
+        </div>
+        <div class="FauxTable">
+            @foreach (var shippingProfile in Model.Addresses.GetAllByTypeID(Constants.AddressType.Shipping).OrderByDescending(a => a.IsDefault))
+            {
+                <div class="FRow">
+                    <div class="FLabel" style="padding: 10px; width: auto;">
+                        @Html.Raw(shippingProfile.ToDisplay(false, showProfileName: true))
+                        @if (shippingProfile.IsDefault)
+                        {
+                            <span class="FR UI-icon-container"><span class="UI-icon icon-check"></span></span>
+                        }
+                    </div>
+                    <div class="FInput" style="padding: 15px 10px 10px;">
+                        <a href="@Url.Resolve("~/Account/EditShippingProfile/")@shippingProfile.AddressID" class="Button ShippingProfile">
+                            <span>
+                                @Html.Term("Edit")</span></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="FR splitCol billingCol">
+        <h3>
+            @Html.Term("BillingProfiles", "Billing Profile")</h3>
+        <div class="UI-mainBg pad5 brdrAll GridUtility">
+            <a id="btnAddBillingProfile" href="@Url.Resolve("~/Account/EditBillingProfile")" class="UI-icon-container overlay BillingProfile">
+                <span class="UI-icon icon-plus"></span><span>@Html.Term("Add")</span></a> <span class="clr">
+                </span>
+        </div>
+        <div class="FauxTable">
+            @foreach (var billingProfile in Model.AccountPaymentMethods.OrderByDescending(apm => apm.IsDefault))
+            {
+                <div class="FRow">
+                    <div class="FLabel" style="padding: 10px; width: auto;">
+                        @Html.Raw(((IPayment)billingProfile).ToDisplay(false, true, true))
+                        @if (billingProfile.IsDefault)
+                        {
+                            <span class="FR UI-icon-container"><span class="UI-icon icon-check"></span></span>
+                        }
+                    </div>
+                    <div class="FInput" style="padding: 15px 10px 10px;">
+                        <a href="@Url.Resolve("~/Account/EditBillingProfile/")@billingProfile.AccountPaymentMethodID" class="Button BillingProfile">
+                            <span>
+                                @Html.Term("Edit")</span></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <span class="clr"></span>
+</div>

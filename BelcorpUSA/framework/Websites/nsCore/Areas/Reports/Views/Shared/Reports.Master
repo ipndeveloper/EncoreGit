@@ -1,0 +1,122 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="Head" runat="server">
+        //Developed by Wesley Campos S. - CSTI
+        <style type="text/css">
+            .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .Cerrar 
+            {
+                font-family:Helvetica;
+                font-size:11px;
+            }
+        </style>    
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">    
+
+     <%= Html.DropDownNavigation(Html.Term("Warehouse&Products", "Warehouse & Products"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText =  Html.Term("WarehouseReport1", "WareHouse"), Url = "~/Reports/Reports/WareHouseReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/WareHouseReportGate/*" } },
+			new NavigationItem() { LinkText =  Html.Term("ProductPricesReport", "Product Prices"), Url = "~/Reports/Reports/ProductPricesReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/ProductPricesReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("InventoryMovementsReport", "Inventory Movements"), Url = "~/Reports/Reports/InventoryMovementsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/InventoryMovementsReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("ItemsAllocatedByProductReport", "Items Allocated By Product"), Url = "~/Reports/Reports/ItemsAllocatedByProductReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/ItemsAllocatedByProductReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("SAPCodeRepeatedReport", "SAP Code Repeated"), Url = "~/Reports/Reports/SAPCodeRepeatedReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/SAPCodeRepeatedReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("ShipmentsByProductReport", "Shipments By Product"), Url = "~/Reports/Reports/ShipmentsByProductReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/ShipmentsByProductReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("PickingPendingsReport", "Picking Pendings"), Url = "~/Reports/Reports/PickingPendingsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/PickingPendingsReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("CancellPaidWithoutReturnReport", "Cancelled Paid Without Returns"), Url = "~/Reports/Reports/CancellPaidWithoutReturnReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/CancellPaidWithoutReturnReportGate/*" } }
+            
+            
+		}) %>
+    
+     <%= Html.DropDownNavigation(Html.Term("Sales", "Sales"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("DailyPaymentsReport1", "Daily Payments"), Url = "~/Reports/Reports/DailyPaymentsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/DailyPaymentsReportGate/*" } },
+	      	new NavigationItem() { LinkText = Html.Term("DailyOrdersReport1", "Daily Orders"), Url ="~/Reports/Reports/DailyOrdersReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/OrderDetailReportGate/*" } },
+	    	new NavigationItem() { LinkText = Html.Term("OrderDetailReport1", "Order Detail"), Url = "~/Reports/Reports/OrderDetailReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/DailyPaymentsReportGate/*" } },
+	    	new NavigationItem() { LinkText =  Html.Term("TotalSalesReport", "Total Sales"), Url = "~/Reports/Reports/TotalSalesReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/TotalSalesReportGate/*" } },
+	        new NavigationItem() { LinkText =  Html.Term("SalesSourceReport", "Sales Source"), Url ="~/Reports/Reports/SalesSourceReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/SalesSourceReportGate/*" } },
+	        new NavigationItem() { LinkText =  Html.Term("TotalCommissions", "Total Commissions"), Url ="~/Reports/Reports/TotalCommissionsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/TotalCommissionsReportGate/*" } },
+            new NavigationItem() { LinkText =  Html.Term("DetailCommissions", "Detail Commissions"), Url ="~/Reports/Reports/DetailCommissionsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/DetailCommissionsReportGate/*" } }
+	  }) %>
+
+     <%= Html.DropDownNavigation(Html.Term("Accounts", "Accounts"), "", new List<NavigationItem>()
+		{
+		 	new NavigationItem() { LinkText = Html.Term("EnrollmentsReport1", "New Enrollments"), Url = "~/Reports/Reports/EnrollmentsReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/EnrollmentsReportGate/*" } },
+            //new NavigationItem() { LinkText = Html.Term("ProductCreditBalanceReport", "Product Credit Balance"), Url = "~/Reports/Reports/ProductCreditBalanceReportGate", MappedUrls = new List<string>(){ "~/Reports/Reports/ProductCreditBalanceReportGate/*" } },
+            //new NavigationItem() { LinkText = Html.Term("DisbursementProfilesReport", "Disbursement Profiles"), Url = "~/Reports/Reports/DisbursmentProfilesReportGate", MappedUrls = new List<string>(){"~/Reports/Reports/DisbursmentProfilesReportGate/*"} },
+            new NavigationItem() { LinkText = Html.Term("VolumesReport", "Volumes"), Url = "~/Reports/Reports/VolumesReportGate", MappedUrls = new List<string>(){"~/Reports/Reports/VolumesReportGate/*"} }
+    
+        }) %>
+
+
+     <%= Html.DropDownNavigation(Html.Term("GeneralLegder", "General Ledger"), "", new List<NavigationItem>()
+	     {
+	     	new NavigationItem() { LinkText = Html.Term("DebtsPerAge", "Debts Per Age"), Url = "~/Reports/Reports/DebtsPerAge", MappedUrls = new List<string>(){ "~/Reports/Reports/DebtsPerAge/*" } },
+            new NavigationItem() { LinkText = Html.Term("TicketPaymentsPerMonth", "Ticket Payments Per Month"), Url = "~/Reports/Reports/TicketPaymentsPerMonth", MappedUrls = new List<string>(){ "~/Reports/Reports/TicketPaymentsPerMonth/*" } }
+         }) %>
+
+    <%= Html.DropDownNavigation(Html.Term("MLM", "MLM"), "", new List<NavigationItem>()
+	     {
+	     	new NavigationItem() { LinkText = Html.Term("Reports", "MLM Reports"), Url = "~/Reports/Reports/ReportsFilterGate", MappedUrls = new List<string>(){ "~/Reports/Reports/ReportsFilterGate/*" } }
+         }) %>   
+    
+</asp:Content>
+
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+
+    <script type="text/javascript">
+        //Developed by Wesley Campos S. - CSTI
+        function ShowAlert(msj) {
+            $("#dialogo").html(msj);
+            $("#dialogo").dialog({
+                create: function (event, ui) {
+                    $('.ui-dialog-titlebar').css({ 'background': '#00659e', 'border': 'none', 'font-family': 'Helvetica', 'font-size': '11px', 'color': 'white' });
+                },
+                modal: true,
+                resizable: false,
+                width: 350,
+                height: 150,
+                show: "fold",
+                hide: "scale",
+                buttons: 
+                         {
+                             "1": { id: 'btnClose', text: 'Cerrar', click: function () { $(this).dialog("close"); }, "class": "Cerrar" 
+                         }
+                }
+            });
+        }
+    </script>
+    <div class="BreadCrumb">
+        <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div id="dialogo" title= "Encore" style="font-family: calibri; font-size: 10pt; font-weight: normal">
+        <p></p>
+    </div>
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                    <div class="SectionNav">
+                        <ul class="SectionLinks">
+                            <% foreach (ReportCategory item in SmallCollectionCache.ReportCategories) %>
+                            <% { %>
+                            <% if (CoreContext.CurrentUser.HasFunction(item.Function))
+                               { %>
+                            <li>
+                                <%= Html.SelectedLink(ResolveUrl("~/Reports/Reports/Category/" + item.ReportCategoryID),
+                                     Html.Term("Reports_Category_" + item.CategoryName, item.CategoryName), LinkSelectionType.ActualPage, CoreContext.CurrentUser) %>
+                            </li>
+                            <% } %>
+                            <% } %>
+                        </ul>
+                    </div>
+                </asp:ContentPlaceHolder>
+            </td>
+            <td class="CoreContent">
+                <asp:ContentPlaceHolder runat="server" ID="MainContent">
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

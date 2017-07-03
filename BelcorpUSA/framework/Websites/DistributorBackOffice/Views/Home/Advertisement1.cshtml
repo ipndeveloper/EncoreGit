@@ -1,0 +1,16 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+
+@((ViewData["Advertisement1"] as HtmlSection).ToDisplay(((NetSteps.Data.Entities.Page)ViewData["CurrentPage"]).PageID))
+
+<script type="text/javascript">
+    $(function () {
+        var finPer = '@ViewBag.FinPeriodo';
+        var titPago = '@ViewBag.TitPago';
+        var venPersonal = '@ViewBag.VenPersonal';
+        var venDivision = '@ViewBag.VenDivision';
+        $("#finPer").html(finPer.toString());
+        $("#titPag").html(titPago.toString());
+        $("#venPer").html(venPersonal.toString());
+        $("#venDiv").html(venDivision.toString());
+    });
+</script>

@@ -1,0 +1,363 @@
+﻿<!-- Title Progression Widget -->
+@Html.Partial("_PerformanceFusionCharts")
+<div class="FL PerfKPI kpiProgress TitleProgress advancedTitleProgress @Html.Term("TitleProgressLanguage")">
+    <div class="UI-secBg brdrAll pad5">
+        <span>@Html.Term("TitleProgress", "Title Progress")</span>
+    </div>
+    <div id="chartContainer" class="brdr1 brdrNNYY mb10 body">
+        FusionCharts will load here!</div>
+    @Html.Partial("_TitleProgressionAdvancedSettings")
+    <script type="text/javascript"><!--
+        FusionCharts.setCurrentRenderer('javascript');
+
+        var userVal = new Array();
+        var userValActive = new Array();
+        
+
+         $(function () {
+        $('#statusSelectFilter').parent().hide();
+        $('#statusSelectFilter').change(function () {
+            $.getJSON("@Url.Action("GetAdvancedTitleProgressionData", "Performance")", { accountId: @CoreContext.CurrentAccount.AccountID, periodId: $(this).val()}, function(data) {
+            if (data.success) {
+	            userValActive = new Array();
+	            userVal = new Array();
+                $.each(data.result.Rows, function(index, value) {
+                    userValActive.push(value.Active);
+                    userVal.push(value.Data);
+                });
+
+                var currentPaidAsTitle = data.result.PaidAsLevel;
+                var currentCareerTitle = data.result.CurrentLevel;
+
+                /************************
+        * Sample Data
+        ************************/
+        //var currentPaidAsTitle = '5',                                       //Integer will be provided from commissions
+	      //  currentCareerTitle = '7',                                       //Integer will be provided from commissions
+		    //userValActive = [true, true, true, false, false, false, false],  //Will need to figure out any prior requirements to make a qualification active or not.
+            //userValActive = [true,true,true,true,true,true,true],          //Will need to figure out any prior requirements to make a qualification active or not.
+            //userVal = ['1500','8000','4','123546.56','4','2','1'];         //Sample current/progress data for each qualification. Eeach value will be provided from commissions
+            //userVal = ['275','2700','2','0','0','0','0'];                  //Sample current/progress data for each qualification. Eeach value will be provided from commissions
+		    //userVal = ['275', '2700', '2', '123546.56', '4', '2', '1'];      //Sample current/progress data for each qualification. Eeach value will be provided from commissions
+        /**** End Sample Data ****/
+
+        var onRight = '0',                       //If chart type is a column format, this is for autodetection from the settings to position items correctly (auto switches in an if statement below)
+	        qtyTitles = titles.length,           //Count how many titles organization has
+		    qtyQualifiers = qualifiers.length,   //Count how many qualifications there are for the titles
+            zoneAlpha1,
+            zoneAlpha2,
+            titleLines = new Array(qtyTitles);   //This will store Json data to place trendlines in appropriate places
+        
+        //Assign the Json values for the trend lines that will represent the different levels (titles).
+        for (var i = 0; i < qtyTitles; i++) {
+            var color;
+            if (i == currentCareerTitle-1) {
+                color = titleColor;
+            }
+            else if (i == currentPaidAsTitle-1) {
+                color = paidAsColor;
+            }
+            else {
+                color = titleLinesColor;
+            }
+            titleLines[i] = {
+                'value': i,
+                'color': color,
+                'dashed': lineDashed,
+                'showOnTop': lineOnTop,
+                'thickness': lineThickness,
+                'valueOnRight': titlesOnRight,
+                'displayValue': titles[i]
+            };
+        };
+        //If chart type is using a Column format then this applies (it is based on a setting and puts labels in correct positioning)
+        if (titlesOnRight == '0') {
+            onRight = '1';
+        }
+
+        myChart.render("chartContainer");
+        myChart.setTransparent(true);
+
+        //Terms for current Paid As/Carrer Title (use {br} to create line breaks when using chart type "Bar2D", remove first {br} if using chart type "Columnxx")
+        var currentIndicatorTerms =
+            [
+                '@Html.Term("Titles_PaidAsTitleIndicationText", "{br}Paid As{br}Title")',
+                '@Html.Term("Titles_CareerTitleIndicationText", "{br}Career{br}Title")'
+            ];
+        //This prevents the trendline display values from illegible (due to overlapping text with no background).
+        if (currentCareerTitle == currentPaidAsTitle) {
+            currentIndicatorTerms[0] = ' ';
+            currentIndicatorTerms[1] = '@Html.Term("Titles_CareerAndPaidTitleIndicationText", "{br}Career / {br} Paid As Title")';
+        }
+        else if (currentCareerTitle > currentPaidAsTitle) {
+            zoneAlpha1 = zoneOpacity1;
+            zoneAlpha2 = zoneOpacity2;
+        }
+        else if (currentCareerTitle < currentPaidAsTitle) {
+            zoneAlpha1 = zoneOpacity2;
+            zoneAlpha2 = zoneOpacity1;
+        }
+
+        //Create an array with the data for the progress bars, the value data (first value [0]) would come from calculated values to determine the appropriate 
+        //level (current plus a percentage to next level) and the tooltip data (second value [1]) would come from users current data.
+        var qualifierValues = new Array(qtyQualifiers);
+        for (var i = 0; i < qtyQualifiers; i++) {
+            var currentVal = shorthand(userVal[i]),                                  //Calls shorthand() to modify the formatting of large numbers thousands to K, Millions to M
+			      type = qualifiers[i][0][1],                                        //Type of value (i.e. Monitary, Bool, Integer)
+			      prefix = typePrefix(type),                                         //Calls typePrefix() to determine prefix to value (i.e. '$')
+			      level = getLevel(userVal[i], qualifiers, qtyTitles, i, type),      //Calls getLevel() that determines the ending plot point of the qualification bar graph
+			      remaining = level[1] - userVal[i],                                 //Find how much is still needed to have qualification reach next level
+		          label = qualifiers[i][0][0],   //Get the name of the qualification
+			      displayValue,
+			      toolTip,
+			      nextTitle = titles[Math.floor(level[0] + 1)];
+            //If the qualification is a boolean, modify the display of the labels and tooltips
+            if (type == 'Bool') {
+                var boolTerm;
+                if (currentVal == '0') {
+                    boolTerm = '@Html.Term("Titles_BoolFalseTerm", "No")';
+                }
+                else {
+                    boolTerm = '@Html.Term("Titles_BoolTrueTerm", "Yes")';
+                }
+                label = qualifiers[i][0][0];
+            }
+            //Checks if the variable in the settings is set to display current values in the label or not
+            if (showCurrentInLabel == '1') {
+                label = label + ' (' + prefix + currentVal + ') ';
+            }
+            //if statement to check if the qualification is currently affecting the title progression and change the data that displays based on result.
+            if (userValActive[i] == false) {
+                plotOpacity = plotInactiveOpacity;
+                displayValue = toolTip = '@Html.Term("Titles_NotActiveTerm", "N/A")';
+            }
+            else if (level[0] == qtyTitles - 1) {
+                displayValue = ' ';
+                if (type == 'Bool') {
+                    toolTip = boolTerm;
+                }
+                else {
+                    toolTip = '@Html.Term("Titles_CompletedQualificationTerm", "Completed")';
+                }
+            }
+            else {
+                if (type == 'Bool') {
+                    var trueLevel = getActivationLevel(qualifiers, qtyTitles, i);
+                    displayValue = titles[trueLevel] + ' @Html.Term("Titles_BoolRequiredForTrue", "Title Required")';
+                    toolTip = boolTerm;
+                }
+                else {
+                    displayValue = nextTitle + ' @Html.Term("Titles_ForNextLevel_Required", "Requires"): ' + prefix + shorthand(level[1]);
+                    toolTip = 
+                        '@Html.Term("Titles_CurrentLevel_Current", "Current") ' + qualifiers[i][0][0] + ': ' + prefix + currentVal + '<br />' + 
+                        '@Html.Term("Titles_ForNextLevel_AmountRemainingFor", "Amount Remaining for") ' + nextTitle + ': ' + prefix + shorthand(remaining);
+                }
+            }
+            //Assign the Json values created above to an array that will plot the graph
+            qualifierValues[i] = {
+                'label': label,
+                'value': level[0],
+                'displayValue': displayValue,
+                'toolText': toolTip,
+                'color': barTopColor,
+                'alpha': plotOpacity
+            };
+        }
+        /************************ End Sample Data ************************/
+
+        myChart.setJSONData({
+            //Contains customizable items that would be set in a client override.
+            'chart':
+            {
+                'alternateHGridColor': altColor,
+                'alternateVGridColor': altColor,
+                'bgAlpha': '0',
+                'borderThickness': '0',
+                'canvasBgAlpha': '0',
+                'canvasBorderColor': graphBorderColor,
+                'canvasBorderThickness': graphBorderThickness,
+                'chartRightMargin': chartRightMargin,
+                'divLineAlpha': '0',
+                'labelDisplay': titlesRotate,
+                'labelPadding': '5',
+                'numDivLines': qtyTitles,
+                'outCnvBaseFontColor': fontColor,
+                'outCnvbaseFont': fontFamily,
+                'outCnvbaseFontSize': fontSize,
+                'plotFillAngle': plotGradiantAngle,
+                'plotGradientColor': barBottomColor,
+                'showAlternateHGridColor': altColorShow,
+                'showAlternateVGridColor': altColorShow,
+                'showPlotBorder': '0',
+                'showToolTip': showToolTip,
+                'showValues': showNextValReq,
+                'showYAxisValues': '0',
+                'toolTipBgColor': toolTipBgColor,
+                'toolTipBorderColor': toolTipBorderCol,
+                'useRoundEdges': useRoundEdges,
+                'yAxisMaxValue': qtyTitles - 1
+            },
+
+            'data':
+            [
+                    //Created the data array from sample data above.
+				    qualifierValues
+            ],
+
+            //Provides the option of making the title terms bold
+            'styles': {
+                'definition': [
+                    {
+                        'name': 'trendlineFont',
+                        'type': 'font',
+                        'bold': boldTitles
+                    }
+                ],
+                'application': [
+                    {
+                        'toobject': 'TrendValues',
+                        'styles': 'trendlineFont'
+                    }
+                ]
+            },
+
+            'trendlines': {
+                'line': [
+                //The titles and their line indicators pulled from an array.
+			    titleLines,
+                //The color Zone for Paid As Title.
+			    {
+			    'startValue': '0',
+			    'endValue': currentPaidAsTitle - 1,
+			    'color': zoneColorPaid,
+			    'displayValue': ' ',
+			    'isTrendZone': '1',
+			    'alpha': zoneAlpha1
+    },
+                //The current indicator for Paid As Title.
+			    {
+			    'value': currentPaidAsTitle - 1,
+			    'color': paidAsColor,
+			    'dashed': currentLineDashed,
+			    'showOnTop': '1',
+			    'thickness': currentLineThickness,
+			    'valueOnRight': onRight,
+			    'displayValue': currentIndicatorTerms[0]
+    },
+                //The color Zone for Career Title.
+                {
+                'startValue': '0',
+                'endValue': currentCareerTitle - 1,
+                'color': zoneColorCareer,
+                'displayValue': ' ',
+                'isTrendZone': '1',
+                'alpha' : zoneAlpha2
+            },
+            //The current indicator for Career Title.
+                {
+                'value': currentCareerTitle - 1,
+                'color': titleColor,
+                'dashed': currentLineDashed,
+                'showOnTop': '1',
+                'thickness': currentLineThickness,
+                'valueOnRight': onRight,
+                'displayValue': currentIndicatorTerms[1]
+            }
+		    ]
+        }
+    });
+
+
+
+            }
+        });
+    });
+
+});
+
+
+        
+
+        
+
+    //Functions
+    function shorthand(num) {
+        num = num + '';
+        if (num >= 1000000) {
+            if (num.substr(num.length - 5) == '00000') {
+                if (num.substr(1, 1) == '0') {
+                    num = num.substr(0, 1) + 'M';
+                }
+                else {
+                    num = num.substr(0, 1) + '.' + num.substr(1, 1) + 'M';
+                }
+            }
+        }
+        else if (num >= 100000 && num < 1000000) {
+            if (num.substr(num.length - 3) == '000') {
+                num = num.substr(0, 3) + 'K';
+            }
+        }
+        else if (num >= 10000 && num < 100000) {
+            if (num.substr(num.length - 3) == '000') {
+                num = num.substr(0, 2) + 'K';
+            }
+        }
+        return num;
+    }
+    function getLevel(cur, q, qtyT, i, type) {
+        var level = 0;
+        for (j = 0; j < qtyT; j++) {
+            var req = q[i][1][j],
+				    reqNext = q[i][1][j + 1],
+				    reqPrev = q[i][1][j - 1];
+            if (type == 'Bool') {
+                if (cur == '1') {
+                    level = qtyT - 1;
+                }
+                break;
+            }
+            if (req != 'NA' && reqNext != 'NA') {
+                if (cur >= req && cur >= reqNext) {
+                    level++;
+                    reqNext = q[i][1][j];
+                }
+                else if (cur > req && cur < reqNext) {
+                    level = level + ((cur - req) / (reqNext - req));
+                    break;
+                }
+                else {
+                    break;
+                }
+            }
+            else if (req == 'NA') {
+                if ((reqPrev != null && cur >= reqPrev) || (reqPrev == null && cur == 0)) {
+                    break;
+                }
+                else {
+                    level++;
+                }
+            }
+        }
+        return [level, reqNext];
+    }
+    function typePrefix(t) {
+        var prefix = '';
+        if (t == 'Monitary') {
+            prefix = '$';
+        }
+        return prefix;
+    }
+    function getActivationLevel(q, qtyT, i) {
+        var al;
+        for (j = 0; j < qtyT; j++) {
+            if (q[i][1][j] == '1') {
+                al = j;
+                break;
+            }
+        }
+        return al;
+    }
+    // -->     
+    </script>
+</div>

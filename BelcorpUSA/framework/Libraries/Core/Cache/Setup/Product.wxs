@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define Version="2.3.99.43342"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="7e27e981-9857-43ba-9d06-bc92c146efaa" Name="NetSteps Cache Core" Language="1033" Version="$(var.Version)" Manufacturer="NetSteps LLC" UpgradeCode="a32f9283-4aa7-49a2-91f0-394350763341">
+		<Package InstallerVersion="200" Compressed="yes" />
+
+		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLLOCATION" Name="NetSteps LLC">
+					<Directory Id="SharedLibrariesFolder" Name="Shared Libraries">
+						<Directory Id="ProductFolder" Name="NetSteps.Core.Cache">
+							<Directory Id="VersionFolder" Name="$(var.Version)">
+								<Component Id="cmp1B149655BBB777299B9ACCDAED4CB736" Guid="{D3D1ADA8-8BB3-4119-A1F4-5978A3D3D5DA}">
+									<File Id="fil0BB0570D61FFD66A14E593F8A8A02C70" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Cache.Core.dll" />
+								</Component>
+								<Component Id="cmpF052B1F66C89D18C95114BB597E50115" Guid="{C1CD1825-B3D3-44BD-861F-E6A5CA7720C1}">
+									<File Id="fil4E978EF11F0ACCEBCA859E50A0597FF6" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Cache.Core.pdb" />
+								</Component>
+								<Component Id="cmpEFE6914C77EF8114CAD7D189DC1C4F7D" Guid="{8E09008C-0A96-4A1D-8E3A-0074EF98EAC8}">
+									<File Id="fil8DA91D9C6B077AD1C23C903CE12449E1" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Core.dll" />
+								</Component>
+								<Component Id="cmp9D6117D6AF74DD214A3A672079E4CBC5" Guid="{62326A22-1E20-40E7-B7B2-821AE3393FD9}">
+									<File Id="filCD44C476A24FE48129BE1F5416953D80" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Core.xml" />
+								</Component>
+								<Component Id="cmp8B22C032798812CAB376639C6C0D1590" Guid="{C89FE1B1-8258-47F2-B577-7CB248F6C98E}">
+									<File Id="fil4499C1EA0CC019481D46E1E33D902F17" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Reflection.Core.dll" />
+								</Component>
+								<Component Id="cmpD774B44E647CFBEA0C8C12C00B98A8E8" Guid="{02975A58-BE05-41D7-9E6B-84434D457EA4}">
+									<File Id="filA406C393234341FFD3F995D33F41A802" KeyPath="yes" Source="$(var.Core.TargetDir)NetSteps.Reflection.Core.xml" />
+								</Component>
+								<Component Id="cmp1EA75742196A10FF30F14DEE49B96795" Guid="{723C74B4-C173-421A-9B7B-721F90CFBE53}">
+									<File Id="filA73AF48DE5075796F2DCBECBA256DB1F" KeyPath="yes" Source="$(var.Core.TargetDir)Newtonsoft.Json.dll" />
+								</Component>
+								<Component Id="cmp049D6DAC61BAF03669143C26DFD37AA3" Guid="{964A4C1D-8492-461D-AACB-18AD0821F0FA}">
+									<File Id="filEAB22769019291F7E047D5A08490616C" KeyPath="yes" Source="$(var.Core.TargetDir)Newtonsoft.Json.pdb" />
+								</Component>
+								<Component Id="cmp1C6F1E8B3EE6638F19B2B6B60781C542" Guid="{8595C5B8-C002-4316-93AE-D4ED70CA17E3}">
+									<File Id="fil7E66778347932BE65114795F21535359" KeyPath="yes" Source="$(var.Core.TargetDir)Newtonsoft.Json.xml" />
+								</Component>
+								<Component Id="cmpPerformanceCounters" Guid="{28D0E08B-D458-4736-A0F6-985296E1637D}" KeyPath="yes">
+									<PerformanceCategory Id="NetStepsCache" Name="NetSteps Cache" Help="Provides combined statistics for caches" xmlns="http://schemas.microsoft.com/wix/UtilExtension">
+										<PerformanceCounter Name="resolve ratio" Help="resolve ratio" Type="rawFraction" />
+										<PerformanceCounter Name="resolve ratio (base)" Help="resolve ratio (base)" Type="rawBase" />
+										<PerformanceCounter Name="eviction workers" Help="eviction workers" Type="numberOfItems32" />
+										<PerformanceCounter Name="hit ratio" Help="hit ratio" Type="rawFraction" />
+										<PerformanceCounter Name="hit ratio (base)" Help="hit ratio (base)" Type="rawBase" />
+									</PerformanceCategory>
+									<PerformanceCategory Id="NetStepsCacheEa" Name="NetSteps Cache (ea)" Help="Provides statistics for local memory caches" MultiInstance="yes" xmlns="http://schemas.microsoft.com/wix/UtilExtension">
+										<PerformanceCounter Name="hit ratio" Help="hit ratio" Type="rawFraction" />
+										<PerformanceCounter Name="hit ratio (base)" Help="hit ratio (base)" Type="rawBase" />
+										<PerformanceCounter Name="reads/second" Help="Items read from the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="writes/second" Help="Items written to the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="removes/second" Help="Items removed from the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="expires/second" Help="Items expired per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="evictions/second" Help="Items evicted from the cache per second" Type="rateOfCountsPerSecond64" />
+									</PerformanceCategory>
+									<PerformanceCategory Id="NetStepsActiveCacheEa" Name="NetSteps Active Cache (ea)" Help="Provides statistics for active memory caches" MultiInstance="yes" xmlns="http://schemas.microsoft.com/wix/UtilExtension">
+										<PerformanceCounter Name="hit ratio" Help="hit ratio" Type="rawFraction" />
+										<PerformanceCounter Name="hit ratio (base)" Help="hit ratio (base)" Type="rawBase" />
+										<PerformanceCounter Name="resolve ratio" Help="resolve ratio" Type="rawFraction" />
+										<PerformanceCounter Name="resolve ratio (base)" Help="resolve ratio (base)" Type="rawBase" />
+										<PerformanceCounter Name="reads/second" Help="Items read from the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="writes/second" Help="Items written to the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="resolves/second" Help="Items resolved by the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="removes/second" Help="Items removed from the cache per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="expires/second" Help="Items expired per second" Type="rateOfCountsPerSecond64" />
+										<PerformanceCounter Name="evictions/second" Help="Items evicted from the cache per second" Type="rateOfCountsPerSecond64" />
+									</PerformanceCategory>
+								</Component>
+							</Directory>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<ComponentGroup Id="CacheOutputBin">
+			<ComponentRef Id="cmp1B149655BBB777299B9ACCDAED4CB736" />
+			<ComponentRef Id="cmpF052B1F66C89D18C95114BB597E50115" />
+			<ComponentRef Id="cmpEFE6914C77EF8114CAD7D189DC1C4F7D" />
+			<ComponentRef Id="cmp9D6117D6AF74DD214A3A672079E4CBC5" />
+			<ComponentRef Id="cmp8B22C032798812CAB376639C6C0D1590" />
+			<ComponentRef Id="cmpD774B44E647CFBEA0C8C12C00B98A8E8" />
+			<ComponentRef Id="cmp1EA75742196A10FF30F14DEE49B96795" />
+			<ComponentRef Id="cmp049D6DAC61BAF03669143C26DFD37AA3" />
+			<ComponentRef Id="cmp1C6F1E8B3EE6638F19B2B6B60781C542" />
+		</ComponentGroup>
+
+		<Feature Id="ProductFeature" Title="Setup" Level="1">
+			<ComponentGroupRef Id="CacheOutputBin" />
+			<ComponentRef Id="cmpPerformanceCounters" />
+		</Feature>
+	</Product>
+</Wix>

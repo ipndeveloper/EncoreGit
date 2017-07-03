@@ -1,0 +1,3706 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Commissions.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Commissions.Common.Base.IBaseLedgerService`1">
+      <summary>
+            Base ledger service - not intended for 
+            </summary>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetCurrentBalance(System.Int32)">
+      <summary>
+            Gets the current balance.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetCurrentBalance(System.Int32,NetSteps.Commissions.Common.Models.ILedgerEntryKind)">
+      <summary>
+            Gets the current balance for the requested kind
+            </summary>
+      <param name="accountId" />
+      <param name="entryKind" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.RetrieveLedger(System.Int32)">
+      <summary>
+            Retrieves the ledger.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.UpdateLedgerEntry(`0)">
+      <summary>
+            Updates the ledger entry.
+            </summary>
+      <param name="ledgerEntry">The ledger entry.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.AddLedgerEntry(`0)">
+      <summary>
+            Adds the ledger entry.
+            </summary>
+      <param name="ledgerEntry">The ledger entry.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryReason(System.Int32)">
+      <summary>
+            Gets the entry reason.
+            </summary>
+      <param name="entryReasonId">The entry reason identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryReason(System.String)">
+      <summary>
+            Gets the entry reason.
+            </summary>
+      <param name="entryReasonCode">The entry reason code.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryKind(System.Int32)">
+      <summary>
+            Gets the kind of the entry.
+            </summary>
+      <param name="entryKindId">The entry kind identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryKind(System.String)">
+      <summary>
+            Gets the kind of the entry.
+            </summary>
+      <param name="entryCode">The entry code.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryOrigin(System.Int32)">
+      <summary>
+            Gets the entry origin.
+            </summary>
+      <param name="entryOriginId">The entry origin identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryOrigins">
+      <summary>
+            Gets all entry origins.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryKinds">
+      <summary>
+            Gets the entry kinds.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.GetEntryReasons">
+      <summary>
+            Gets the entry reasons.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Base.IBaseLedgerService`1.AddLedgerEntry(System.Int32,System.Decimal,System.DateTime,System.String,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>
+            Adds a ledger entry.  This method formerly contained an address and a value for the "current balance", which
+            I thought was stupid as we don't tell the ledger what its balance is, the ledger tells us.  So I've removed them.
+            Hopefully that doesn't cause a problem.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="entryAmount">The entry amount.</param>
+      <param name="effectiveDateUtc">The effective date UTC.</param>
+      <param name="entryDescription">The entry description.</param>
+      <param name="entryReason">The entry reason.</param>
+      <param name="entryType">Type of the entry.</param>
+      <param name="bonusType">Type of the bonus.</param>
+      <param name="notes">The notes.</param>
+      <param name="currencyTypeId">The currency type identifier.</param>
+      <param name="userId">The user identifier.</param>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Base.IBaseOverride">
+      <summary>
+            This is a base override object; I do not know if this is really shared but the properties
+            of all overrides seem to have the same properties.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.OverrideReason">
+      <summary>
+            Gets or sets the override reason.
+            </summary>
+      <value>
+            The override reason.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.IsEditable">
+      <summary>
+            Gets or sets a value indicating whether [is editable].
+            </summary>
+      <value>
+        <c>true</c> if [is editable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.ApplicationSourceId">
+      <summary>
+            Gets or sets the application source identifier.
+            </summary>
+      <value>
+            The application source identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.CreatedDateUTC">
+      <summary>
+            Gets or sets the created date UTC.
+            </summary>
+      <value>
+            The created date UTC.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.Notes">
+      <summary>
+            Gets or sets the notes.
+            </summary>
+      <value>
+            The notes.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.UpdatedDateUTC">
+      <summary>
+            Gets or sets the updated date UTC.
+            </summary>
+      <value>
+            The updated date UTC.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.UserId">
+      <summary>
+            Gets or sets the user identifier.
+            </summary>
+      <value>
+            The user identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseOverride.OverrideKind">
+      <summary>
+            Gets or sets the kind of the override.
+            </summary>
+      <value>
+            The kind of the override.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Base.IBaseSearchResult`1">
+      <summary>
+            base interface for search results
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseSearchResult`1.Results">
+      <summary>
+            list of results
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseSearchResult`1.TotalCount">
+      <summary>
+            total count of results before paging
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccount">
+      <summary>
+            model for the commissions account
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.AccountId">
+      <summary>
+            the account identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.AccountNumber">
+      <summary>
+            the account number
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.AccountKindId">
+      <summary>
+            the account kind identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.FirstName">
+      <summary>
+            gets or sets the first name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.MiddleName">
+      <summary>
+            gets or sets the middle name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.LastName">
+      <summary>
+            gets or sets the last name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.EmailAddress">
+      <summary>
+            gets or sets the email address
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.SponsorId">
+      <summary>
+            gets or sets the sponsor identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.EnrollerId">
+      <summary>
+            gets or sets the enroller identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.EnrollmentDateUtc">
+      <summary>
+            gets or sets teh enrollment date
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.IsEntity">
+      <summary>
+            gets or sets whether the account is an entity
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.AccountStatusChangeReasonId">
+      <summary>
+            gets of sets the account status change reason identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.AccountStatusId">
+      <summary>
+            gets or sets the account status
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.EntityName">
+      <summary>
+            gets or sets the entity name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.CountryId">
+      <summary>
+            gets or sets the country identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.BirthdayUtc">
+      <summary>
+            gets or sets the birthday
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.TerminatedDateUtc">
+      <summary>
+            gets or sets the account termination date
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccount.ActivationDateUtc">
+      <summary>
+            gets or sets the account activation date
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail">
+      <summary>
+            Represent a Report AccountKPI Detail Data Returned
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.AccountKPIDetailID">
+      <summary>
+            Obtiene o establece AccountKPIDetailID
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.DownlineID">
+      <summary>
+            Obtiene o establece DownlineID
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.DownlineName">
+      <summary>
+            Obtiene o establece DownlineName
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.Level">
+      <summary>
+            Obtiene o establece Level
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.Generation">
+      <summary>
+            Obtiene o establece Generation
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.CareerTitle">
+      <summary>
+            Obtiene o establece CareerTitle
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.DownlinePaidAsTitle">
+      <summary>
+            Obtiene o establece DownlinePaidAsTitle
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.PQV">
+      <summary>
+            Obtiene o establece PQV
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.DQV">
+      <summary>
+            Obtiene o establece DQV
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportAccountKPIDetail.QV">
+      <summary>
+            Obtiene o establece QV
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccountTitle">
+      <summary>
+            account title
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitle.AccountId">
+      <summary>
+            Gets the account identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitle.TitleId">
+      <summary>
+            Gets the title identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitle.TitleKindId">
+      <summary>
+            Gets the title kind identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitle.PeriodId">
+      <summary>
+            Gets the period identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitle.DateModified">
+      <summary>
+            Gets the last date this was modified
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IBonusPayout">
+      <summary>
+            Represents a Bonus Payout Line Item
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.AccountID">
+      <summary>
+            The Account ID this payout is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.PeriodID">
+      <summary>
+            The PeriodID this payout is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.SortOrder">
+      <summary>
+            The Order in which to present the payout
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.BonusCategory">
+      <summary>
+            The parent Bonus Category
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.BonusSubcategory">
+      <summary>
+            The Bonus SubCategory
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.BonusName">
+      <summary>
+            The name of the Bonus value
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusPayout.BonusAmount">
+      <summary>
+            The value of the Bonus
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICalculationOverrideSearchResult">
+      <summary>
+            Search results for calculation override searches
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.IAccountLedgerService">
+      <summary>
+            Service that manages the primary Account Ledger
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.ICommissionJobService">
+      <summary>
+            Service to run commission jobs
+            </summary>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionJobStatus(System.String)">
+      <summary>
+            Gets the commission job status.
+            </summary>
+      <param name="jobName">Name of the job.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionJobs(NetSteps.Commissions.Common.Models.DisbursementFrequencyKind)">
+      <summary>
+            Gets the commission jobs.
+            </summary>
+      <param name="disbursementFrequency">The disbursement frequency.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.StartCommissionJob(System.String)">
+      <summary>
+            Starts the commission job.
+            </summary>
+      <param name="jobName">Name of the job.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionRunOutput(System.String)">
+      <summary>
+            Gets the commission run output.
+            </summary>
+      <param name="jobName">Name of the job.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.StartSystemEvent(System.Int32,System.Int32)">
+      <summary>
+            Starts a system event.
+            </summary>
+      <param name="periodId">The period identifier.</param>
+      <param name="systemEventApplicationId">The system event application identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.OpenCommissionPeriod(System.Int32)">
+      <summary>
+            Opens the commission period.
+            </summary>
+      <param name="periodId">The period identifier.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.InsertSystemEventLog(System.Int32,System.Int32,System.Int32,System.String)">
+      <summary>
+            Inserts the system event log.
+            </summary>
+      <param name="systemEventId">The system event identifier.</param>
+      <param name="systemEventApplicationId">The system event application identifier.</param>
+      <param name="eventKindId">The event kind identifier.</param>
+      <param name="message">The message.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.CloseSystemEvents(System.Int32)">
+      <summary>
+            Closes the system events.
+            </summary>
+      <param name="systemEventApplicationId">The system event application identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetSystemEventsByPeriod(System.Int32,System.Int32)">
+      <summary>
+            Gets the system events by period.
+            </summary>
+      <param name="periodId">The period identifier.</param>
+      <param name="systemEventApplicationId">The system event application identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetSystemEvents(System.Int32,System.Nullable{System.DateTime})">
+      <summary>
+            Gets the system events.
+            </summary>
+      <param name="systemEventApplicationId">The system event application identifier.</param>
+      <param name="endTime">The end time.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.ExecuteCommissionRunProcedure(System.Int32,System.Int32,System.Boolean,System.String)">
+      <summary>
+            Executes the commission run procedure.
+            </summary>
+      <param name="periodId">The period identifier.</param>
+      <param name="sqlTimeOutSeconds">The SQL time out seconds.</param>
+      <param name="includePeriodIdParameter">if set to <c>true</c> [include period identifier parameter].</param>
+      <param name="commissionProcedureName">Name of the commission procedure.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.EndSystemEvent(System.Int32,System.Boolean)">
+      <summary>
+            Ends the system event.
+            </summary>
+      <param name="systemEventId">The system event identifier.</param>
+      <param name="completed">if set to <c>true</c> [completed].</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetSystemEventSettings">
+      <summary>
+            Gets the system event settings.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetSystemEventLog(System.Int32,System.Int32)">
+      <summary>
+            Gets the system event log.
+            </summary>
+      <param name="systemEventId">The system event identifier.</param>
+      <param name="previousSystemEventLogId">The previous system event log identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionRun(System.Int32,System.Int32,NetSteps.Commissions.Common.Models.CommissionRunKind)">
+      <summary>
+            Gets the commission run.
+            </summary>
+      <param name="planId">The plan identifier.</param>
+      <param name="periodId">The period identifier.</param>
+      <param name="runKind">Kind of the run.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionRun(System.Int32,NetSteps.Commissions.Common.Models.CommissionRunKind)">
+      <summary>
+            Gets the commission run.
+            </summary>
+      <param name="planId">The plan identifier.</param>
+      <param name="runKind">Kind of the run.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionJobService.GetCommissionRunPlan(NetSteps.Commissions.Common.Models.CommissionRunKind)">
+      <summary>
+            Gets the commission run plan.
+            </summary>
+      <param name="runKind">Kind of the run.</param>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Commissions.Common.IDownlineService">
+      <summary>
+            Service contract for downline
+            </summary>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.IDownlineService.GetDownline(System.Int32)">
+      <summary>
+            Get the full downline for the requested periodId
+            </summary>
+      <param name="periodId" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.IDownlineService.GetDownline(System.Int32,System.Int32)">
+      <summary>
+            Get the full downline for the requested period and account
+            </summary>
+      <param name="periodId">Period ID</param>
+      <param name="sponsorID">Account ID</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.IDownlineService.GetSingleLayerDownline(System.Int32,System.Int32)">
+      <summary>
+            Get the single layer downline for the downlineId and periodId
+            </summary>
+      <param name="downlineId" />
+      <param name="periodId" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.IDownlineService.GetSimpleDownline(System.Int32)">
+      <summary>
+            Get the simple downline
+            </summary>
+      <param name="periodId" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Commissions.Common.IProductCreditLedgerService">
+      <summary>
+            Product Credit Ledger Service
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.AccountTitleOverrideSearchParameters">
+      <summary>
+            Query tooling for account title overrides
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.AccountTitleOverrideSearchParameters.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.AccountTitleOverrideSearchParameters.AccountTitleOverrideId">
+      <summary>
+            Gets or sets the account title override identifier.
+            </summary>
+      <value>
+            The account title override identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.AccountTitleOverrideSearchParameters.OverrideReasonId">
+      <summary>
+            Gets or sets the override reason identifier.
+            </summary>
+      <value>
+            The override reason identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.BankAccountKind">
+      <summary>
+            Kinds of bank accounts
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.BankAccountKind.Checking">
+      <summary>
+            Checking
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.BankAccountKind.Savings">
+      <summary>
+            Savings
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.CalculationOverrideSearchParameters">
+      <summary>
+            Query tooling for calculation overrides
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.CalculationOverrideSearchParameters.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.CalculationOverrideSearchParameters.CalculationOverrideId">
+      <summary>
+            Gets or sets the calculation override identifier.
+            </summary>
+      <value>
+            The calculation override identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.CalculationOverrideSearchParameters.OverrideReasonId">
+      <summary>
+            Gets or sets the override reason identifier.
+            </summary>
+      <value>
+            The override reason identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.DisbursementHoldSearchParameters">
+      <summary>
+            Query tooling for check holds.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.DisbursementHoldSearchParameters.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.DisbursementHoldSearchParameters.CheckHoldId">
+      <summary>
+            Gets or sets the check hold identifier.
+            </summary>
+      <value>
+            The check hold identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.DisbursementHoldSearchParameters.ReasonId">
+      <summary>
+            Gets or sets the reason identifier.
+            </summary>
+      <value>
+            The reason identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.CommissionJobStatus">
+      <summary>
+            Commission Job Status
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.CommissionJobStatus.NotRunning">
+      <summary>
+            Not running.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.CommissionJobStatus.Running">
+      <summary>
+            Running
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.CommissionRunKind">
+      <summary>
+            Kinds of commission runs available
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.CommissionRunKind.Prep">
+      <summary>
+            Defines a prep run
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.CommissionRunKind.Publish">
+      <summary>
+            Defines a run intended to go live
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.DisbursementMethodKind">
+      <summary>
+            Methods of disbursments available.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementMethodKind.Check">
+      <summary>
+            Check disbursement
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementMethodKind.EFT">
+      <summary>
+            EFT disbursement
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementMethodKind.HyperWallet">
+      <summary>
+            HyperWallet disbursement
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementMethodKind.Payoneer">
+      <summary>
+            Payoneer disbursement
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementMethodKind.ProPay">
+      <summary>
+            ProPay disbursement
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccountLedgerEntry">
+      <summary />
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Base.IBaseLedgerEntry">
+      <summary>
+            Base ledger entry
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.BonusTypeId">
+      <summary>
+            Gets or sets the bonus type identifier.
+            </summary>
+      <value>
+            The bonus type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.BonusValueId">
+      <summary>
+            Gets or sets the bonus value identifier.
+            </summary>
+      <value>
+            The bonus value identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.CurrencyTypeId">
+      <summary>
+            Gets or sets the currency type identifier.
+            </summary>
+      <value>
+            The currency type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EffectiveDate">
+      <summary>
+            Gets or sets the effective date.
+            </summary>
+      <value>
+            The effective date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EndingBalance">
+      <summary>
+            Gets or sets the ending balance.
+            </summary>
+      <value>
+            The ending balance.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryAmount">
+      <summary>
+            Gets or sets the entry amount.
+            </summary>
+      <value>
+            The entry amount.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryDate">
+      <summary>
+            Gets or sets the entry date.
+            </summary>
+      <value>
+            The entry date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryDescription">
+      <summary>
+            Gets or sets the entry description.
+            </summary>
+      <value>
+            The entry description.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryId">
+      <summary>
+            Gets or sets the entry identifier.
+            </summary>
+      <value>
+            The entry identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryNotes">
+      <summary>
+            Gets or sets the entry notes.
+            </summary>
+      <value>
+            The entry notes.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryOrigin">
+      <summary>
+            Gets or sets the entry origin identifier.
+            </summary>
+      <value>
+            The entry origin identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryReason">
+      <summary>
+            Gets or sets the entry reason identifier.
+            </summary>
+      <value>
+            The entry reason identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.EntryKind">
+      <summary>
+            Gets or sets the entry type identifier.
+            </summary>
+      <value>
+            The entry type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Base.IBaseLedgerEntry.UserId">
+      <summary>
+            Gets or sets the user identifier.
+            </summary>
+      <value>
+            The user identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccountTitleOverrideSearchResult">
+      <summary>
+            Search results for account title override searches
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICalculationKind">
+      <summary>
+            Calculation Kind (formerly type)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.CalculationKindId">
+      <summary>
+            the calculation kind identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.Code">
+      <summary>
+            the calculation code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.Name">
+      <summary>
+            friendly name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.IsUserOverridable">
+      <summary>
+            is overridable by user
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.IsRealTime">
+      <summary>
+            is real time
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.TermName">
+      <summary>
+            the term name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.DateModified">
+      <summary>
+            date last modified
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.ReportVisibility">
+      <summary>
+            needs clarification from commissions
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.ClientCode">
+      <summary>
+            the client code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationKind.ClientName">
+      <summary>
+            the client name
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IDisbursementHoldSearchResult">
+      <summary>
+            Search results for check hold searches
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionRun">
+      <summary>
+            Commission run
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IJsonSerializable">
+      <summary>
+            Probably defined somewhere else - but I'm adding it here now for convenience.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.Models.IJsonSerializable.ToJson">
+      <summary>
+            To the json.
+            </summary>
+      <returns />
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunId">
+      <summary>
+            Gets or sets the commission run identifier.
+            </summary>
+      <value>
+            The commission run identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunCanBePublished">
+      <summary>
+            Gets or sets a value indicating whether [commission run can be published].
+            </summary>
+      <value>
+        <c>true</c> if [commission run can be published]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunName">
+      <summary>
+            Gets or sets the name of the commission run.
+            </summary>
+      <value>
+            The name of the commission run.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunPlans">
+      <summary>
+            Gets or sets the commission run plans.
+            </summary>
+      <value>
+            The commission run plans.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunProgress">
+      <summary>
+            Gets the commission run progress.
+            </summary>
+      <value>
+            The commission run progress.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunSteps">
+      <summary>
+            Gets or sets the commission run steps.
+            </summary>
+      <value>
+            The commission run steps.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunStepNumber">
+      <summary>
+            Gets the commission run step number.
+            </summary>
+      <value>
+            The commission run step number.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunKind">
+      <summary>
+            Gets or sets the kind of the commission run.
+            </summary>
+      <value>
+            The kind of the commission run.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CommissionRunKindId">
+      <summary>
+            Gets or sets the commission run kind identifier.
+            </summary>
+      <value>
+            The commission run kind identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CurrentCommissionRunProgress">
+      <summary>
+            Gets the current commission run progress.
+            </summary>
+      <value>
+            The current commission run progress.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.CurrentCommissionRunStep">
+      <summary>
+            Gets or sets the current commission run step.
+            </summary>
+      <value>
+            The current commission run step.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.DefaultCommissionRunPlan">
+      <summary>
+            Gets or sets the default commission run plan.
+            </summary>
+      <value>
+            The default commission run plan.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.Enabled">
+      <summary>
+            Gets or sets a value indicating whether [enabled].
+            </summary>
+      <value>
+        <c>true</c> if [enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.InProgress">
+      <summary>
+            Gets or sets a value indicating whether [in progress].
+            </summary>
+      <value>
+        <c>true</c> if [in progress]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.LastSystemEventLogId">
+      <summary>
+            Gets or sets the last system event log identifier.
+            </summary>
+      <value>
+            The last system event log identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.NextCommissionRunStep">
+      <summary>
+            Gets or sets the next commission run step.
+            </summary>
+      <value>
+            The next commission run step.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.OpenPeriods">
+      <summary>
+            Gets or sets the open periods.
+            </summary>
+      <value>
+            The open periods.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.PeriodId">
+      <summary>
+            Gets or sets the period identifier.
+            </summary>
+      <value>
+            The period identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.PlanId">
+      <summary>
+            Gets or sets the plan identifier.
+            </summary>
+      <value>
+            The plan identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.SystemEventId">
+      <summary>
+            Gets or sets the system event identifier.
+            </summary>
+      <value>
+            The system event identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.SystemEventLog">
+      <summary>
+            Gets or sets the system event log.
+            </summary>
+      <value>
+            The system event log.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.SystemEventSetting">
+      <summary>
+            Gets or sets the system event setting.
+            </summary>
+      <value>
+            The system event setting.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.TotalCommissionRunProgress">
+      <summary>
+            Gets the total commission run progress.
+            </summary>
+      <value>
+            The total commission run progress.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRun.TotalCommissionRunSteps">
+      <summary>
+            Gets the total commission run steps.
+            </summary>
+      <value>
+            The total commission run steps.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionJob">
+      <summary>
+            Commission job
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionJob.CommissionRunId">
+      <summary>
+            Gets or sets the commission run identifier.
+            </summary>
+      <value>
+            The commission run identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionJob.DisbursementFrequency">
+      <summary>
+            Gets or sets the disbursement frequency.
+            </summary>
+      <value>
+            The disbursement frequency.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionJob.CommissionRunType">
+      <summary>
+            Gets or sets the type of the commission run.
+            </summary>
+      <value>
+            The type of the commission run.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionJob.JobName">
+      <summary>
+            Gets or sets the name of the job.
+            </summary>
+      <value>
+            The name of the job.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionJob.JobDisplayName">
+      <summary>
+            Gets or sets the display name of the job.
+            </summary>
+      <value>
+            The display name of the job.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionPlan">
+      <summary>
+            Commission plan contract
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.CommissionPlanId">
+      <summary>
+            The commission plan identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.PlanCode">
+      <summary>
+            Gets or sets the plan code.
+            </summary>
+      <value>
+            The plan code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.TermName">
+      <summary>
+            Gets or sets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.IsEnabled">
+      <summary>
+            Gets or sets a value indicating whether [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.IsDefault">
+      <summary>
+            Gets or sets a value indicating whether [is default].
+            </summary>
+      <value>
+        <c>true</c> if [is default]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionPlan.DisbursementFrequency">
+      <summary>
+            Gets or sets the disbursement frequency.
+            </summary>
+      <value>
+            The disbursement frequency.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.ICommissionsService">
+      <summary>
+            Service contract for the commissions service.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCurrentPeriod">
+      <summary>
+            Gets the current period.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCurrentPeriods">
+      <summary>
+            Gets the current periods.
+            </summary>
+      <returns>collection of current periods</returns>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetPeriod(System.Int32)">
+      <summary>
+            Gets the specified period.
+            </summary>
+      <param name="periodId">The period identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetPeriodsForAccount(System.Int32)">
+      <summary>
+            Gets the periods available for the specified distributor account.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCurrentAndPastPeriods">
+      <summary>
+            Gets current and past periods.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOpenPeriods(NetSteps.Commissions.Common.Models.DisbursementFrequencyKind)">
+      <summary>
+            Gets the open periods.
+            </summary>
+      <param name="disbursementFrequency">The disbursement frequency.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetTitle(System.Int32)">
+      <summary>
+            Gets the title.
+            </summary>
+      <param name="titleId">The title identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetMaximumDisbursementProfiles(NetSteps.Commissions.Common.Models.DisbursementMethodKind)">
+      <summary>
+            Gets the maximum disbursement profiles.
+            </summary>
+      <param name="method">The method.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDistributorPerformanceData(System.Int32,System.Int32)">
+      <summary>
+            Gets the distributor performance data for a particular period.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="periodId">The period identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDistributorPerformanceOverviewData(System.Int32,System.Int32)">
+      <summary>
+            Gets the distributor performance overview data.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="periodId">The period identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDistributorBonusData(System.Int32,System.Int32)">
+      <summary>
+            Returns the bonus payouts for an account and period
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="periodId">The period identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetBonusKind(System.Int32)">
+      <summary>
+            Gets the kind of the bonus.
+            </summary>
+      <param name="bonusKindId">The bonus kind identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetBonusKind(System.String)">
+      <summary>
+            Gets the kind of the bonus.
+            </summary>
+      <param name="bonusCode">The bonus code.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetBonusKinds">
+      <summary>
+            Get all bonus kinds
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetTitles">
+      <summary>
+            Gets the titles.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetTitleKind(System.Int32)">
+      <summary>
+            Gets a title kinds
+            </summary>
+      <param name="titleKindId">The title kind identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetTitleKinds">
+      <summary>
+            Gets the title kinds
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDisbursementProfilesByAccountId(System.Int32)">
+      <summary>
+            Gets the disbursement profiles by account identifier.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDisbursementProfilesByAccountAndDisbursementMethod(System.Int32,NetSteps.Commissions.Common.Models.DisbursementMethodKind)">
+      <summary>
+            Gets the type of the disbursement profiles by account and.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="disbursementMethod">The disbursement method.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDisbursementProfileCountByAccountAndDisbursementMethod(System.Int32,NetSteps.Commissions.Common.Models.DisbursementMethodKind)">
+      <summary>
+            Gets the profile count by account and disbursement method.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="disbursementMethod">The disbursement method.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDisbursementMethodCode(System.Int32)">
+      <summary>
+            Gets the disbursement method code.
+            </summary>
+      <param name="disbursementMethodId">The disbursement method identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SaveDisbursementProfile(NetSteps.Commissions.Common.Models.IDisbursementProfile)">
+      <summary>
+            Save the disbursement profile
+            </summary>
+      <param name="disbursementProfile">the profile to save</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SavePartialAccountToCommission(System.Int32,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Saves the temporary account to commission.
+            </summary>
+      <param name="accountId">The account identifier.</param>
+      <param name="accountNumber">The account number.</param>
+      <param name="sponsorId" />
+      <param name="enrollerId" />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetAccount(System.Int32)">
+      <summary>
+            Gets the requested account, null if not found
+            </summary>
+      <param name="accountId">the account identifier</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SaveAccount(NetSteps.Commissions.Common.Models.IAccount)">
+      <summary>
+            Save an account to commissions
+            </summary>
+      <param name="account">the account to save</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetDisbursementHold(System.Int32)">
+      <summary>
+            Gets the disbursement hold.
+            </summary>
+      <param name="disbursementHoldId">The disbursement hold identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.AddDisbursementHold(NetSteps.Commissions.Common.Models.IDisbursementHold)">
+      <summary>
+            Adds the disbursement hold.
+            </summary>
+      <param name="disbursementHold">The disbursement hold.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCommissionPlan(NetSteps.Commissions.Common.Models.DisbursementFrequencyKind)">
+      <summary>
+            Gets the commission plans.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCommissionPlan(System.Int32)">
+      <summary>
+            Gets the commission plans.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCommissionPlans">
+      <summary>
+            Gets the commission plans.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetAccountTitleOverride(System.Int32)">
+      <summary>
+            Gets the account title override.
+            </summary>
+      <param name="accountTitleOverrideId">The account title override identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.AddAccountTitleOverride(NetSteps.Commissions.Common.Models.IAccountTitleOverride)">
+      <summary>
+            Adds the account title override.
+            </summary>
+      <param name="titleOverride">The title override.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.DeleteAccountTitleOverride(System.Int32)">
+      <summary>
+            Deletes the account title override.
+            </summary>
+      <param name="titleOverrideId">The title override identifier.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCalculationOverride(System.Int32)">
+      <summary>
+            Gets the calculation override.
+            </summary>
+      <param name="calculationOverrideId">The calculation override identifier.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.AddCalculationOverride(NetSteps.Commissions.Common.Models.ICalculationOverride)">
+      <summary>
+            Adds the calculation override.
+            </summary>
+      <param name="calculationOverride">The calculation override.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.DeleteCalculationOverride(System.Int32)">
+      <summary>
+            Deletes the calculation override.
+            </summary>
+      <param name="calculationOverrideId">The calculation override identifier.</param>
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SearchDisbursementHolds(NetSteps.Commissions.Common.Models.DisbursementHoldSearchParameters)">
+      <summary>
+            Searches the disbursement holds.
+            </summary>
+      <param name="parameters">The parameters.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SearchAccountTitleOverrides(NetSteps.Commissions.Common.Models.AccountTitleOverrideSearchParameters)">
+      <summary>
+            Searches the account title overrides.
+            </summary>
+      <param name="parameters">The parameters.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.SearchCalculationOverrides(NetSteps.Commissions.Common.Models.CalculationOverrideSearchParameters)">
+      <summary>
+            Searches the calculation overrides.
+            </summary>
+      <param name="parameters">The parameters.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOverrideReasonSources">
+      <summary>
+            Gets the override reason sources
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOverrideReasons">
+      <summary>
+            Gets all override reasons
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOverrideReasonsForSource(NetSteps.Commissions.Common.Models.IOverrideReasonSource)">
+      <summary>
+            Gets all override reasons for a particular override reason source
+            </summary>
+      <param name="overrideReasonSource">the override reason source</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOverrideReasonsForSource(System.Int32)">
+      <summary>
+            Gets all override reasons for a particular override reason source
+            </summary>
+      <param name="overrideReasonSourceId">the override reason source identifier</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCalculationKinds">
+      <summary>
+            Gets all calculation kinds
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetOverrideKinds">
+      <summary>
+            Gets all override kinds
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetAccountTitle(System.Int32,System.Int32,System.Nullable{System.Int32})">
+      <summary>
+            Gets the requested account title
+            </summary>
+      <param name="accountId" />
+      <param name="titleKindId" />
+      <param name="periodId">defaults to the current period</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetAccountTitles(System.Int32,System.Nullable{System.Int32})">
+      <summary>
+            Gets the requested account titles
+            </summary>
+      <param name="accountId" />
+      <param name="periodId">defaults to the current period</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetCurrentAccountTitles(System.Nullable{System.Int32})">
+      <summary>
+            Gets all current AccountTitles for the period supplied, or the current period if null.
+            </summary>
+      <param name="periodId" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetEarningReportData(System.Int32,System.Int32)">
+      <summary>
+            Get Earning Data
+            </summary>
+      <param name="accountId" />
+      <param name="periodId" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetTitleFromReportByPeriod(System.Int32,System.Int32)">
+      <summary>
+            Get Carrer and 
+            </summary>
+      <param name="periodId" />
+      <param name="accountId" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetReportBonusDetail(System.Int32,System.Int32,System.String)">
+      <summary>
+            Get Data From Report.BonusDetail
+            </summary>
+      <param name="periodId">Period ID</param>
+      <param name="accountId">Account ID</param>
+      <param name="bonusCode">Bonus Code</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetReportAccountKPIDetails(System.Int32,System.Int32,System.String)">
+      <summary>
+            Get Data From Report.AccountKPIsDetails
+            </summary>
+      <param name="periodId">Period ID</param>
+      <param name="accountId">Account ID</param>
+      <param name="kPICode">KPI Code</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetReportAccountKPIDetailsLegs(System.Int32,System.Int32,System.String)">
+      <summary>
+            Get Data From Report.AccountKPIsDetails for Legs
+            </summary>
+      <param name="periodId">Period Id</param>
+      <param name="accountId">Account ID</param>
+      <param name="kPICode">KPI Code</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Commissions.Common.ICommissionsService.GetEarningsAmountOnly(System.Int32,System.Int32,System.Nullable{System.Decimal}@,System.Nullable{System.Decimal}@)">
+      <summary>
+            Gets a total earnings for period and year
+            </summary>
+      <param name="periodId">period ID</param>
+      <param name="accountId">Account ID</param>
+      <param name="totalPeriodEarnings">Out total period earnings</param>
+      <param name="totalYearEanings">Out total year earnings</param>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.DisbursementFrequencyKind">
+      <summary>
+            Disbursement plan kinds
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementFrequencyKind.Monthly">
+      <summary>
+            Commission run monthly
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementFrequencyKind.Weekly">
+      <summary>
+            Commission run weekly
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementFrequencyKind.Daily">
+      <summary>
+            Commission run daily
+            </summary>
+    </member>
+    <member name="F:NetSteps.Commissions.Common.Models.DisbursementFrequencyKind.Rerun">
+      <summary>
+            Commission rerun - ??
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccountKPI">
+      <summary>
+            KPI for an account
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountKPI.DataType">
+      <summary>
+            Gets or sets the type of the data.
+            </summary>
+      <value>
+            The type of the data.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountKPI.KPITypeCode">
+      <summary>
+            Gets or sets the kpi type code.
+            </summary>
+      <value>
+            The kpi type code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountKPI.KPIValue">
+      <summary>
+            Gets or sets the kpi value.
+            </summary>
+      <value>
+            The kpi value.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountKPI.TermName">
+      <summary>
+            Gets or sets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IAccountTitleOverride">
+      <summary>
+            Account title override
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitleOverride.AccountTitleOverrideId">
+      <summary>
+            Gets or sets the account title override identifier.
+            </summary>
+      <value>
+            The account title override identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitleOverride.Period">
+      <summary>
+            Gets or sets the period.
+            </summary>
+      <value>
+            The period.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitleOverride.OverrideTitle">
+      <summary>
+            Gets or sets the override title.
+            </summary>
+      <value>
+            The override title.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IAccountTitleOverride.OverrideTitleKind">
+      <summary>
+            Gets or sets the type of the title.
+            </summary>
+      <value>
+            The type of the title.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IBonusKind">
+      <summary>
+            Bonus kind
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.BonusKindId">
+      <summary>
+            Gets or sets the bonus kind identifier.
+            </summary>
+      <value>
+            The bonus kind identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.BonusCode">
+      <summary>
+            Gets or sets the bonus code.
+            </summary>
+      <value>
+            The bonus code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.TermName">
+      <summary>
+            Gets or sets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.IsEnabled">
+      <summary>
+            Gets or sets a value indicating whether [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.IsEditable">
+      <summary>
+            Gets or sets a value indicating whether [is editable].
+            </summary>
+      <value>
+        <c>true</c> if [is editable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.PlanId">
+      <summary>
+            Gets or sets the disbursement frequency.
+            </summary>
+      <value>
+            The disbursement frequency.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.EarningsKindId">
+      <summary>
+            Gets or sets the earnings kind identifier.
+            </summary>
+      <value>
+            The earnings kind identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.ClientName">
+      <summary>
+            Gets or sets the name of the client.
+            </summary>
+      <value>
+            The name of the client.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IBonusKind.ClientCode">
+      <summary>
+            Gets or sets the client code.
+            </summary>
+      <value>
+            The client code.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICalculationOverride">
+      <summary>
+            Calculation override
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationOverride.CalculationOverrideId">
+      <summary>
+            Gets or sets the account title override identifier.
+            </summary>
+      <value>
+            The account title override identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationOverride.CalculationKind">
+      <summary>
+            Gets or sets the type of the calculation.
+            </summary>
+      <value>
+            The type of the calculation.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationOverride.Period">
+      <summary>
+            Gets or sets the period identifier.
+            </summary>
+      <value>
+            The period identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationOverride.NewValue">
+      <summary>
+            Gets or sets the new value.
+            </summary>
+      <value>
+            The new value.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICalculationOverride.OverrideIfNull">
+      <summary>
+            Gets or sets whether to override if null
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICheckDisbursementProfile">
+      <summary>
+            Profile of a check disbursement.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IDisbursementProfile">
+      <summary>
+            Disbursement profile contract.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.DisbursementProfileId">
+      <summary>
+            Gets or sets the disbursement profile identifier.
+            </summary>
+      <value>
+            The disbursement profile identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.DisbursementMethod">
+      <summary>
+            Gets the disbursement method for this disbursement.  This is formerly DisbursementType.
+            </summary>
+      <value>
+            The kind of the disbursement.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.IsEnabled">
+      <summary>
+            Gets a value indicating whether this profile [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.AccountId">
+      <summary>
+            Gets or sets the account id
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.Percentage">
+      <summary>
+            Gets or sets the percentage
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.CurrencyId">
+      <summary>
+            Gets or sets the currency id
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.NameOnAccount">
+      <summary>
+            Gets or sets the name on account
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementProfile.EnrollmentFormReceived">
+      <summary>
+            Gets or sets if the enrollment form [has been received]
+            </summary>
+      <value>
+        <c>true</c> if [has been received]; otherwise, <c>false</c></value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICheckDisbursementProfile.NameOnCheck">
+      <summary>
+            Gets the name on the check.
+            </summary>
+      <value>
+            The name on check.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICheckDisbursementProfile.AddressId">
+      <summary>
+            Gets the address identifier.
+            </summary>
+      <value>
+            The address identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionRunPlan">
+      <summary>
+            Commission run plan?
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.PlanId">
+      <summary>
+            Gets or sets the plan identifier.
+            </summary>
+      <value>
+            The plan identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.PlanCode">
+      <summary>
+            Gets or sets the plan code.
+            </summary>
+      <value>
+            The plan code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.Enabled">
+      <summary>
+            Gets or sets a value indicating whether [enabled].
+            </summary>
+      <value>
+        <c>true</c> if [enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.DefaultPlan">
+      <summary>
+            Gets or sets a value indicating whether [default plan].
+            </summary>
+      <value>
+        <c>true</c> if [default plan]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.TermName">
+      <summary>
+            Gets or sets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.RunKind">
+      <summary>
+            Gets or sets the commission run type identifier.
+            </summary>
+      <value>
+            The commission run type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.RunTypeName">
+      <summary>
+            Gets or sets the name of the commission run type.
+            </summary>
+      <value>
+            The name of the commission run type.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunPlan.RunName">
+      <summary>
+            Gets or sets the name of the commission run.
+            </summary>
+      <value>
+            The name of the commission run.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionRunStep">
+      <summary>
+            Commission run step
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.CommissionProcedureName">
+      <summary>
+            Gets or sets the name of the commission procedure.
+            </summary>
+      <value>
+            The name of the commission procedure.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.CommissionRunId">
+      <summary>
+            Gets or sets the commission run identifier.
+            </summary>
+      <value>
+            The commission run identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.CommissionRunProcedureId">
+      <summary>
+            Gets or sets the commission run procedure identifier.
+            </summary>
+      <value>
+            The commission run procedure identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.CommissionRunStepId">
+      <summary>
+            Gets or sets the commission run step identifier.
+            </summary>
+      <value>
+            The commission run step identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.CommissionRunStepNumber">
+      <summary>
+            Gets or sets the commission run step number.
+            </summary>
+      <value>
+            The commission run step number.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.DisplayMessage">
+      <summary>
+            Gets or sets the display message.
+            </summary>
+      <value>
+            The display message.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.Enabled">
+      <summary>
+            Gets or sets a value indicating whether [enabled].
+            </summary>
+      <value>
+        <c>true</c> if [enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.IncludePeriodIdParameter">
+      <summary>
+            Gets or sets a value indicating whether [include period identifier parameter].
+            </summary>
+      <value>
+        <c>true</c> if [include period identifier parameter]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.SortOrder">
+      <summary>
+            Gets or sets the sort order.
+            </summary>
+      <value>
+            The sort order.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.SQLTimeOutSeconds">
+      <summary>
+            Gets or sets the SQL time out seconds.
+            </summary>
+      <value>
+            The SQL time out seconds.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunStep.SystemEventLog">
+      <summary>
+            Gets or sets the system event log.
+            </summary>
+      <value>
+            The system event log.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IDisbursementHold">
+      <summary>
+            disbursement hold
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.DisbursementHoldId">
+      <summary>
+            Gets or sets the disbursement hold identifier.
+            </summary>
+      <value>
+            The check hold identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.AccountId">
+      <summary>
+            Gets or sets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.UserId">
+      <summary>
+            Gets or sets the user identifier.
+            </summary>
+      <value>
+            The user identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.Reason">
+      <summary>
+            Gets or sets the reason.
+            </summary>
+      <value>
+            The reason.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.HoldUntil">
+      <summary>
+            Gets or sets the hold until date.
+            </summary>
+      <value>
+            The hold until.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.StartDate">
+      <summary>
+            Gets or sets the start date.
+            </summary>
+      <value>
+            The start date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.Notes">
+      <summary>
+            Gets or sets the notes.
+            </summary>
+      <value>
+            The notes.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.ApplicationSourceId">
+      <summary>
+            Gets or sets the application source identifier.
+            </summary>
+      <value>
+            The application source identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.CreatedDate">
+      <summary>
+            Gets or sets the created date.
+            </summary>
+      <value>
+            The created date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDisbursementHold.UpdatedDate">
+      <summary>
+            Gets or sets the updated date.
+            </summary>
+      <value>
+            The updated date.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData">
+      <summary>
+            Data for the performance widget
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.AccountId">
+      <summary>
+            Gets the account identifier.
+            </summary>
+      <value>
+            The account identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.PeriodId">
+      <summary>
+            Gets the period identifier.
+            </summary>
+      <value>
+            The period identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.Volume">
+      <summary>
+            Gets the volume earned for the period and account specified.
+            </summary>
+      <value>
+            The volume.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.RequiredVolume">
+      <summary>
+            Gets the required volume for the period and account specified.
+            </summary>
+      <value>
+            The required volume.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.CurrentTitle">
+      <summary>
+            Gets the current level title earned by the account for the period specified.
+            </summary>
+      <value>
+            The current level.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.PaidAsTitle">
+      <summary>
+            Gets the title that the distributor will be "paid as" for the period specified.
+            </summary>
+      <value>
+            The paid as level.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IDistributorPeriodPerformanceData.SalesIndicatorLevel">
+      <summary>
+            Gets the sales indicator level.
+            </summary>
+      <value>
+            The sales indicator level.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IEarningReport">
+      <summary>
+            Represent a Earning Model
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CompanyTerm">
+      <summary>
+            Obtiene o establece CompanyTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Company">
+      <summary>
+            Obtiene o establece Company
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AccountNumberTerm">
+      <summary>
+            Obtiene o establece AccountNumberTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AccountNumber">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CareerTitleTerm">
+      <summary>
+            Obtiene o establece CareerTitleTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CareerTitle">
+      <summary>
+            The AccountNumber is for TODO: STRING
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.PaidAsTitleTerm">
+      <summary>
+            Obtiene o establece PaidAsTitleTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.PaidAsTitle">
+      <summary>
+            Obtiene o establece PaidAsTitle
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.EnrollmentDateTerm">
+      <summary>
+            Obtiene o establece EnrollmentDateTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.EnrollmentDate">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AccountNameTerm">
+      <summary>
+            Obtiene o establece AccountNameTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AccountName">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AddressTerm">
+      <summary>
+            Obtiene o establece AddressTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Address">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.StateTerm">
+      <summary>
+            Obtiene o establece StateTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.State">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.PostalCodeTerm">
+      <summary>
+            Obtiene o establece PostalCodeTerm
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.PostalCode">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level1CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level1CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level1CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level1Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level1Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level2CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level2CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level2CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level2Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level2Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level3CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level3CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level3CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level3Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level3Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level4CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level4CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level4CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level4Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Level4Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title7CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title7CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title7CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title7Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title7Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title7CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title7CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title7CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title7Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title7Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation3Title7CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation3Title7CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation3Title7CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation3Title7Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation3Title7Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation4Title7CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation4Title7CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation4Title7CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation4Title7Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation4Title7Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation5Title7CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation5Title7CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation5Title7CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation5Title7Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation5Title7Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title10CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title10CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title10CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title10Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation1Title10Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title10CV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title10CBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title10CB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title10Term">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.Generation2Title10Code">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TurboInfinityBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TurboInfinityBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TurboInfinityBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TurboInfinityBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TurboInfinityBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.FastStartBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.FastStartBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.FastStartBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.FastStartBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.FastStartBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CoachingBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CoachingBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CoachingBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CoachingBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.CoachingBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TeamBuildingBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TeamBuildingBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TeamBuildingBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TeamBuildingBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TeamBuildingBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AdvancementBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AdvancementBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AdvancementBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AdvancementBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.AdvancementBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.MatchingAdvacementBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.MatchingAdvacementBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.MatchingAdvacementBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.MatchingAdvacementBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.MatchingAdvacementBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.ConsistencyBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.ConsistencyBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.ConsistencyBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.ConsistencyBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.ConsistencyBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.RetailProfitBonusCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.RetailProfitBonusCBPer">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.RetailProfitBonusCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.RetailProfitBonusTerm">
+      <summary>
+            Term field - not provided
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.RetailProfitBonusCode">
+      <summary>
+            Code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TotalCV">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEarningReport.TotalCB">
+      <summary>
+            The AccountNumber is for
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IEFTAccount">
+      <summary>
+            EFT Account model
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.DisbursementProfileId">
+      <summary>
+            Gets or sets the disbursement profile identifier.
+            </summary>
+      <value>
+            The disbursement profile identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.RoutingNumber">
+      <summary>
+            Gets or sets the routing number.
+            </summary>
+      <value>
+            The routing number.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.AccountNumber">
+      <summary>
+            Gets or sets the account number.
+            </summary>
+      <value>
+            The account number.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankName">
+      <summary>
+            Gets or sets the name of the bank.
+            </summary>
+      <value>
+            The name of the bank.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankPhone">
+      <summary>
+            Gets or sets the bank phone.
+            </summary>
+      <value>
+            The bank phone.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankAddress1">
+      <summary>
+            Gets or sets the bank address1.
+            </summary>
+      <value>
+            The bank address1.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankAddress2">
+      <summary>
+            Gets or sets the bank address2.
+            </summary>
+      <value>
+            The bank address2.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankAddress3">
+      <summary>
+            Gets or sets the bank address3.
+            </summary>
+      <value>
+            The bank address3.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankCity">
+      <summary>
+            Gets or sets the bank city.
+            </summary>
+      <value>
+            The bank city.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankState">
+      <summary>
+            Gets or sets the state of the bank.
+            </summary>
+      <value>
+            The state of the bank.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankZip">
+      <summary>
+            Gets or sets the bank zip.
+            </summary>
+      <value>
+            The bank zip.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankCountry">
+      <summary>
+            Gets or sets the bank country.
+            </summary>
+      <value>
+            The bank country.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.BankCounty">
+      <summary>
+            Gets or sets the bank county.
+            </summary>
+      <value>
+            The bank county.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.AccountType">
+      <summary>
+            Gets or sets the type of the account.
+            </summary>
+      <value>
+            The type of the account.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.PercentToDeposit">
+      <summary>
+            Gets or sets the percent to deposit.
+            </summary>
+      <value>
+            The percent to deposit.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTAccount.IsEnabled">
+      <summary>
+            Gets of sets whether this account is enabled
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile">
+      <summary>
+            EFT disbursement profile contract.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.AccountNumber">
+      <summary>
+            Gets or sets the account number.
+            </summary>
+      <value>
+            The account number.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.BankName">
+      <summary>
+            Gets or sets the name of the bank.
+            </summary>
+      <value>
+            The name of the bank.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.AddressId">
+      <summary>
+            Gets or sets the address identifier of the bank
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.RoutingNumber">
+      <summary>
+            Gets or sets the routing
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.BankPhone">
+      <summary>
+            Gets or sets the bank phone
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IEFTDisbursementProfile.BankAccountTypeId">
+      <summary>
+            Gets or sets the bank account type id
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IOverrideKind">
+      <summary>
+            Override kind (formerly type)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideKind.OverrideKindId">
+      <summary>
+            the override kind identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideKind.OverrideCode">
+      <summary>
+            the override code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideKind.Description">
+      <summary>
+            the override description
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideKind.Operator">
+      <summary>
+            the override operator
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IOverrideReason">
+      <summary>
+            Commissions override reason
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReason.OverrideReasonId">
+      <summary>
+            Gets the override reason identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReason.ReasonCode">
+      <summary>
+            Gets the reason code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReason.Name">
+      <summary>
+            Gets the friendly name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReason.OverrideReasonSource">
+      <summary>
+            Gets the related override reason source
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReason.TermName">
+      <summary>
+            Gets the term name
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IOverrideReasonSource">
+      <summary>
+            Commissions overridee reason source
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReasonSource.OverrideReasonSourceId">
+      <summary>
+            Gets the override reason source identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReasonSource.Code">
+      <summary>
+            Gets the reason code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReasonSource.Description">
+      <summary>
+            Gets the reason description
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReasonSource.TermName">
+      <summary>
+            Gets the term name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IOverrideReasonSource.Name">
+      <summary>
+            Gets the friendly name
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IPeriod">
+      <summary>
+            Commissions period.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.PeriodId">
+      <summary>
+            Gets the period identifier.
+            </summary>
+      <value>
+            The period identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.StartDateUTC">
+      <summary>
+            Gets the start date in UTC.
+            </summary>
+      <value>
+            The start date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.EndDateUTC">
+      <summary>
+            Gets the end date in UTC.
+            </summary>
+      <value>
+            The end date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.ClosedDateUTC">
+      <summary>
+            Gets the closed date UTC.
+            </summary>
+      <value>
+            The closed date UTC.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.Description">
+      <summary>
+            Gets the description.
+            </summary>
+      <value>
+            The description.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.IsOpen">
+      <summary>
+            Gets a value indicating whether [is open].
+            </summary>
+      <value>
+        <c>true</c> if [is open]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPeriod.DisbursementFrequency">
+      <summary>
+            Gets the disbursement plan.
+            </summary>
+      <value>
+            The disbursement plan.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IProductCreditLedgerEntry">
+      <summary>
+            Product Credit Ledger Entry
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IProductCreditLedgerEntry.OrderId">
+      <summary>
+            Gets or sets the order identifier.
+            </summary>
+      <value>
+            The order identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IProductCreditLedgerEntry.OrderPaymentId">
+      <summary>
+            Gets or sets the order payment identifier.
+            </summary>
+      <value>
+            The order payment identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ILedgerEntryKind">
+      <summary>
+            Entry Kind (formerly type)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.LedgerEntryKindId">
+      <summary>
+            Gets or sets the ledger entry kind identifier.
+            </summary>
+      <value>
+            The ledger entry kind identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.IsEnabled">
+      <summary>
+            Gets or sets a value indicating whether [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.IsEditable">
+      <summary>
+            Gets or sets a value indicating whether [is editable].
+            </summary>
+      <value>
+        <c>true</c> if [is editable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.IsTaxable">
+      <summary>
+            Gets or sets a value indicating whether [is taxable].
+            </summary>
+      <value>
+        <c>true</c> if [is taxable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.Code">
+      <summary>
+            Gets or sets the code.
+            </summary>
+      <value>
+            The code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryKind.TermName">
+      <summary>
+            Gets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin">
+      <summary>
+            Product Credit Ledger Origin
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.EntryOriginId">
+      <summary>
+            Gets the entry origin identifier.
+            </summary>
+      <value>
+            The entry origin identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.Name">
+      <summary>
+            Gets the origin name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.IsEnabled">
+      <summary>
+            Gets a value indicating whether [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.IsEditable">
+      <summary>
+            Gets a value indicating whether [is editable].
+            </summary>
+      <value>
+        <c>true</c> if [is editable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.TermName">
+      <summary>
+            Gets the origin term name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryOrigin.Code">
+      <summary>
+            Gets the origin code
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ILedgerEntryReason">
+      <summary>
+            Ledger entry reasons
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.EntryReasonId">
+      <summary>
+            Gets or sets the entry reason identifier.
+            </summary>
+      <value>
+            The entry reason identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+      <value>
+            The name.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.IsEnabled">
+      <summary>
+            Gets or sets a value indicating whether [is enabled].
+            </summary>
+      <value>
+        <c>true</c> if [is enabled]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.IsEditable">
+      <summary>
+            Gets or sets a value indicating whether [is editable].
+            </summary>
+      <value>
+        <c>true</c> if [is editable]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.TermName">
+      <summary>
+            Gets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ILedgerEntryReason.Code">
+      <summary>
+            Gets or sets the code.
+            </summary>
+      <value>
+            The code.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IPropayDisbursementProfile">
+      <summary>
+            Profile of a propay disbursement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IPropayDisbursementProfile.PropayAccountNumber">
+      <summary>
+            Gets the propay account number.
+            </summary>
+      <value>
+            The propay account number.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ICommissionRunOutput">
+      <summary>
+            Commission Run Output
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunOutput.DisbursementFrequency">
+      <summary>
+            Gets or sets the disbursement frequency.
+            </summary>
+      <value>
+            The disbursement frequency.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ICommissionRunOutput.Results">
+      <summary>
+            Gets or sets the results.
+            </summary>
+      <value>
+            The results.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.IReportBonusDetail">
+      <summary>
+            Represent a Report Bonus Detail Data Returned
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.DownlineID">
+      <summary>
+            Obtiene o establece DownlineID
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.DownlineName">
+      <summary>
+            Obtiene o establece DownlineName
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.PQV">
+      <summary>
+            Obtiene o establece PQV
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.PCV">
+      <summary>
+            Obtiene o establece PCV
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.CB">
+      <summary>
+            Obtiene o establece CB
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.AmountPaid">
+      <summary>
+            Obtiene o establece AmountPaid
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.BonusTypeID">
+      <summary>
+            Obtiene o establece BonusTypeID
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.BonusTypeName">
+      <summary>
+            Obtiene o establece BonusTypeName
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.IReportBonusDetail.BonusValue">
+      <summary>
+            Obtiene o establece BonusValue
+            </summary>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ISystemEvent">
+      <summary>
+            System event contract
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.CreatedDate">
+      <summary>
+            Gets or sets the created date.
+            </summary>
+      <value>
+            The created date.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.Completed">
+      <summary>
+            Gets or sets a value indicating whether [completed].
+            </summary>
+      <value>
+        <c>true</c> if [completed]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.Duration">
+      <summary>
+            Gets or sets the duration.
+            </summary>
+      <value>
+            The duration.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.EndTime">
+      <summary>
+            Gets or sets the end time.
+            </summary>
+      <value>
+            The end time.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.PeriodId">
+      <summary>
+            Gets or sets the period identifier.
+            </summary>
+      <value>
+            The period identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.StartTime">
+      <summary>
+            Gets or sets the start time.
+            </summary>
+      <value>
+            The start time.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.SystemEventApplicationId">
+      <summary>
+            Gets or sets the system event application identifier.
+            </summary>
+      <value>
+            The system event application identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEvent.SystemEventId">
+      <summary>
+            Gets or sets the system event identifier.
+            </summary>
+      <value>
+            The system event identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ISystemEventLog">
+      <summary>
+            System event log.  Not sure how this is different than System Event.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventLog.SystemEventLogId">
+      <summary>
+            Gets or sets the system event log identifier.
+            </summary>
+      <value>
+            The system event log identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventLog.SystemEventApplicationId">
+      <summary>
+            Gets or sets the system event application identifier.
+            </summary>
+      <value>
+            The system event application identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventLog.SystemEventLogTypeId">
+      <summary>
+            Gets or sets the system event log type identifier.
+            </summary>
+      <value>
+            The system event log type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventLog.EventMessage">
+      <summary>
+            Gets or sets the event message.
+            </summary>
+      <value>
+            The event message.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventLog.CreatedDate">
+      <summary>
+            Gets or sets the created date.
+            </summary>
+      <value>
+            The created date.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ISystemEventSetting">
+      <summary>
+            System event settings
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventSetting.PrepSystemEventApplicationId">
+      <summary>
+            Gets or sets the prep system event application identifier.
+            </summary>
+      <value>
+            The prep system event application identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventSetting.PublishSystemEventApplicationId">
+      <summary>
+            Gets or sets the publish system event application identifier.
+            </summary>
+      <value>
+            The publish system event application identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventSetting.SystemEventLogErrorTypeId">
+      <summary>
+            Gets or sets the system event log error type identifier.
+            </summary>
+      <value>
+            The system event log error type identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ISystemEventSetting.SystemEventLogNoticeTypeId">
+      <summary>
+            Gets or sets the system event log notice type identifier.
+            </summary>
+      <value>
+            The system event log notice type identifier.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ITitle">
+      <summary>
+            Account Commissions Title
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.TitleId">
+      <summary>
+            Gets the title identifier.
+            </summary>
+      <value>
+            The title identifier.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.TitleName">
+      <summary>
+            Gets the name of the title.
+            </summary>
+      <value>
+            The name of the title.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.TermName">
+      <summary>
+            Gets the name of the term.
+            </summary>
+      <value>
+            The name of the term.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.SortOrder">
+      <summary>
+            Gets or sets the sort order.
+            </summary>
+      <value>
+            The sort order.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.TitleCode">
+      <summary>
+            Gets or sets the title code.
+            </summary>
+      <value>
+            The title code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.Active">
+      <summary>
+            Gets or sets a value indicating whether [active].
+            </summary>
+      <value>
+        <c>true</c> if [active]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.ClientName">
+      <summary>
+            Gets or sets the name of the client.
+            </summary>
+      <value>
+            The name of the client.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.ClientCode">
+      <summary>
+            Gets or sets the client code.
+            </summary>
+      <value>
+            The client code.
+            </value>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitle.ReportsVisibility">
+      <summary>
+            Gets or sets a value indicating whether [reports visibility].
+            </summary>
+      <value>
+        <c>true</c> if [reports visibility]; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="T:NetSteps.Commissions.Common.Models.ITitleKind">
+      <summary>
+            Title Kind (formerly type)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitleKind.TitleKindId">
+      <summary>
+            The title kind identifier
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitleKind.TitleKindCode">
+      <summary>
+            the title kind code
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitleKind.Name">
+      <summary>
+            the friendly name
+            </summary>
+    </member>
+    <member name="P:NetSteps.Commissions.Common.Models.ITitleKind.TermName">
+      <summary>
+            the term name
+            </summary>
+    </member>
+  </members>
+</doc>

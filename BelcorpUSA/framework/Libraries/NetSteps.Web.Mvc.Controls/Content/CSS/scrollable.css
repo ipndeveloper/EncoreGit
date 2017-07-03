@@ -1,0 +1,69 @@
+﻿
+/*
+	root element for the scrollable.
+	when scrolling occurs this element stays still.
+*/
+.scrollable { /* required settings */ float: left; position: relative; overflow: hidden; width: 960px; height: 115px;  }
+body.IE7 .scrollable {width:900px;}
+.scrollable.vertical { width: 150px; height: 225px; }
+/*
+	root element for scrollable items. Must be absolutely positioned
+	and it should have a extremely large width to accomodate scrollable items.
+	it's enough that you set the width and height for the root element and
+	not for this element.
+*/
+.scrollable .items { /* this cannot be too large */ width: 20000em; position: absolute; clear: both;border-left:1px solid #CCC;height:115px; }
+.scrollable.vertical .items { height: 20000em; width: auto; }
+
+.items .itemGroup { float: left; width: auto; }
+.scrollable.vertical .items .itemGroup { width: 150px;  }
+.itemGroup .item:hover, #choicesSortable .item:hover {background-color:#EFFAFF;}
+
+
+.scrollable .item {cursor: pointer;float: left;width:115px;border-right:1px solid #CCC;}
+.scrollable.vertical .item {  }
+
+#editContentModal .item {display:block;float:left;}
+
+#editContentModal .itemGroup {float:none;clear:both;}
+
+/* single scrollable item */
+.scrollable img {background-color: #FFFFFF;cursor: pointer;max-width:100%;width: 100%;opacity:.75;-moz-opacity:.75;-webkit-opacity:.75;}
+.scrollable .titlecontent {display: block;font-size: 90%;height: 115px;line-height: normal;padding: 0 5px;text-align: center;vertical-align: middle;}
+/* active item */
+.scrollable .active { background:#DFF5FF;cursor: default;position: relative;opacity:100;-moz-opacity:100;-webkit-opacity:100;}
+.scrollable.vertical .active { top: 0; }
+
+/* prev, next, prevPage and nextPage buttons */
+a.browse { background: url(../Images/EditMode/bgs.png) no-repeat; display: block; width: 30px; height: 50px; float: left; cursor: pointer; font-size: 1px; overflow:hidden;margin-top:30px; }
+a.browse.vertical { display: block; clear: both; width: 30px; height: 30px; /*margin: 15px 60px;*/ cursor: pointer; float: none; }
+
+/* right */
+a.right {background-position: right -32px; clear: right;}
+a.right:hover {background-position: right -86px; }
+a.right.disabled {background-position: right -142px;cursor:default;}
+
+/* left */
+a.left {background-position: left -32px; clear: right; }
+a.left:hover {background-position: left -86px; }
+a.left.disabled {background-position: left -142px;cursor:default;}
+
+/* up */
+a.up { margin: 5px 60px 5px 60px; }
+a.up:hover { }
+a.up:active { }
+
+/* down */
+a.down { margin: 12px 60px 5px 60px; }
+a.down:hover { }
+a.down:active { }
+
+
+
+a.sortButton { margin: 5px 10px; }
+
+#editContentModal #reorderButtons { position: relative; top:100px;right:0px;}
+#editContentModal #reorderButtons a {display:block;clear:both;}
+
+
+.ui-sortable-helper {background:#1590CA !important;color:#fff;border:none !important;box-shadow:0 0 10px #000;-moz-box-shadow:0 0 10px #000;-webkit-box-shadow:0 0 10px #000;}

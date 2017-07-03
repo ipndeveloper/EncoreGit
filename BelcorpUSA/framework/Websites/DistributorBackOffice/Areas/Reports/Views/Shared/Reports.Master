@@ -1,0 +1,40 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="Head" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+    <div class="BreadCrumb">
+        <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                    <div class="SectionNav">
+                        <ul class="SectionLinks">
+                            <% foreach (ReportCategory item in SmallCollectionCache.ReportCategories) %>
+                            <% { %>
+                            <% if (CoreContext.CurrentUser.HasFunction(item.Function))
+                               { %>
+                            <li>
+                                <%= Html.SelectedLink(ResolveUrl("~/Reports/Reports/Category/" + item.ReportCategoryID),
+                                     Html.Term("Reports_Category_" + item.CategoryName, item.CategoryName), LinkSelectionType.ActualPage, CoreContext.CurrentUser) %>
+                            </li>
+                            <% } %>
+                            <% } %>
+                        </ul>
+                    </div>
+                </asp:ContentPlaceHolder>
+            </td>
+            <td class="CoreContent">
+                <asp:ContentPlaceHolder runat="server" ID="MainContent">
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

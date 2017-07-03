@@ -1,0 +1,9 @@
+﻿@using DistributorBackOffice.Models.Promotion
+@model IEnumerable<NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo>
+<div id="PromotionsContainer" class="FL splitCol30 allPromotionCoupons">
+    @foreach (var item in Model)
+    {
+        PromotionModel promotionModel = new PromotionModel(item);
+        @Html.Partial("~/Views/Promotions/_Promotion.cshtml", promotionModel)
+    }
+</div>

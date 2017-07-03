@@ -1,0 +1,62 @@
+﻿<tr data-bind="css: { AltRow: $index() % 2 == 1, DynamicKit: IsDynamicKit() }">
+	<!-- ko if: $parent.showDeleteColumn -->
+	<td class="center noText">
+		<!-- ko if: IsRemovable && showDeleteLink -->
+		<a href="javascript:void(0);" data-bind="click: removeFromCart, visible: !isRemoving()" class="UI-icon-container icon-24 Delete" title="@Html.Term("RemoveFromCart", "Remove from cart")">
+			<span class="UI-icon icon-x"></span></a>
+		<img class="loading" src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" height="15" width="15" data-bind="visible: isRemoving()" style="margin: 3px 0 0 10px; padding: 1px;" />
+		<!-- /ko -->
+	</td>
+	<!-- /ko -->
+	<td data-bind="text: SKU">
+	</td>
+	<td class="center CartThumb">
+		<img width="25" alt="" data-bind="attr: { src: ImageUrl }" />
+		<input class="productId" type="hidden" data-bind="attr: { value: ProductID }" />
+		<input class="guid" type="hidden"  data-bind="attr: { value: Guid }" />
+	</td>
+	<td>
+		<!-- ko text: ProductName -->
+		<!-- /ko -->
+        <!-- ko if: IsGiftCard -->
+            <ul data-bind="foreach: GiftCardCodes">
+                <li data-bind="text: $data">
+                </li>
+            </ul>
+        <!-- /ko -->
+		<!-- ko if: ModificationReason() -->
+		<div class="lawyer lineItemPromoList">
+			<span class="promoName" data-bind="text: ModificationReason" />
+		</div>
+		<!-- /ko -->
+		<!-- ko if:IsKit -->
+			@Html.Partial("_KitItemsModel")
+		<!-- /ko -->
+	</td>
+	<td data-bind="template: OriginalUnitPrice() != AdjustedUnitPrice() ? 'unitPriceStrikethrough' : 'unitPrice'">
+		<script type="text/html" id="unitPriceStrikethrough">
+		<span class="block price strikethrough originalPrice" data-bind="currency: OriginalUnitPrice">
+		</span><span class="block price discountPrice" data-bind="currency: AdjustedUnitPrice"></span>
+		</script>
+		<script type="text/html" id="unitPrice">
+		<span class="price originalPrice" data-bind="currency: OriginalUnitPrice"></span>
+		</script>
+	</td>
+	<td class="center CartQty" data-bind="template: (IsQuantityEditable() && allowQuantityEdit()) ? 'quantityInput' : 'quantityNoInput'">
+		<script type="text/html" id="quantityInput">
+			<input type="text" data-bind="value: Quantity" class="TextInput quantity" />
+		</script>
+		<script type="text/html" id="quantityNoInput">
+			<!-- ko text: Quantity --><!-- /ko -->
+		</script>
+	</td>
+	<td class="right" data-bind="template: OriginalTotal() != AdjustedTotal() ? 'totalStrikethrough' : 'total'">
+		<script type="text/html" id="totalStrikethrough">
+		<span class="block price originalPrice strikethrough" data-bind="currency: OriginalTotal">
+		</span><span class="block price discountPrice" data-bind="currency: AdjustedTotal"></span>
+		</script>
+		<script type="text/html" id="total">
+		<span class="price originalPrice" data-bind="currency: OriginalTotal"></span>
+		</script>
+	</td>
+</tr>

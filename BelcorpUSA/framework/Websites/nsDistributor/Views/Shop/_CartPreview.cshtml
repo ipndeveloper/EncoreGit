@@ -1,0 +1,99 @@
+﻿<div id="ShoppingCart">
+	<div id="CartTotals" class="cartTotals @(ViewBag.OrderItemCount > 0 ? "cartTotalsHasItems" : "")">
+		<a href="@Url.Content("~/Cart")" class="UI-btn cartTotalsLink @(ViewBag.OrderItemCount > 0 ? "cartTotalsLink-hasItems" : "")" title="@Html.Term("PreviewYourCart", "Preview Your Cart Contents")" data-icon="&#x2334;"><cite class="labelItems"><span class="itemsCount">@Html.Term("Items"):</span> <span class="itemsInCart" data-bind="text: totalItems"></span></cite><cite class="labelSubs"><span class="subTotal">@Html.Term("CartPreview_Subtotal", "Subtotal"):</span> <span class="Total" data-bind="currency: AdjustedSubtotal"></span></cite><span class="clr"></span></a>
+		<div id="CartPreview" class="UI-darkBg pad5 cartPreview">
+			@{ var canSelectParty = ViewBag.IsPartyOrderClient && ViewBag.OpenParties != null && ViewBag.OpenParties.Count > 0; }
+			@if (canSelectParty)
+   {
+				<!-- attach party -->
+				<div id="selectParty" class="hide UI-lightBg pad10 brdrAll attachPartyWindow">
+					<div class="UI-mainBg pad5 brdrAll mb10 selectPartyHeader">
+						@Html.Term("PleaseChooseAParty", "Please select one of the parties below")
+					</div>
+					@Html.Partial("OpenParties")
+					<!--/ end parties list -->
+					<div class="clr pad5">
+						<a href="javascript:void(0);" class="FL cancelAttach Button MinorButton"><span>@Html.Term("Cancel", "Cancel")</span></a>
+						<div class="FR">
+							<a id="attachAndContinue" href="javascript:void(0);" class="FL UI-btn pad5 mr10 brdrAll"><span>@Html.Term("AttachPartyAndContinueShopping", "Attach Party and Continue Shopping")</span></a> <a id="attachAndCheckout" href="javascript:void(0);" class="FL Button"><span>@Html.Term("AttachPartyAndCheckout", "Attach Party and Checkout")</span></a>
+						</div>
+						<span class="clr"></span>
+					</div>
+				</div>
+				<!--/ end attach party -->
+   }
+			<div id="CartPreviewBody" class="UI-lightBg pad5 cartPreviewBody">
+				<div class="UI-mainBg mb5 brdrAll pad5 center promoNotification" data-bind="visible: ApplicablePromotions().length > 0">
+					<h3 class="bold promoNotificationTerm">@Html.Term("ShoppingCart_YouQualifiedFor", "Congratulations! You qualified for the following promotions:")</h3>
+					<!-- ko foreach: ApplicablePromotions -->
+					<span class="block promoItem">
+						<!-- ko text: Description -->
+						<!-- /ko -->
+						<!-- ko if: !Available() -->
+						<a class="bold promoItemAvailability">@Html.Term("Unavailable", "Unavailable")</a>
+						<!-- /ko -->
+					</span>
+					<!-- /ko -->
+					<!-- ko if: anyGiftsAvailable -->
+					<a href="/Cart">@Html.Term("CartPreview_GoSelectFreeGift", "Go to my cart to select my FREE gift")</a>
+					<!-- /ko -->
+				</div>
+				<table class="DataGrid" width="100%">
+					<thead>
+						<tr>
+							<th class="thumbCol">
+								&nbsp;
+							</th>
+							<th>
+								@Html.Term("SKU")
+							</th>
+							<th>
+								@Html.Term("Product")
+							</th>
+							<th>
+								@Html.Term("Price")
+							</th>
+							<th>
+								@Html.Term("Quantity", "Qty")
+							</th>
+							<th>
+								@Html.Term("Total")
+							</th>
+						</tr>
+					</thead>
+					<tbody id="CartItems">
+						<!-- ko foreach: OrderItems -->
+						@Html.Partial("CartPreviewOrderItem")
+						<!-- /ko -->
+						<!-- ko foreach: PromotionallyAddedItems -->
+						@Html.Partial("CartPreviewPromotionallyAddedItem")
+						<!-- /ko -->
+					</tbody>
+				</table>
+				<div class="UI-darkBg center bold pad5 brdrAll GuestOrderSummaryTable">
+					<span class="Label">@Html.Term("SubTotal", "Sub Total"):</span> &nbsp; <span id="subtotal" class="price OriginalPrice Total" data-bind="currency: Subtotal, css: { strikethrough: isSubtotalAdjusted }"></span><span id="adjustedSubtotal" class="price discountPrice DiscountTotal" data-bind="currency: AdjustedSubtotal, visible: isSubtotalAdjusted"></span>
+				</div>
+				<div class="pad10 cartPreviewButtons">
+					@if (canSelectParty)
+	 {
+						<div class="FL attachToParty">
+							<a href="javascript:void(0);" class="Button MinorButton partyAttachBtn" @Html.Raw(CoreContext.CurrentOrder != null && (!CoreContext.CurrentOrder.ParentOrderID.HasValue || CoreContext.CurrentOrder.ParentOrderID == 0) ? "" : "style=\"display:none;\"")><span>@Html.Term("AttachButtonTxt", "I need to attach my order a party")</span></a>
+						</div>
+	 }
+					<a href="@Url.Content("~/Cart")" class="FR UI-btn Button goToCart"><span>@Html.Term("GoToMyCart", "Go To My Cart")</span></a> <span class="clr"></span>
+				</div>
+			</div>
+		</div>
+		<!--/ end cart preview -->
+	</div>
+	<div id="CartMessages" class="UI-darkBg pad5 cartMessages">
+		<div class="UI-lightBg pad5 Wrap">
+			<div>
+				<b id="CartTitle"></b>
+				<div id="CartMessageContent">
+				</div>
+			</div>
+		</div>
+		<span class="Foot"></span>
+	</div>
+</div>

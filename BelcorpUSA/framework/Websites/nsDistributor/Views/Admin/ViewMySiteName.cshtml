@@ -1,0 +1,78 @@
+@model NetSteps.Data.Entities.Site
+@{Layout = String.Empty;}
+
+<script src="../../Scripts/ns.siteNameEditor.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $('#editMySite').siteNameEditor({
+            siteName: '@ViewBag.SiteName',
+            siteNameDomain: '@ViewBag.Domain'
+        });
+    });
+</script>
+
+
+<div id="editMySite" class="emWidget brdrAll Section section-WebsiteName">
+    <div class="viewMode">
+        <div class="emWidgetTitle">
+            <span class="NS-FL bold">@Html.Term("SiteNameTitleView", "My Website Name")</span>
+            <a class="NS-FR edit" href="javascript:void(0);">@Html.Term("Edit","Edit")</a>
+        </div>
+                    
+        <div class="formContainer siteName siteNameCurrent"></div>
+
+    </div>
+    <div class="editMode">
+        <div class="emWidgetTitle">
+            <span class="NS-FL bold">@Html.Term("SiteNameTitleEdit", "My Website Name")</span>
+        </div>
+        @*
+        <div class="FormSubmit">
+            <a href="javascript:void();" class="NS-FR cancel"></a>
+            <a href="javascript:void();" class="NS-FR submit"></a>
+        </div>
+        *@
+        <div class="FormSubmit GridUtility">
+	        <a href="javascript:void(0);" class="submit UI-icon-container"><span class="UI-icon icon-save"></span><span>@Html.Term("Save")</span></a>
+	        <a href="javascript:void(0);" class="cancel UI-icon-container NS_ButtonCancel"><span class="UI-icon icon-x"></span><span>@Html.Term("Cancel")</span></a>
+        </div>
+        <div class="formContainer">
+            <div class="inputContainer"><input type="text" class="siteNameInput" />
+            <div class="refreshAvailable">@Html.Term("SiteNameCheck", "check") </div></div>
+            
+            <span class="progress">
+                <span class="icon"></span>
+            </span>
+            <span class="available">
+                <div class="success">@Html.Term("SiteNameAvailable", "This name is available")</div>
+                <div>@Html.Term("WebsiteAddressPreview", "your new website name will be:")</div>
+                <div class="siteNamePreview siteName"></div>
+            </span>
+            <span class="unavailable">
+                <div class="success">@Html.Term("SiteNameUnavailable", "This name is taken.  Try another")</div>
+                <div>@Html.Term("WebsiteAddressCurrent", "your website name is currently:")</div>
+                <div class="siteNameCurrent siteName"></div>
+            </span>
+        </div>
+    </div>
+    <div class="prompt jqmWindow LModal" style="display:none;"> 
+        <div class="mContent bodyContainer">
+            <h2>@Html.Term("SiteNameConfirmTitle","Website Name Change Confirmation")</h2>
+            <h3>@Html.Term("SiteNameConfirmSubTitle", "You are about to change your website to:")
+                <span class="siteNamePreview"></span>
+            </h3>
+            <div class="mt10 mb20 body">@Html.Term("SiteNameConfirmBody", "Once this is complete, your old website name will become" + 
+                                        " available for someone else to use, and it may be possible that you will not be " + 
+                                        " able to switch back to your old website name again")</div>
+            <p>
+                <a href="javascript:void();" class="Button change">@Html.Term("SiteNameConfirmSubmit", "Make the Change")</a>
+                <a href="javascript:void();" class="cancel">@Html.Term("SiteNameConfirmCancel", "Cancel")</a>
+            </p>
+        </div>
+        <div class="mContent progressContainer" style="display:none;">
+            <img src="@Url.Content("~/Resource/Content/Images/Icons/loading-blue.gif")" alt="@Html.Term("loading...")" class="FL mr20" />
+            <h3>@Html.Term("Please wait while we change your web site name")</h3>
+            <div class="siteNamePreview"></div>
+        </div>
+    </div>
+</div>

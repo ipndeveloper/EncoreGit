@@ -1,0 +1,847 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\..\csproj-import-before.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\..\csproj-import-before.targets')" />
+  <PropertyGroup>
+    <HomeSolution>Framework.sln</HomeSolution>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D36B49AF-9022-464E-BA5D-49F61E2210FF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DistributorBackOfficeMobile</RootNamespace>
+    <AssemblyName>DistributorBackOfficeMobile</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Testing|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="FlitBit.Core">
+      <HintPath>..\..\packages\FlitBit.Core.2.11.4\lib\net40\FlitBit.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FlitBit.Dto">
+      <HintPath>..\..\packages\FlitBit.Dto.2.2.1\lib\net40\FlitBit.Dto.dll</HintPath>
+    </Reference>
+    <Reference Include="FlitBit.Emit">
+      <HintPath>..\..\packages\FlitBit.Emit.2.8.6\lib\net40\FlitBit.Emit.dll</HintPath>
+    </Reference>
+    <Reference Include="FlitBit.Wireup">
+      <HintPath>..\..\packages\FlitBit.Wireup.2.5.6\lib\net40\FlitBit.Wireup.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NetSteps.Accounts.Common, Version=1.1.66.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Accounts.Common.1.1.66\lib\net40\NetSteps.Accounts.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Addresses.Common">
+      <HintPath>..\..\packages\NetSteps.Addresses.Common.1.0.10\lib\net40\NetSteps.Addresses.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Auth.Common, Version=1.1.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Auth.Common.1.1.52\lib\net40\NetSteps.Auth.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Auth.Service, Version=1.1.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Auth.Service.1.1.52\lib\net40\NetSteps.Auth.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Authorization.Common">
+      <HintPath>..\..\packages\NetSteps.Authorization.Common.1.0.10\lib\net40\NetSteps.Authorization.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Authorization.Service">
+      <HintPath>..\..\packages\NetSteps.Authorization.Service.1.0.14\lib\net40\NetSteps.Authorization.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Common, Version=1.3.661.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\NetSteps.Common.1.3.661\lib\net40\NetSteps.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Communication.Common, Version=3.1.19.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Communication.Common.3.1.19\lib\net40\NetSteps.Communication.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Core.Cache, Version=1.4.140.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Core.Cache_r1_0.1.4.140\lib\net40\NetSteps.Core.Cache.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Data.Common, Version=1.24.699.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Data.Common.1.24.699\lib\net40\NetSteps.Data.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Diagnostics.Utilities, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Diagnostics.Utilities.1.0.23\lib\net40\NetSteps.Diagnostics.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Encore.Core, Version=2.4.143.0, Culture=neutral, PublicKeyToken=d116fce376e37d09, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Encore.Core_r2_3.2.4.143\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Enrollment.Common, Version=1.5.210.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Enrollment.Common.1.5.210\lib\net40\NetSteps.Enrollment.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Extensibility.Core, Version=1.0.16115.25224, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extensibility.Core.1.0.16115\lib\net40\NetSteps.Extensibility.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Foundation.Common, Version=1.3.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Foundation.Common.1.3.7\lib\net40\NetSteps.Foundation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Foundation.Entity">
+      <HintPath>..\..\packages\NetSteps.Foundation.Entity.1.3.7\lib\net40\NetSteps.Foundation.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Infrastructure.Common">
+      <HintPath>..\..\packages\NetSteps.Infrastructure.Common.1.0.3\lib\net40\NetSteps.Infrastructure.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Locale.Common, Version=1.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Locale.Common.1.1.6\lib\net40\NetSteps.Locale.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.OrderAdjustments.Common, Version=2.8.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\OrderAdjustments.Common.2.8.104\lib\net40\NetSteps.OrderAdjustments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.OrderAdjustments.Service, Version=2.8.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\OrderAdjustments.Service.2.8.104\lib\net40\NetSteps.OrderAdjustments.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Orders.Common">
+      <HintPath>..\..\packages\NetSteps.Orders.Common.1.0.6\lib\net40\NetSteps.Orders.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Caching, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Caching.2.15.547\lib\net40\NetSteps.Promotions.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Common, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Common.2.15.547\lib\net40\NetSteps.Promotions.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Plugins, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Plugins.2.15.547\lib\net40\NetSteps.Promotions.Plugins.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Plugins.Base, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Plugins.Base.2.15.547\lib\net40\NetSteps.Promotions.Plugins.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Plugins.Common, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Plugins.Common.2.15.547\lib\net40\NetSteps.Promotions.Plugins.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.Service, Version=2.15.547.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Promotions.Service.2.15.547\lib\net40\NetSteps.Promotions.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.UI.Common, Version=3.2.257.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Promotions.UI.Common.3.2.257\lib\net40\NetSteps.Promotions.UI.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Promotions.UI.Service, Version=3.2.258.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Promotions.UI.Service.3.2.258\lib\net40\NetSteps.Promotions.UI.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Security, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Security.1.0.4\lib\net40\NetSteps.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Sites.Common, Version=1.1.45.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Sites.Common.1.1.45\lib\net40\NetSteps.Sites.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Sites.Service, Version=1.1.48.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetSteps.Sites.Service.1.1.48\lib\net40\NetSteps.Sites.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.SSO.Common">
+      <HintPath>..\..\packages\NetSteps.SSO.Common.1.1.5.0\lib\net40\NetSteps.SSO.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.SSO.Service">
+      <HintPath>..\..\packages\NetSteps.SSO.Service.1.1.5.0\lib\net40\NetSteps.SSO.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\app.js" />
+    <Content Include="app\models\Contact.js" />
+    <Content Include="app\models\KPIRptWidget.js" />
+    <Content Include="app\models\KPIData.js" />
+    <Content Include="app\models\NewsItem.js" />
+    <Content Include="app\models\Order.js" />
+    <Content Include="app\models\PartyDetail.js" />
+    <Content Include="app\models\TripData.js" />
+    <Content Include="app\views\Contacts.js" />
+    <Content Include="app\views\KPI.js" />
+    <Content Include="app\views\Login.js" />
+    <Content Include="app\views\Network.js" />
+    <Content Include="app\views\NetworkCustomers.js" />
+    <Content Include="app\views\NetworkProspects.js" />
+    <Content Include="app\views\NetworkTeam.js" />
+    <Content Include="app\views\News.js" />
+    <Content Include="app\views\Orders.js" />
+    <Content Include="app\views\Parties.js" />
+    <Content Include="app\views\Performance.js" />
+    <Content Include="app\views\Trip.js" />
+    <Content Include="app\views\Viewport.js" />
+    <Content Include="index.html" />
+    <Content Include="lib\Ext.ux.TouchGridPanel.js" />
+    <Content Include="lib\json2.js" />
+    <Content Include="lib\phonegap.0.9.5.js" />
+    <Content Include="lib\resources\css\Ext.ux.TouchGridPanel.css" />
+    <Content Include="lib\resources\css\mobilenet.css" />
+    <Content Include="lib\resources\css\theme.css" />
+    <Content Include="lib\resources\themes\images\default\check.png" />
+    <Content Include="lib\resources\themes\images\default\clickablerow.png" />
+    <Content Include="lib\resources\themes\images\default\disclosure.png" />
+    <Content Include="lib\resources\themes\images\default\dotgrid.png" />
+    <Content Include="lib\resources\themes\images\default\loading.gif" />
+    <Content Include="lib\resources\themes\images\default\pictos\action.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\add.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\add1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\address_book.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\add_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\arrow_down.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\arrow_left.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\arrow_right.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\arrow_up.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\at.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\atom.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\attachment.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\attachment2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\attachment3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\attachment_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\backspace.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\battery_full.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\battery_low.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\battery_power.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\blank.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bolt.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bolt_side.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bookmark1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bookmark2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bookmarks.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bookmark_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\briefcase1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\briefcase2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\brightness1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\brightness2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\broadcast.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bug.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bulb.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bullseye1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\bullseye2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\calendar.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\calendar2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\calendar_add.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\card1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\card2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chart1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chart2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chart3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chart4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\chat_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\check1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\check2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\check_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\check_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\check_dotted.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\circle.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\circle2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\clash.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud_black_upload1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud_black_upload2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud_bolt.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cloud_download.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\code1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\code2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compass1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compass2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compass3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compose.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compose1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compose2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compose3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\compose_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\contract.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\cube.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\data.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\delete.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\delete1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\delete_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\delete_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\docs1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\docs2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\docs_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\docs_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_black_landscape.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_compose1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_compose2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_delete.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_down.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_drawer.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_list.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_new.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_send.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\doc_up.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\download.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\download1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\download2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\download_screen.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\eject.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\empty1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\empty2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\equalizer1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\equalizer2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\event_complete.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\expand.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\favorites.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\favorites1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\favorites_circle.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\fforward.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\find.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\flag.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\flickr2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_add.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_black_open.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_delete.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_delete2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_lock.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\folder_open2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\font.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\forbidden.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\forward_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\globe1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\globe2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\globe_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\headphones.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\heart.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\heart_circle.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\help.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\help_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\home.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\home2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\hot.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\inbox1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\inbox2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\inbox3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\infinite.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\infinite2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\info.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\info2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\info_plain.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\info_plain2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\json.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\lab.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\layout.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\link1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\link2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\link_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\list.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\locate.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\locate1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\locate2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\locate3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\locate4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\lock_closed.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\lock_open.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\look.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\loop.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\loop2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\loop_circle.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\magic.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mail5.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\maps.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mic.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\minus1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\minus2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\minus_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\minus_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\monitor1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\monitor2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\monitor3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\monitor4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\more.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\mouse.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\move.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\music1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\music2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\nodes1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\nodes2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\note1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\note2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\note3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\note_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\nuclear.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\organize.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\outbox.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\pause.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\phone1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\phone2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\phone_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\phone_ring1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\phone_ring2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photo1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photo2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photo3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photos1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photos2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photos4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photo_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\photo_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\piechart.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\plane.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\play1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\play2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\play_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\play_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\podcast.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\power socket.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\power_on.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\print.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\print2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\quote1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\quote2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\quote_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\quote_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\quote_black3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\refresh.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\refresh1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\refresh2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\refresh3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\refresh5.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\reply.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\replytoall.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\resize.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\resize_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rewind.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\right.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\right2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rss.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rss2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rss_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rss_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\rss_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\screens.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\search.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\search1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\search2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\search_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\server.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\servers.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings10.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings11.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings5.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings6.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings7.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings8.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings9.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\settings_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\share.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shield1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shield2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shop1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shop2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shop3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\shuffle.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_backforth.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_cross.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_leftright.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_leftright2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_split.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_switch.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sign_uturn.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\spaces1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\spaces2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\speedometer1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\speedometer2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\speedometer_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\speedometer_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\star.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\stop1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\stop2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sync-android.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\sync.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tabbed_book.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tag.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tags.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tag_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\team.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\team1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\time.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\time_repeat.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\trash.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\trash2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\trash_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tree.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tv.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\tweak.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\twitter1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\twitter2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\up1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\up2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\upload2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\up_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_add.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_business.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_fave.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_list.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_list2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_remote1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_remove2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\user_send.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\video.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\video_black1.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\video_black2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\volume.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\volume_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\volume_down.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\volume_mute.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\volume_up.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\warming_dotted.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\warning_black.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\wifi.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\wifi2.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\wifi3.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\wifi4.png" />
+    <Content Include="lib\resources\themes\images\default\pictos\window.png" />
+    <Content Include="lib\resources\themes\images\default\pullarrow.png" />
+    <Content Include="lib\resources\themes\images\default\select_mask.png" />
+    <Content Include="lib\resources\themes\images\default\tip.png" />
+    <Content Include="lib\resources\themes\images\default\tip_horizontal.png" />
+    <Content Include="lib\resources\themes\images\default\tip_right.png" />
+    <Content Include="lib\resources\themes\images\default\togglebg.png" />
+    <Content Include="lib\resources\themes\images\default\togglemask.png" />
+    <Content Include="lib\resources\themes\images\default\togglethumb.png" />
+    <Content Include="lib\resources\themes\images\default\togglethumbbg.png" />
+    <Content Include="lib\resources\themes\images\default\togglethumbmask.png" />
+    <Content Include="lib\resources\themes\images\default\trackmask_outer.png" />
+    <Content Include="lib\resources\themes\images\encore\alert.png" />
+    <Content Include="lib\resources\themes\images\encore\apple-touch-icon.png" />
+    <Content Include="lib\resources\themes\images\encore\clickIcon.png" />
+    <Content Include="lib\resources\themes\images\encore\deadspace.png" />
+    <Content Include="lib\resources\themes\images\encore\encore.png" />
+    <Content Include="lib\resources\themes\images\encore\favorite.png" />
+    <Content Include="lib\resources\themes\images\encore\flower.png" />
+    <Content Include="lib\resources\themes\images\encore\guestCart.png" />
+    <Content Include="lib\resources\themes\images\encore\jansmith.png" />
+    <Content Include="lib\resources\themes\images\encore\joe.png" />
+    <Content Include="lib\resources\themes\images\encore\login_graphic.png" />
+    <Content Include="lib\resources\themes\images\encore\login_img.png" />
+    <Content Include="lib\resources\themes\images\encore\longpane_bg.png" />
+    <Content Include="lib\resources\themes\images\encore\next.png" />
+    <Content Include="lib\resources\themes\images\encore\no_photo.png" />
+    <Content Include="lib\resources\themes\images\encore\no_photo_gen.png" />
+    <Content Include="lib\resources\themes\images\encore\no_photo_male.png" />
+    <Content Include="lib\resources\themes\images\encore\offline.png" />
+    <Content Include="lib\resources\themes\images\encore\openList.png" />
+    <Content Include="lib\resources\themes\images\encore\openList2.png" />
+    <Content Include="lib\resources\themes\images\encore\phone_startup.png" />
+    <Content Include="lib\resources\themes\images\encore\photo_default.png" />
+    <Content Include="lib\resources\themes\images\encore\progress_alert.png" />
+    <Content Include="lib\resources\themes\images\encore\progress_good.png" />
+    <Content Include="lib\resources\themes\images\encore\sally.png" />
+    <Content Include="lib\resources\themes\images\encore\startup_img.png" />
+    <Content Include="lib\resources\themes\images\encore\tablet_startup.png" />
+    <Content Include="lib\resources\themes\images\partylite\apple-touch-icon.png" />
+    <Content Include="lib\resources\themes\images\partylite\partylite-loginHead.png" />
+    <Content Include="lib\resources\themes\images\partylite\partylite-logo.png" />
+    <Content Include="lib\resources\themes\images\partylite\partylite-startup-phone.png" />
+    <Content Include="lib\sencha-touch-debug-w-comments.js" />
+    <Content Include="lib\sencha-touch.js" />
+    <Content Include="lib\UxBufList.js" />
+    <Content Include="lib\yepnope.1.5.3-min.js" />
+    <Content Include="offline.html" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="PUBLISH README.txt" />
+    <Content Include="usersettings.js" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.version.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cache.appcache" />
+    <None Include="lib\resources\sass\config.rb" />
+    <None Include="lib\resources\sass\mobilenet.scss" />
+    <None Include="lib\resources\sass\theme.scss" />
+    <None Include="lib\resources\themes\compass_init.rb" />
+    <None Include="lib\resources\themes\lib\theme_images.rb" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\core\_core.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\core\_layout.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\core\_reset.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_buttons.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_carousel.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_form-sliders-basic.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_form-sliders.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_form.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_indexbar.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_list.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_loading-spinner.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_map.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_msgbox.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_panel.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_picker.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_sheets.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_tabs.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_toolbar-forms.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\widgets\_toolbar.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_all.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_core.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_global.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_mixins.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_variables.scss" />
+    <None Include="lib\resources\themes\stylesheets\sencha-touch\default\_widgets.scss" />
+    <None Include="lib\resources\themes\templates\project\manifest.rb" />
+    <None Include="lib\resources\themes\templates\project\sencha-touch.scss" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Staging.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Testing.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\NetSteps.Auth.UI.Common\NetSteps.Auth.UI.Common.csproj">
+      <Project>{D723CC1A-5F8B-441D-90C9-196DA3C76F23}</Project>
+      <Name>NetSteps.Auth.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\NetSteps.Auth.UI.Service\NetSteps.Auth.UI.Service.csproj">
+      <Project>{7B5D4D42-182A-44A1-869C-CCD8AD47A619}</Project>
+      <Name>NetSteps.Auth.UI.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Customizable Output Directory Opt-In for TFS Build (web application projects) -->
+  <PropertyGroup Condition="$(TeamBuildOutDir) != '' ">
+    <OutDir>$(TeamBuildOutDir)\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>50076</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:50076/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://m.netstepsdev.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\csproj-import-after.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\..\csproj-import-after.targets')" />
+</Project>

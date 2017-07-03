@@ -1,0 +1,178 @@
+﻿@using NetSteps.Data.Common.Services
+@using NetSteps.Encore.Core.IoC
+@model Order
+@{
+	var customer = Model.OrderCustomers[0];
+	var orderStatus = SmallCollectionCache.Instance.OrderStatuses.GetById(Model.OrderStatusID);
+	var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+}
+<div class="UI-bg UI-header brdrYYNN pad5 GuestTag customerCartHeader">
+    <a href="javascript:void(0);" class="FL UI-icon-container collapseCart guestName"><span
+        class="UI-icon icon-arrowDown"></span><span>
+            @customer.FullName @Html.Term("OnlineOrderIndicator", "(Online Order)") - (@(orderStatus != null ? orderStatus.GetTerm() : string.Empty))
+            <input type="hidden" value="@customer.Guid.ToString("N")" class="orderCustomerId" />
+        </span></a><span class="clrall"></span>
+</div>
+<div id="@("orderCustomerBody" + customer.Guid.ToString("N"))" class="clr CustomerCart">
+    <table width="100%" cellspacing="0" class="DataGrid">
+        <thead class="UI-bg UI-header">
+            <tr>
+                <th style="width: 80px;">@Html.Term("SKU")
+                </th>
+                <th>@Html.Term("Product")
+                </th>
+                <th style="width: 75px;">@Html.Term("Price")
+                </th>
+                <th style="width: 60px;">@Html.Term("Quantity")
+                </th>
+                <th style="width: 150px;">@Html.Term("CV_QV")
+                </th>
+                <th style="width: 175px;">@Html.Term("Total")
+                </th>
+            </tr>
+        </thead>
+        <tbody class="OrderItems">
+            @foreach (var orderItem in customer.ParentOrderItems.OrderByDescending(oi => oi.OrderItemTypeID))
+            {
+                decimal commissionableTotal = (orderItem.CommissionableTotalOverride != null) ? orderItem.CommissionableTotalOverride.ToDecimal() : orderItem.CommissionableTotal.ToDecimal();
+                var product = inventory.GetProduct(orderItem.ProductID ?? 0);
+                <tr id="@(product.IsDynamicKit() ? "DynamickKit " : "")@("oi" + orderItem.Guid.ToString("N"))" @(Html.Raw(orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? "class=\"ExclusiveProductsRow\"" : ""))>
+                    <td class="icon-24">
+                        @orderItem.SKU
+                    </td>
+                    <td>
+                        @Html.Raw((orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? String.Format("<span class=\"ExclusiveProductsIndicator\">{0}</span>", Html.Term("ExclusiveProductsIndicator", "*")) : ""))
+                        @product.Translations.Name()
+                        @if (product.IsDynamicKit())
+                        {
+                            int requiredItemsInBundleCount = product.DynamicKits[0].DynamicKitGroups.Sum(g => g.MinimumProductCount);
+                            if (orderItem.ChildOrderItems.Sum(oi => oi.Quantity) == requiredItemsInBundleCount)
+                            {
+                            <span class="UI-icon icon-bundle-full"></span>
+                            }
+                            else
+                            {
+                            <span class="UI-icon icon-bundle-add"></span>
+                            }
+                            <div class="bundlePackItemList">
+                                <table cellspacing="0" width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                            </th>
+                                            <th>@Html.Term("SKU")
+                                            </th>
+                                            <th>@Html.Term("Product")
+                                            </th>
+                                            <th>@Html.Term("Quantity")
+                                            </th>
+                                        </tr>
+                                        @foreach (OrderItem childItem in orderItem.ChildOrderItems)
+                                        {
+                                            Product childProduct = inventory.GetProduct(childItem.ProductID.Value);
+                                            <tr>
+                                                <td>
+                                                    <span class="UI-icon icon-bundle-arrow"></span>
+                                                </td>
+                                                <td class="KitSKU">
+                                                    @childItem.SKU
+                                                </td>
+                                                <td>
+                                                    @childProduct.Translations.Name()
+                                                </td>
+                                                <td>
+                                                    @childItem.Quantity
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        @orderItem.ItemPrice.ToString(Model.CurrencyID)
+                    </td>
+                    <td style="text-align: center;">
+                        @orderItem.Quantity
+                    </td>
+                        <td>
+                            @{
+								var preAjustedCommissionableTotal = orderItem.GetPreAdjustmentPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+								var adjustedCommissionableTotal = orderItem.GetAdjustedPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+
+								if (preAjustedCommissionableTotal != adjustedCommissionableTotal)
+								{
+									<span class="block originalPrice strikethrough">@((preAjustedCommissionableTotal * orderItem.Quantity).ToString(Model.CurrencyID))</span>
+									<span class="block discountPrice">@((adjustedCommissionableTotal * orderItem.Quantity).ToString(Model.CurrencyID))</span>
+								}
+								else
+								{
+									orderItem.CommissionableTotal.ToString(Model.CurrencyID);
+								}
+							}
+                        </td>
+                    <td>
+                        @((orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(Model.CurrencyID))
+                        @if (orderItem.IsHostReward)
+						{
+							decimal discount = 0;
+							if (orderItem.Discount.HasValue)
+							{
+								discount = orderItem.Discount.Value;
+							}
+							else if (orderItem.DiscountPercent.HasValue)
+							{
+								discount = (orderItem.ItemPrice * orderItem.Quantity) * orderItem.DiscountPercent.ToDecimal();
+							}
+                            @Html.Term("HostRewardDiscount", "(discounted {0})", discount.ToString(Model.CurrencyID))
+						}
+                    </td>
+                </tr>
+			}
+        </tbody>
+        <tbody class="GuestTotals">
+            <tr class="GuestTotal">
+                <td colspan="5" class="right bold">
+                    <span>@Html.Term("CV_QV")</span>:
+                </td>
+                <td>
+                    <span class="commissionableTotal Total">@Model.CommissionableTotal.ToString(Model.CurrencyID)</span>
+                </td>
+            </tr>
+            <tr class="GuestTotal">
+                <td colspan="5" class="right bold">
+                    <span>@Html.Term("Subtotal")</span>:
+                </td>
+                <td>
+                    <span class="subtotal Total">@Model.Subtotal.ToString(Model.CurrencyID)</span>
+                </td>
+            </tr>
+            <tr class="GuestTotal">
+                <td colspan="5" class="right bold">
+                    <span>@Html.Term("Tax")</span>:
+                </td>
+                <td>
+                    <span class="taxTotal Total">@Model.TaxAmountTotal.ToString(Model.CurrencyID)</span>
+                </td>
+            </tr>
+            <tr class="GuestTotal">
+                <td colspan="5" class="right bold">
+                    <span>@Html.Raw(Html.Term("ShippingAndHandling", "Shipping &amp; Handling")):</span>
+                </td>
+                <td>
+                    <span class="shippingAndHandlingTotal Total">@((Model.ShippingTotal + Model.HandlingTotal).ToString(Model.CurrencyID))</span>
+                </td>
+            </tr>
+            <tr class="UI-secBg GuestTotal GuestTotalBalance">
+                <td colspan="5" class="right bold">
+                    <span>@Html.Term("Total"):</span>
+                </td>
+                <td class="bold">
+                    <span class="grandTotal Total">@Model.GrandTotal.ToString(Model.CurrencyID)</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+  

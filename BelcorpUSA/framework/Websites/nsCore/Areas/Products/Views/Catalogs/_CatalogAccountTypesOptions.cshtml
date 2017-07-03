@@ -1,0 +1,66 @@
+﻿@model NetSteps.Data.Entities.TrackableCollection<AccountType>
+@using System.Web.Mvc.Html
+<div id="PromotionForm">
+	<div class="promotionOption">
+		<div class="FL optionHelpIcons">
+		</div>
+		<div class="FLabel">
+			<label for="chkCouponCodeRequired">
+				@Html.Term("PWS_CatalogEdit_AccountTypesOptions", "Specify Account Types?")</label>
+		</div>
+		<div class="hasPanel" id="SpecifyCatalogAccountTypes">
+			<span>
+				<label for="couponNo">
+					<input type="radio" value="no" name="chkSpecifyCatalogAccountTypes" id="catalogAccountTypesNo" checked="checked" />
+					No
+				</label>
+			</span>
+			<span class="">
+				<label for="couponYes">
+					<input type="radio" name="chkSpecifyCatalogAccountTypes" value="yes" id="catalogAccountTypesYes" />
+					Yes
+				</label>
+			</span>
+
+			<div style="display: none;" class="UI-lightBg hiddenPanel pad10" id="AccountTypesOptions">
+				@Html.Term("PWS_CatalogEdit_CheckAccountTypes","Check desired Account Types"):
+				<p>
+					@{ foreach (var accountType in (List<AccountType>)ViewBag.AccountTypes)
+					   {
+				   		<span>
+							@{ var isTypeChecked = Model.Any(x => x.AccountTypeID == accountType.AccountTypeID) ? "checked=\"checked\"" : string.Empty; }
+							<input id="@string.Format("CatalogAccountType{0}", @accountType.AccountTypeID)" type="checkbox" value="@accountType.AccountTypeID.ToString()" class="CatalogAccountTypesCheckbox" @isTypeChecked />
+						</span>	   		
+				   		<span>
+							@accountType.Name
+						</span>
+				   		<br/>
+					   }
+					}	
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#catalogAccountTypesNo').change(function () {
+		$('div.hasPanel span').removeClass('UI-lightBg');
+		$('#AccountTypesOptions').slideUp('fast');
+	});
+
+	$('#catalogAccountTypesYes').change(function () {
+		$(this).parents('span').addClass('UI-lightBg');
+		$('#AccountTypesOptions').slideDown();
+	});
+	
+	$(function() {
+		$('#CatalogTypeID').trigger('change');
+		@{
+			if (Model.Any())
+			{
+				@:$('#catalogAccountTypesYes').prop('checked',true);
+				@:$('#catalogAccountTypesYes').trigger('change');
+			}
+		}
+	});
+</script>

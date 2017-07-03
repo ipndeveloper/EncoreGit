@@ -1,0 +1,33 @@
+﻿<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.1.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>jQuery: $.get() template</Title>
+      <Author>John Sheehan (@johnsheehan)</Author>
+      <Shortcut>jqget</Shortcut>
+      <HelpUrl>http://jquerysnippets.codeplex.com</HelpUrl>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>url</ID>
+          <ToolTip>The URL for the request</ToolTip>
+          <Default>/</Default>
+        </Literal>
+        <Literal>
+          <ID>data</ID>
+          <ToolTip>Data to send (querystring)</ToolTip>
+          <Default>{ }</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="jscript">
+        <![CDATA[
+$$.get('<%= ResolveUrl("~$url$") %>', $data$, function(data, status) {
+        $end$
+    });]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

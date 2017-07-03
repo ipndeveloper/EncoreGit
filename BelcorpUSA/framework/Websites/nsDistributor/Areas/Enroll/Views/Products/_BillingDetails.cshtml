@@ -1,0 +1,14 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.BillingModel
+@{
+	string paymentTypeString = SmallCollectionCache.Instance.PaymentTypes.GetById(Model.PaymentMethod.PaymentTypeID).GetTerm();
+}
+@if (Model.PaymentMethod.PaymentTypeID == (int)Constants.PaymentType.CreditCard)
+{
+	@string.Format("{0} - {1}", paymentTypeString, Model.PaymentMethod.NameOnCard)<br />
+	@string.Format("{0} - {1}: {2:MM/yyyy}", Model.PaymentMethod.MaskedCreditCardNumber, Html.Term("Expires"), Model.PaymentMethod.CreditCardExpirationDate)<br />
+}
+else
+{
+	@paymentTypeString<br />
+}
+@Model.BillingAddress.ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine)

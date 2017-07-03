@@ -1,0 +1,11 @@
+﻿@model NetSteps.Accounts.Downline.UI.Common.TreeView.ITreeNodeModel
+
+<li id="@Model.Id" class="@Model.NodeClass" title="@Model.HoverText">
+	@Html.Link(Model.Text, "#", Model.LinkHtmlAttributes)
+	@if (Model.ChildNodes.Any())
+	{
+		<ul>
+			@Html.Partial("_TreeNodes", Model.ChildNodes)
+		</ul>
+	}
+</li>

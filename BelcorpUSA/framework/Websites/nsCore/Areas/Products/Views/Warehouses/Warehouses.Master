@@ -1,0 +1,31 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks">
+				<%= Html.SelectedLink("~/Products/Warehouses", "Warehouse Inventory", new List<string>() { "~/Products/Warehouses/Transfer" }, LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+				<%= Html.SelectedLink("~/Products/ShippingRegions", "Shipping Regions", new List<string>(){"~/Products/ShippingRegions/Manage"}, LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+                
+                <%--Developed by BAL - CSTI - A01--%>
+                <%= Html.SelectedLink("~/Products/InventoryMovements", Html.Term("InventoryMovements", "Inventory Movements"), new List<string>() { "~/Products/InventoryMovements" }, LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+                
+                <!-- KLC - CSTI 
+                     BR-IN-004 – CONSULTA DE RESERVAS EN ORDENES
+                -->
+                <%= Html.SelectedLink("~/Products/InventoryAllocated", Html.Term("InventoryAllocated", "Inventory Allocated"), new List<string>() { "~/Products/InventoryAllocated" }, LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+				<%--<li><a href="#">List of Warehouses</a></li>
+        <li><a href="#">Add a New Warehouse</a></li>--%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>

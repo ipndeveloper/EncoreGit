@@ -1,0 +1,135 @@
+﻿@using nsDistributor.Areas.Enroll.Models.Products
+@model EnrollmentVariantKitsModel
+<script type="text/javascript">
+    $(function () {
+        $('div.kits').each(function () {
+            var tallestKit = "";
+            $(this).click(function () {
+                $('div.kits').removeClass('selected');
+                //$('.check').hide();
+                //$('.check', this).fadeIn('fast');
+                $(this).addClass('selected').find('[type = "radio"]').attr('checked', 'checked');
+            });
+        });
+
+        $("select[name|='SelectedVariantProduct']").change(function () {
+            var selectedVariantProductID = $(this).val();
+            var parent = $(this).parent();
+            $('#SelectedVariantProductID').val(selectedVariantProductID);
+
+            var uri = 'ProductDetail/?productID=' + selectedVariantProductID;
+            $.ajax({
+                type: "GET",
+                url: uri,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    displayProductDetail(parent.children('#variantDescription'), result);
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        });
+
+        $("input[name = 'SelectedProductID']").change(function () {
+            if ($(this).attr('checked', 'checked')) {
+                $('#SelectedVariantProductID').val('0');
+            }
+        });
+
+        $(".kitEnrollImage").on("error", function () {
+            $(this).hide();
+            $(this).after('<br><div class="kitEnrollNoImage"><center><div class="kitEnrollText">@Html.Term("PWS_Kit_No_Image","Image not available")</div></center></div>');
+        });
+
+        function displayProductDetail(control, result) {
+            //			var text = "<div><span>" + result.name + "</span><span>" + result.price + "</span><span>" + result.description + "</span></div";
+            //			control.html(text);
+        };
+
+    });
+</script>
+<div class="enrollKitsCms1">
+	<div class="UI-cmsWrap block">
+		@ViewData["Enrollment_Products_EnrollmentKits_LeftContent"]
+	</div>
+</div>
+<div class="enrollKitsCms2">
+	<div class="UI-cmsWrap block">
+		@ViewData["Enrollment_Products_EnrollmentKits_RightContent"]
+	</div>
+</div>
+<span class="clr"></span>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+	@Html.ValidationSummary()
+
+	foreach (EnrollmentVariantKitModel kit in Model.EnrollmentKits)
+	{
+	<div class="FL splitCol33 m5">
+		<div class="brdr brdrAll pad5 kits @(kit.ProductID == Model.SelectedProductID ? "selected" : "")">
+            <div class="brdr brdrAll pad10">
+                <table>
+                    <tr>
+                        <td>
+                            @Html.RadioButtonFor(m => m.SelectedProductID, kit.ProductID)
+                        </td>
+                        <td>
+                            <span class="kitTitle" style="float: right">@kit.Name</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h2>
+                                <span class="kitTitle">@kit.Name</span>
+                            </h2>
+                        </td>
+                        <td rowspan="3">
+                            <div class="imagewrapper">
+                                <img src="@kit.ImageUrl" alt="" class="kitEnrollImage" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="price kitPrice">@kit.Price.ToString("C", Model.FormatProvider)</span>
+                            <h3>@kit.Name</h3>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>@kit.Description</p>
+                            @if (kit.HasVariants)
+                            {
+                                //var variantKits = kit.Variants.ToSelectListItems(kit.SelectedVariantProductID);
+                                var variantKits = kit.Variants.ToList().FindAll(x => x.Active == true).ToSelectListItems(kit.SelectedVariantProductID); //Developed by Wesley Campos S. - CSTI
+                                @Html.DropDownList(String.Concat("SelectedVariantProduct-", kit.ProductID), variantKits)
+                                <div id="variantDescription">
+                                </div>
+                                <div id="variantDescriptionSpinner" style='display: none;'>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+			@*<div class="check">
+				<span class="UI-icon icon-check"></span>
+			</div>*@
+		</div>
+	</div>
+	}
+	<input type="hidden" name="SelectedVariantProductID" id="SelectedVariantProductID" value="" />    
+   
+	<span class="clr"></span>          
+			 
+	<p class="FormSubmit enrollSectionBtns">
+		<a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent"><span>@Html.Term("Next")</span> </a>
+	</p>
+	@Html.AntiForgeryToken()
+}

@@ -1,0 +1,60 @@
+@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = "Shop";
+    var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();		
+}
+@section head {
+}
+@if (TempData["SessionTimedOut"] != null)
+{
+    <div id="messageCenterModal">
+        <div id="messageCenter">
+            <div class="messageCenterMessage" id="message1" style="display: block;">
+                <img align="absmiddle" class="messageCenterIcon" src="../Resource/Content/Images/icon-Success.png" alt="">&nbsp;@Html.Term("SessionTimedOut", "We're sorry, but your session timed out.")<a class="CustomExitIcon"></a></div>
+        </div>
+    </div>
+}
+else if (TempData["Error"] != null)
+{
+    <div id="messageCenterModal">
+        <div id="messageCenter">
+            <div class="messageCenterMessage" id="message2" style="display: block;">
+                <img align="absmiddle" class="messageCenterIcon" src="../Resource/Content/Images/icon-Success.png" alt="">&nbsp;@TempData["Error"]<a class="CustomExitIcon"></a></div>
+        </div>
+    </div>
+}
+@{Html.RenderPartial("_ShopIndexContent", Model);}
+@if (ViewBag.FeaturedItemCategoryTree != null)
+{
+    Category categoryTree = ViewBag.FeaturedItemCategoryTree;
+    foreach (var category in categoryTree.ChildCategories)
+    {
+        bool hasMore;
+        var catItemCount = ConfigurationManager.CategoryShopDisplayCount;
+        //
+        // This is overkill, because the ConfigurationManager will never return a null or empty string
+        int childCount = !string.IsNullOrEmpty(catItemCount) ? int.Parse(catItemCount) : 6;
+        var products = inventory.GetActiveValidProductsForCategory(NetSteps.Data.Entities.ApplicationContext.Instance.StoreFrontID, category.CategoryID, childCount, out hasMore, CoreContext.CurrentAccount != null ? CoreContext.CurrentAccount.AccountTypeID : (short)Constants.AccountType.RetailCustomer, (int)ViewBag.FeaturedItemCatalogId);
+        if (products.Count > 0)
+        {
+    <div class="CategoryGroup">
+        <div class="categoryHeading">
+            <div class="FL categoryName">
+                @category.Translations.Name()
+            </div>
+            @if (hasMore)
+            {
+                <div class="FR ViewAll">
+                    <a href="@(Url.Resolve("~/Shop/Category/") + category.CategoryID)">
+                        @Html.Term("ViewEntireCategory", "View Entire {0}", category.Translations.Name())</a>
+                </div>
+            }
+            <span class="clr"></span>
+        </div>
+        <div class="ProductThumbRows">
+            @foreach (var product in products) { Html.RenderPartial("ProductListing", product); }
+        </div>
+    </div>
+        }
+    }
+}

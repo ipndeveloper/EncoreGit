@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\csproj-import-before.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\csproj-import-before.targets')" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Testing|AnyCPU'">
+    <OutputPath>bin\Testing\</OutputPath>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HomeSolution>BelcorpUSA.sln</HomeSolution>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7D6B7B24-C2FA-4FB4-8D6B-17669F550458}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetSteps.Integrations.Service</RootNamespace>
+    <AssemblyName>NetSteps.Integrations.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Accounts.Common">
+      <HintPath>..\packages\NetSteps.Accounts.Common.1.1.66\lib\net40\NetSteps.Accounts.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Addresses.Common">
+      <HintPath>..\packages\NetSteps.Addresses.Common.1.0.10\lib\net40\NetSteps.Addresses.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Common, Version=1.3.6859.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetSteps.Common.1.3.774\lib\net40\NetSteps.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetSteps.Content.Common">
+      <HintPath>..\packages\NetSteps.Content.Common.1.0.8\lib\net40\NetSteps.Content.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Data.Common, Version=1.24.11126.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Data.Common.1.24.11126\lib\net40\NetSteps.Data.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetSteps.Diagnostics.Auditing.Common">
+      <HintPath>..\packages\NetSteps.Diagnostics.Auditing.Common.1.0.11\lib\net40\NetSteps.Diagnostics.Auditing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Diagnostics.Logging.Common">
+      <HintPath>..\packages\NetSteps.Diagnostics.Logging.Common.1.0.12\lib\net40\NetSteps.Diagnostics.Logging.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Diagnostics.Utilities">
+      <HintPath>..\packages\NetSteps.Diagnostics.Utilities.1.0.23\lib\net40\NetSteps.Diagnostics.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Encore.Core, Version=2.4.143.0, Culture=neutral, PublicKeyToken=d116fce376e37d09, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetSteps.Encore.Core_r2_3.2.4.143\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Extensibility.Core">
+      <HintPath>..\packages\Extensibility.Core.1.0.16115\lib\net40\NetSteps.Extensibility.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Foundation.Common">
+      <HintPath>..\packages\NetSteps.Foundation.Common.1.3.7\lib\net40\NetSteps.Foundation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Locale.Common">
+      <HintPath>..\packages\NetSteps.Locale.Common.1.1.6\lib\net40\NetSteps.Locale.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Logistics.Common, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetSteps.Logistics.Common.1.0.9\lib\net40\NetSteps.Logistics.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.OrderAdjustments.Common, Version=2.8.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OrderAdjustments.Common.2.8.104\lib\net40\NetSteps.OrderAdjustments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Orders.Common">
+      <HintPath>..\packages\NetSteps.Orders.Common.1.0.6\lib\net40\NetSteps.Orders.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Products.Common">
+      <HintPath>..\packages\NetSteps.Products.Common.1.0.4\lib\net40\NetSteps.Products.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountAPI.cs" />
+    <Compile Include="DataModels\AccountModel.cs" />
+    <Compile Include="DataModels\GetInventoryItemModel.cs" />
+    <Compile Include="DataModels\GetInventoryItemModelCollection.cs" />
+    <Compile Include="DataModels\GetInventoryItemModelResponse.cs" />
+    <Compile Include="DataModels\GetInventoryItemModelResponseCollection.cs" />
+    <Compile Include="DataModels\InventoryModelRepository.cs" />
+    <Compile Include="DataModels\KitItemValuationModel.cs" />
+    <Compile Include="DataModels\KitItemValuationModelCollection.cs" />
+    <Compile Include="Entities\BelcorpIntegrationsDbContext.cs" />
+    <Compile Include="Entities\KitItemValuation.cs" />
+    <Compile Include="Interfaces\IAccount.cs" />
+    <Compile Include="Properties\AssemblyInfo.version.cs" />
+    <Compile Include="CommissionAPI.cs" />
+    <Compile Include="DataModels\APIFault.cs" />
+    <Compile Include="DataModels\OrderItemBaseModel.cs" />
+    <Compile Include="DataModels\OrderKitItemModelCollection.cs" />
+    <Compile Include="DataModels\OrderKitItemModel.cs" />
+    <Compile Include="DataModels\DisbursementAccountModel.cs" />
+    <Compile Include="DataModels\DisbursementAccountModelCollection.cs" />
+    <Compile Include="DataModels\DisbursementAddressModel.cs" />
+    <Compile Include="DataModels\DisbursementDetailACHModel.cs" />
+    <Compile Include="DataModels\DisbursementDetailBaseModel.cs" />
+    <Compile Include="DataModels\DisbursementDetailCheckModel.cs" />
+    <Compile Include="DataModels\DisbursementDetailModelCollection.cs" />
+    <Compile Include="DataModels\DisbursementModel.cs" />
+    <Compile Include="DataModels\OrderItemModel.cs" />
+    <Compile Include="DataModels\OrderItemModelCollection.cs" />
+    <Compile Include="DataModels\OrderModel.cs" />
+    <Compile Include="DataModels\OrderModelCollection.cs" />
+    <Compile Include="Interfaces\ICommissionAPI.cs" />
+    <Compile Include="Interfaces\IInventoryAPI.cs" />
+    <Compile Include="Interfaces\ISalesAPI.cs" />
+    <Compile Include="InventoryAPI.cs" />
+    <Compile Include="IntegrationsService.cs" />
+    <Compile Include="Business\OrderUpdateRepository.cs" />
+    <Compile Include="DataModels\addProductResponse.cs" />
+    <Compile Include="DataModels\addProductItemCollection.cs" />
+    <Compile Include="DataModels\ProductModel.cs" />
+    <Compile Include="DataModels\UpdateInventoryItemModel.cs" />
+    <Compile Include="DataModels\UpdateInventoryItemModelCollection.cs" />
+    <Compile Include="DataModels\UpdateInventoryItemModelResponse.cs" />
+    <Compile Include="DataModels\UpdateInventoryItemModelResponseCollection.cs" />
+    <Compile Include="Data\Repository.cs" />
+    <Compile Include="Interfaces\IIntegrationsService.cs" />
+    <Compile Include="Interfaces\IProductAPI.cs" />
+    <Compile Include="ProductAPI.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SalesAPI.cs" />
+    <Compile Include="SAPIntegration\ISAPIntegration.cs" />
+    <Compile Include="SAPIntegration\SAPIntegration.cs" />
+    <Compile Include="XMLs\Disbursements.Designer.cs" />
+    <Compile Include="XMLs\EncoreFinancialsGrossRevenue.designer.cs" />
+    <Compile Include="XMLs\EncoreFinancialsShippedRevenue.designer.cs" />
+    <Compile Include="XMLs\InventoryUpdateResponse.Designer.cs" />
+    <Compile Include="XMLs\OrderFulfillment.designer.cs" />
+    <Compile Include="XMLs\OrderUpdate.Designer.cs" />
+    <Compile Include="XMLs\OrderUpdateResponse.designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="XMLs\Disbursements.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\EncoreFinancialsGrossRevenue.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\EncoreFinancialsShippedRevenue.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\InventoryUpdateResponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\OrderFulfillment.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\OrderUpdate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="XMLs\OrderUpdateResponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Libraries\Netsteps.Data.Entities\NetSteps.Data.Entities.csproj">
+      <Project>{FA88FE0C-9AF1-4527-9DA5-5A572A04ECEB}</Project>
+      <Name>NetSteps.Data.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integrations.Internals\NetSteps.Integrations.Internals.csproj">
+      <Project>{BC24DFC7-60F9-48AA-9196-71C8D4656D9D}</Project>
+      <Name>NetSteps.Integrations.Internals</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)..\csproj-import-after.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\csproj-import-after.targets')" />
+</Project>

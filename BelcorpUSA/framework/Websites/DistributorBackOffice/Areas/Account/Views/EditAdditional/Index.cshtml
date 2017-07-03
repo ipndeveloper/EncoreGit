@@ -1,0 +1,272 @@
+﻿@model DistributorBackOffice.Areas.Account.Models.Edit.AccountModel
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+   
+}
+@{
+    NetSteps.Data.Entities.Account accountToEdit = Model.Account;
+  
+}
+<style>       
+      #txtphoneNumberMain01 {        
+        max-width : 50px;
+        }
+
+        #txtphoneNumberMain02 {
+        max-width: 50px;
+        }
+
+        #txtphoneNumberMain03 {
+        max-width: 50px;
+        }
+        
+ </style>
+
+<script type="text/javascript">
+    $(function () {
+        var currentPhone = 0;
+        var isComplete = true;
+
+        $('#phone').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes: [{ id: 'txtphoneNumberMain01', length: 3, size: 3 }, { id: 'txtphoneNumberMain02', length: 3, size: 3 }, { id: 'txtphoneNumberMain03', length: 4, size: 4}] }).inputsByFormat('setValue', ($('#hdnPhone').val() == null) ? "" : $('#hdnPhone').val());
+        $('#RelationShip').val($('#hdnRelationShip').val());
+        $('#valor0').val($('#hdnSchooline').val());
+
+        //        alert(Model.listAdditonal.RelationShip);
+        //        for (var i = 0; i < Model.listaPromerties.Count(); i++) {
+        //            $('#AccountPropertyID' + i).val(Model.listaPromerties[i].AccountPropertyID);
+        //            $('#TypeID' + i).val(Model.listaPromerties[i].AccountPropertyTypeID)
+        //        };
+
+
+
+        $('#btnSaveAccountAdditionalInfo').click(function () {
+
+            var data = {};
+            var cantReq = 4;
+
+            for (var i = 0; i < cantReq; i++) {
+                
+                data['AccountProperties[' + i + '].AccountPropertyID'] = $('#AccountPropertyID' + i).val()
+                data['AccountProperties[' + i + '].AccountPropertyTypeID'] = $('#TypeID' + i).val();
+                if (i == 0)
+                    data['AccountProperties[' + i + '].AccountPropertyValueID'] = $('#valor' + i).val(); 
+                else
+                    data['AccountProperties[' + i + '].PropertyValue'] = $('#valor' + i).prop('checked');
+
+            };
+
+
+            for (var i = 0; i < 6; i++) {
+                data['AccountSocialNetworks[' + i + '].AccountSocialNetworkID'] = $('#AccountSocialNetworkID_' + i).val()
+                data['AccountSocialNetworks[' + i + '].SocialNetworkID'] = $('#SocialNetworkID_' + i).val();
+                data['AccountSocialNetworks[' + i + '].Value'] = $('#valor_' + i).val();
+            };
+
+            var phonenumber = $('#txtphoneNumberMain01').val() + $('#txtphoneNumberMain02').val() + $('#txtphoneNumberMain03').val();
+            
+            data.ReferenceID = $('#AccountReferencesID').val();
+            data.ReferenceName = $('#txtName').val();
+            data.PhoneNumberMain = phonenumber;
+            data.RelationShip = $('#RelationShip').val();
+
+            $.post('@Href("~/Account/EditAdditional/AdditionalInformation")', data, function (response) {
+                if (response.result) {
+                    showMessage('Credit Requirement saved!', false);
+
+                    $('#AccountReferencesID').val(response.referenceID);
+
+                    for (var i = 0; i < response.creditRequirements.length; i++) {
+                        $('#AccountPropertyID' + i).val(response.creditRequirements[i].accountPropertyID);
+                    }
+
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+    });
+    </script>
+<table class="SectionTable" id="EditForm" width="100%">
+    <tr>
+        <td class="FormBlock splitCol">
+            <h5 class="SectionTitle PersonalData">
+            @Html.Term("References", "References")</h5>
+            <div class="FormTable">   
+                 <div class="FormRow">
+                 <input type="hidden" id="AccountReferencesID" value="@Model.listAdditonal.AccountReferencID" />
+                  <input type="hidden" id="hdnPhone" value="@Model.listAdditonal.PhoneNumberMain" />
+                   <input type="hidden" id="hdnRelationShip" value="@Model.listAdditonal.RelationShip" />
+                    <label for="txtName">
+                        @Html.Term("Name"):</label>
+                    <div class="data">
+                        <input type="text" id="txtName" value="@Model.listAdditonal.ReferenceName" class="required" style="width: 250px;" />                        
+                    </div> 
+                     <br />                    
+                    </div>
+                  <div class="FormRow">                 
+                    <label for="SchoolingLevel">
+                        @Html.Term("Relation Ship"):</label>
+                    <div class="data">
+                        @Html.DropDownRelationShip(htmlAttributes: new { id = "RelationShip" })
+                    </div>
+                    <br />
+                </div>            
+                <div class="FormRow">               
+                    <label for="phone">
+                        @Html.Term("Phone Number(Main)"):</label>
+                    <div class="data" id="phone">
+                    </div>
+                    <br />
+                </div>
+                                                            
+             </div>      
+             
+           <h5 class="SectionTitle PersonalData">
+            @Html.Term("Complement", "Complement")</h5>
+            <div class="FormTable">   
+                <div class="FormRow">
+                 <input type="hidden" id="TypeID0" value="@Model.listAdditonal.AccountPropertyTypeID_SchoolingLevel" />
+                 <input type="hidden" id="AccountPropertyID0" value="@Model.listAdditonal.AccountPropertyID_SchoolingLevel"  />
+                 <input type="hidden" id="hdnSchooline" value="@Model.listAdditonal.SchoolingLevel"  />
+                 
+                    <label for="valor0">
+                        @Html.Term("Shooling Level"):</label>
+                    <div class="data">
+                        @Html.DropDownSchoolineLevel(htmlAttributes: new { id = "valor0" })
+                    </div>
+                    <br />
+                </div>              
+                  
+                <div class="FormRow">   
+                <input type="hidden" id="TypeID1" value="@Model.listAdditonal.AccountPropertyTypeID_AcceptShareWithNetwork"    />
+                 <input type="hidden" id="AccountPropertyID1"   value="@Model.listAdditonal.AccountPropertyID_AcceptShareWithNetwork" />                 
+                    <div class="data">
+                    @{
+                        string isChecked1 = Model.listAdditonal.AcceptShareWithNetwork? "checked=checked" : string.Empty;
+                    }
+                        <input type="checkbox" class="toggleNetWork" id="valor1"   @isChecked1 />@Html.Term("AutorizationNetWork", "Autorización compartir datos con la red")
+                    </div>
+                    <br />
+                </div>          
+                <div class="FormRow"> 
+                <input type="hidden" id="TypeID2" value="@Model.listAdditonal.AccountPropertyTypeID_AcceptEmailFrom" />
+                 <input type="hidden" id="AccountPropertyID2" value="@Model.listAdditonal.AccountPropertyID_AcceptEmailFrom" />                   
+                    <div class="data">
+                     @{
+                         string isChecked2 = Model.listAdditonal.AcceptEmailFrom? "checked=checked" : string.Empty;
+                    }
+                        <input type="checkbox" class="toggleEmail" id="valor2"   @isChecked2 />@Html.Term("AutorizationEmail", "Autorización enviar e-mails")
+                    </div>
+                    <br />
+                </div>   
+                <div class="FormRow">   
+                <input type="hidden" id="TypeID3"  value="@Model.listAdditonal.AccountPropertyTypeID_AcceptShareForLocator" />
+                 <input type="hidden" id="AccountPropertyID3"  value="@Model.listAdditonal.AccountPropertyID_AcceptShareForLocator" />                 
+                    <div class="data">
+                      @{
+                          string isChecked3 = Model.listAdditonal.AcceptShareForLocator? "checked=checked" : string.Empty;
+                    }
+                        <input type="checkbox" class="toggleLocalizator"  id="valor3"  @isChecked3 />@Html.Term("AutorizationLocalizator", "Autorización compartir datos con localizador")
+                    </div>
+                    <br />
+                </div>   
+                       
+                <div class="FormRow">   
+                      <table ">
+                      <tr><td>
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID4"  />
+                         <input type="hidden" id="AccountPropertyID4"  />
+                        <label for="valor7">
+                          @Html.Term("Link Blong"):</label>
+                        <div class="data">
+                        <input type="text"  id="valor_0"  value="@Model.listAdditonal.LinkBlog"  style="width: 250px;" />                        
+                         <input type="hidden" id="SocialNetworkID_0" value="@Model.listAdditonal.SocialNetworkID_Blog"  />
+                         <input type="hidden" id="AccountSocialNetworkID_0" value="@Model.listAdditonal.AccountSocialNetworkID_Blog"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID5"  />
+                         <input type="hidden" id="AccountPropertyID5"  />
+                        <label for="valor8">
+                          @Html.Term("Link Facebook"):</label>
+                        <div class="data">
+                        <input type="text" id="valor_1" value="@Model.listAdditonal.LinkFacebook"  style="width: 250px;" />
+                        <input type="hidden" id="SocialNetworkID_1" value="@Model.listAdditonal.SocialNetworkID_Facebook"  />
+                         <input type="hidden" id="AccountSocialNetworkID_1" value="@Model.listAdditonal.AccountSocialNetworkID_Facebook"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID6"  />
+                         <input type="hidden" id="AccountPropertyID6"  />
+                        <label for="valor9">
+                          @Html.Term("Link MSN"):</label>
+                        <div class="data">
+                        <input type="text" id="valor_2" value="@Model.listAdditonal.LinkEmail"  style="width: 250px;" />
+                        <input type="hidden" id="SocialNetworkID_2" value="@Model.listAdditonal.SocialNetworkID_MSN"  />
+                         <input type="hidden" id="AccountSocialNetworkID_2" value="@Model.listAdditonal.AccountSocialNetworkID_MSN"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+                      </td><td>
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID7"  />
+                          <input type="hidden" id="AccountPropertyID7"  />
+                        <label for="valor10">
+                          @Html.Term("Link Orkut"):</label>
+                        <div class="data">
+                        <input type="text" id="valor_3" value="@Model.listAdditonal.LinkOrkut"  style="width: 250px;" />
+                        <input type="hidden" id="SocialNetworkID_3" value="@Model.listAdditonal.SocialNetworkID_Orkut"  />
+                         <input type="hidden" id="AccountSocialNetworkID_3" value="@Model.listAdditonal.AccountSocialNetworkID_Orkut"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID8"  />
+                         <input type="hidden" id="AccountPropertyID8"  />
+                        <label for="valor11">
+                          @Html.Term("Link Twitter"):</label>
+                        <div class="data">
+                        <input type="text" id="valor_4" value="@Model.listAdditonal.LinkTwitter"  style="width: 250px;" />
+                        <input type="hidden" id="SocialNetworkID_4" value="@Model.listAdditonal.SocialNetworkID_Twitter"  />
+                         <input type="hidden" id="AccountSocialNetworkID_4" value="@Model.listAdditonal.AccountSocialNetworkID_Twitter"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+
+                        <div class="FormRow">
+                        <input type="hidden" id="TypeID9"  />
+                        <input type="hidden" id="AccountPropertyID9"  />
+                        <label for="valor12">
+                          @Html.Term("Link LinkedID"):</label>
+                        <div class="data">
+                        <input type="text" id="valor_5" value="@Model.listAdditonal.LinkedIN"  style="width: 250px;" />
+                        <input type="hidden" id="SocialNetworkID_5" value="@Model.listAdditonal.SocialNetworkID_LinkedIN"  />
+                         <input type="hidden" id="AccountSocialNetworkID_5" value="@Model.listAdditonal.AccountSocialNetworkID_LinkedIN"  />
+                        </div> 
+                        <br />                    
+                        </div> 
+                      </td></tr>
+                      </table>
+                      
+                </div>       
+                                                 
+             </div>                
+        </td>        
+    </tr>
+</table>
+
+<div class="center PageSaveButtons">
+    <a href="javascript:void(0);" id="btnSaveAccountAdditionalInfo" class="Button FormSubmit FR">
+        <span>
+            @Html.Term("Save")</span></a> <a href="@Href("~/Account")" class="Cancel FL"><span>
+                @Html.Term("Cancel")</span></a> <span class="ClearAll"></span>
+</div>

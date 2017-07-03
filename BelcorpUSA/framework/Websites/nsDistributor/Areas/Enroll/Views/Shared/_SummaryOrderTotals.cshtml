@@ -1,0 +1,28 @@
+﻿@model Order
+           
+@{
+    var order = Model;
+}
+
+<div class="UI-lightBg pad5 finalOrderTotals">
+    <div class="FR">
+        <div style="width: 290px">
+            <p>
+              <span class="FL Label">@Html.Term("Subtotal")</span> <span class="FR">@order.Subtotal.ToString(CoreContext.CurrentCultureInfo)</span>
+              @*  <span class="FL Label">@Html.Term("Subtotal")</span> <span class="FR">@order.Subtotal.ToString(order.CurrencyID)</span>*@
+                <span class="clr"></span>
+            </p>
+
+
+            <p><span class="FL Label">@Html.Term("Tax")</span> <span class="FR">@order.TaxAmountTotal.ToString(CoreContext.CurrentCultureInfo)</span></p>
+            <p><span class="FL Label">@Html.Raw(Html.Term("ShippingAndHandling", "Shipping & Handling"))</span> <span class="FR">@((order.ShippingTotal + order.HandlingTotal).ToString(CoreContext.CurrentCultureInfo))</span></p>
+            <p><span class="FL Label">@Html.Term("EnrollmentOrderTotal", "Enrollment Order Total")</span> <span class="FR">@order.GrandTotal.ToString(CoreContext.CurrentCultureInfo)</span></p>
+
+            @*<p><span class="FL Label">@Html.Term("Tax")</span> <span class="FR">@order.TaxAmountTotal.ToString(order.CurrencyID)</span></p>
+            <p><span class="FL Label">@Html.Raw(Html.Term("ShippingAndHandling", "Shipping & Handling"))</span> <span class="FR">@((order.ShippingTotal + order.HandlingTotal).ToString(order.CurrencyID))</span></p>*@
+            @*<p><span class="FL Label">@Html.Term("Savings")</span> <span class="FR">-@(((decimal)0).ToString(CurrencyID))</span></p>*@
+           @* <p><span class="FL Label">@Html.Term("EnrollmentOrderTotal", "Enrollment Order Total")</span> <span class="FR">@order.GrandTotal.ToString(order.CurrencyID)</span></p>*@
+        </div>
+    </div>
+    <span class="clr"></span>
+</div>

@@ -1,0 +1,107 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+<%@ Import Namespace="NetSteps.Common.EldResolver" %>
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="SubNavigation">
+<% Html.RenderPartial("SubNavigation"); %>
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="YellowWidget" runat="server">
+                    <% Site currentSite = nsCore.Areas.Sites.Controllers.BaseSitesController.GetCurrentSiteFromCache() ?? new Site()
+                        {
+                            Name = "New Site Name",
+                            Description = "New Site Description",
+                            SiteStatusID = -1
+                        }; %>
+                    <div class="TagInfo">
+                        <div class="Content">
+                            <h2>
+                                <%= currentSite.Name%></h2>
+                            <p>
+                                <%= currentSite.Description%>
+                            </p>
+                            <table class="DetailsTag Section" width="100%">
+                                <tr>
+                                    <td>
+                                        <%= Html.Term("Market") %>:
+                                    </td>
+                                    <td>
+                                        <%= SmallCollectionCache.Instance.Markets.GetById(currentSite.MarketID).GetTerm() %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <%= Html.Term("Status") %>:
+                                    </td>
+                                    <td>
+                                        <%= currentSite.SiteStatusID == -1 ? Html.Term("None") : SmallCollectionCache.Instance.SiteStatuses.GetById(currentSite.SiteStatusID).GetTerm() %>
+                                    </td>
+                                </tr>
+                            </table>
+                            <%
+                                var isEditor = CoreContext.CurrentUser.HasFunction("CMS-Content Editing");
+                                var isApprover = CoreContext.CurrentUser.HasFunction("CMS-Content Approving");
+                                var isPusher = CoreContext.CurrentUser.HasFunction("CMS-Content Pushing");
+                                var canEdit = isEditor || isApprover || isPusher;
+                             %>
+                            <% string url = null;
+                               if (Request.Url.Authority.Contains("localhost") && currentSite.SiteUrls.Any(u => u.Url.Contains("localhost")))
+                                   url = currentSite.SiteUrls.First(u => u.Url.Contains("localhost")).Url;
+                               if (string.IsNullOrEmpty(url) && currentSite.PrimaryUrl != null)
+                                   url = currentSite.PrimaryUrl.Url;
+                               if (!string.IsNullOrEmpty(url) && Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+                               {
+                                   if (CoreContext.CurrentUser != null && CoreContext.CurrentUser is CorporateUser && canEdit)
+                                   {  %>
+                            <a target="_blank" rel="external" href="<%= url.EldEncode().AppendForwardSlash() %>Login?sso=<%= Server.UrlEncode(CorporateUser.GetSingleSignOnToken((CoreContext.CurrentUser as CorporateUser).CorporateUserID)) %>" class="DTL EditSite">
+                                <%= Html.Term("LoadSiteInEditMode", "Load Site in Edit Mode")%></a>
+                            <%}
+              else
+              {%>
+                            <a target="_blank" rel="external" href="<%= url %>" class="DTL EditSite">
+                                <%= Html.Term("LoadSite", "Load Site")%></a>
+                            <%}
+          }%>
+                        </div>
+                    </div>
+                </asp:ContentPlaceHolder>
+                <div class="SectionNav">
+                    <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+                        <% var currentSiteId = nsCore.Areas.Sites.Controllers.BaseSitesController.CurrentSiteId;
+                           if (currentSiteId != null)
+                           {
+							   var currentSite = nsCore.Areas.Sites.Controllers.BaseSitesController.GetCurrentSiteFromCache();
+							   var currentSiteTypeId = currentSite.SiteTypeID;%>
+                        <ul class="SectionLinks">
+                            <%= Html.SelectedLink("~/Sites/Overview", Html.Term("Overview"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites") %>
+                            <%= Html.SelectedLink("~/Sites/Edit/", Html.Term("EditSiteDetails", "Edit Site Details"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Create and Edit Base Site")%>
+                            <%--<%= Html.SelectedLink("~/Sites/ChildSites", Html.Term("ChildSites", "Child Sites"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Replicated Sites")%>--%>
+							<% if (currentSiteTypeId != (short)Constants.SiteType.BackOffice)
+							   { %>
+								<%= Html.SelectedLink("~/Sites/Pages", Html.Term("SitePages", "Site Pages"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Site Pages") %>
+								<%= Html.SelectedLink("~/Sites/SiteMap", Html.Term("SiteMap", "Site Map"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Site Map") %>
+							<% } %>
+
+                            <%= Html.SelectedLink("~/Sites/News", Html.Term("NewsAndAnnouncements", "News & Announcements"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-News") %>
+                            <%--<%= Html.SelectedLink("~/Sites/CalendarEvents", Html.Term("CalendarEvents", "Calendar Events"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Calendar Events") %>--%>
+                            <%= Html.SelectedLink("~/Sites/Documents", Html.Term("DocumentLibrary", "Document Library"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-Resource Library")%>
+                            <%--<%= Html.SelectedLink("~/Sites/ReviewContent", Html.Term("PWSContentReview", "PWS Content Review"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites-PWS Content Review")%>--%>
+                        </ul>
+                        <% } %>
+                    </asp:ContentPlaceHolder>
+                </div>
+            </td>
+            <td class="CoreContent">
+                <div class="BreadCrumb">
+                    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+                </div>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

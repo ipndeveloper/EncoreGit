@@ -1,0 +1,33 @@
+﻿@if (ViewBag.IsPartyOrderClient)
+{
+	if (ViewBag.OpenParties != null && ViewBag.OpenParties.Count > 0)
+	{
+		bool first = true;
+	<div class="clr openParties">
+		<ul class="flatList partiesList">
+			@foreach (PartySearchData party in ViewBag.OpenParties)
+   {
+				<li>
+					<div class="FL splitCol10 partyRadio">
+						<input id="party@(party.PartyID)" type="radio" name="party" value="@party.PartyID" @Html.Raw(first ? "checked=\"checked\"" : "") />
+					</div>
+					<div class="FL splitCol90 partyDetails">
+						<label for="party@(party.PartyID)">
+							<a href="@Url.Resolve("~/Shop", new { partyId = party.PartyID })" class="FR Button MinorButton buyFromPartyBtn"><span>@Html.Term("Shop", "Shop")</span></a> <span class="partyDate">@party.StartDate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span> <span class="bold mr10 partyName">@party.Name</span> <span class="clr"></span>
+						</label>
+					</div>
+					<span class="clr"></span></li>
+	   first = false;
+   }
+		</ul>
+	</div>
+	}
+	else
+	{
+	<div class="clr openParties noParties">
+		<div class="UI-linkAlt partiesList">
+			@Html.Term("ThereAreNoOpenParties", "There are no open parties right now.")
+		</div>
+	</div>
+	}
+}

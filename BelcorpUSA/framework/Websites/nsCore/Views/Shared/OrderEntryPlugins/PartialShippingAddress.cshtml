@@ -1,0 +1,216 @@
+﻿@model OrderEntryModel
+@using NetSteps.Addresses.Common.Models
+@{
+    var shippingAddresses = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == Constants.AddressType.Shipping.ToInt()).ToList();
+}
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td class="FLabel">
+            @Html.Term("ShipTo", "Ship To")
+            <div id="AddNewShippingAddress">
+                <p class="InputTools">
+                    <a href="javascript:void(0);" style="cursor: pointer" onclick="editAddress();" class="OverrideDisable">
+                        @Html.Term("AddNewShippingAddress", "Add New Shipping Address")
+                    </a>
+                </p>
+            </div>
+        </td>
+        <td>
+            <table class="ShippingSelector">
+                <tr>
+                    <td>
+                        <input id="hdShippingAddress" type="hidden" value="" />
+                        <select id="sShippingAddress">
+                            @{
+                                bool showActualShippingAddress = false;
+                                OrderShipment shipment = null;
+                            }
+                            @if (shippingAddresses.Count == 0)
+                            {
+                                Response.Write("<option value=\"\">-- " + Html.Term("PleaseAddShippingAddress", "Please add a shipping address") + " --</option>");
+                            }
+                            else
+                            {
+                                int shippingAddressId = 0;
+                                if (Model.Order.IsTemplate && Model.Order.GetDefaultShipment() != null)
+                                {
+                                    shipment = Model.Order.GetDefaultShipment();
+                                    IAddress selectedShippingAddress = null;
+                                    if (shipment.SourceAddressID.HasValue)
+                                    {
+                                        selectedShippingAddress = shippingAddresses.FirstOrDefault(x => x.AddressID == shipment.SourceAddressID.Value);
+                                    }
+                                    else
+                                    {
+                                        selectedShippingAddress = shippingAddresses.FirstOrDefault(sa => sa.Address1 == shipment.Address1 && sa.City == shipment.City);
+                                    }
+
+                                    if (selectedShippingAddress.IsNotNull())
+                                    {
+                                        shippingAddressId = selectedShippingAddress.AddressID;
+                                    }
+                                    else
+                                    {
+                                        showActualShippingAddress = true;
+                                <option value="">--@Html.Term("PleaseAddShippingAddress")--</option>
+
+                                    }
+
+                                }
+                                foreach (Address shippingAddress in shippingAddresses.OrderByDescending(a => a.IsDefault))
+                                {
+                                    string profileName = (string.IsNullOrEmpty(shippingAddress.ProfileName) ? shippingAddress.Address1 : shippingAddress.ProfileName) + (shippingAddress.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                                    if (string.IsNullOrEmpty(profileName))
+                                    {
+                                        profileName = SmallCollectionCache.Instance.AddressTypes.GetById(shippingAddress.AddressTypeID).GetTerm();
+                                    }
+
+                                <option value="@shippingAddress.AddressID" @Html.Raw(shippingAddress.AddressID == shippingAddressId ? "selected=\"selected\"" : "")>
+                                    @profileName
+                                </option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <div id="shippingAddressContainer">
+                            @foreach (Address shippingAddress in shippingAddresses)
+                            {
+                                <div id='@string.Format("shippingAddress{0}", shippingAddress.AddressID)' class="shippingAddressDisplay">
+                                    <b>
+                                        @shippingAddress.ProfileName</b> - <a title="@Html.Term("Edit")" class="EditAddress" style="cursor: pointer;"
+                                        onclick='@string.Format("editAddress({0});", shippingAddress.AddressID)'>
+                                            @Html.Term("Edit")</a>
+                                    <br />
+                                    @Html.Raw(shippingAddress.ToString().ToHtmlBreaks())
+                                </div>
+                            }
+                            @*if order shipping address doesn't match an existing account shipping address, just show the actual order shipping address (for accuracy)*@
+                            @if (showActualShippingAddress && shipment.IsNotNull())
+                            {
+                                <div id="Div1" class="shippingAddressDisplay">
+                                    @Html.Raw(shipment.ToDisplay())
+                                </div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<div id="addMovementModel" class="jqmWindow LModal Overrides">
+    <div class="mContent">
+        <p>
+            the shipping addres couldn´t be modified
+            <br />
+            because is attended for a different warehouse.</p>
+        <p>
+            if you really want to chanfe the shipping address,<br />
+            @Html.ActionLink(" click here to start new order", "RedirectPage", "OrderEntry/NewOrder");
+            with the selected
+            <br />
+            address or <a href="javascript:void(0)" onclick="closeFunc();">close click here to continue</a>;
+            with the current<br />
+            information</p>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#addMovementModel').jqm({ modal: false, onShow: function (h) {
+        h.w.css({
+            top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+            left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+        }).fadeIn();
+    }
+    });
+    $('#lnkClosePopup').click(function () {
+        $('#addMovementModel').jqmHide();
+    });
+    function closeFunc() {
+        $('#addMovementModel').jqmHide();
+        getSelectedShippingProfile();
+    };
+
+    
+
+    $(function () {
+        getSelectedShippingProfile();
+        $('#sShippingAddress').change(function () {
+            ChangeShippingAddress($('#sShippingAddress').val());
+        });
+
+        function Mark() {
+            $('#hdShippingAddress').val('1');
+        }
+
+        $('.EditAddress').click(function () {
+            Mark();
+        });
+
+    });
+
+    function ChangeShippingAddress(shippingAddressIDValue) {
+        if (shippingAddressIDValue != null && !isNaN(shippingAddressIDValue) && shippingAddressIDValue != "" && shippingAddressIDValue.length > 0) {
+            //TODO: change order shipment address in controller and get shipping methods
+            $.post('@Href("~/" + Model.ChangeShippingAddressLocation)', { shippingAddressId: shippingAddressIDValue }, function (results) {
+                if (results.result && results.isPopup) {
+                    getSelectedShippingProfile();
+                    updateCartAndTotals(results);
+
+                    BalanceCredit(results);
+                    //==============================================================================================
+                    // btnSubmitOrder y btnSaveOrder
+                    HabBotonesSubmitOrderSaveOrder(results);
+                    //==============================================================================================
+
+                    //updateCartAndTotals(results);
+                } else if (!results.result && results.isPopup) {
+//                    alert('1');
+                    shippingAddressIDValue = results.sourceAddressID;
+                    $('#sShippingAddress').val(results.sourceAddressID);
+                    getSelectedShippingProfile();
+                    $('#addMovementModel').jqmShow();
+                    //showMessage('@Html.Term("ThereWasaProblemSettingTheShippingAddress", "There was a problem setting the shipping address"): ' + results.message, true);
+                } else if (!results.result && !results.isPopup) {
+                    getSelectedShippingProfile();
+                }
+                else if (results.result && !results.isPopup) {
+//                    alert('2');
+                    updateCartAndTotals(results);
+                    BalanceCredit(results);
+                    //==============================================================================================
+                    // btnSubmitOrder y btnSaveOrder
+                    HabBotonesSubmitOrderSaveOrder(results);
+                    //==============================================================================================
+
+                    getSelectedShippingProfile();
+//                    $('#addMovementModel').jqmShow();
+                    // showMessage('@Html.Term("ThereWasaProblemSettingTheShippingAddress", "There was a problem setting the shipping address"): ' + results.message, true);
+                }
+            });
+        }
+    }
+
+    function getSelectedShippingProfile() {
+        $('#shippingAddressContainer .shippingAddressDisplay').hide();
+        $('#shippingAddress' + $('#sShippingAddress').val()).show();
+    }
+
+    function displayAddresses(results) {
+        var sw = $('#hdShippingAddress').val();
+        var original = $('#shippingAddressContainer .shippingAddressDisplay').length;
+        $('#shippingAddressContainer').html(results.addresses);
+
+//        $('#sShippingAddress').html(results.options);
+
+        //alert(sw);
+        if (sw != 1)$('#sShippingAddress').html(results.options);
+        else $('#hdShippingAddress').val('');
+        
+        //if we added an address, select that address
+        if ($('#shippingAddressContainer .shippingAddressDisplay').length > original) {
+            $('#sShippingAddress').val($('#sShippingAddress option:last').val()).change();
+        }
+        getSelectedShippingProfile();
+    }
+</script>

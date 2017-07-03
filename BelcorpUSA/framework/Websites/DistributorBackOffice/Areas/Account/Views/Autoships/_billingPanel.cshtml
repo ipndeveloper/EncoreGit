@@ -1,0 +1,67 @@
+﻿@model NetSteps.Data.Entities.Order
+
+@{
+    var paymentMethods = CoreContext.CurrentAccount.AccountPaymentMethods;
+    int selectedPaymentMethodId = 0;
+    IPayment billsToPayment = null;
+    
+    if(Model.OrderPayments.Any())
+    {
+        var orderPayment = Model.OrderPayments[0];
+        // Default to actual order payment
+        billsToPayment = orderPayment;
+
+        if(Model.IsTemplate
+            && orderPayment.SourceAccountPaymentMethodID.HasValue)
+        {
+            // Match by AccountPaymentMethodID
+            var selectedPaymentMethod = paymentMethods
+                .FirstOrDefault(pm => pm.AccountPaymentMethodID == orderPayment.SourceAccountPaymentMethodID.Value);
+            if (selectedPaymentMethod != null)
+            {
+                // Show account payment method instead
+                billsToPayment = selectedPaymentMethod;
+                selectedPaymentMethodId = selectedPaymentMethod.AccountPaymentMethodID;
+            }
+        }
+    }
+}
+
+<div class="FL BillsTo">
+    <h5>
+        @Html.Term("BillsTo", "Bills To"):</h5>
+    <div id="BillingCurrentlyTo">
+        @if (billsToPayment != null)
+        {
+            @Html.Raw(billsToPayment.ToDisplay(CoreContext.CurrentCultureInfo));
+        }
+        <a id="lnkUpdateBilling" class="Button DTL Update OverrideDisable" href="javascript:void(0);"><span>@Html.Term("Change Billing Profile")</span></a>
+    </div>
+    <div id="paymentMethodContainer">
+        <select id="sPaymentMethod">
+            @if (paymentMethods.Count() < 1)
+            {
+                <option value="">--
+                    @Html.Term("PleaseAddaPaymentMethod", "Please add a payment method")
+                    -- </option>
+            }
+            @foreach (var paymentMethod in paymentMethods.OrderByDescending(pm => pm.IsDefault))
+            {
+                <option value="@paymentMethod.AccountPaymentMethodID" @Html.Raw(paymentMethod.AccountPaymentMethodID == selectedPaymentMethodId ? "selected=\"selected\"" : "")>
+                    @(paymentMethod.ProfileName + (paymentMethod.IsDefault ? " (" + Html.Term("default", "default") + ")" : ""))
+                </option>
+            }
+        </select>
+        <a href="javascript:void(0);" id="lnkCancelBilling" class="DTL Update OverrideDisable">@Html.Term("Cancel")</a>
+        @foreach (var paymentMethod in paymentMethods)
+        {
+            <div id="paymentMethod@(paymentMethod.AccountPaymentMethodID)" class="paymentMethodDisplay">
+                <b>
+                    @paymentMethod.ProfileName</b>
+                <br />
+                @Html.Raw(paymentMethod.ToDisplay(CoreContext.CurrentCultureInfo))
+                <br />
+            </div>
+        }
+    </div>
+</div>

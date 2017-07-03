@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Struct Name="NetSteps.Claims.Common.ClaimSet">
+    <Position X="0.75" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ClaimSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Claims" />
+    </ShowAsCollectionAssociation>
+  </Struct>
+  <Struct Name="NetSteps.Claims.Common.Claim">
+    <Position X="1.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Claim.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetSteps.Claims.Common.PasswordPolicyEvaluationResult">
+    <Position X="11.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PasswordPolicyEvaluationResult.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetSteps.Claims.Common.PasswordEvaluatorResult">
+    <Position X="11" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PasswordPolictyEvaluatorResult.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetSteps.Claims.Common.UserIdentityPolicyEvaluationResult">
+    <Position X="17.75" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserIdentityPolicyEvaluationResult.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetSteps.Claims.Common.UserIdentityEvaluationResult">
+    <Position X="17.5" Y="10.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserIdentityEvaluationResult.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="NetSteps.Claims.Common.IRealm">
+    <Position X="3.5" Y="0.5" Width="2.5" />
+    <AssociationLine Name="Applications" Type="NetSteps.Claims.Common.IApplication" FixedToPoint="true">
+      <Path>
+        <Point X="4.812" Y="1.603" />
+        <Point X="4.812" Y="2.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRealm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Applications" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IApplication">
+    <Position X="3.5" Y="2.5" Width="2.5" />
+    <AssociationLine Name="Realms" Type="NetSteps.Claims.Common.IRealm" FixedToPoint="true">
+      <Path>
+        <Point X="5.062" Y="2.5" />
+        <Point X="5.062" Y="1.603" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.963" Y="0.092" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ClaimSets" Type="NetSteps.Claims.Common.IRegisteredClaimSet" FixedFromPoint="true">
+      <Path>
+        <Point X="4.625" Y="3.795" />
+        <Point X="4.625" Y="4.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.713" Y="0.029" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAgAAAAAAAAAAAQAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>IApplication.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Realms" />
+      <Property Name="ClaimSets" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRegisteredIdentity">
+    <Position X="16.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IUser.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRegisteredClaim">
+    <Position X="3.5" Y="6.25" Width="2.5" />
+    <AssociationLine Name="ClaimSet" Type="NetSteps.Claims.Common.IRegisteredClaimSet" FixedFromPoint="true">
+      <Path>
+        <Point X="5.75" Y="6.25" />
+        <Point X="5.75" Y="5.738" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.807" Y="0.112" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IClaim.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ClaimSet" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRegisteredClaimSet">
+    <Position X="3.5" Y="4.25" Width="2.5" />
+    <AssociationLine Name="Claims" Type="NetSteps.Claims.Common.IRegisteredClaim" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="5.738" />
+        <Point X="5.5" Y="6.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.11" Y="0.06" Height="0.162" Width="2.553" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Application" Type="NetSteps.Claims.Common.IApplication" FixedFromPoint="true">
+      <Path>
+        <Point X="4.312" Y="4.25" />
+        <Point X="4.312" Y="3.796" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.11" Y="0.06" Height="0.162" Width="0.899" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACIAAAABAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>IClaimSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Application" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Claims" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IClaimSetResolver">
+    <Position X="3.5" Y="8.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IClaimSetResolver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRealmApplicationUser">
+    <Position X="10.75" Y="0.5" Width="2" />
+    <AssociationLine Name="Identity" Type="NetSteps.Claims.Common.IUserIdentity" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.75" Y="0.934" />
+        <Point X="14.5" Y="0.934" />
+        <Point X="14.5" Y="2.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAEAAAAAAAAA=</HashCode>
+      <FileName>IRealmApplicationUser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RealmApplication" />
+      <Property Name="Identity" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRealmApplication">
+    <Position X="6.75" Y="0.5" Width="1.75" />
+    <AssociationLine Name="Realm" Type="NetSteps.Claims.Common.IRealm" FixedFromPoint="true">
+      <Path>
+        <Point X="6.75" Y="1.062" />
+        <Point X="6" Y="1.062" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Application" Type="NetSteps.Claims.Common.IApplication" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.227" Y="1.368" />
+        <Point X="7.227" Y="2.94" />
+        <Point X="6" Y="2.94" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>IRealmApplication.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Realm" />
+      <Property Name="Application" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IClaimsService">
+    <Position X="3.5" Y="9.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAIAAAAAAAAAAAAAgAAAAAAAggAAA=</HashCode>
+      <FileName>IClaimsService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IPassword">
+    <Position X="10.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAABAAAAAAAAgAgAAAAAAA=</HashCode>
+      <FileName>IUserPassword.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+      <Property Name="AppliedPolicy" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IPasswordPolicy">
+    <Position X="7.75" Y="3.75" Width="3.5" />
+    <AssociationLine Name="Evaluators" Type="NetSteps.Claims.Common.IPasswordPolicyEvaluator" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="5.497" />
+        <Point X="10.25" Y="6" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAwQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IUserPasswordPolicy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Evaluators" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRealmApplicationPasswordPolicy">
+    <Position X="7.75" Y="2.25" Width="2.5" />
+    <AssociationLine Name="RealmApplication" Type="NetSteps.Claims.Common.IRealmApplication" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="9.313" Y="2.25" />
+        <Point X="9.313" Y="1.139" />
+        <Point X="8.5" Y="1.139" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEACAAAAAAAAAAAAA=</HashCode>
+      <FileName>IRealmApplicationPasswordPolicy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RealmApplication" />
+      <Property Name="PasswordPolicy" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IPasswordPolicyEvaluator">
+    <Position X="7.75" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>IPasswordPolicyEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IUserIdentity">
+    <Position X="14.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>IUserPrincipal.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IApplicationIdentity">
+    <Position X="16.25" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IApplicationIdentity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IUserIdentityPolicy">
+    <Position X="14.25" Y="6.25" Width="3.25" />
+    <AssociationLine Name="Evaluators" Type="NetSteps.Claims.Common.IUserIdentityPolicyEvaluator">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-3.169" Y="0.074" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAwQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IUserIdentityPolicy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Evaluators" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IPasswordEvaluator">
+    <Position X="7.75" Y="8" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPasswordEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IUserIdentityEvaluator">
+    <Position X="14.25" Y="10.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IUserIdentityEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IUserIdentityPolicyEvaluator">
+    <Position X="14.25" Y="8.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>IUserIdentityPolicyEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetSteps.Claims.Common.IRealmApplicationUserIdentityPolicy">
+    <Position X="14.25" Y="4.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAEAAAAAAAAAA=</HashCode>
+      <FileName>IRealmApplicationUserIdentityPolicy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserIdentityPolicy" />
+    </ShowAsAssociation>
+  </Interface>
+  <Enum Name="NetSteps.Claims.Common.ClaimSetZeroClaims">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAABAAYAAAAACAIEAAAAAAAAAAAQAAAAAFABA=</HashCode>
+      <FileName>ClaimSetZeroClaims.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetSteps.Claims.Common.IdentityKind">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAJAAAAAAAAAAAAAAAAAAAAABAAAAAAAAABA=</HashCode>
+      <FileName>IdentityKind.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,1 @@
+﻿[assembly: NetSteps.Encore.Core.Wireup.Meta.WireupDependency(typeof(BelcorpUSA.Edi.Service.BelcorpUSAEdiServiceWireup))]

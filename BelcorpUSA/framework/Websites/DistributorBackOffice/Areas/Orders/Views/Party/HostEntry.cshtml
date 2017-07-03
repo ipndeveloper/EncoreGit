@@ -1,0 +1,100 @@
+﻿@model DistributorBackOffice.Models.HostInformation
+@section head
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            $('body').addClass('partyWizard');
+            
+            
+
+            //Host setup otpions (sliding panel thingy)
+            function openPanel(index) {
+                    $('.target').slideUp('fast').parents('li').removeClass('selected');
+                    $('div.target:eq('+index+')').slideDown(600).parents('li').addClass('selected');
+            };    
+            $('#hostActionList li').each(function() {
+                var targIndex = $(this).index();
+                var targDiv = $('div.target:eq('+targIndex+')');
+		        $(this).bind('click focus', function(){
+                    if(targDiv.is(':visible')) { } else {
+                        openPanel(targIndex);
+                    }
+		        });
+            });
+
+            $('#lnkConsultantAsHost').click(function () {
+                $.post('@Url.Action("HostEntry", "Party", new { AccountID = CoreContext.CurrentAccount.AccountID })', function (response) {
+                    if (response.result) {
+                        window.location = '@Url.Action("PartyEntry", "Party")' + '?' 
+                            + $.param({ hostAccountId: response.hostAccountId, 
+                                partyId: @(ViewBag.PartyId ?? 0) });
+                    }
+                });
+            });
+        });
+    </script>
+}
+@section breadcrumb
+{
+    <h1>@Html.Term("ScheduleParty_StepOne_BreadcrumbHeaderText", "Schedule a New Party")</h1>
+    @Html.Partial("PartyEntryNav", new DistributorBackOffice.Areas.Orders.Models.Party.StepActiveModel() { StepOneActive = true })
+}
+@section title
+{
+}
+<div class="partyEntryHeader UI-mainTxt">
+    <h2>@Html.Term("ScheduleParty_StepOne_HeaderText", "Who is going to host this party?")</h2>
+    <span>@Html.Term("ScheduleParty_StepOne_SubHeaderText", "You can choose someone aready in your contacts list, or enter a brand new person.")</span>
+</div>
+@if (Model != null)
+{
+    <div id="HostBanner">
+        <table>
+            <tr>
+                <td>
+                    <span>@Html.Term("PartyHost", "Party Host")</span>
+                </td>
+                <td>
+                    @(Model.FirstName + " " + Model.LastName)
+                </td>
+                <td>
+                    @Model.Email
+                </td>
+                <td>
+                    <a href="@Url.Action("PartyEntry", "Party", new { partyId = ViewBag.PartyId, hostAccountId = Model.AccountID.Value })">@Html.Term("ScheduleParty_StepOne_CancelHostText", "Cancel")</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+
+<div id="hostActionList">
+    <ul class="flatList">
+        <li class="trigger actionItems selected" tabindex="1" id="ActionSearch">
+            <div class="pad10 hostActionTitle">
+                <h3>@Html.Term("ScheduleParty_StepOne_SearchTabHeaderText", "Search My Contacts")</h3>
+            </div>
+            <div class="target hostActionContent">
+                @Html.Partial("HostSearch")
+            </div>
+        </li>
+        <li class="trigger actionItems" tabindex="3" id="ActionNew">
+            <div class="pad10 hostActionTitle">
+            <h3>
+                @Html.Term("ScheduleParty_StepOne_NewHostHeaderText", "Enter a New Person")</h3>
+            </div>
+            <div class="target hostActionContent" style="display: none;">
+                @Html.Partial("HostInformation", Model)
+            </div>
+        </li>
+        <li class="pad10 trigger actionItems" tabindex="20" id="ActionSelf">
+            <div class="pad10 hostActionTitle">
+            <h3 id="lnkConsultantAsHost">
+                @Html.Term("ScheduleParty_StepOne_ConsultantHeaderText", "Choose Yourself")
+                </h3>
+            </div>
+        </li>
+    </ul>
+</div>

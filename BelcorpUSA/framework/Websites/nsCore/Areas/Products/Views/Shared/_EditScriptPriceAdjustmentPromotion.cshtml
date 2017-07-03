@@ -1,0 +1,200 @@
+﻿@using nsCore.Areas.Products.Models.Promotions.Interfaces
+<script type="text/javascript">
+
+    $(function () {
+        var b = '@TempData["OrConditionPercentOff"]';
+        if (b == 'True') $('#chkOrCondition').prop("checked", "checked");
+        else $('#chkOrCondition').prop("checked", "");
+
+        var b1 = '@TempData["AndConditionQvTotalPercentOff"]';
+        if (b1 == 'True') $('#chkAndConditionQVTotal').prop("checked", "checked");
+        else $('#chkAndConditionQVTotal').prop("checked", "");
+
+        $('.Tabber').each(function () {
+            var activeTabs = $(this).attr('id');
+            $('li', this).click(function () {
+                var content_show = $(this).attr("rel");
+                var defaultState = $(this).html();
+                var t = activeTabs.replace('Tabber', 'Contents');
+                $('#' + t + ' .TabContent').hide();
+                $('#' + activeTabs + ' li').removeClass("current");
+                $(this).addClass("current");
+                $("#" + content_show).show();
+                return false;
+            });
+        });
+
+        $('#btnSave').click(function () {
+            var AndConditionQVTotal = $('#chkAndConditionQVTotal').prop('checked');
+            var count = 0;
+            if (AndConditionQVTotal) {
+                $('#conditionComboGrid tbody tr').each(function (i) { count += 1; });
+                if (count <= 0) {
+                    showMessage('@Html.Term("MsgEnterCombItems", "You must enter a combination of items")', true);
+                    return;
+                }
+            }
+
+            if (!$('#NameType, #RewardsPanel').checkRequiredFields()) {
+                return;
+            }
+            if (!$('#paginatedGrid tbody tr').length) {
+                showMessage('@Html.Term("Promotions_PromotionMustContainProducts", "Promotion must contain products") ', true);
+                return;
+            }
+            var data = {
+                promotionID: $('#promotionId').val(),
+                name: $('#txtName').val(),
+                oneTimeUse: $('#chkOneTimeUseY').prop('checked'),
+                OrCondition: $('#chkOrCondition').prop('checked'),
+                AndConditionQVTotal: $('#chkAndConditionQVTotal').prop('checked'),
+                QvMin: $('#qvSubVal').val(),
+                QvMax: $('#qvSubMaxValue').val(),
+
+
+
+                //                QvMin: $('#qvSubVal').val().replace('.', ','),
+                //                QvMax: $('#qvSubMaxValue').val().replace('.', ','),
+                hasContinuity: $('#chkContinuityY').prop('checked') //INI-FIN - GR_Encore-07
+            };
+            if ($('#couponYes').prop('checked')) {
+                data['hasCouponCode'] = true;
+                data['couponCode'] = $('#txtCouponCode').val();
+            }
+            if ($('#activeN').prop('checked')) {
+                data['hasDates'] = true;
+                data['startDate'] = $('#txtStartDate').val() + ' ' + $('#txtStartTime').val();
+                data['endDate'] = $('#txtEndDate').val() + ' ' + $('#txtEndTime').val();
+            }
+            if ($('#restrictMarketsY').prop('checked')) {
+                data['hasMarketIDs'] = true;
+                $('.market:checked').each(function (i) { data['marketIDs[' + i + ']'] = $(this).val(); });
+            }
+            if ($('#acctRestrictY').prop('checked')) {
+                data['hasAccountTypes'] = true;
+                $('.paidAs:checked').each(function (i) { data['paidAsTitleIDs[' + i + ']'] = $(this).val(); });
+                $('.recognized:checked').each(function (i) { data['recognizedTitleIDs[' + i + ']'] = $(this).val(); });
+                $('.accountType:checked').each(function (i) { data['accountTypeIDs[' + i + ']'] = $(this).val(); });
+            }
+            //INI - GR_Encore-07
+            if ($('#restrictNewBAY').prop('checked')) {
+                data['hasBAStatusIDs'] = true;
+                $('.newBA:checked').each(function (i) { data['newBAStatusIDs[' + i + ']'] = $(this).val(); })
+            }
+            if ($('#restrictActivityStatusY').prop('checked')) {
+                data['hasActivityStatusIDs'] = true;
+                $('.activityStatus:checked').each(function (i) { data['activityStatusIDs[' + i + ']'] = $(this).val(); })
+            }
+            //FIN - GR_Encore-07
+            if ($('#restrictOrderTypeY').prop('checked')) {
+                data['hasOrderTypeIDs'] = true;
+                $('.orderType:checked').each(function (i) { data['orderTypeIDs[' + i + ']'] = $(this).val(); });
+            }
+            var PromotionProducts = new Array();
+            $('#paginatedGrid tbody tr').each(function (i) {
+
+                
+                var row = $(this);
+
+                var PercentOffPromotionProductModel = new Object();
+                PercentOffPromotionProductModel.ProductID = row.find('input.productId').val();
+                PercentOffPromotionProductModel.RetailDiscountPercent = row.find('input.retailPrice').val();
+                PercentOffPromotionProductModel.QVDiscountPercent = row.find('input.qvPrice').val();
+                PercentOffPromotionProductModel.CVDiscountPercent = row.find('input.cvPrice').val();
+
+                PromotionProducts.push(PercentOffPromotionProductModel);
+
+
+                //                data['promotionProducts[' + i + '].productId'] = row.find('input.productId').val();
+                //                data['promotionProducts[' + i + '].retailDiscountPercent'] = row.find('input.retailPrice').val();
+                //                data['promotionProducts[' + i + '].qvDiscountPercent'] = row.find('input.qvPrice').val();
+                //                data['promotionProducts[' + i + '].cvDiscountPercent'] = row.find('input.cvPrice').val();
+                //                data['promotionProducts[' + i + '].retailDiscountPercent'] = row.find('input.retailPrice').val().replace(/\./g, ',');
+                //                data['promotionProducts[' + i + '].qvDiscountPercent'] = row.find('input.qvPrice').val().replace(/\./g, ',');
+                //                data['promotionProducts[' + i + '].cvDiscountPercent'] = row.find('input.cvPrice').val().replace(/\./g, ',');
+            });
+
+            data.PromotionProducts = PromotionProducts;
+            if ($('#acctIDsY').prop('checked')) {
+                data['hasAccountIDs'] = true;
+                $('.accountId').each(function (i) { data['accountIDs[' + i + ']'] = $(this).val(); })
+            }
+            //cart conditions:
+            if (AndConditionQVTotal) {
+                data['CartConditionType'] = '@((int)CartConditionType.CombinationOfProducts)';
+                $('#conditionComboGrid tbody tr').each(function (i) { data['CartCondition.requiredProductIDs[' + i + ']'] = $(this).find('.productId').val(); });
+            }
+            else if ($('#crSKU').is(':visible')) {
+                data['CartConditionType'] = '@((int)CartConditionType.SingleProduct)';
+                data['CartCondition.productId'] = $('#conditionSingleGrid #productId').val();
+                data['CartCondition.quantity'] = $('#conditionSingleGrid #qty').val();
+            }
+            else if ($('#crCombo').is(':visible')) {
+                data['CartConditionType'] = '@((int)CartConditionType.CombinationOfProducts)';
+                $('#conditionComboGrid tbody tr').each(function (i) { data['CartCondition.requiredProductIDs[' + i + ']'] = $(this).find('.productId').val(); });
+            }
+            else if ($('#crSub').is(':visible')) { //subtotal
+
+                
+                data['CartConditionType'] = '@((int)CartConditionType.CustomerSubtotalRange)';
+                //                data['CartCondition.minimumSubtotal'] = $('#subVal').val().replace(/\,/g, '');
+                //                data['CartCondition.maximumSubtotal'] = $('#subMaxValue').val().replace(/\,/g, '');
+
+
+                data['CartCondition.minimumSubtotal'] = $('#subVal').val();
+                data['CartCondition.maximumSubtotal'] = $('#subMaxValue').val();
+
+
+
+
+                //                data['CartCondition.minimumSubtotal'] = $('#subVal').val().replace(/\./g, ',');
+                //                data['CartCondition.maximumSubtotal'] = $('#subMaxValue').val().replace(/\./g, ',');
+            }
+            else if ($('#crQVSub').is(':visible')) { //qvtotal
+
+                
+
+                //                alert('qvSubVal : ' + $('#qvSubVal').val().replace(/\./g, '')); //test
+                //                alert('qvSubMaxValue : ' + $('#qvSubMaxValue').val().replace(/\./g, '')); //test
+                data['CartConditionType'] = '@((int)CartConditionType.CustomerQVRange)';
+                //	                data['CartCondition.qvMinimumSubtotal'] = $('#qvSubVal').val().replace(/\,/g, '');
+                //	                data['CartCondition.qvMaximumSubtotal'] = $('#qvSubMaxValue').val().replace(/\,/g, '');
+
+
+
+                data['CartCondition.qvMinimumSubtotal'] = $('#qvSubVal').val();
+                data['CartCondition.qvMaximumSubtotal'] = $('#qvSubMaxValue').val();
+
+
+
+
+                //                data['CartCondition.qvMinimumSubtotal'] = $('#qvSubVal').val().replace(/\./g, ',');
+                //                data['CartCondition.qvMaximumSubtotal'] = $('#qvSubMaxValue').val().replace(/\./g, ',');
+                data['CartCondition.priceTypeID'] = '@((int)Constants.ProductPriceType.QV)'
+            }
+            var myJSON = JSON.stringify(data);
+            var options = {
+                url: '@Url.Content("~/Products/ProductPromotions/SavePercentOffPromotion")',
+                success: onSuccess,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                showLoading: $('#btnSave'),
+                data: myJSON
+            };
+            
+            NS.post(options);
+
+
+            function onSuccess(result) {
+                if (result.result) {
+                    showMessage('@Html.Term("Promotions_PromotionSaved", "Promotion Successfully Saved!")');
+                    window.location = '@Url.Content("~/Products/Promotions")';
+                }
+                else {
+                    showMessage(result.message, true);
+                }
+            }
+        });
+
+    });
+</script>

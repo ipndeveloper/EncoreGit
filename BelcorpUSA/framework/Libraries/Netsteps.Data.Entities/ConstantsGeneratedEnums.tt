@@ -1,0 +1,220 @@
+﻿<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.xml" #>
+<#@ assembly name="System.Configuration" #>
+<#@ import namespace="System.Configuration" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ include file="CommonTemplate.tt" #>
+<#@ include file="EF.Utility.CS.ttinclude" #>
+<#@ output extension=".cs" #>
+<#
+	
+// http://www.highoncoding.com/Articles/557_Code_Generation_Using_T4_Templates.aspx
+	//  System.Diagnostics.Debugger.Launch();
+CodeGenerationTools code = new CodeGenerationTools(this); 
+MetadataLoader loader = new MetadataLoader(this); 
+CodeRegion region = new CodeRegion(this, 1);  
+MetadataTools ef = new MetadataTools(this);
+var connectionString = "Data Source=10.12.6.187;Initial Catalog=BelcorpBRACore;Persist Security Info=True;Integrated Security=false;Application Name=GMP;MultipleActiveResultSets=True;uid=usrencorebrasilqas;pwd=Belcorp2016%";
+
+List<EntityModelInfo> allPaths = new List<EntityModelInfo>();
+allPaths.Add(new EntityModelInfo() { Path = @"EntityModels/Main/NetStepsDB.edmx" });
+
+List<MetadataWorkspace> metadataWorkspaces = new List<MetadataWorkspace>();
+foreach (EntityModelInfo path in allPaths)
+{
+	string inputFile = path.Path;
+	MetadataWorkspace metadataWorkspace = null;
+	bool allMetadataLoaded = loader.TryLoadAllMetadata(inputFile, out metadataWorkspace);
+	
+	metadataWorkspaces.Add(metadataWorkspace);
+}
+
+List<TableEnumData> tableEnumData = new List<TableEnumData>();
+List<string> tablesToGenerateEnumsFor = GetStringListFromFile("", "ConstantsGeneratedTables.txt");
+foreach (string item in tablesToGenerateEnumsFor)
+{			
+	var enumData = GetTableEnumData(metadataWorkspaces, item, connectionString);	
+	 tableEnumData.Add(enumData);
+}
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+//  Enum Constants
+//	Author: John Egbert
+//  Generated: <#= DateTime.Now #>
+namespace NetSteps.Data.Entities.Generated
+{
+	public partial class ConstantsGenerated : NetSteps.Common.Constants
+	{
+	<#
+
+	foreach (TableEnumData entity in tableEnumData)
+	{
+		string entitySetName = Formatting.Pluralize(5, entity.TableName);
+		string entityName = GetEntityName(metadataWorkspaces, entity.TableName);	
+				
+		string primaryKeyTypeName = "int";
+		var primaryKeyType = GetEntityKey(metadataWorkspaces, entityName);
+		if(primaryKeyType != null)
+			primaryKeyTypeName = primaryKeyType.TypeUsage.EdmType.Name;
+		
+		if(primaryKeyTypeName == "Int32")
+			primaryKeyTypeName = "int";
+		else if(primaryKeyTypeName == "Int16")
+			primaryKeyTypeName = "short";
+		else if(primaryKeyTypeName == "Byte")
+			primaryKeyTypeName = "byte";
+		
+		if(entityName != null)
+		{
+	#>	
+
+		#region <#=entity.TableName#>
+		public enum <#=entityName#> : <#= primaryKeyTypeName #>
+		{
+		<#
+		foreach (NameValue value in entity.Values)
+		{
+			if(value.Value >= 1000) //Exclude custom enum values
+				continue;
+			#>
+	<#=value.Name #> = <#=value.Value #>,
+		<# } #>
+}
+		#endregion
+	<# } #>
+	<# } #>
+}
+}
+
+<#+
+string GetEntitySetName(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	string entitySetName = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.Name).FirstOrDefault();
+
+	return entitySetName;
+}
+string GetEntityName(List<MetadataWorkspace> metadataWorkspaces, string entitySetName)
+{
+	foreach (MetadataWorkspace metadataWorkspace in metadataWorkspaces)
+	{
+		var key = GetEntityName(metadataWorkspace, entitySetName);
+		if(key != null)
+			return key;
+	}
+	return null;
+}
+string GetEntityName(MetadataWorkspace metadataWorkspace, string entitySetName)
+{
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	string entityName = (from meta in container.BaseEntitySets
+							where meta.Name == entitySetName
+							select meta.ElementType.Name).FirstOrDefault();
+	return entityName;
+}
+
+
+EdmMember GetEntityKey(List<MetadataWorkspace> metadataWorkspaces, string entityTypeName)
+{
+	foreach (MetadataWorkspace metadataWorkspace in metadataWorkspaces)
+	{
+		var key = GetEntityKey(metadataWorkspace, entityTypeName);
+		if(key != null)
+			return key;
+	}
+	return null;
+}
+EdmMember GetEntityKey(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var context = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+
+	var keyMembers = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.ElementType.KeyMembers).FirstOrDefault();
+
+	if(keyMembers != null)
+		return keyMembers.FirstOrDefault();
+	else
+		return null;
+}
+
+public class EntityModelInfo
+{
+	public string Path { get; set; }
+	public string NameSpace { get; set; }
+}
+
+
+TableEnumData GetTableEnumData(List<MetadataWorkspace> metadataWorkspaces, string tableName, string connectionString)
+{	
+	TableEnumData tableEnumData = new TableEnumData();
+	tableEnumData.TableName = tableName;
+	tableEnumData.Values = new List<NameValue>();
+	
+	SqlConnection conn = new SqlConnection(connectionString); 
+		string selectQuery = "select * from " + tableName; 
+	conn.Open(); 
+	SqlCommand command = new SqlCommand(selectQuery, conn); 
+	
+		command.CommandType = CommandType.Text;
+	command.Connection = conn;
+		SqlDataAdapter ad = new SqlDataAdapter(command); 
+		System.Data.DataSet ds = new DataSet(); 
+		ad.Fill(ds);
+		ad.Dispose();
+	
+		EdmMember primaryKeyType = GetEntityKey(metadataWorkspaces, tableName);
+	
+		tableEnumData.Values.Add(new NameValue() { Name = "NotSet", Value = 0 });
+		
+		foreach(System.Data.DataRow row in ds.Tables[0].Rows)
+		{
+			// Friendly error if there is no 'Name' column
+			if(!row.Table.Columns.Contains("Name"))
+				throw new Exception(tableName + " does not have a 'Name' column.");
+
+			// Ignore 'Editable' rows
+			if(row.Table.Columns.Contains("Editable") && (bool)row["Editable"])
+				continue;
+
+			string enumName = string.Empty;
+			int enumValue = 0;
+		
+			if(row["Name"] != null)
+				enumName = GetEnumName(row["Name"] != null ? row["Name"].ToString() : null);
+		
+			enumValue = System.Convert.ToInt32(row[0].ToString());
+		tableEnumData.Values.Add(new NameValue() { Name = enumName, Value = enumValue });
+		
+		}
+	
+	return tableEnumData;
+}
+string GetEnumName(string name)
+{
+ return	Regex.Replace(ToPascalCase(name.Trim()), @"[^\w]", string.Empty);
+}
+
+public class TableEnumData
+{
+	public string TableName { get; set; }
+	public List<NameValue> Values { get; set; }
+}
+public class NameValue
+{
+	public string Name { get; set; }
+	public int Value { get; set; }
+}
+#>

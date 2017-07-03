@@ -1,0 +1,131 @@
+﻿@{    
+    decimal retailPerItem = 0;
+    if (ViewData["Products"] != null)
+    {
+        Product oProduct = ViewData["Products"] as Product;
+        retailPerItem = NetSteps.Data.Entities.Business.Logic.ProductPriceLogic.Intance.GetRetilPerItem(oProduct.ProductID);
+    }
+                   //var orderItem = Model;
+                   //Order orderItem = Model;
+                   //retailPerItem = NetSteps.Data.Entities.ProductPricesExtensions.GetPriceByPriceType(Convert.ToInt32(orderItem.ProductID), ProductPriceTypeRetail, order.CurrencyID).GetRoundedNumber(2);
+                   //var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+                   //Product product = inventory.GetProduct(orderItem.ProductID.Value);
+                   ////var retailPerItem = NetSteps.Data.Entities.Business.Logic.ProductPriceLogic.Intance.GetRetilPerItem(product.ProductID);
+}
+<tr data-bind="fadeOut: isRemoving, css: { 'remove-hover': isRemoveHovering }">
+    <td data-label="" class="icon-24">
+        <!-- ko if: IsRemovable -->
+        <a href="javascript:void(0);"
+               class="UI-icon icon-x RemoveOrderItem"
+               title="@Html.Term("RemoveItemFromCart", "Remove item from cart")"
+               data-bind="disable: $parent.isUpdating, event: { mouseover: btnRemove_mouseover, mouseout: btnRemove_mouseout }, click: btnRemove_click">
+        </a>
+        <!-- /ko -->
+    </td>
+    <td data-label="@Html.Term("SKU")" data-bind="text: SKU">
+    </td>
+    <!-- ko if: IsKit -->
+    <td data-label="@Html.Term("Product")">
+        <!-- ko if: IsDynamicKit -->
+        <a data-bind="attr: { href: BundlePackItemsUrl }, text: ProductName"></a><span class="UI-icon"
+            data-bind="css: { 'icon-bundle-full': IsDynamicKitFull, 'icon-bundle-add': isDynamicKitNotFull }">
+        </span>
+        <!-- /ko -->
+        <!-- ko ifnot: IsDynamicKit -->
+        <span data-bind="text: ProductName"></span>
+        <!-- /ko -->
+        <div data-bind="foreach: Messages">
+            <span class="block" data-bind="text: $data"></span>
+        </div>
+        <div class="bundlePackItemList" data-bind="with: KitItemsModel">
+            @Html.Partial("_KitItemsModel")
+        </div>
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: IsKit -->
+    <td>
+            <span data-label="@Html.Term("Product")" data-bind="text: ProductName"></span> 
+            <div data-bind="foreach: Messages">
+                <span class="block" data-bind="text: $data"></span>
+            </div>
+    </td>
+    <!-- /ko -->
+    <td>
+        <span data-label="@Html.Term("retailPricePerItem", "retailPricePerItem")" data-bind="text: retailPricePerItem">
+    </td>
+    <!-- ko if: SamePrice -->
+    <td data-label="@Html.Term("UnitPrice", "Unit Price")" data-bind="text: OriginalUnitPrice">
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: SamePrice -->
+    <td>
+        <span data-label="@Html.Term("OriginalUnitPrice", "Original Unit Price")" class="block originalPrice strikethrough" data-bind="text: OriginalUnitPrice">
+        </span><span data-label="@Html.Term("ActualUnitPrice", "Actual Unit Price")" class="block discountPrice" data-bind="text: AdjustedUnitPrice">
+        </span>
+    </td>
+
+
+    <!-- /ko -->
+    <!-- ko if: SameCommissionableTotal -->
+    @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+    <td data-label="@Html.Term("CommissionablePrice", "Commissionable Price")" data-bind="text: OriginalCommissionableTotal">
+    </td>
+                                }
+                                }
+                                @*CS.05MAY2016.Fin.Muestra CV*@
+
+
+    <!-- /ko -->
+    <!-- ko ifnot: SameCommissionableTotal -->
+       @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                if (valorSCV == "S")
+                                {
+    <td>
+        <span data-label="@Html.Term("OriginalCommissionablePrice", "Original Commissionable Price")" class="block originalPrice strikethrough" data-bind="text: OriginalCommissionableTotal">
+        </span><span data-label="@Html.Term("ActualCommissionablePrice", "Actual Commissionable Price")" class="block discountPrice" data-bind="text: AdjustedCommissionableTotal">
+        </span>
+    </td>
+                                }
+                                }
+                                @*CS.05MAY2016.Fin.Muestra CV*@
+
+
+    <!-- /ko -->
+    <!-- ko if: IsQuantityEditable -->
+    <td data-label="@Html.Term("Quantity")" style="text-align: center;">
+        <input type="text" style="width: 50px;" class="quantity" id="Quantity" onfocus="GetValueQuantity(value);" onblur="UpdateQuantity(value);" data-bind="value: Quantity, valueUpdate: 'afterkeydown'" />
+        @*<input type="text" style="width: 50px;" class="quantity" id="Quantity" data-bind="value: Quantity, valueUpdate: 'afterkeydown'" />*@
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: IsQuantityEditable -->
+    <td style="text-align: center;" data-bind="text: Quantity">
+    </td>
+    <!-- /ko -->
+    @*CGI(CMR)-29/10/2014-Inicio*@
+    <!-- ko if: TotalQV -->
+    <td>
+        <span data-bind="text: TotalQV"></span>
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: TotalQV -->
+    <td>
+        <span class="block originalPrice strikethrough" data-bind="text: TotalQV_Currency"></span>
+    </td>
+    <!-- /ko -->
+    @*CGI(CMR)-29/10/2014-Fin*@
+    <!-- ko if: SameTotal -->
+    <td data-bind="text: AdjustedTotal">
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: SameTotal -->
+    <td>
+        <span class="block originalPrice strikethrough" data-bind="text: OriginalTotal">
+        </span><span class="block discountPrice" data-bind="text: AdjustedTotal"></span>
+    </td>
+    <!-- /ko -->
+</tr>

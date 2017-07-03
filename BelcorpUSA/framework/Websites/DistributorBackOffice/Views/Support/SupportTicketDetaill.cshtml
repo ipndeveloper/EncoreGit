@@ -1,0 +1,146 @@
+﻿@model nsCore.Areas.Support.Models.Ticket.SupportTicketDetaillModel
+ <hr />
+    @{
+        Func<bool, string> FncHabilitarDeshabilitar = (estado) =>
+        {
+            return !estado ? "disabled=disabled" : "";
+        };
+        Func<Boolean, string> Requerido = (b) => {
+            string estado = string.Empty;
+            if(b)
+            { 
+                estado = "'1'";
+            }
+            else 
+            {
+                estado = "'0'";
+            }
+            return estado;
+        };
+        Func<int, string> crearIdText = (idText) => {
+            string ids = string.Format("Txt_{0}",idText);  
+            return ids;
+        };
+        Func<int, string> crearIdTextArea = (idTextaArea) =>
+        {
+            string ids = string.Format("TxtArea_{0}", idTextaArea);
+            return ids;
+        };
+
+        
+        var objSupportTicketDetaillModel = Model as nsCore.Areas.Support.Models.Ticket.SupportTicketDetaillModel;
+        bool ModoEdicion = objSupportTicketDetaillModel.ModoEdicion;
+
+        List<SupportMotivePropertyTypes> LstNoSolucion = objSupportTicketDetaillModel.LstSupportMotivePropertyTypes.FindAll((o) => !o.FieldSolution);
+        List<SupportMotivePropertyTypes> LstSolucion = objSupportTicketDetaillModel.LstSupportMotivePropertyTypes.FindAll((o) => o.FieldSolution);
+        }
+        @for (int index = 0; index < LstNoSolucion.Count; index++)
+        {  
+            <div class="FRow"  FilaDinamica="FilaDinamica" solucion="no"  TipoControles="Propiedades">
+                <div class="FLabel">
+                    @LstNoSolucion[index].Name:
+                </div>
+                <div class="FInput">
+                    @if(LstNoSolucion[index].DataType == "List")
+                      { 
+                            <select @FncHabilitarDeshabilitar(ModoEdicion)  onchange="VerificarValidacionControl(this)" DataType="@LstNoSolucion[index].DataType" Required="@Requerido(LstNoSolucion[index].Required)"  SupportTicketsPropertyID="@LstNoSolucion[index].SupportTicketsPropertyID"
+                              SupportMotivePropertyTypeID="@LstNoSolucion[index].SupportMotivePropertyTypeID"  id="Cmb_@LstNoSolucion[index].SupportMotivePropertyTypeID">
+                               <option value="0">-----@Html.Term("SelectedValue", "Selected Value")-----</option>
+                                @{
+                                  List<SupportMotivePropertyValues> LstSupportMotivePropertyValues =
+                                      objSupportTicketDetaillModel.LstSupportMotivePropertyValues.FindAll((obj) => obj.SupportMotivePropertyTypeID == LstNoSolucion[index].SupportMotivePropertyTypeID) ?? new List<SupportMotivePropertyValues>();
+                                }
+
+                                  @for (int indiceSupprtValues = 0; indiceSupprtValues < LstSupportMotivePropertyValues.Count; indiceSupprtValues++){  
+                                       if(LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID == LstNoSolucion[index].SupportTicketsPropertyValueID){ 
+                                            <option selected="selected" value="@LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID">
+                                            @LstSupportMotivePropertyValues[indiceSupprtValues].Value</option>
+                                          }
+                                         else
+                                         {  
+                                            <option value="@LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID">
+                                            @LstSupportMotivePropertyValues[indiceSupprtValues].Value</option>
+                                         } 
+                                } 
+                            </select>
+                     }
+                     else{ 
+                             if(LstNoSolucion[index].DataType == "Text"){  
+                                    <input  @FncHabilitarDeshabilitar(ModoEdicion) onchange="VerificarValidacionControl(this)" DataType="@LstNoSolucion[index].DataType" Required="@Requerido(LstNoSolucion[index].Required)" SupportMotivePropertyTypeID="@LstNoSolucion[index].SupportMotivePropertyTypeID" type="text" SupportTicketsPropertyID="@LstNoSolucion[index].SupportTicketsPropertyID"
+                                    id="@crearIdText(LstNoSolucion[index].SupportMotivePropertyTypeID)"
+                                    value="@LstNoSolucion[index].PropertyValue" />
+                              } 
+                               if (LstNoSolucion[index].DataType == "MultiLine"){  
+                                    <textarea  style ="height: 1cm;overflow-y : scroll" class="fullWidth"    @FncHabilitarDeshabilitar(ModoEdicion) onchange="VerificarValidacionControl(this)" DataType="@LstNoSolucion[index].DataType" Required="@Requerido(LstNoSolucion[index].Required)" SupportMotivePropertyTypeID="@LstNoSolucion[index].SupportMotivePropertyTypeID"   SupportTicketsPropertyID="@LstNoSolucion[index].SupportTicketsPropertyID" id="@crearIdTextArea(LstNoSolucion[index].SupportMotivePropertyTypeID)" >@LstNoSolucion[index].PropertyValue</textarea>
+                               } 
+                             
+                          if(LstNoSolucion[index].DataType == "Numeric"){ 
+                                <input  @FncHabilitarDeshabilitar(ModoEdicion)  onchange="VerificarValidacionControl(this)" DataType="@LstNoSolucion[index].DataType" Required="@Requerido(LstNoSolucion[index].Required)" SupportMotivePropertyTypeID="@LstNoSolucion[index].SupportMotivePropertyTypeID"  SupportTicketsPropertyID="@LstNoSolucion[index].SupportTicketsPropertyID"
+                                id="@crearIdText(LstNoSolucion[index].SupportMotivePropertyTypeID)"
+                             onkeypress="return isNumberKey(event)"   value="@LstNoSolucion[index].PropertyValue" />
+                            } 
+                     } 
+                </div>
+             </div> 
+
+        }  
+          
+
+ @for(int index = 0; index < LstSolucion.Count; index++){ 
+           <div class="FRow"  FilaDinamica="FilaDinamicaSolucion" solucion="si"   TipoControles="Propiedades">
+                <div class="FLabel">
+                    @LstSolucion[index].Name:
+                </div>
+                <div class ="FInput">
+                   @if(LstSolucion[index].DataType == "List"){ 
+                            <select @FncHabilitarDeshabilitar(ModoEdicion) onchange="VerificarValidacionControl(this)" DataType="@LstSolucion[index].DataType" Required="@Requerido(LstSolucion[index].Required)"  SupportTicketsPropertyID="@LstSolucion[index].SupportTicketsPropertyID"
+                              SupportMotivePropertyTypeID="@LstSolucion[index].SupportMotivePropertyTypeID"  id="Select1">
+                               <option value="0">-----@Html.Term("SelectedValue", "Selected Value")-----</option>
+                                @{
+                                  List<SupportMotivePropertyValues> LstSupportMotivePropertyValues =
+                                      objSupportTicketDetaillModel.LstSupportMotivePropertyValues.FindAll((obj) => obj.SupportMotivePropertyTypeID == LstSolucion[index].SupportMotivePropertyTypeID) ?? new List<SupportMotivePropertyValues>();
+                                      }
+
+                                  @for(int indiceSupprtValues = 0; indiceSupprtValues < LstSupportMotivePropertyValues.Count; indiceSupprtValues++){ 
+                                      
+                                       if(LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID == LstSolucion[index].SupportTicketsPropertyValueID){ 
+                                            <option selected="selected" value="@LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID">
+                                            @LstSupportMotivePropertyValues[indiceSupprtValues].Value</option>
+                                         }
+                                         else
+                                          {
+                                                <option value="@LstSupportMotivePropertyValues[indiceSupprtValues].SupportMotivePropertyValueID">
+                                                @LstSupportMotivePropertyValues[indiceSupprtValues].Value</option>
+                                         }
+                                }
+                            </select>
+                    }
+                      else
+                      { 
+                             if(LstSolucion[index].DataType == "Text")
+                               {  
+                                    <input  @FncHabilitarDeshabilitar(ModoEdicion) onchange="VerificarValidacionControl(this)" DataType="@LstSolucion[index].DataType" Required="@Requerido(LstSolucion[index].Required)" SupportMotivePropertyTypeID="@LstSolucion[index].SupportMotivePropertyTypeID" type="text" SupportTicketsPropertyID="@LstSolucion[index].SupportTicketsPropertyID"
+                                    id="@crearIdText(LstSolucion[index].SupportMotivePropertyTypeID)"
+                                    value="@LstSolucion[index].PropertyValue" />
+                              } 
+                            if(LstSolucion[index].DataType == "MultiLine")
+                               {  
+                                    <textarea style ="height: 1cm; overflow-y : scroll" class="fullWidth" @FncHabilitarDeshabilitar(ModoEdicion)  onchange="VerificarValidacionControl(this)" DataType="@LstSolucion[index].DataType" Required="@Requerido(LstSolucion[index].Required)" SupportMotivePropertyTypeID="@LstSolucion[index].SupportMotivePropertyTypeID"   SupportTicketsPropertyID="@LstSolucion[index].SupportTicketsPropertyID" id="@crearIdTextArea(LstSolucion[index].SupportMotivePropertyTypeID)"> @LstSolucion[index].PropertyValue></textarea>
+                               }  
+
+                         if(LstSolucion[index].DataType == "Numeric")
+                              {  
+                                <input  @FncHabilitarDeshabilitar(ModoEdicion)  onchange="VerificarValidacionControl(this)" DataType="@LstSolucion[index].DataType" Required="@Requerido(LstSolucion[index].Required)" SupportMotivePropertyTypeID="@LstSolucion[index].SupportMotivePropertyTypeID"  SupportTicketsPropertyID="@LstSolucion[index].SupportTicketsPropertyID"
+                                 id="@crearIdText(LstSolucion[index].SupportMotivePropertyTypeID)"
+                             onkeypress="return isNumberKey(event)"   value="@LstSolucion[index].PropertyValue" />
+                            } 
+                     }  
+                </div>
+            </div>
+          
+           
+      } 
+
+
+ 
+ <hr />

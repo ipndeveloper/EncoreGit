@@ -1,0 +1,22 @@
+﻿@model NetSteps.Web.Mvc.Controls.Analytics.AnalyticsModel
+@if (Model.AnalyticsEnabled)
+{
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        
+        @foreach (var tracker in Model.Trackers)
+        {
+            @Html.Raw(string.Format("_gaq.push(['{0}_setDomainName', 'none']);", tracker.Prefix))
+            @Html.Raw(string.Format("_gaq.push(['{0}_setAccount', '{1}']);", tracker.Prefix, tracker.PropertyId))
+            @Html.Raw(string.Format("_gaq.push(['{0}_trackPageview']); ", tracker.Prefix))
+            @Html.Raw(string.Format("_gaq.push(['{0}_setAllowLinker', true]);", tracker.Prefix))
+            @Html.Raw(string.Format("_gaq.push(['{0}_setCustomVar', 1, 'hostName', '{1}', 3]); ", tracker.Prefix, Model.HostName))
+        }
+        
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            @Html.Raw(string.Format("ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com{0}';", Model.FilePath)) 
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+}

@@ -1,0 +1,104 @@
+﻿@model IEnumerable<OrderItem>
+@using System.Collections.Generic;
+@using NetSteps.Data.Common.Entities;
+@using NetSteps.Data.Entities.Extensions
+
+
+@{
+    var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+}
+
+@foreach (var orderItem in Model)
+{
+	var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+	<tr id="@("oi" + orderItem.Guid.ToString("N"))">
+		<td class="icon-24">
+		</td>
+		<td>
+			<input type="hidden" value="@orderItem.Guid.ToString("N")" class="orderItemGuid" />
+			<input type="hidden" value="@product.ProductID" class="productId" />
+			@orderItem.SKU
+		</td>
+		<td>
+			@product.Translations.Name()
+			<br />
+
+			@Html.Partial("_DisplayOrderAdjustmentDescription", orderItem)
+
+			@if (product.IsDynamicKit() || product.IsStaticKit())
+   {
+	   if (product.IsDynamicKit())
+	   {
+		   int requiredItemsInBundleCount = product.DynamicKits[0].DynamicKitGroups.Sum(g => g.MinimumProductCount);
+		   if (orderItem.ChildOrderItems.Sum(oi => oi.Quantity) == requiredItemsInBundleCount)
+		   {
+				<span class="UI-icon icon-bundle-full"></span>
+		   }
+		   else
+		   {
+				<span class="UI-icon icon-bundle-add"></span>
+		   }
+	   }
+				<div class="bundlePackItemList">
+					<table cellspacing="0" width="100%">
+						<tbody>
+							<tr>
+								<th>
+								</th>
+								<th>@Html.Term("SKU")
+								</th>
+								<th>@Html.Term("Product")
+								</th>
+								<th>@Html.Term("Quantity")
+								</th>
+							</tr>
+							@foreach (OrderItem childItem in orderItem.ChildOrderItems)
+	   {
+		   Product childProduct = inventory.GetProduct(childItem.ProductID.Value);
+								<tr>
+									<td>
+										<span class="UI-icon icon-bundle-arrow"></span>
+									</td>
+									<td class="KitSKU">
+										@childItem.SKU
+									</td>
+									<td>
+										@childProduct.Translations.Name()
+									</td>
+									<td>
+										@childItem.Quantity
+									</td>
+								</tr>
+	   }
+						</tbody>
+					</table>
+				</div>
+   }
+		</td>
+		@{ int currencyID = orderItem.OrderCustomer.Order.CurrencyID; } 
+		<td>
+		@{
+            var preAdjustmentPriceValue = orderItem.GetPreAdjustmentPrice(orderItem.ProductPriceTypeID.Value);
+            var adjustedPriceValue = orderItem.GetAdjustedPrice(orderItem.ProductPriceTypeID.Value);
+        }
+            @if (preAdjustmentPriceValue != adjustedPriceValue)
+            {
+                <span class="block price originalPrice strikethrough">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+                <span class="block price discountPrice">@adjustedPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+            }
+            else
+            {
+                <span class="price originalPrice">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span> 
+            }
+		</td>
+		<td>
+			@orderItem.Quantity
+		</td>
+		<td>
+			@(0M.ToString(currencyID))
+		</td>
+		<td>
+			@((orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(currencyID))
+		</td>
+	</tr>
+}

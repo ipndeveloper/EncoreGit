@@ -1,0 +1,382 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Accounts.Downline.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.DownlineLoadedEventArgs">
+      <summary>
+            Contains data related to the DownlineLoaded event.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Models.DownlineLoadedEventArgs.#ctor(System.Collections.Generic.IList{NetSteps.Accounts.Downline.Common.Models.IDownlineData})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Accounts.Downline.Common.Models.DownlineLoadedEventArgs" /> class.
+            </summary>
+      <param name="data">The downline data returned from the database.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="data != null" vb="data &lt;&gt; Nothing">data != null</requires>
+      <exception cref="T:System.ArgumentNullException">data == null</exception>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.DownlineLoadedEventArgs.Data">
+      <summary>
+            The downline data returned from the database.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.DownlineLoadingEventArgs">
+      <summary>
+            Contains data related to the DownlineLoading event.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Models.DownlineLoadingEventArgs.#ctor(NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Accounts.Downline.Common.Models.DownlineLoadingEventArgs" /> class.
+            </summary>
+      <param name="context">Contains specification parameters.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="context != null" vb="context &lt;&gt; Nothing">context != null</requires>
+      <exception cref="T:System.ArgumentNullException">context == null</exception>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.DownlineLoadingEventArgs.Context">
+      <summary>
+            Contains specification parameters.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.DownlineSearchedEventArgs">
+      <summary>
+            Contains data related to the DownlineSearched event.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Models.DownlineSearchedEventArgs.#ctor(System.Collections.Generic.IList{NetSteps.Accounts.Downline.Common.Models.IDownlineData})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Accounts.Downline.Common.Models.DownlineSearchedEventArgs" /> class.
+            </summary>
+      <param name="data">The downline data returned from the database.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="data != null" vb="data &lt;&gt; Nothing">data != null</requires>
+      <exception cref="T:System.ArgumentNullException">data == null</exception>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.DownlineSearchedEventArgs.Data">
+      <summary>
+            The downline data returned from the database.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.DownlineSearchingEventArgs">
+      <summary>
+            Contains data related to the DownlineSearching event.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Models.DownlineSearchingEventArgs.#ctor(NetSteps.Accounts.Downline.Common.Models.ISearchDownlineContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Accounts.Downline.Common.Models.DownlineSearchingEventArgs" /> class.
+            </summary>
+      <param name="context">Contains specification parameters.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="context != null" vb="context &lt;&gt; Nothing">context != null</requires>
+      <exception cref="T:System.ArgumentNullException">context == null</exception>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.DownlineSearchingEventArgs.Context">
+      <summary>
+            Contains specification parameters.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo">
+      <summary>
+            Extended data related to an account and their upline/downline.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.AccountId">
+      <summary>
+            The account ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.RelativeTreeLevel">
+      <summary>
+            The tree level relative to the specified root account.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.DownlineCount">
+      <summary>
+            The number of accounts below this one in the downline.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.AccountNumber">
+      <summary>
+            The account number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.FirstName">
+      <summary>
+            The account's first name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.LastName">
+      <summary>
+            The account's last name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.SponsorAccountNumber">
+      <summary>
+            The sponsor's account number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.SponsorFirstName">
+      <summary>
+            The sponsor's first name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.SponsorLastName">
+      <summary>
+            The sponsor's last name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.EnrollerAccountNumber">
+      <summary>
+            The enroller's account number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.EnrollerFirstName">
+      <summary>
+            The enroller's first name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.EnrollerLastName">
+      <summary>
+            The enroller's last name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.EnrollmentDateUtc">
+      <summary>
+            The account's enrollment date.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.NextRenewalDateUtc">
+      <summary>
+            The account's next renewal date.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.AccountTypeId">
+      <summary>
+            The account type ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.AccountStatusId">
+      <summary>
+            The account status ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.EmailAddress">
+      <summary>
+            The account's email address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.PhoneNumber">
+      <summary>
+            The account's phone number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.PwsUrl">
+      <summary>
+            The account's PWS URL.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.Address1">
+      <summary>
+            The account's address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.City">
+      <summary>
+            The account's city.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.StateAbbreviation">
+      <summary>
+            The account's state abbreviation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.PostalCode">
+      <summary>
+            The account's postal code.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.CountryId">
+      <summary>
+            The account's country ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.LastOrderCommissionDateUtc">
+      <summary>
+            The commission date of the account's last completed order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineAccountInfo.NextAutoshipRunDate">
+      <summary>
+            The date of the account's next autoship run.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.IDownlineData">
+      <summary>
+            Basic data related to an account and their parent in the hierarchy.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.AccountId">
+      <summary>
+            The account ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.ParentAccountId">
+      <summary>
+            The parent account ID in the hierarchy.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.TreeLevel">
+      <summary>
+            The account's absolute tree level.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.AccountTypeId">
+      <summary>
+            The account type ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.AccountStatusId">
+      <summary>
+            The account status ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.AccountNumber">
+      <summary>
+            The account number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.FirstName">
+      <summary>
+            The account's first name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IDownlineData.LastName">
+      <summary>
+            The account's last name.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Repositories.IDownlineRepository">
+      <summary>
+            A repository for retrieving downline-related data.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Repositories.IDownlineRepository.GetDownline(NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext)">
+      <summary>
+            Returns basic account data for a specified account's downline.
+            </summary>
+      <param name="context">The specification parameters for getting downline data.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="context != null" vb="context &lt;&gt; Nothing">context != null</requires>
+      <exception cref="T:System.ArgumentNullException">context == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="context.RootAccountId &gt; 0" vb="context.RootAccountId &gt; 0">context.RootAccountId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">context.RootAccountId &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="(() =&gt; {
+    {
+        if (context.get_MaxLevels.HasValue)
+        {
+            local_1 = context.get_MaxLevels;
+            push local_1.GetValueOrDefault() &gt;= 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()" vb="(() =&gt; {
+    If context.get_MaxLevels.HasValue Then
+    local_1 = context.get_MaxLevels
+    push local_1.GetValueOrDefault() &gt;= 0 AndAlso local_1.HasValue;
+    else    push 1;
+    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (context.get_MaxLevels.HasValue)
+        {
+            local_1 = context.get_MaxLevels;
+            push local_1.GetValueOrDefault() &gt;= 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">context.MaxLevels != null &amp;&amp; context.MaxLevels &lt; 0</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Repositories.IDownlineRepository.Search(NetSteps.Accounts.Downline.Common.Models.ISearchDownlineContext)">
+      <summary>
+            Returns basic account data for matching accounts in a specified account's downline.
+            </summary>
+      <param name="context">The specification parameters for searching downline data.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="context != null" vb="context &lt;&gt; Nothing">context != null</requires>
+      <exception cref="T:System.ArgumentNullException">context == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="context.RootAccountId &gt; 0" vb="context.RootAccountId &gt; 0">context.RootAccountId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">context.RootAccountId &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="context.Query != null" vb="context.Query &lt;&gt; Nothing">context.Query != null</requires>
+      <exception cref="T:System.ArgumentNullException">context.Query == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="context.Query.Length &gt; 0" vb="context.Query.Length &gt; 0">context.Query.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">context.Query.Length &lt;= 0</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Repositories.IDownlineRepository.GetUplineAccountIds(System.Int32)">
+      <summary>
+            Returns all account IDs in the specified account's upline.
+            </summary>
+      <param name="accountId">The account ID whose upline will be returned.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountId &gt; 0" vb="accountId &gt; 0">accountId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountId &lt;= 0</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Accounts.Downline.Common.Repositories.IDownlineRepository.GetDownlineAccountInfo(System.Int32,System.Int32)">
+      <summary>
+            Returns extended data related to an account inside another account's downline.
+            </summary>
+      <param name="rootAccountId">The root account ID whose downline contains the specified account.</param>
+      <param name="accountId">The account ID of the person whose info will be returned.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="rootAccountId &gt; 0" vb="rootAccountId &gt; 0">rootAccountId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">rootAccountId &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountId &gt; 0" vb="accountId &gt; 0">accountId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountId &lt;= 0</exception>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext">
+      <summary>
+            Specification parameters for getting downline data.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext.RootAccountId">
+      <summary>
+            The root account ID to begin the downline query.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext.MaxLevels">
+      <summary>
+            If specified, the maximum number of levels in the downline to include.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext.AccountStatusIds">
+      <summary>
+            If specified, the account status IDs to include.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.IGetDownlineContext.AccountTypeIds">
+      <summary>
+            If specified, the account type IDs to include.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Accounts.Downline.Common.Models.ISearchDownlineContext">
+      <summary>
+            Specification parameters for searching the downline.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.ISearchDownlineContext.RootAccountId">
+      <summary>
+            The root account ID to begin the downline search.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Accounts.Downline.Common.Models.ISearchDownlineContext.Query">
+      <summary>
+            A string containing one or more parts of the name(s) or account number(s) to search for.
+            </summary>
+    </member>
+  </members>
+</doc>

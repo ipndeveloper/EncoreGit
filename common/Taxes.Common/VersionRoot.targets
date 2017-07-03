@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This file provides version stamps used by the build.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Condition="Exists('$(MSBuildThisFileDirectory)Version.targets')" Project="$(MSBuildThisFileDirectory)Version.targets" />
+	<PropertyGroup>
+		<AssemblyInfoVersionFile>$(MSBuildProjectDirectory)\Properties\AssemblyInfo.version.cs</AssemblyInfoVersionFile>		
+		<VersionMajor Condition="'$(VersionMajor)' == ''">0</VersionMajor>
+		<VersionMinor Condition="'$(VersionMinor)' == ''">1</VersionMinor>
+		<VersionBuild Condition="'$(VersionBuild)' == ''">0</VersionBuild>
+		<VersionRevision Condition="'$(Configuration)' != 'Release'">1</VersionRevision>
+		<VersionRevision Condition="'$(CMVersionRevision)' != '' and '$(Configuration)' == 'Release' and $(CMBuild) != ''">$(CMVersionRevision)</VersionRevision>
+		<VersionRevision Condition="'$(VersionRevision)' == ''">0</VersionRevision>
+		<VersionInformationalSuffix Condition="'$(Configuration)' == 'Debug'">-$(USERNAME.Replace(" ", ""))</VersionInformationalSuffix>
+	</PropertyGroup>
+	
+	<UsingTask TaskName="GetSvnRevision" TaskFactory="PowershellTaskFactory"  AssemblyFile="$(BuildToolsRoot)3rdParty\MSBuild Extension Pack 4.0.8.0 Binaries\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll">
+        <ParameterGroup>
+			<VersionRoot Required="true" ParameterType="System.String" />
+            <ReturnValue Output="true" />
+        </ParameterGroup>
+        <Task>
+<![CDATA[
+		$log.LogMessage([Microsoft.Build.Framework.MessageImportance]"High", "VersionRoot is $versionRoot")
+		$innerVR = (Join-Path -Path (Split-Path $versionRoot) -ChildPath (Split-Path $versionRoot -Leaf))
+		$returnValue = ([xml](svn info $innerVR --xml)).info.entry.commit.revision
+		$log.LogMessage([Microsoft.Build.Framework.MessageImportance]"High", "Revision is $returnValue")
+]]>
+        </Task>
+    </UsingTask>	
+	
+	<Target Name="SvnCleanVersionFiles" BeforeTargets="BeforeClean">
+		<ItemGroup>
+			<FilesToDelete Include="$(MSBuildProjectDirectory)\**\*.version.cs" />
+		</ItemGroup>
+		<Delete 
+			Files="@(FilesToDelete)" 
+			ContinueOnError="true" 
+			TreatErrorsAsWarnings="true"/>
+	</Target>		
+
+	<!-- Targeted before 'BeforeBuild' so that the file is generated before MSBuild needs it. -->
+	<Target Name="SvnVersioning" BeforeTargets="BeforeBuild" Condition="!Exists('$(AssemblyInfoVersionFile)')">
+		<GetSvnRevision Condition="'$(VersionBuild)' == '0'" VersionRoot="$(MSBuildThisFileDirectory)">
+			<Output TaskParameter="ReturnValue" PropertyName="VersionBuild" />
+		</GetSvnRevision>
+		
+		<!-- Creates the AssemblyInfo.version.cs file -->
+		<ItemGroup>
+			<Line Include="line0"><Text>using System;</Text></Line>
+			<Line Include="line1"><Text>using System.Reflection;</Text></Line>
+			<Line Include="line2"><Text>[assembly: AssemblyFileVersion("$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)")]</Text></Line>
+			<Line Include="line3"><Text>[assembly: AssemblyVersion("$(VersionMajor).$(VersionMinor).$(VersionBuild).0")]</Text></Line>
+			<Line Include="line4"><Text>[assembly: AssemblyInformationalVersion("$(VersionMajor).$(VersionMinor).$(VersionBuild)$(VersionInformationalSuffix)")]</Text>
+			</Line>
+		</ItemGroup>
+						
+		<WriteLinesToFile File="$(AssemblyInfoVersionFile)" Lines="@(Line->'%(Text)')" Overwrite="true" />
+	</Target>
+	
+</Project>

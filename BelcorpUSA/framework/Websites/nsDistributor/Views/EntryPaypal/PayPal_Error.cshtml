@@ -1,0 +1,47 @@
+﻿<!-- Vista: Mostrar los mensajes de error el proceso de pasarela de pago con PayPal
+    Proyecto: nscore
+    Author: Juan Morales Olivares - CSTI * Año: 2016
+-->
+
+<div style="background-color: White;">
+    <h2>@Html.Term("ErrorPagamento", "Error Pagamento")</h2>
+    <div style="text-align:center">
+        <p style="font-size: 12px;">
+            @*@Html.Term("estado", "Estado"):<b>@ViewData["state"]</b><br />*@
+            @Html.Term("tipoError", "Tipo Error"):<b>@ViewData["message"]</b><br />
+        </p><br /><br />
+    </div>
+    <div>
+        <div style="text-align: center;">
+            <a href="javascript:void(0);" id="btnPaymentError" style="display: inline-block;" class="Button BigBlue  ">@Html.Term("Voltar", "Voltar")</a>
+            <br />
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+
+        $('#btnPaymentError').click(function ()
+        {
+
+            var sid = $("#hdid").val();
+            var sindice = $("#hdindice").val();
+
+            removePayment(sid, sindice);
+
+
+            $("#prepaymentWait").hide();
+            $("#paypalForm").hide();
+            $("#paymentWait").hide();
+            $('#PayPalPrePayment').jqmHide();
+        });
+
+
+        
+
+    });
+
+</script>
+

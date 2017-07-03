@@ -1,0 +1,98 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.DisbursementProfileModel
+<script type="text/javascript">
+    $(function () {
+
+        var DPAshow = JSON.parse('@ViewBag.DPA');
+
+        if (!DPAshow) {
+            $('#divAccount2').hide();
+            $('#percentToDepositAccount1').val('100').closest('tr').hide();
+        }
+
+        var count = true;
+
+        $('.AccountNumberInput').each(function () {
+            
+            if(count)
+                $(this).val('@ViewBag.AccountName').prop('disabled', true);
+            
+            count = false;
+        });
+
+        $('#btnNext').click(function () {
+            if (!AreProfilesValid()) {
+                hideLoading(t);
+                return false;
+            }
+
+            var t = this;
+            showLoading(t);
+
+            window.letUnload = false;
+            enrollmentMaster.postStepAction({
+                step: "AccountInfo",
+                stepAction: "DisbursementProfiles",
+                data: data,
+                showLoadingElement: $(this).parent(),
+                load: true
+            });
+        });
+    });
+
+    var enrollmentMaster = new function () {
+        this.getStepAction = function (options) {
+            this.stepAction($.extend({}, options, { type: 'GET' }));
+        };
+        this.postStepAction = function (options) {
+            this.stepAction($.extend({}, options, { type: 'POST' }));
+        };
+        this.stepAction = function (options) {
+            var defaults = {
+                type: 'GET',
+                step: undefined,
+                stepAction: '',
+                data: {},
+                showLoadingElement: undefined,
+                load: false,
+                loadElement: $('#enrollment'),
+                success: function () { }
+            };
+            var settings = $.extend({}, defaults, options);
+
+            if (settings.step === undefined)
+                return;
+            window.letUnload = false;
+
+            var url = settings.stepAction;
+
+            $.ajax({
+                url: url,
+                type: settings.type,
+                data: settings.data,
+                success: function (response) {
+                    window.location = 'WebSite';
+
+                },
+                error: function () {
+                    if (settings.showLoadingElement !== undefined)
+                        hideLoading(settings.showLoadingElement);
+                    showMessage(undefined, true);
+                }
+            });
+        };
+    };
+</script>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    
+    @Html.ValidationSummary(true)
+    <div class="FormContainer splitCol FL disbursementprofiles" style="width: 100%">
+        @Html.Partial("_DisbursementProfilesControl", Model.ViewModel)
+    </div>
+    <span class="ClearAll"></span>
+    <p class="FormSubmit enrollSectionBtns">
+        <a class="Button" id="btnNext" href="javascript:void(0);"><span>@Html.Term("Next")</span>
+        </a>
+    </p>
+    @Html.AntiForgeryToken()
+}

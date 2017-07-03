@@ -1,0 +1,47 @@
+﻿@model NetSteps.Web.Mvc.Controls.Models.PhotoCropperModel
+<div style="background-color: White; padding: 10px; width: 800px;">
+    @Html.Partial("PhotoCropper", Model)
+    <div class="center mb10 mt10">
+        <p>
+            <a href="javascript:void(0);" class="jqmClose">@Html.Term("Cancel")</a> <a id="btnSave"
+                href="javascript:void(0);" class="Button"><span>@Html.Term("SavePhoto", "Save Photo")
+                </span></a>
+            <img class="loading" src='@Url.Content("~/Content/Images/loader_36x36.gif")' alt="Saving..." style="height:31px;display:none;" />
+            @*<a href="@Href("~/Communication/Newsletters")" class="Button MoreOptions"><span>@Html.Term("Cancel", "Cancel")
+			</span></a>*@
+        </p>
+    </div>
+    <div>
+        <script type="text/javascript">
+            $(function () {
+                $('.qq-upload-button span.uploaderLabel').text('@Html.Term("ImgUploadHint", "Click here to upload a photo")');
+                $('#btnSave').click(function () {
+                    if (!$('#newsletterCrop').attr('src')) {
+                        showMessage('@Html.Term("PleaseUploadAPhoto", "Please upload a photo first.")', true);
+                        return false;
+                    }
+
+                    var data = {
+                        coords: $('#newsletterCoords').val(),
+                        imagePath: $('#newsletterCrop').attr('src')
+                    };
+
+                    $.post('/Communication/Newsletters/SavePhoto', data, function (response) {
+                        if (response.result) {
+                            var img = $('#uploadPhoto').find('img');
+                            if (img.size() > 0) {
+                                img.attr('src', response.imagePath);
+                            }
+                            else {
+                                $('#uploadPhoto').html('<img src="' + response.imagePath + '" alt="" id="distributorImage" />');
+                            }
+                            $('#uploadPhotoModal').jqmHide();
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>

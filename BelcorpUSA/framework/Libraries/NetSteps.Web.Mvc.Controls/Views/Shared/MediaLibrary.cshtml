@@ -1,0 +1,322 @@
+@model NetSteps.Web.Mvc.Controls.Models.MediaLibraryModel
+<script type="text/javascript">
+	//<![CDATA[
+    if (!window.qq || !window.qq.FileUploader) {
+        document.write(unescape('%3Cscript src="@Href("~/Resource/Scripts/fileuploader.js")" type="text/javascript"%3E%3C/script%3E%3Clink rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" /%3E'));
+    }
+    $(function () {
+        function resizeHeaders() {
+            $('#imagesBrowser .emLibraryContent').scroll();
+        }
+        $('#mediaLibrary').bind('resizeHeaders', resizeHeaders).trigger('resizeHeaders');
+
+        $('#folderBrowser li').click(function () {
+            var $this = $(this),
+                liText = $this.text(),
+                icons = ["&#xe02f;", "&#xe030;", "&#xe032;", "&#xe031;"],
+                dataIcon = icons[$this.index()];
+            $('.libraryHeader').html('<h3 data-icon="' + dataIcon + '">' + liText + '</h3>')
+            if (!$this.hasClass('current')) {
+                $('#folderBrowser li.current').removeClass('current');
+                $this.addClass('current');
+                $('#mediaLibrary .emLibraryBrowser').hide();
+                $('#mediaLibrary .emLibraryBrowser:eq(' + $this.index() + ')').show();
+                $('#mediaLibrary').trigger('resizeHeaders');
+            }
+        });
+
+        $('#mediaLibrary a.DeleteFile').live({
+            click: function () {
+                if (confirm('@Html.Term("AreYouSureYouWantToDeleteThisFile", "Are you sure you want to delete this file?")')) {
+                    var t = $(this);
+                    $.post('@Url.Content("~/Edit/DeleteFile")', { path: t.parent().find('.path').val() }, function (response) {
+                        if (response.result) {
+                            t.parent().parent().slideUp(function () {
+                                $(this).effect("highlight", { color: 'red' }, 3000).remove();
+                            });
+                        }
+                    });
+                }
+            },
+            mouseover: function () {
+                $(this).closest('.NS-fileInfo').addClass('NS-delete-hover');
+            },
+            mouseout: function () {
+                $(this).closest('.NS-fileInfo').removeClass('NS-delete-hover');
+            }
+        });
+
+        $('#txtSearchMedia').attr('autocomplete', 'off').watermark('@Html.JavascriptTerm("SearchFiles", "Search files...")').keyup(function () {
+            var val = $(this).val();
+            $('#mediaLibrary .NS-fileInfo').each(function () {
+                if (new RegExp(val, 'ig').test($(this).find('.NS-fileName').text())) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        $('#mediaLibrary input.emFileURL').live('click', function () {
+            $(this).select();
+        });
+
+        $('.changeViewIcon').click(function () {
+            var t = $(this);
+            if (!t.hasClass('active')) {
+                swapView($(this));
+                $('#mediaLibrary').trigger('resizeHeaders');
+            }
+        });
+        function swapView($e) {
+            $e.toggleClass('active', '').siblings().removeClass('active');
+            $('.emMediaLibrary').toggleClass('listView');
+            $('.NS-thumbnail').toggleClass('hide');
+        }
+
+        $('.NS-thumbnail').hover(function () {
+            var $this = $(this),
+                $preview = $this.find('.imagePreview'),
+                thumbPos = $this.closest('.NS-fileInfo').offset(),
+                containerPos = $this.closest('.emLibraryBrowser').offset(),
+                thumbOffset = {
+                    x: thumbPos.left - containerPos.left,
+                    y: thumbPos.top - containerPos.top
+                };
+            if ($preview.length == 0) {
+                var path = $this.find('img').attr('data-original'),
+                    imgPreview,
+                    posY = 'bottom',
+                    posX = 'right';
+                if (thumbOffset.x < 310) {
+                    posX = 'left';
+                }
+                if (thumbOffset.y < 310) {
+                    posY = 'top';
+                }
+                imgPreview = '<div class="imagePreview" style="' + posY + ':0;' + posX + ':0;' + '"><img src="' + path + '" alt="" /></div>';
+                $(imgPreview).hide().appendTo($this).toggle();
+            }
+            else {
+                $preview.toggle();
+            }
+        });
+
+
+        $('img.lazy').lazyload({
+            container: $('#imagesBrowser.emLibraryBrowser'),
+            skip_invisible: false,
+            load: function () { $('#mediaLibrary').trigger('resizeHeaders'); }
+        });
+
+        var uploader = new qq.FileUploader({
+            element: document.getElementById('uploadNewFile'),
+            action: '@Href(Model.UploadUrl)',
+            messages: {
+                typeError: '@Html.Term("InvalidExtension", "{0} has invalid extension. Only {1} are allowed.", "{file}", "{extensions}")',
+                sizeError: '@Html.Term("FileTooLarge", "{0} is too large, maximum file size is {1}.", "{file}", "{sizeLimit}")',
+                minSizeError: '@Html.Term("FileTooSmall", "{0} is too small, minimum file size is {1}.", "{file}", "{minSizeLimit}")',
+                emptyError: '@Html.Term("EmptyFile", "{0} is empty, please select files again without it.", "{file}")',
+                onLeave: '@Html.Term("FilesStillUploading", "The files are being uploaded, if you leave now the upload will be canceled.")'
+            },
+            template: '<div class="qq-uploader">' +
+					'<div class="qq-upload-drop-area"><span>@Html.Term("DropFilesHereToUpload", "Drop files here to upload")</span></div>' +
+					'<div class="qq-upload-button emButton NS-qq-upload NewFileWin">@Html.Term("UploadANewFile", "Upload a new file")</div>' +
+					'<div class="qq-max-file-size">@Html.Term("MaxFileSize", "Max file size"): @NetSteps.Common.Configuration.ConfigurationManager.MaxFileSize</div>' +
+					'<ul id="qqUploadList" class="qq-upload-list"></ul>' +
+				 '</div>',
+            fileTemplate: '<li>' +
+					'<span class="qq-upload-file"></span>' +
+					'<span class="qq-upload-spinner"></span>' +
+					'<span class="qq-upload-size"></span>' +
+					'<a class="qq-upload-cancel" href="javascript:void(0);">@Html.Term("Cancel")</a>' +
+					'<span class="qq-upload-failed-text">@Html.Term("Failed")</span>' +
+				'</li>',
+            onComplete: function (id, fileName, response) {
+                if (response.success) {
+                    var item = uploader._getItemByFileId(id), trueRegex = /\s*true\s*/i, allowImageInsert = trueRegex.test('@Model.AllowImageInsert'), generateSelectButtons = trueRegex.test('@Model.GenerateSelectButtons');
+                    var fileUrl = response.filePath;
+                    $(item).addClass(response.folder);
+                    $('#qqUploadList').addClass('hasFiles');
+                    //$('#qqUploadList li:contains(' + fileName + ')').addClass(response.folder);
+                    var hideClass = 'hide';
+                    if ($('.icon-iconView').hasClass('active')) {
+                        hideClass = '';
+                    }
+                    if (response.folder == 'images') {
+                        var newRow = $('<div class="NS-fileInfo">' +
+							'<div class="NS-removeLink"><input type="hidden" class="path" value="' + fileUrl + '" /><a class="emIconLink Delete DeleteFile NS-Delete" href="javascript:void(0);"><span>X</span></a></div>' +
+							'<div class="NS-fileName appended" title="' + fileName + '">' + fileName + '</div>' +
+							'<div class="NS-thumbnail ' + hideClass + '"><img width="300" src="file:///' + fileUrl + '" data-label="' + fileUrl + '" alt="' + fileName + '" /></div>\n' +
+							'<div class="NS-dateTime"><span>@Html.Term("MediaLibrary_UploadedTerm", "Uploaded"):</span>' + response.uploaded + '</div>' +
+							'<div class="NS-FL NS-filePath"><input type="text" value="' + fileUrl + '" class="emFileURL" /></div>' +
+                        //'<td><a class="emButton emSB" href="javascript:void(0);"><span>Insert</span></a></td>' +
+						'</div>');
+                        if (allowImageInsert || generateSelectButtons) {
+                            var cell = $('<div class="NS-FR NS-selectInsert"></div>');
+                            if (allowImageInsert) {
+                                cell.append('<a class="emButton emSB InsertFile" href="javascript:void(0);"><span>@Html.Term("Insert")</span></a><span class="NS-clr"></span>');
+                            }
+                            if (generateSelectButtons) {
+                                cell.append('<a class="emButton emSB SelectFile" href="javascript:void(0);"><span>@Html.Term("Select")</span></a><span class="NS-clr"></span>');
+                            }
+                            newRow.append(cell);
+                        }
+
+                        $('#imagesBrowser').scrollTop(0).find('.emLibraryContent').prepend(newRow);
+                        $('#mediaLibrary').trigger('resizeHeaders');
+                        newRow.hide().slideDown().effect("highlight", {}, 3000);
+                    } else {
+                        var newRow = $('<div class="NS-fileInfo">' +
+							'<div class="NS-removeLink"><input type="hidden" class="path" value="' + fileUrl + '" /><a class="emIconLink Delete DeleteFile NS-Delete" href="javascript:void(0);"><span>X</span></a></div>' +
+							'<div class="NS-fileName appended" title="' + fileName + '">' + fileName + '</div>' +
+							'<div class="NS-dateTime"><span>@Html.Term("MediaLibrary_UploadedTerm", "Uploaded"):</span>' + response.uploaded + '</div>' +
+							'<div class="NS-FL NS-filePath"><input type="text" value="' + fileUrl + '" class="emFileURL" /></div>' +
+						'</div>');
+
+                        if (generateSelectButtons) {
+                            newRow.append('<div class="NS-FR NS-selectInsert"><a class="emButton emSB SelectFile" href="javascript:void(0);"><span>@Html.Term("Select")</span></a><span class="NS-clr"></span></div>');
+                        }
+
+                        $('#' + response.folder + 'Browser').scrollTop(0).find('.emLibraryContent').prepend(newRow);
+                        $('#mediaLibrary').trigger('resizeHeaders');
+                        newRow.hide().slideDown().effect("highlight", {}, 3000);
+                    }
+                }
+            }
+        });
+    });
+	//]]>
+</script>
+
+<div style="z-index: 3000;" id="mediaLibrary" class="jqmWindow LModal">
+    <div class="mContent NS-modalContent">
+        <div id="MediaLibraryContainer">
+            <div id="MediaLibraryHeader">
+                <h1 class="NS-FL">
+                    @Html.Term("MediaLibrary", "Media Library")</h1>
+                <a class="NS-FR emIconLink Delete DeleteFile jqmClose" href="javascript:void(0);"></a>
+                <span class="NS-clr"></span>
+                <div class="UI-darkBg libraryToolBar">
+                    <div class="NS-FL libraryHeader">
+                        <h3 data-icon="&#xe02f;">@Html.Term("Images")</h3>
+                    </div>
+                    <div class="LibrarySearch NS-FancySearch NS-pad10">
+                        <input id="txtSearchMedia" type="text" class="NS-pad5" />
+                        <a href="javascript:void(0);" id="ListView_Button" class="changeViewIcon icon-textView active" data-icon="&#xe02d;"></a>
+                        <a href="javascript:void(0);" id="iconView_Button" class="changeViewIcon icon-iconView" data-icon="&#xe015;"></a>
+                        <span class="NS-clr"></span>
+                    </div>
+                    <span class="NS-clr"></span>
+                </div>
+            </div>
+            <div class="emMediaLibrary listView">
+                <div class="FL emLibraryFolders">
+                    <ul id="folderBrowser" class="NS-flatList NS-listNav">
+                        <li class="current"><a href="javascript:void(0);"><span data-icon="&#xe033;" class="icon-folder">
+                            @Html.Term("EncoreMediaLibraryFolder_Images","Images")</span></a></li>
+                        <li><a href="javascript:void(0);"><span data-icon="&#xe033;" class="icon-folder">
+                            @Html.Term("EncoreMediaLibraryFolder_Videos", "Videos")</span></a></li>
+                        <li><a href="javascript:void(0);"><span data-icon="&#xe033;" class="icon-folder">
+                            @Html.Term("EncoreMediaLibraryFolder_Flash", "Flash")</span></a></li>
+                        <li><a href="javascript:void(0);"><span data-icon="&#xe033;" class="icon-folder">
+                            @Html.Term("EncoreMediaLibraryFolder_Documents", "Documents")</span></a></li>
+                    </ul>
+                </div>
+                <div id="imagesBrowser" class="NS-FL emLibraryBrowser">
+                    <div class="emLibraryContent emGrid">
+                        @if (System.IO.Directory.Exists(Model.SystemBaseUrl.AppendBackSlash() + "Images"))
+                        {
+                            foreach (var file in System.IO.Directory.GetFiles(Model.SystemBaseUrl.AppendBackSlash() + "Images"))
+                            {
+                                var fileName = System.IO.Path.GetFileName(file);
+                                var url = file.AbsoluteUploadPathToWebUploadPath();
+                                if (fileName != "Thumbs.db")
+                                {
+                                    <div class="NS-fileInfo">
+                                        <div class="NS-removeLink">
+                                            <input type="hidden" class="path" value="@url" />
+                                            <input type="hidden" class="absolutePath" value="@file.AbsoluteUploadPathToAbsoluteWebUploadPath()" />
+                                            <a class="emIconLink Delete DeleteFile NS-Delete" href="javascript:void(0);"><span>X</span></a>
+                                        </div>
+                                        <div class="NS-fileName" title="@fileName">
+                                            @fileName
+                                        </div>
+                                        <div class="NS-thumbnail hide">
+                                        @{ string thumbUrl = Url.Action("ThumbImage", "MediaLibrary", new { path = file, width = 225, height = 225, Area = "" }); }
+                                            <img class="lazy" width="225" src="" data-original="@thumbUrl" data-label="@url" alt="@fileName" />
+                                        </div>
+                                        <div class="NS-dateTime">
+                                            <span>@Html.Term("MediaLibrary_UploadedTerm", "Uploaded"):</span>@System.IO.File.GetCreationTime(file)
+                                        </div>
+                                        <div class="NS-FL NS-filePath">
+                                            <input type="text" value="@url" class="emFileURL" />
+                                        </div>
+                                        @if (Model.AllowImageInsert || Model.GenerateSelectButtons)
+                                        {
+                                            <div class="NS-FR NS-selectInsert">
+                                                @if (Model.AllowImageInsert)
+                                                {
+                                                    <a class="emButton emSB InsertFile" href="javascript:void(0);"><span>@Html.Term("Insert")</span></a>
+                                                }
+                                                @if (Model.GenerateSelectButtons)
+                                                {
+                                                    <a class="emButton emSB SelectFile" href="javascript:void(0);"><span>@Html.Term("Select")</span></a>
+                                                }
+                                            </div>
+                                        }
+                                        <span class="NS-clr"></span>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                @foreach (var folder in new string[] { "Videos", "Flash", "Documents" })
+                {
+                    <div id="@folder.ToLower()Browser" class="FL emLibraryBrowser" style="display: none;">
+                        <div class="emGrid emLibraryContent">
+                            @if (System.IO.Directory.Exists(Model.SystemBaseUrl.AppendBackSlash() + folder))
+                            {
+                                foreach (var file in System.IO.Directory.GetFiles(Model.SystemBaseUrl.AppendBackSlash() + folder))
+                                {
+                                    var fileName = System.IO.Path.GetFileName(file);
+                                    var url = file.AbsoluteUploadPathToWebUploadPath();
+                                    if (fileName != "Thumbs.db")
+                                    {
+                                        <div class="NS-fileInfo">
+                                            <div class="NS-removeLink">
+                                                <input type="hidden" class="path" value="@url" />
+                                                <input type="hidden" class="absolutePath" value="@file.AbsoluteUploadPathToAbsoluteWebUploadPath()" />
+                                                <a class="emIconLink Delete DeleteFile NS-Delete" href="javascript:void(0);"><span>X</span></a>
+                                            </div>
+                                            <div class="NS-fileName" title="@fileName">
+                                                @fileName
+                                            </div>
+                                            <div class="NS-dateTime">
+                                                <span>@Html.Term("MediaLibrary_UploadedTerm", "Uploaded"):</span>@System.IO.File.GetCreationTime(file)
+                                            </div>
+                                            <div class="NS-FL NS-filePath">
+                                                <input type="text" value="@url" class="emFileURL" />
+                                            </div>
+                                            @if (Model.GenerateSelectButtons)
+                                            {
+                                                <div class="NS-FR NS-selectInsert">
+                                                    <a class="emButton emSB SelectFile" href="javascript:void(0);"><span>@Html.Term("Select")</span></a>
+                                                </div>
+                                            }
+                                            <span class="NS-clr"></span>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+                <div id="uploadNewFile" class="NS-FR">
+                </div>
+                <span class="clr"></span>
+            </div>
+        </div>
+    </div>
+</div>

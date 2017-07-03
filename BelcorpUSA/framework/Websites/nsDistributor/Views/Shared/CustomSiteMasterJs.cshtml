@@ -1,0 +1,59 @@
+﻿<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $('#txtUsername,#txtPassword').keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#btnLogin').click();
+        });
+        //$('#loginContainer').hide();
+        $('#btnShowLogin').click(function (e) {
+            $('#loginContainer').show(300, function () {
+                $('#txtUsername').focus();
+            });
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            $(document).mousedown(function (e) {
+                var resPos = $('#loginContainer').offset();
+                resPos.bottom = resPos.top + $('#loginContainer').outerHeight();
+                resPos.right = resPos.left + $('#loginContainer').outerWidth();
+
+                if (e.pageY < resPos.top || e.pageY > resPos.bottom || e.pageX < resPos.left || e.pageX > resPos.right) {
+                    $('#loginContainer').hide(300);
+                    $(document).unbind('mousedown');
+                }
+            });
+        });
+        $('#btnLogin').click(function () {
+            var t = $(this);
+            showLoading(t, { float: 'left' });
+            $('#invalidLogin').hide();
+            NS.post({
+                url: '@Url.Resolve("~/Login")',
+                data: {
+                    username: $('#txtUsername').val(),
+                    password: $('#txtPassword').val()
+                },
+                success: function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        $.cookie('isReload', 'True');
+                        if (response.returnUrl) {
+                            openLink(response);
+                        } else if (/^\/Shop/i.test(window.location.pathname) || response.reload)
+                            window.location.reload();
+                        else {
+                            loggedIn(response.name);
+                        }
+                    } else {
+                        $('#invalidLogin').show();
+                    }
+                },
+                error: function () {
+                    hideLoading(t);
+                    $('#invalidLogin').show();
+                }
+            });
+        });
+    });
+//]]>
+</script>

@@ -1,0 +1,102 @@
+@model dynamic
+<script type="text/javascript">
+	//<![CDATA[
+    //    if (!window.jQuery.jqm) {
+   //        document.write(unescape('%3Cscript src="@Url.Content("~/Resource/Scripts/jqModal.js")" type="text/javascript"%3E%3C/script%3E%3Clink rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jqModal.css")" /%3E'));
+    //    }
+    $(function () {
+        $('#messageCenter').messageCenter({ iconPath: '@Url.Content("~/Resource/Content/Images/icon-Alert.png")', includeCustomExitIcon: true });
+        
+        $(document).ajaxComplete(function (event, request, settings) {
+            try {
+                var response = $.parseJSON(request.responseText)
+                if (response && response.MessageHandler) {
+                    $.each(response.MessageHandler.Errors, function() {
+                        AddErrorMessage(this);
+                    });
+
+                    $.each(response.MessageHandler.SuccessfulResults, function() {
+                        AddSuccessMessage(this);
+                    });
+
+                    $.each(response.MessageHandler.NoticeResults, function() {
+                        AddNotificationMessage(this);
+                    });
+                }
+            }
+            catch(e) {}
+        });
+        
+        @{var messageHandler = NetSteps.Web.Mvc.Business.Controllers.BaseController.MessageHandler;}
+        @if (messageHandler.HasAnyMessages)
+        {
+            foreach (string msg in messageHandler.Errors)
+            {
+                @:AddErrorMessage('@(HttpUtility.JavaScriptStringEncode(msg))');
+            }
+            foreach (string msg in messageHandler.SuccessfulResults)
+            {
+                @:AddSuccessMessage('@(HttpUtility.JavaScriptStringEncode(msg))');
+            }
+            foreach (string msg in messageHandler.NoticeResults)
+            {
+                @:AddNotificationMessage('@(HttpUtility.JavaScriptStringEncode(msg))');
+            }
+            messageHandler.Clear();
+        }
+    });
+
+    /// <summary>This legacy method will clear the existing messages before showing the given message.</summary>
+    function showMessage(message, isError) {
+        $('#messageCenter').messageCenter('clearAllMessages');
+        if (isError) {
+            AddErrorMessage(message);
+        }
+        else {
+            AddSuccessMessage(message);
+        }
+    }
+
+    /// <summary>Adds and shows an additional error message to the message center.</summary>
+    function AddErrorMessage(message) {
+        if (message === undefined) {
+            message = '@HttpUtility.JavaScriptStringEncode(Html.Term("GenericErrorMessage", "An error occurred. Please try again later."))';
+        }
+
+        $('#messageCenter').messageCenter('addMessage', message, { additionalCSSClasses: 'thisIsNowAnErrorMessage' });
+        $('#messageCenterModal').show();
+    }
+
+    /// <summary>Adds and shows an additional success message to the message center.</summary>
+    function AddSuccessMessage(message) {
+        if (message === undefined) {
+            return false;
+        }
+
+        $('#messageCenter').messageCenter('addMessage', message, { additionalCSSClasses: 'UI-icon icon-check', fadeOutTimeout: 3000 });
+        $('#messageCenterModal').show();
+    }
+
+    /// <summary>Adds and shows an additional notification message to the message center.</summary>
+    function AddNotificationMessage(message) {
+        if (message === undefined) {
+            return false;
+        }
+
+        //$('#messageCenter').messageCenter('addMessage', message, { iconPath: '', additionalCSSClasses: 'thisIsNowANotificationMessage', checkForIcon: true });
+        $('#messageCenter').messageCenter('addMessage', message, { additionalCSSClasses: 'UI-icon icon-exclamation thisIsNowANotificationMessage' });
+        $('#messageCenterModal').show();
+    }
+
+    /// <summary>Clears and hides all messages in the message center.</summary>
+    function hideMessage() {
+        $('#messageCenter').messageCenter('clearAllMessages');
+        $('#messageCenterModal').hide();
+    }
+	//]]>
+</script>
+
+<div id="messageCenterModal">
+    <div id="messageCenter">
+    </div>
+</div>

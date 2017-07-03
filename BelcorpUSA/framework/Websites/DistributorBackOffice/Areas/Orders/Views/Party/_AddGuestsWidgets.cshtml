@@ -1,0 +1,38 @@
+﻿@model NetSteps.Data.Entities.Party
+<div class="Widget guestList">
+    <div class="WidgetTitle UI-btn txtShadowDark">
+        <span class="Txt UI-btn">@Html.Term("MyGroups", "My Groups")</span>
+    </div>
+    <div class="WidgetBody">
+        <ul id="myGroups" class="lr listNav">
+            @{
+				var distributionList = DistributorBackOffice.Infrastructure.DistributionListCacheHelper.GetDistributionListByAccountID(CoreContext.CurrentAccount.AccountID);
+            }
+            @if (distributionList != null)
+            {
+                foreach (var group in distributionList.Where(g => g.Active))
+                {
+                <li><a href="javascript:void(0);" class="AddGroup">@group.Name<input type="hidden" class="groupId" value="@group.DistributionListID" /></a></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+@{var guests = Model.PartyGuests.Where(pg => !Model.Order.OrderCustomers.Any(oc => oc.AccountInfo.EmailAddress == pg.EmailAddress || oc.AccountID == pg.AccountID));}
+@if (guests.Count() > 0)
+{
+<div class="Widget guestList">
+    <div class="WidgetTitle UI-btn txtShadowDark">
+        <span class="Txt UI-btn">@Html.Term("InvitedGuests", "Invited Guests")</span>
+    </div>
+    <div class="WidgetBody">
+        <ul id="invitedGuests" class="lr listNav">
+            @foreach (var guest in guests)
+            {
+                <li><a href="javascript:void(0);" class="AddGuest">@NetSteps.Data.Entities.Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, CoreContext.CurrentCultureInfo.Name)<input type="hidden" class="guestId" value="@guest.PartyGuestID" /></a></li>
+            }
+        </ul>
+    </div>
+</div>
+}

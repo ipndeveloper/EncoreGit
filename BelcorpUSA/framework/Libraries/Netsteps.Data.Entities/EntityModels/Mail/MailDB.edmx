@@ -1,0 +1,1150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="NSFramework_Mail_TestModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="NSFramework_Mail_TestModelStoreContainer">
+          <EntitySet Name="AddressTypes" EntityType="NSFramework_Mail_TestModel.Store.AddressTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailAttachments" EntityType="NSFramework_Mail_TestModel.Store.MailAttachments" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailFolderTypes" EntityType="NSFramework_Mail_TestModel.Store.MailFolderTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageAttachments" EntityType="NSFramework_Mail_TestModel.Store.MailMessageAttachments" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageGroupAddresses" EntityType="NSFramework_Mail_TestModel.Store.MailMessageGroupAddresses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageGroups" EntityType="NSFramework_Mail_TestModel.Store.MailMessageGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageGroupStatusAudit" EntityType="NSFramework_Mail_TestModel.Store.MailMessageGroupStatusAudit" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessagePriority" EntityType="NSFramework_Mail_TestModel.Store.MailMessagePriority" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageRecipientEvents" EntityType="NSFramework_Mail_TestModel.Store.MailMessageRecipientEvents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageRecipientEventTypes" EntityType="NSFramework_Mail_TestModel.Store.MailMessageRecipientEventTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessages" EntityType="NSFramework_Mail_TestModel.Store.MailMessages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MailMessageTypes" EntityType="NSFramework_Mail_TestModel.Store.MailMessageTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MessageGroupStatus" EntityType="NSFramework_Mail_TestModel.Store.MessageGroupStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RecipientStatus" EntityType="NSFramework_Mail_TestModel.Store.RecipientStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RecipientTypes" EntityType="NSFramework_Mail_TestModel.Store.RecipientTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SitesAccounts" EntityType="NSFramework_Mail_TestModel.Store.SitesAccounts" store:Type="Views" store:Schema="dbo" store:Name="SitesAccounts">
+            <DefiningQuery>SELECT 
+      [SitesAccounts].[AccountID] AS [AccountID], 
+      [SitesAccounts].[AccountNumber] AS [AccountNumber], 
+      [SitesAccounts].[AccountTypeID] AS [AccountTypeID], 
+      [SitesAccounts].[AccountStatusID] AS [AccountStatusID], 
+      [SitesAccounts].[PreferedContactMethodID] AS [PreferedContactMethodID], 
+      [SitesAccounts].[DefaultLanguageID] AS [DefaultLanguageID], 
+      [SitesAccounts].[UserID] AS [UserID], 
+      [SitesAccounts].[FirstName] AS [FirstName], 
+      [SitesAccounts].[MiddleName] AS [MiddleName], 
+      [SitesAccounts].[LastName] AS [LastName], 
+      [SitesAccounts].[NickName] AS [NickName], 
+      [SitesAccounts].[CoApplicant] AS [CoApplicant], 
+      [SitesAccounts].[EmailAddress] AS [EmailAddress], 
+      [SitesAccounts].[SponsorID] AS [SponsorID], 
+      [SitesAccounts].[EnrollerID] AS [EnrollerID], 
+      [SitesAccounts].[EnrollmentDateUTC] AS [EnrollmentDateUTC], 
+      [SitesAccounts].[IsTaxExempt] AS [IsTaxExempt], 
+      [SitesAccounts].[TaxNumber] AS [TaxNumber], 
+      [SitesAccounts].[IsEntity] AS [IsEntity], 
+      [SitesAccounts].[EntityName] AS [EntityName], 
+      [SitesAccounts].[AccountStatusChangeReasonID] AS [AccountStatusChangeReasonID], 
+      [SitesAccounts].[LastRenewalUTC] AS [LastRenewalUTC], 
+      [SitesAccounts].[NextRenewalUTC] AS [NextRenewalUTC], 
+      [SitesAccounts].[ReceivedApplication] AS [ReceivedApplication], 
+      [SitesAccounts].[IsTaxExemptVerified] AS [IsTaxExemptVerified], 
+      [SitesAccounts].[DateApplicationReceivedUTC] AS [DateApplicationReceivedUTC], 
+      [SitesAccounts].[BirthdayUTC] AS [BirthdayUTC], 
+      [SitesAccounts].[GenderID] AS [GenderID], 
+      [SitesAccounts].[DataVersion] AS [DataVersion], 
+      [SitesAccounts].[ModifiedByUserID] AS [ModifiedByUserID], 
+      [SitesAccounts].[DateCreatedUTC] AS [DateCreatedUTC], 
+      [SitesAccounts].[CreatedByUserID] AS [CreatedByUserID], 
+      [SitesAccounts].[AccountSourceID] AS [AccountSourceID]
+      FROM [dbo].[SitesAccounts] AS [SitesAccounts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="SitesCampaignSubscribers" EntityType="NSFramework_Mail_TestModel.Store.SitesCampaignSubscribers" store:Type="Views" store:Schema="dbo" store:Name="SitesCampaignSubscribers">
+            <DefiningQuery>SELECT 
+      [SitesCampaignSubscribers].[CampaignSubscriberID] AS [CampaignSubscriberID], 
+      [SitesCampaignSubscribers].[CampaignID] AS [CampaignID], 
+      [SitesCampaignSubscribers].[AddedByAccountID] AS [AddedByAccountID], 
+      [SitesCampaignSubscribers].[AccountID] AS [AccountID], 
+      [SitesCampaignSubscribers].[DateAddedUTC] AS [DateAddedUTC]
+      FROM [dbo].[SitesCampaignSubscribers] AS [SitesCampaignSubscribers]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_MailMessageGroupAddresses_MailMessageGroups" Association="NSFramework_Mail_TestModel.Store.FK_MailMessageGroupAddresses_MailMessageGroups">
+            <End Role="MailMessageGroups" EntitySet="MailMessageGroups" />
+            <End Role="MailMessageGroupAddresses" EntitySet="MailMessageGroupAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageGroups_MailMessages" Association="NSFramework_Mail_TestModel.Store.FK_MailMessageGroups_MailMessages">
+            <End Role="MailMessages" EntitySet="MailMessages" />
+            <End Role="MailMessageGroups" EntitySet="MailMessageGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageGroupStatusAudit_MailMessageGroupID" Association="NSFramework_Mail_TestModel.Store.FK_MailMessageGroupStatusAudit_MailMessageGroupID">
+            <End Role="MailMessageGroups" EntitySet="MailMessageGroups" />
+            <End Role="MailMessageGroupStatusAudit" EntitySet="MailMessageGroupStatusAudit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageRecipientEvents_MailMessageGroupAddresses" Association="NSFramework_Mail_TestModel.Store.FK_MailMessageRecipientEvents_MailMessageGroupAddresses">
+            <End Role="MailMessageGroupAddresses" EntitySet="MailMessageGroupAddresses" />
+            <End Role="MailMessageRecipientEvents" EntitySet="MailMessageRecipientEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes" Association="NSFramework_Mail_TestModel.Store.FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes">
+            <End Role="MailMessageRecipientEventTypes" EntitySet="MailMessageRecipientEventTypes" />
+            <End Role="MailMessageRecipientEvents" EntitySet="MailMessageRecipientEvents" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AddressTypes">
+          <Key>
+            <PropertyRef Name="AddressTypeID" />
+          </Key>
+          <Property Name="AddressTypeID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="MailAttachments">
+          <Key>
+            <PropertyRef Name="MailAttachmentID" />
+          </Key>
+          <Property Name="MailAttachmentID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Size" Type="int" />
+        </EntityType>
+        <EntityType Name="MailFolderTypes">
+          <Key>
+            <PropertyRef Name="MailFolderTypeID" />
+          </Key>
+          <Property Name="MailFolderTypeID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="MailMessageAttachments">
+          <Key>
+            <PropertyRef Name="MailMessageAttachmentID" />
+          </Key>
+          <Property Name="MailMessageAttachmentID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageID" Type="int" Nullable="false" />
+          <Property Name="MailAttachmentID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MailMessageGroupAddresses">
+          <Key>
+            <PropertyRef Name="MailMessageGroupAddressID" />
+          </Key>
+          <Property Name="MailMessageGroupAddressID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageGroupID" Type="int" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AddressTypeID" Type="smallint" />
+          <Property Name="RecipientTypeID" Type="smallint" />
+          <Property Name="RecipientStatusID" Type="smallint" />
+          <Property Name="AccountID" Type="int" />
+        </EntityType>
+        <EntityType Name="MailMessageGroups">
+          <Key>
+            <PropertyRef Name="MailMessageGroupID" />
+          </Key>
+          <Property Name="MailMessageGroupID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageID" Type="int" Nullable="false" />
+          <Property Name="MessageGroupStatusID" Type="smallint" />
+          <Property Name="AttemptCount" Type="int" Nullable="false" />
+          <Property Name="RetryTimeUTC" Type="datetime" />
+          <Property Name="IsOriginal" Type="bit" />
+          <Property Name="tmpAccountID" Type="int" />
+        </EntityType>
+        <EntityType Name="MailMessageGroupStatusAudit">
+          <Key>
+            <PropertyRef Name="MailMessageGroupStatusAuditID" />
+          </Key>
+          <Property Name="MailMessageGroupStatusAuditID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageGroupID" Type="int" Nullable="false" />
+          <Property Name="MessageGroupStatusID" Type="smallint" />
+          <Property Name="AttemptCount" Type="int" Nullable="false" />
+          <Property Name="RetryTimeUTC" Type="datetime" />
+          <Property Name="DateAddedUTC" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MailMessagePriority">
+          <Key>
+            <PropertyRef Name="MailMessagePriorityID" />
+          </Key>
+          <Property Name="MailMessagePriorityID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="MailMessageRecipientEvents">
+          <Key>
+            <PropertyRef Name="MailMessageRecipientEventID" />
+          </Key>
+          <Property Name="MailMessageRecipientEventID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageGroupAddressID" Type="int" Nullable="false" />
+          <Property Name="MailMessageRecipientEventTypeID" Type="smallint" Nullable="false" />
+          <Property Name="DateCreatedUTC" Type="datetime" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="500" />
+          <Property Name="Url" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="MailMessageRecipientEventTypes">
+          <Key>
+            <PropertyRef Name="MailMessageRecipientEventTypeID" />
+          </Key>
+          <Property Name="MailMessageRecipientEventTypeID" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="TermName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MailMessages">
+          <Key>
+            <PropertyRef Name="MailMessageID" />
+          </Key>
+          <Property Name="MailMessageID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="Body" Type="nvarchar(max)" />
+          <Property Name="HTMLBody" Type="nvarchar(max)" />
+          <Property Name="DateAddedUTC" Type="datetime" Nullable="false" />
+          <Property Name="FromAddress" Type="nvarchar" MaxLength="255" />
+          <Property Name="FromNickName" Type="nvarchar" MaxLength="255" />
+          <Property Name="MailAccountID" Type="int" />
+          <Property Name="IsOutbound" Type="bit" Nullable="false" />
+          <Property Name="MailMessageTypeID" Type="smallint" Nullable="false" />
+          <Property Name="BeenRead" Type="bit" Nullable="false" />
+          <Property Name="MailMessagePriorityID" Type="smallint" Nullable="false" />
+          <Property Name="VisualTemplateID" Type="int" />
+          <Property Name="MailFolderTypeID" Type="smallint" Nullable="false" />
+          <Property Name="AttachmentUniqueID" Type="nvarchar" MaxLength="36" />
+          <Property Name="Locked" Type="bit" />
+          <Property Name="SiteID" Type="int" />
+          <Property Name="CampaignActionID" Type="int" />
+          <Property Name="EnableEventTracking" Type="bit" Nullable="false" />
+          <Property Name="ReplyToAddress" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="MailMessageTypes">
+          <Key>
+            <PropertyRef Name="MailMessageTypeID" />
+          </Key>
+          <Property Name="MailMessageTypeID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="MessageGroupStatus">
+          <Key>
+            <PropertyRef Name="MessageGroupStatusID" />
+          </Key>
+          <Property Name="MessageGroupStatusID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="RecipientStatus">
+          <Key>
+            <PropertyRef Name="RecipientStatusID" />
+          </Key>
+          <Property Name="RecipientStatusID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="RecipientTypes">
+          <Key>
+            <PropertyRef Name="RecipientTypeID" />
+          </Key>
+          <Property Name="RecipientTypeID" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'MicheMail_1_0_2.dbo.SitesAccounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="SitesAccounts">
+          <Key>
+            <PropertyRef Name="AccountID" />
+            <PropertyRef Name="AccountTypeID" />
+            <PropertyRef Name="AccountStatusID" />
+            <PropertyRef Name="DefaultLanguageID" />
+            <PropertyRef Name="IsEntity" />
+            <PropertyRef Name="ReceivedApplication" />
+            <PropertyRef Name="IsTaxExemptVerified" />
+            <PropertyRef Name="DataVersion" />
+            <PropertyRef Name="DateCreatedUTC" />
+          </Key>
+          <Property Name="AccountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="100" />
+          <Property Name="AccountTypeID" Type="smallint" Nullable="false" />
+          <Property Name="AccountStatusID" Type="smallint" Nullable="false" />
+          <Property Name="PreferedContactMethodID" Type="int" />
+          <Property Name="DefaultLanguageID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CoApplicant" Type="nvarchar" MaxLength="50" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="320" />
+          <Property Name="SponsorID" Type="int" />
+          <Property Name="EnrollerID" Type="int" />
+          <Property Name="EnrollmentDateUTC" Type="datetime" />
+          <Property Name="IsTaxExempt" Type="bit" />
+          <Property Name="TaxNumber" Type="nvarchar" MaxLength="60" />
+          <Property Name="IsEntity" Type="bit" Nullable="false" />
+          <Property Name="EntityName" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountStatusChangeReasonID" Type="smallint" />
+          <Property Name="LastRenewalUTC" Type="datetime" />
+          <Property Name="NextRenewalUTC" Type="datetime" />
+          <Property Name="ReceivedApplication" Type="bit" Nullable="false" />
+          <Property Name="IsTaxExemptVerified" Type="bit" Nullable="false" />
+          <Property Name="DateApplicationReceivedUTC" Type="datetime" />
+          <Property Name="BirthdayUTC" Type="datetime" />
+          <Property Name="GenderID" Type="smallint" />
+          <Property Name="DataVersion" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="int" />
+          <Property Name="DateCreatedUTC" Type="datetime" Nullable="false" />
+          <Property Name="CreatedByUserID" Type="int" />
+          <Property Name="AccountSourceID" Type="smallint" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'MicheMail_1_0_2.dbo.SitesCampaignSubscribers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="SitesCampaignSubscribers">
+          <Key>
+            <PropertyRef Name="CampaignSubscriberID" />
+            <PropertyRef Name="CampaignID" />
+            <PropertyRef Name="AddedByAccountID" />
+            <PropertyRef Name="AccountID" />
+            <PropertyRef Name="DateAddedUTC" />
+          </Key>
+          <Property Name="CampaignSubscriberID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignID" Type="int" Nullable="false" />
+          <Property Name="AddedByAccountID" Type="int" Nullable="false" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="DateAddedUTC" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_MailMessageGroupAddresses_MailMessageGroups">
+          <End Role="MailMessageGroups" Type="NSFramework_Mail_TestModel.Store.MailMessageGroups" Multiplicity="1" />
+          <End Role="MailMessageGroupAddresses" Type="NSFramework_Mail_TestModel.Store.MailMessageGroupAddresses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroups">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupAddresses">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageGroups_MailMessages">
+          <End Role="MailMessages" Type="NSFramework_Mail_TestModel.Store.MailMessages" Multiplicity="1" />
+          <End Role="MailMessageGroups" Type="NSFramework_Mail_TestModel.Store.MailMessageGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessages">
+              <PropertyRef Name="MailMessageID" />
+            </Principal>
+            <Dependent Role="MailMessageGroups">
+              <PropertyRef Name="MailMessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageGroupStatusAudit_MailMessageGroupID">
+          <End Role="MailMessageGroups" Type="NSFramework_Mail_TestModel.Store.MailMessageGroups" Multiplicity="1" />
+          <End Role="MailMessageGroupStatusAudit" Type="NSFramework_Mail_TestModel.Store.MailMessageGroupStatusAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroups">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupStatusAudit">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageRecipientEvents_MailMessageGroupAddresses">
+          <End Role="MailMessageGroupAddresses" Type="NSFramework_Mail_TestModel.Store.MailMessageGroupAddresses" Multiplicity="1" />
+          <End Role="MailMessageRecipientEvents" Type="NSFramework_Mail_TestModel.Store.MailMessageRecipientEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroupAddresses">
+              <PropertyRef Name="MailMessageGroupAddressID" />
+            </Principal>
+            <Dependent Role="MailMessageRecipientEvents">
+              <PropertyRef Name="MailMessageGroupAddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes">
+          <End Role="MailMessageRecipientEventTypes" Type="NSFramework_Mail_TestModel.Store.MailMessageRecipientEventTypes" Multiplicity="1" />
+          <End Role="MailMessageRecipientEvents" Type="NSFramework_Mail_TestModel.Store.MailMessageRecipientEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageRecipientEventTypes">
+              <PropertyRef Name="MailMessageRecipientEventTypeID" />
+            </Principal>
+            <Dependent Role="MailMessageRecipientEvents">
+              <PropertyRef Name="MailMessageRecipientEventTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="usp_DeleteMailMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailMessageID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetAllMessageHeadersByFolder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailFolderTypeID" Type="int" Mode="In" />
+          <Parameter Name="MailAccountID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_MailMessageMarkRead" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailMessageID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_MailMessageMoveFolder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailMessageID" Type="int" Mode="In" />
+          <Parameter Name="MailFolderTypeID" Type="smallint" Mode="In" />
+        </Function>
+        <Function Name="usp_MailMessageSelect" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailMessageID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_PurgeFolder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MailAccountID" Type="int" Mode="In" />
+          <Parameter Name="MailFolderTypeID" Type="smallint" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NSFramework_Mail_TestModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MailEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AddressTypes" EntityType="NSFramework_Mail_TestModel.AddressType" />
+          <EntitySet Name="MailAttachments" EntityType="NSFramework_Mail_TestModel.MailAttachment" />
+          <EntitySet Name="MailFolderTypes" EntityType="NSFramework_Mail_TestModel.MailFolderType" />
+          <EntitySet Name="MailMessageAttachments" EntityType="NSFramework_Mail_TestModel.MailMessageAttachment" />
+          <EntitySet Name="MailMessageGroupAddresses" EntityType="NSFramework_Mail_TestModel.MailMessageGroupAddress" />
+          <EntitySet Name="MailMessageGroups" EntityType="NSFramework_Mail_TestModel.MailMessageGroup" />
+          <EntitySet Name="MailMessageGroupStatusAudits" EntityType="NSFramework_Mail_TestModel.MailMessageGroupStatusAudit" />
+          <EntitySet Name="MailMessagePriorities" EntityType="NSFramework_Mail_TestModel.MailMessagePriority" />
+          <EntitySet Name="MailMessageTypes" EntityType="NSFramework_Mail_TestModel.MailMessageType" />
+          <EntitySet Name="MessageGroupStatus1" EntityType="NSFramework_Mail_TestModel.MessageGroupStatus" />
+          <EntitySet Name="RecipientStatus1" EntityType="NSFramework_Mail_TestModel.RecipientStatus" />
+          <EntitySet Name="RecipientTypes" EntityType="NSFramework_Mail_TestModel.RecipientType" />
+          <AssociationSet Name="FK_MailMessageAttachments_MailAttachments" Association="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailAttachments">
+            <End Role="MailAttachments" EntitySet="MailAttachments" />
+            <End Role="MailMessageAttachments" EntitySet="MailMessageAttachments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageGroupAddresses_MailMessageGroups" Association="NSFramework_Mail_TestModel.FK_MailMessageGroupAddresses_MailMessageGroups">
+            <End Role="MailMessageGroups" EntitySet="MailMessageGroups" />
+            <End Role="MailMessageGroupAddresses" EntitySet="MailMessageGroupAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageGroupStatusAudit_MailMessageGroupID" Association="NSFramework_Mail_TestModel.FK_MailMessageGroupStatusAudit_MailMessageGroupID">
+            <End Role="MailMessageGroups" EntitySet="MailMessageGroups" />
+            <End Role="MailMessageGroupStatusAudit" EntitySet="MailMessageGroupStatusAudits" />
+          </AssociationSet>
+          <EntitySet Name="MailMessages" EntityType="NSFramework_Mail_TestModel.MailMessage" />
+          <AssociationSet Name="FK_MailMessageAttachments_MailMessages" Association="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailMessages">
+            <End Role="MailMessage" EntitySet="MailMessages" />
+            <End Role="MailMessageAttachment" EntitySet="MailMessageAttachments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageGroups_MailMessages" Association="NSFramework_Mail_TestModel.FK_MailMessageGroups_MailMessages">
+            <End Role="MailMessage" EntitySet="MailMessages" />
+            <End Role="MailMessageGroup" EntitySet="MailMessageGroups" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageMailFolderType" Association="NSFramework_Mail_TestModel.MailMessageMailFolderType">
+            <End Role="MailMessage" EntitySet="MailMessages" />
+            <End Role="MailFolderType" EntitySet="MailFolderTypes" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageMailMessageType" Association="NSFramework_Mail_TestModel.MailMessageMailMessageType">
+            <End Role="MailMessage" EntitySet="MailMessages" />
+            <End Role="MailMessageType" EntitySet="MailMessageTypes" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageMailMessagePriority" Association="NSFramework_Mail_TestModel.MailMessageMailMessagePriority">
+            <End Role="MailMessage" EntitySet="MailMessages" />
+            <End Role="MailMessagePriority" EntitySet="MailMessagePriorities" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageGroupStatusAuditMessageGroupStatus" Association="NSFramework_Mail_TestModel.MailMessageGroupStatusAuditMessageGroupStatus">
+            <End Role="MailMessageGroupStatusAudit" EntitySet="MailMessageGroupStatusAudits" />
+            <End Role="MessageGroupStatus" EntitySet="MessageGroupStatus1" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageGroupAddressRecipientType" Association="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientType">
+            <End Role="MailMessageGroupAddress" EntitySet="MailMessageGroupAddresses" />
+            <End Role="RecipientType" EntitySet="RecipientTypes" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageGroupAddressRecipientStatus" Association="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientStatus">
+            <End Role="MailMessageGroupAddress" EntitySet="MailMessageGroupAddresses" />
+            <End Role="RecipientStatus" EntitySet="RecipientStatus1" />
+          </AssociationSet>
+          <AssociationSet Name="MailMessageGroupAddressAddressType" Association="NSFramework_Mail_TestModel.MailMessageGroupAddressAddressType">
+            <End Role="MailMessageGroupAddress" EntitySet="MailMessageGroupAddresses" />
+            <End Role="AddressType" EntitySet="AddressTypes" />
+          </AssociationSet>
+          <FunctionImport Name="usp_MailMessageMarkRead">
+          <Parameter Name="MailMessageID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_DeleteMailMessage">
+          <Parameter Name="MailMessageID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_PurgeFolder">
+            <Parameter Name="MailAccountID" Mode="In" Type="Int32" />
+            <Parameter Name="MailFolderTypeID" Mode="In" Type="Int16" />
+          </FunctionImport>
+          <EntitySet Name="MailMessageRecipientEvents" EntityType="NSFramework_Mail_TestModel.MailMessageRecipientEvent" />
+          <EntitySet Name="MailMessageRecipientEventTypes" EntityType="NSFramework_Mail_TestModel.MailMessageRecipientEventType" />
+          <AssociationSet Name="FK_MailMessageRecipientEvents_MailMessageGroupAddresses" Association="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageGroupAddresses">
+            <End Role="MailMessageGroupAddress" EntitySet="MailMessageGroupAddresses" />
+            <End Role="MailMessageRecipientEvent" EntitySet="MailMessageRecipientEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes" Association="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes">
+            <End Role="MailMessageRecipientEventType" EntitySet="MailMessageRecipientEventTypes" />
+            <End Role="MailMessageRecipientEvent" EntitySet="MailMessageRecipientEvents" />
+          </AssociationSet>
+          <EntitySet Name="SitesAccounts" EntityType="NSFramework_Mail_TestModel.SitesAccount" />
+          <EntitySet Name="SitesCampaignSubscribers" EntityType="NSFramework_Mail_TestModel.SitesCampaignSubscriber" />
+        </EntityContainer>
+        <EntityType Name="AddressType">
+          <Key>
+            <PropertyRef Name="AddressTypeID" />
+          </Key>
+          <Property Name="AddressTypeID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessageGroupAddresses" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressAddressType" FromRole="AddressType" ToRole="MailMessageGroupAddress" />
+        </EntityType>
+        <EntityType Name="MailAttachment">
+          <Key>
+            <PropertyRef Name="MailAttachmentID" />
+          </Key>
+          <Property Name="MailAttachmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Size" Type="Int32" />
+          <NavigationProperty Name="MailMessageAttachments" Relationship="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailAttachments" FromRole="MailAttachments" ToRole="MailMessageAttachments" />
+        </EntityType>
+        <EntityType Name="MailFolderType">
+          <Key>
+            <PropertyRef Name="MailFolderTypeID" />
+          </Key>
+          <Property Name="MailFolderTypeID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessages" Relationship="NSFramework_Mail_TestModel.MailMessageMailFolderType" FromRole="MailFolderType" ToRole="MailMessage" />
+        </EntityType>
+        <EntityType Name="MailMessageAttachment">
+          <Key>
+            <PropertyRef Name="MailMessageAttachmentID" />
+          </Key>
+          <Property Name="MailMessageAttachmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageID" Type="Int32" Nullable="false" />
+          <Property Name="MailAttachmentID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MailAttachment" Relationship="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailAttachments" FromRole="MailMessageAttachments" ToRole="MailAttachments" />
+          <NavigationProperty Name="MailMessage" Relationship="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailMessages" FromRole="MailMessageAttachment" ToRole="MailMessage" />
+        </EntityType>
+        <EntityType Name="MailMessageGroupAddress">
+          <Key>
+            <PropertyRef Name="MailMessageGroupAddressID" />
+          </Key>
+          <Property Name="MailMessageGroupAddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageGroupID" Type="Int32" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NickName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AddressTypeID" Type="Int16" />
+          <Property Name="RecipientTypeID" Type="Int16" />
+          <Property Name="RecipientStatusID" Type="Int16" />
+          <NavigationProperty Name="MailMessageGroup" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroupAddresses_MailMessageGroups" FromRole="MailMessageGroupAddresses" ToRole="MailMessageGroups" />
+          <NavigationProperty Name="RecipientType" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientType" FromRole="MailMessageGroupAddress" ToRole="RecipientType" />
+          <NavigationProperty Name="RecipientStatus" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientStatus" FromRole="MailMessageGroupAddress" ToRole="RecipientStatus" />
+          <NavigationProperty Name="AddressType" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressAddressType" FromRole="MailMessageGroupAddress" ToRole="AddressType" />
+          <NavigationProperty Name="MailMessageRecipientEvents" Relationship="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageGroupAddresses" FromRole="MailMessageGroupAddress" ToRole="MailMessageRecipientEvent" />
+          <Property Type="Int32" Name="AccountID" />
+          </EntityType>
+        <EntityType Name="MailMessageGroup">
+          <Key>
+            <PropertyRef Name="MailMessageGroupID" />
+          </Key>
+          <Property Name="MailMessageGroupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageID" Type="Int32" Nullable="false" />
+          <Property Name="MessageGroupStatusID" Type="Int16" />
+          <Property Name="AttemptCount" Type="Int32" Nullable="false" />
+          <Property Name="IsOriginal" Type="Boolean" />
+          <Property Name="tmpAccountID" Type="Int32" />
+          <NavigationProperty Name="MailMessageGroupAddresses" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroupAddresses_MailMessageGroups" FromRole="MailMessageGroups" ToRole="MailMessageGroupAddresses" />
+          <NavigationProperty Name="MailMessageGroupStatusAudits" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroupStatusAudit_MailMessageGroupID" FromRole="MailMessageGroups" ToRole="MailMessageGroupStatusAudit" />
+          <NavigationProperty Name="MailMessage" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroups_MailMessages" FromRole="MailMessageGroup" ToRole="MailMessage" />
+          <Property Type="DateTime" Name="RetryTimeUTC" />
+        </EntityType>
+        <EntityType Name="MailMessageGroupStatusAudit">
+          <Key>
+            <PropertyRef Name="MailMessageGroupStatusAuditID" />
+          </Key>
+          <Property Name="MailMessageGroupStatusAuditID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MailMessageGroupID" Type="Int32" Nullable="false" />
+          <Property Name="MessageGroupStatusID" Type="Int16" />
+          <Property Name="AttemptCount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MailMessageGroup" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroupStatusAudit_MailMessageGroupID" FromRole="MailMessageGroupStatusAudit" ToRole="MailMessageGroups" />
+          <NavigationProperty Name="MessageGroupStatus" Relationship="NSFramework_Mail_TestModel.MailMessageGroupStatusAuditMessageGroupStatus" FromRole="MailMessageGroupStatusAudit" ToRole="MessageGroupStatus" />
+          <Property Type="DateTime" Name="RetryTimeUTC" />
+          <Property Type="DateTime" Name="DateAddedUTC" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MailMessagePriority">
+          <Key>
+            <PropertyRef Name="MailMessagePriorityID" />
+          </Key>
+          <Property Name="MailMessagePriorityID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessages" Relationship="NSFramework_Mail_TestModel.MailMessageMailMessagePriority" FromRole="MailMessagePriority" ToRole="MailMessage" />
+        </EntityType>
+        <EntityType Name="MailMessageType">
+          <Key>
+            <PropertyRef Name="MailMessageTypeID" />
+          </Key>
+          <Property Name="MailMessageTypeID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessages" Relationship="NSFramework_Mail_TestModel.MailMessageMailMessageType" FromRole="MailMessageType" ToRole="MailMessage" />
+        </EntityType>
+        <EntityType Name="MessageGroupStatus">
+          <Key>
+            <PropertyRef Name="MessageGroupStatusID" />
+          </Key>
+          <Property Name="MessageGroupStatusID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessageGroupStatusAudits" Relationship="NSFramework_Mail_TestModel.MailMessageGroupStatusAuditMessageGroupStatus" FromRole="MessageGroupStatus" ToRole="MailMessageGroupStatusAudit" />
+        </EntityType>
+        <EntityType Name="RecipientStatus">
+          <Key>
+            <PropertyRef Name="RecipientStatusID" />
+          </Key>
+          <Property Name="RecipientStatusID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessageGroupAddresses" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientStatus" FromRole="RecipientStatus" ToRole="MailMessageGroupAddress" />
+        </EntityType>
+        <EntityType Name="RecipientType">
+          <Key>
+            <PropertyRef Name="RecipientTypeID" />
+          </Key>
+          <Property Name="RecipientTypeID" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="MailMessageGroupAddresses" Relationship="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientType" FromRole="RecipientType" ToRole="MailMessageGroupAddress" />
+        </EntityType>
+        <Association Name="FK_MailMessageAttachments_MailAttachments">
+          <End Role="MailAttachments" Type="NSFramework_Mail_TestModel.MailAttachment" Multiplicity="1" />
+          <End Role="MailMessageAttachments" Type="NSFramework_Mail_TestModel.MailMessageAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailAttachments">
+              <PropertyRef Name="MailAttachmentID" />
+            </Principal>
+            <Dependent Role="MailMessageAttachments">
+              <PropertyRef Name="MailAttachmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageGroupAddresses_MailMessageGroups">
+          <End Role="MailMessageGroups" Type="NSFramework_Mail_TestModel.MailMessageGroup" Multiplicity="1" />
+          <End Role="MailMessageGroupAddresses" Type="NSFramework_Mail_TestModel.MailMessageGroupAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroups">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupAddresses">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageGroupStatusAudit_MailMessageGroupID">
+          <End Role="MailMessageGroups" Type="NSFramework_Mail_TestModel.MailMessageGroup" Multiplicity="1" />
+          <End Role="MailMessageGroupStatusAudit" Type="NSFramework_Mail_TestModel.MailMessageGroupStatusAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroups">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupStatusAudit">
+              <PropertyRef Name="MailMessageGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MailMessage">
+          <Key>
+            <PropertyRef Name="MailMessageID" />
+          </Key>
+          <Property Type="Int32" Name="MailMessageID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Subject" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Body" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="HTMLBody" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FromAddress" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FromNickName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="MailAccountID" />
+          <Property Type="Boolean" Name="IsOutbound" Nullable="false" />
+          <Property Type="Int16" Name="MailMessageTypeID" Nullable="false" />
+          <Property Type="Boolean" Name="BeenRead" Nullable="false" />
+          <Property Type="Int16" Name="MailMessagePriorityID" Nullable="false" />
+          <Property Type="Int32" Name="VisualTemplateID" />
+          <Property Type="Int16" Name="MailFolderTypeID" Nullable="false" />
+          <Property Type="String" Name="AttachmentUniqueID" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Locked" />
+          <Property Type="Int32" Name="SiteID" />
+          <NavigationProperty Name="MailMessageAttachments" Relationship="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailMessages" FromRole="MailMessage" ToRole="MailMessageAttachment" />
+          <NavigationProperty Name="MailMessageGroups" Relationship="NSFramework_Mail_TestModel.FK_MailMessageGroups_MailMessages" FromRole="MailMessage" ToRole="MailMessageGroup" />
+          <NavigationProperty Name="MailFolderType" Relationship="NSFramework_Mail_TestModel.MailMessageMailFolderType" FromRole="MailMessage" ToRole="MailFolderType" />
+          <NavigationProperty Name="MailMessageType" Relationship="NSFramework_Mail_TestModel.MailMessageMailMessageType" FromRole="MailMessage" ToRole="MailMessageType" />
+          <NavigationProperty Name="MailMessagePriority" Relationship="NSFramework_Mail_TestModel.MailMessageMailMessagePriority" FromRole="MailMessage" ToRole="MailMessagePriority" />
+          <Property Type="DateTime" Name="DateAddedUTC" Nullable="false" />
+          <Property Type="Int32" Name="CampaignActionID" />
+          <Property Type="Boolean" Name="EnableEventTracking" Nullable="false" />
+          <Property Type="String" Name="ReplyToAddress" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_MailMessageAttachments_MailMessages">
+          <End Type="NSFramework_Mail_TestModel.MailMessage" Role="MailMessage" Multiplicity="1" />
+          <End Type="NSFramework_Mail_TestModel.MailMessageAttachment" Role="MailMessageAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessage">
+              <PropertyRef Name="MailMessageID" />
+            </Principal>
+            <Dependent Role="MailMessageAttachment">
+              <PropertyRef Name="MailMessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageGroups_MailMessages">
+          <End Type="NSFramework_Mail_TestModel.MailMessage" Role="MailMessage" Multiplicity="1" />
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroup" Role="MailMessageGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessage">
+              <PropertyRef Name="MailMessageID" />
+            </Principal>
+            <Dependent Role="MailMessageGroup">
+              <PropertyRef Name="MailMessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageMailFolderType">
+          <End Type="NSFramework_Mail_TestModel.MailMessage" Role="MailMessage" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.MailFolderType" Role="MailFolderType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="MailFolderType">
+              <PropertyRef Name="MailFolderTypeID" />
+            </Principal>
+            <Dependent Role="MailMessage">
+              <PropertyRef Name="MailFolderTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageMailMessageType">
+          <End Type="NSFramework_Mail_TestModel.MailMessage" Role="MailMessage" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.MailMessageType" Role="MailMessageType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageType">
+              <PropertyRef Name="MailMessageTypeID" />
+            </Principal>
+            <Dependent Role="MailMessage">
+              <PropertyRef Name="MailMessageTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageMailMessagePriority">
+          <End Type="NSFramework_Mail_TestModel.MailMessage" Role="MailMessage" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.MailMessagePriority" Role="MailMessagePriority" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessagePriority">
+              <PropertyRef Name="MailMessagePriorityID" />
+            </Principal>
+            <Dependent Role="MailMessage">
+              <PropertyRef Name="MailMessagePriorityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageGroupStatusAuditMessageGroupStatus">
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroupStatusAudit" Role="MailMessageGroupStatusAudit" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.MessageGroupStatus" Role="MessageGroupStatus" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MessageGroupStatus">
+              <PropertyRef Name="MessageGroupStatusID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupStatusAudit">
+              <PropertyRef Name="MessageGroupStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageGroupAddressRecipientType">
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroupAddress" Role="MailMessageGroupAddress" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.RecipientType" Role="RecipientType" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="RecipientType">
+              <PropertyRef Name="RecipientTypeID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupAddress">
+              <PropertyRef Name="RecipientTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageGroupAddressRecipientStatus">
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroupAddress" Role="MailMessageGroupAddress" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.RecipientStatus" Role="RecipientStatus" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="RecipientStatus">
+              <PropertyRef Name="RecipientStatusID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupAddress">
+              <PropertyRef Name="RecipientStatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MailMessageGroupAddressAddressType">
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroupAddress" Role="MailMessageGroupAddress" Multiplicity="*" />
+          <End Type="NSFramework_Mail_TestModel.AddressType" Role="AddressType" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AddressType">
+              <PropertyRef Name="AddressTypeID" />
+            </Principal>
+            <Dependent Role="MailMessageGroupAddress">
+              <PropertyRef Name="AddressTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MailMessageRecipientEvent">
+          <Key>
+            <PropertyRef Name="MailMessageRecipientEventID" />
+          </Key>
+          <Property Type="Int32" Name="MailMessageRecipientEventID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MailMessageGroupAddressID" Nullable="false" />
+          <Property Type="Int16" Name="MailMessageRecipientEventTypeID" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreatedUTC" Nullable="false" />
+          <Property Type="String" Name="Text" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Url" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MailMessageGroupAddress" Relationship="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageGroupAddresses" FromRole="MailMessageRecipientEvent" ToRole="MailMessageGroupAddress" />
+          <NavigationProperty Name="MailMessageRecipientEventType" Relationship="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes" FromRole="MailMessageRecipientEvent" ToRole="MailMessageRecipientEventType" />
+        </EntityType>
+        <EntityType Name="MailMessageRecipientEventType">
+          <Key>
+            <PropertyRef Name="MailMessageRecipientEventTypeID" />
+          </Key>
+          <Property Type="Int16" Name="MailMessageRecipientEventTypeID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TermName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Active" Nullable="false" />
+          <NavigationProperty Name="MailMessageRecipientEvents" Relationship="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes" FromRole="MailMessageRecipientEventType" ToRole="MailMessageRecipientEvent" />
+        </EntityType>
+        <Association Name="FK_MailMessageRecipientEvents_MailMessageGroupAddresses">
+          <End Type="NSFramework_Mail_TestModel.MailMessageGroupAddress" Role="MailMessageGroupAddress" Multiplicity="1" />
+          <End Type="NSFramework_Mail_TestModel.MailMessageRecipientEvent" Role="MailMessageRecipientEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageGroupAddress">
+              <PropertyRef Name="MailMessageGroupAddressID" />
+            </Principal>
+            <Dependent Role="MailMessageRecipientEvent">
+              <PropertyRef Name="MailMessageGroupAddressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes">
+          <End Type="NSFramework_Mail_TestModel.MailMessageRecipientEventType" Role="MailMessageRecipientEventType" Multiplicity="1" />
+          <End Type="NSFramework_Mail_TestModel.MailMessageRecipientEvent" Role="MailMessageRecipientEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MailMessageRecipientEventType">
+              <PropertyRef Name="MailMessageRecipientEventTypeID" />
+            </Principal>
+            <Dependent Role="MailMessageRecipientEvent">
+              <PropertyRef Name="MailMessageRecipientEventTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SitesAccount">
+          <Key>
+            <PropertyRef Name="AccountID" />
+            <PropertyRef Name="AccountTypeID" />
+            <PropertyRef Name="AccountStatusID" />
+            <PropertyRef Name="DefaultLanguageID" />
+            <PropertyRef Name="IsEntity" />
+            <PropertyRef Name="ReceivedApplication" />
+            <PropertyRef Name="IsTaxExemptVerified" />
+            <PropertyRef Name="DataVersion" />
+            <PropertyRef Name="DateCreatedUTC" />
+          </Key>
+          <Property Type="Int32" Name="AccountID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="AccountNumber" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="AccountTypeID" Nullable="false" />
+          <Property Type="Int16" Name="AccountStatusID" Nullable="false" />
+          <Property Type="Int32" Name="PreferedContactMethodID" />
+          <Property Type="Int32" Name="DefaultLanguageID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" />
+          <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MiddleName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NickName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CoApplicant" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmailAddress" MaxLength="320" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SponsorID" />
+          <Property Type="Int32" Name="EnrollerID" />
+          <Property Type="DateTime" Name="EnrollmentDateUTC" />
+          <Property Type="Boolean" Name="IsTaxExempt" />
+          <Property Type="String" Name="TaxNumber" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsEntity" Nullable="false" />
+          <Property Type="String" Name="EntityName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="AccountStatusChangeReasonID" />
+          <Property Type="DateTime" Name="LastRenewalUTC" />
+          <Property Type="DateTime" Name="NextRenewalUTC" />
+          <Property Type="Boolean" Name="ReceivedApplication" Nullable="false" />
+          <Property Type="Boolean" Name="IsTaxExemptVerified" Nullable="false" />
+          <Property Type="DateTime" Name="DateApplicationReceivedUTC" />
+          <Property Type="DateTime" Name="BirthdayUTC" />
+          <Property Type="Int16" Name="GenderID" />
+          <Property Type="Binary" Name="DataVersion" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Int32" Name="ModifiedByUserID" />
+          <Property Type="DateTime" Name="DateCreatedUTC" Nullable="false" />
+          <Property Type="Int32" Name="CreatedByUserID" />
+          <Property Type="Int16" Name="AccountSourceID" />
+        </EntityType>
+        <EntityType Name="SitesCampaignSubscriber">
+          <Key>
+            <PropertyRef Name="CampaignSubscriberID" />
+            <PropertyRef Name="CampaignID" />
+            <PropertyRef Name="AddedByAccountID" />
+            <PropertyRef Name="AccountID" />
+            <PropertyRef Name="DateAddedUTC" />
+          </Key>
+          <Property Type="Int32" Name="CampaignSubscriberID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CampaignID" Nullable="false" />
+          <Property Type="Int32" Name="AddedByAccountID" Nullable="false" />
+          <Property Type="Int32" Name="AccountID" Nullable="false" />
+          <Property Type="DateTime" Name="DateAddedUTC" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NSFramework_Mail_TestModelStoreContainer" CdmEntityContainer="MailEntities">
+          <EntitySetMapping Name="AddressTypes"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.AddressType"><MappingFragment StoreEntitySet="AddressTypes">
+            <ScalarProperty Name="AddressTypeID" ColumnName="AddressTypeID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailAttachments"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailAttachment"><MappingFragment StoreEntitySet="MailAttachments">
+            <ScalarProperty Name="MailAttachmentID" ColumnName="MailAttachmentID" />
+            <ScalarProperty Name="FileName" ColumnName="FileName" />
+            <ScalarProperty Name="Size" ColumnName="Size" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailFolderTypes"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailFolderType"><MappingFragment StoreEntitySet="MailFolderTypes">
+            <ScalarProperty Name="MailFolderTypeID" ColumnName="MailFolderTypeID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessageAttachments"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageAttachment"><MappingFragment StoreEntitySet="MailMessageAttachments">
+            <ScalarProperty Name="MailMessageAttachmentID" ColumnName="MailMessageAttachmentID" />
+            <ScalarProperty Name="MailMessageID" ColumnName="MailMessageID" />
+            <ScalarProperty Name="MailAttachmentID" ColumnName="MailAttachmentID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessageGroupAddresses"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageGroupAddress"><MappingFragment StoreEntitySet="MailMessageGroupAddresses">
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="MailMessageGroupAddressID" ColumnName="MailMessageGroupAddressID" />
+            <ScalarProperty Name="MailMessageGroupID" ColumnName="MailMessageGroupID" />
+            <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+            <ScalarProperty Name="NickName" ColumnName="NickName" />
+            <ScalarProperty Name="AddressTypeID" ColumnName="AddressTypeID" />
+            <ScalarProperty Name="RecipientTypeID" ColumnName="RecipientTypeID" />
+            <ScalarProperty Name="RecipientStatusID" ColumnName="RecipientStatusID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessageGroups"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageGroup"><MappingFragment StoreEntitySet="MailMessageGroups">
+            <ScalarProperty Name="RetryTimeUTC" ColumnName="RetryTimeUTC" />
+                <ScalarProperty Name="MailMessageGroupID" ColumnName="MailMessageGroupID" />
+            <ScalarProperty Name="MailMessageID" ColumnName="MailMessageID" />
+            <ScalarProperty Name="MessageGroupStatusID" ColumnName="MessageGroupStatusID" />
+            <ScalarProperty Name="AttemptCount" ColumnName="AttemptCount" />
+            <ScalarProperty Name="IsOriginal" ColumnName="IsOriginal" />
+            <ScalarProperty Name="tmpAccountID" ColumnName="tmpAccountID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessageGroupStatusAudits"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageGroupStatusAudit"><MappingFragment StoreEntitySet="MailMessageGroupStatusAudit">
+            <ScalarProperty Name="DateAddedUTC" ColumnName="DateAddedUTC" />
+                <ScalarProperty Name="RetryTimeUTC" ColumnName="RetryTimeUTC" />
+                <ScalarProperty Name="MailMessageGroupStatusAuditID" ColumnName="MailMessageGroupStatusAuditID" />
+            <ScalarProperty Name="MailMessageGroupID" ColumnName="MailMessageGroupID" />
+            <ScalarProperty Name="MessageGroupStatusID" ColumnName="MessageGroupStatusID" />
+            <ScalarProperty Name="AttemptCount" ColumnName="AttemptCount" />
+            </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessagePriorities"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessagePriority"><MappingFragment StoreEntitySet="MailMessagePriority">
+            <ScalarProperty Name="MailMessagePriorityID" ColumnName="MailMessagePriorityID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessageTypes"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageType"><MappingFragment StoreEntitySet="MailMessageTypes">
+            <ScalarProperty Name="MailMessageTypeID" ColumnName="MailMessageTypeID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MessageGroupStatus1"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MessageGroupStatus"><MappingFragment StoreEntitySet="MessageGroupStatus">
+            <ScalarProperty Name="MessageGroupStatusID" ColumnName="MessageGroupStatusID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="RecipientStatus1"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.RecipientStatus"><MappingFragment StoreEntitySet="RecipientStatus">
+            <ScalarProperty Name="RecipientStatusID" ColumnName="RecipientStatusID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="RecipientTypes"><EntityTypeMapping TypeName="NSFramework_Mail_TestModel.RecipientType"><MappingFragment StoreEntitySet="RecipientTypes">
+            <ScalarProperty Name="RecipientTypeID" ColumnName="RecipientTypeID" />
+            <ScalarProperty Name="Description" ColumnName="Description" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MailMessages">
+            <EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessage">
+              <MappingFragment StoreEntitySet="MailMessages">
+                <ScalarProperty Name="ReplyToAddress" ColumnName="ReplyToAddress" />
+                <ScalarProperty Name="EnableEventTracking" ColumnName="EnableEventTracking" />
+                <ScalarProperty Name="CampaignActionID" ColumnName="CampaignActionID" />
+                <ScalarProperty Name="DateAddedUTC" ColumnName="DateAddedUTC" />
+                <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="AttachmentUniqueID" ColumnName="AttachmentUniqueID" />
+                <ScalarProperty Name="MailFolderTypeID" ColumnName="MailFolderTypeID" />
+                <ScalarProperty Name="VisualTemplateID" ColumnName="VisualTemplateID" />
+                <ScalarProperty Name="MailMessagePriorityID" ColumnName="MailMessagePriorityID" />
+                <ScalarProperty Name="BeenRead" ColumnName="BeenRead" />
+                <ScalarProperty Name="MailMessageTypeID" ColumnName="MailMessageTypeID" />
+                <ScalarProperty Name="IsOutbound" ColumnName="IsOutbound" />
+                <ScalarProperty Name="MailAccountID" ColumnName="MailAccountID" />
+                <ScalarProperty Name="FromNickName" ColumnName="FromNickName" />
+                <ScalarProperty Name="FromAddress" ColumnName="FromAddress" />
+                <ScalarProperty Name="HTMLBody" ColumnName="HTMLBody" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="MailMessageID" ColumnName="MailMessageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_MailMessageMarkRead" FunctionName="NSFramework_Mail_TestModel.Store.usp_MailMessageMarkRead" />
+          <FunctionImportMapping FunctionImportName="usp_DeleteMailMessage" FunctionName="NSFramework_Mail_TestModel.Store.usp_DeleteMailMessage" />
+          <FunctionImportMapping FunctionImportName="usp_PurgeFolder" FunctionName="NSFramework_Mail_TestModel.Store.usp_PurgeFolder" />
+          <EntitySetMapping Name="MailMessageRecipientEvents">
+            <EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageRecipientEvent">
+              <MappingFragment StoreEntitySet="MailMessageRecipientEvents">
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="DateCreatedUTC" ColumnName="DateCreatedUTC" />
+                <ScalarProperty Name="MailMessageRecipientEventTypeID" ColumnName="MailMessageRecipientEventTypeID" />
+                <ScalarProperty Name="MailMessageGroupAddressID" ColumnName="MailMessageGroupAddressID" />
+                <ScalarProperty Name="MailMessageRecipientEventID" ColumnName="MailMessageRecipientEventID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MailMessageRecipientEventTypes">
+            <EntityTypeMapping TypeName="NSFramework_Mail_TestModel.MailMessageRecipientEventType">
+              <MappingFragment StoreEntitySet="MailMessageRecipientEventTypes">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MailMessageRecipientEventTypeID" ColumnName="MailMessageRecipientEventTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SitesAccounts">
+            <EntityTypeMapping TypeName="NSFramework_Mail_TestModel.SitesAccount">
+              <MappingFragment StoreEntitySet="SitesAccounts">
+                <ScalarProperty Name="AccountSourceID" ColumnName="AccountSourceID" />
+                <ScalarProperty Name="CreatedByUserID" ColumnName="CreatedByUserID" />
+                <ScalarProperty Name="DateCreatedUTC" ColumnName="DateCreatedUTC" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+                <ScalarProperty Name="DataVersion" ColumnName="DataVersion" />
+                <ScalarProperty Name="GenderID" ColumnName="GenderID" />
+                <ScalarProperty Name="BirthdayUTC" ColumnName="BirthdayUTC" />
+                <ScalarProperty Name="DateApplicationReceivedUTC" ColumnName="DateApplicationReceivedUTC" />
+                <ScalarProperty Name="IsTaxExemptVerified" ColumnName="IsTaxExemptVerified" />
+                <ScalarProperty Name="ReceivedApplication" ColumnName="ReceivedApplication" />
+                <ScalarProperty Name="NextRenewalUTC" ColumnName="NextRenewalUTC" />
+                <ScalarProperty Name="LastRenewalUTC" ColumnName="LastRenewalUTC" />
+                <ScalarProperty Name="AccountStatusChangeReasonID" ColumnName="AccountStatusChangeReasonID" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="IsEntity" ColumnName="IsEntity" />
+                <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
+                <ScalarProperty Name="IsTaxExempt" ColumnName="IsTaxExempt" />
+                <ScalarProperty Name="EnrollmentDateUTC" ColumnName="EnrollmentDateUTC" />
+                <ScalarProperty Name="EnrollerID" ColumnName="EnrollerID" />
+                <ScalarProperty Name="SponsorID" ColumnName="SponsorID" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="CoApplicant" ColumnName="CoApplicant" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DefaultLanguageID" ColumnName="DefaultLanguageID" />
+                <ScalarProperty Name="PreferedContactMethodID" ColumnName="PreferedContactMethodID" />
+                <ScalarProperty Name="AccountStatusID" ColumnName="AccountStatusID" />
+                <ScalarProperty Name="AccountTypeID" ColumnName="AccountTypeID" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SitesCampaignSubscribers">
+            <EntityTypeMapping TypeName="NSFramework_Mail_TestModel.SitesCampaignSubscriber">
+              <MappingFragment StoreEntitySet="SitesCampaignSubscribers">
+                <ScalarProperty Name="DateAddedUTC" ColumnName="DateAddedUTC" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="AddedByAccountID" ColumnName="AddedByAccountID" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="CampaignSubscriberID" ColumnName="CampaignSubscriberID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="MailDB" ZoomLevel="81">
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.AddressType" Width="2.25" PointX="10.375" PointY="14.25" Height="1.5956835937500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailAttachment" Width="2" PointX="7" PointY="10.75" Height="1.7879850268363953" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailFolderType" Width="1.5" PointX="1.625" PointY="6.75" Height="1.5956835933029652" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageAttachment" Width="2" PointX="4.375" PointY="10.75" Height="1.9802864585071802" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageGroupAddress" Width="2.375" PointX="7.375" PointY="13.125" Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageGroup" Width="2.375" PointX="4.375" PointY="13.125" Height="2.9417936197916674" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageGroupStatusAudit" Width="2.375" PointX="7.375" PointY="18.125" Height="2.5571907552083353" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessagePriority" Width="1.75" PointX="4.375" PointY="6.875" Height="1.5956835933029652" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageType" Width="1.625" PointX="4.375" PointY="8.75" Height="1.5956835933029652" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MessageGroupStatus" Width="2.375" PointX="10.375" PointY="19.125" Height="1.5956835933029652" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.RecipientStatus" Width="2.25" PointX="10.375" PointY="12.375" Height="1.5956835933029652" IsExpanded="true" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.RecipientType" Width="2.25" PointX="10.375" PointY="10.5" Height="1.5956835933029652" IsExpanded="true" />
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailAttachments" ManuallyRouted="false">
+          <ConnectorPoint PointX="7" PointY="11.643992513418198" />
+          <ConnectorPoint PointX="6.375" PointY="11.643992513418198" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageGroupAddresses_MailMessageGroups" ManuallyRouted="false">
+          <ConnectorPoint PointX="6.75" PointY="14.595896809895834" />
+          <ConnectorPoint PointX="7.375" PointY="14.595896809895834" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageGroupStatusAudit_MailMessageGroupID" ManuallyRouted="false">
+          <ConnectorPoint PointX="5.5625" PointY="16.066793619791667" />
+          <ConnectorPoint PointX="5.5625" PointY="19.403595377604169" />
+          <ConnectorPoint PointX="7.375" PointY="19.403595377604169" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessage" Width="2.125" PointX="1.625" PointY="8.875" Height="5.2494108072916656" />
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageAttachments_MailMessages" >
+          <ConnectorPoint PointX="3.75" PointY="11.74014322925359" />
+          <ConnectorPoint PointX="4.375" PointY="11.74014322925359" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageGroups_MailMessages" >
+          <ConnectorPoint PointX="3.75" PointY="13.624705403645834" />
+          <ConnectorPoint PointX="4.375" PointY="13.624705403645834" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageMailFolderType">
+          <ConnectorPoint PointX="2.375" PointY="8.875" />
+          <ConnectorPoint PointX="2.375" PointY="8.3456835933029652" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageMailMessageType">
+          <ConnectorPoint PointX="3.75" PointY="9.6896696547243923" />
+          <ConnectorPoint PointX="4.375" PointY="9.6896696547243923" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageMailMessagePriority">
+          <ConnectorPoint PointX="3.75" PointY="8.875" />
+          <ConnectorPoint PointX="4.375" PointY="8.4706835933029652" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageGroupStatusAuditMessageGroupStatus">
+          <ConnectorPoint PointX="9.75" PointY="19.903595377604169" />
+          <ConnectorPoint PointX="10.375" PointY="19.903595377604169" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientType">
+          <ConnectorPoint PointX="9.40625" PointY="13.125" />
+          <ConnectorPoint PointX="9.40625" PointY="10.59375" />
+          <ConnectorPoint PointX="10.375" PointY="10.59375" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageGroupAddressRecipientStatus">
+          <ConnectorPoint PointX="9.75" PointY="13.547841796651483" />
+          <ConnectorPoint PointX="10.375" PointY="13.547841796651483" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.MailMessageGroupAddressAddressType">
+          <ConnectorPoint PointX="9.75" PointY="15.047841796875002" />
+          <ConnectorPoint PointX="10.375" PointY="15.047841796875002" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageRecipientEvent" Width="2.75" PointX="10.375" PointY="16.125" Height="2.5571907552083388" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.MailMessageRecipientEventType" Width="2.625" PointX="13.625" PointY="16.125" Height="2.1725878906250031" />
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageGroupAddresses" >
+          <ConnectorPoint PointX="9.75" PointY="16.384348958333334" />
+          <ConnectorPoint PointX="10.375" PointY="16.384348958333334" />
+        </AssociationConnector>
+        <AssociationConnector Association="NSFramework_Mail_TestModel.FK_MailMessageRecipientEvents_MailMessageRecipientEventTypes" >
+          <ConnectorPoint PointX="13.625" PointY="17.2112939453125" />
+          <ConnectorPoint PointX="13.125" PointY="17.2112939453125" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.SitesAccount" Width="1.5" PointX="7.375" PointY="0.75" Height="7.3647265625000031" />
+        <EntityTypeShape EntityType="NSFramework_Mail_TestModel.SitesCampaignSubscriber" Width="1.5" PointX="0.75" PointY="0.75" Height="1.9802864583333388" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

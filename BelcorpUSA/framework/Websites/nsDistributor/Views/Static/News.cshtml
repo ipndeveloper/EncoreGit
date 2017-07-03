@@ -1,0 +1,113 @@
+﻿@model dynamic
+@section head {
+    <script type="text/javascript">
+        $(function () {
+            var currentPage = 0, maxPage,
+
+			resetPage = function () {
+			    currentPage = 0;
+			    showPage();
+			},
+
+			showPage = function () {
+			    $('#News').html('<tr><td colspan="5"><img src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="loading..." /></td></tr>');
+
+			    $.get('@Url.Resolve("~/GetNews")', {
+			        page: currentPage,
+			        pageSize: $('#pageSize').val(),
+			        fileType: $('#fileType').val(),
+			        query: $('#searchText').val(),
+			        category: !$('#SecondaryRail .newsCategory.current').length ? '' : $('#SecondaryRail .newsCategory.current').attr('id').replace(/\D/g, '')
+			    }, function (response) {
+			        if (response.result === undefined || response.result) {
+			            $('#News').html(response.page || '<div class="Resource">@Html.Term("NoRecords", "There are no records that match that criteria.  Please try again.")</div>');
+
+			            maxPage = !response.totalPages ? 0 : response.totalPages - 1;
+			            $('#btnNextPage,#btnPreviousPage').removeAttr('disabled').css({ color: '', cursor: '' });
+			            if (currentPage == maxPage)
+			                $('#btnNextPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' }); ;
+			            if (currentPage == 0)
+			                $('#btnPreviousPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' });
+
+			            $('#pages').text((!response.totalPages ? 0 : currentPage + 1) + ' of ' + response.totalPages);
+			        } else {
+			            showMessage(response.message, true);
+			        }
+			    });
+			};
+
+            $('#searchText').keyup(function (e) {
+                if (e.keyCode == 13)
+                    $('#searchButton').click();
+            });
+
+            $('#searchButton').click(resetPage);
+
+            $('#btnNextPage').click(function () {
+                if (currentPage < maxPage) {
+                    ++currentPage;
+                    showPage();
+                }
+            });
+            $('#btnPreviousPage').click(function () {
+                if (currentPage > 0) {
+                    --currentPage;
+                    showPage();
+                }
+            });
+
+            $('#pageSize').val(50).change(resetPage);
+
+            $('#SecondaryRail .newsCategory').click(function () {
+                if (!$(this).hasClass('current')) {
+                    $('#SecondaryRail .newsCategory.current').removeClass('current');
+                    $(this).addClass('current');
+
+                    resetPage();
+                }
+            });
+
+            if (!$('#SecondaryRail .newsCategory.current').length) {
+                $('#SecondaryRail .newsCategory:first').addClass('current');
+            }
+
+            $('#News .news').each(function (i) {
+                $(this).addClass('newsDiv' + i);
+            });
+
+            $('input#searchText').watermark('@Html.JavascriptTerm("PWS_NewSearch_Input_Watermark", "Search")');
+
+            showPage();
+        });
+    </script>
+}
+<div id="CompanyNews" class="TwoColumnContent">
+    <div id="LeftColumn" class="LeftColumn">
+        <div class="UI-lightBg searchForm searchNews">
+            <input id="searchText" type="text" class="TextInput" value="" />
+            <a id="searchButton" href="javascript:void(0);" class="SearchGo"><span class="searchIcon"
+                data-icon="☌"></span>
+                <label>@Html.Term("PWS_SearchNews_ButtonLabel", "Go")</label>
+            </a><span class="clr"></span>
+        </div>
+        <div id="SecondaryNav">
+            <ul class="navigation newsNav">
+                <li><a href="javascript:void(0);" class="newsCategory"><span>
+                    @Html.Term("AllCategories", "All Categories")
+                </span></a></li>
+                @{IEnumerable<short> categories = ViewData["Categories"] as IEnumerable<short>;}
+                @foreach (NewsType type in SmallCollectionCache.Instance.NewsTypes.Where(nt => categories.Contains(nt.NewsTypeID)))
+                {
+                    <li><a id="@type.NewsTypeID" href="javascript:void(0);" class="newsCategory@(ViewBag.Category != null && ViewBag.Category == type.NewsTypeID ? " current" : "")">
+                        <span>@type.GetTerm()</span> </a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="ContentColumn CenterColumn">
+        <div id="NewsWrapper">
+            <div id="News" class="renderArticle">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Title;
+}
+@section head
+{
+    @{
+        var keywords = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Keywords;
+        var description = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Description;
+    }
+    @if (!string.IsNullOrWhiteSpace(keywords))
+    {
+        <meta name="keywords" content="@keywords" />
+    }
+    @if (!string.IsNullOrWhiteSpace(description))
+    {
+        <meta name="description" content="@description" />
+    }
+    
+    <script type="text/javascript">
+        $(function () {
+            var currentPage = 0, maxPage,
+
+			resetPage = function () {
+			    currentPage = 0;
+			    showPage();
+			},
+
+			showPage = function () {
+			    $('#News').html('<tr><td colspan="5"><img src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="loading..." /></td></tr>');
+
+			    $.get('@Url.Resolve("~/GetNews")', {
+			        page: currentPage,
+			        pageSize: $('#pageSize').val(),
+			        fileType: $('#fileType').val(),
+			        query: $('#searchText').val(),
+			        category: !$('#SecondaryRail .newsCategory.current').length ? '' : $('#SecondaryRail .newsCategory.current').attr('id').replace(/\D/g, '')
+			    }, function (response) {
+			        if (response.result === undefined || response.result) {
+			            $('#News').html(response.page || '<div class="Resource">@Html.Term("NoRecords", "There are no records that match that criteria.  Please try again.")</div>');
+
+			            maxPage = !response.totalPages ? 0 : response.totalPages - 1;
+			            $('#btnNextPage,#btnPreviousPage').removeAttr('disabled').css({ color: '', cursor: '' });
+			            if (currentPage == maxPage)
+			                $('#btnNextPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' }); ;
+			            if (currentPage == 0)
+			                $('#btnPreviousPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' });
+
+			            $('#pages').text((!response.totalPages ? 0 : currentPage + 1) + ' of ' + response.totalPages);
+			        } else {
+			            showMessage(response.message, true);
+			        }
+			    });
+			};
+
+            $('#searchText').keyup(function (e) {
+                if (e.keyCode == 13)
+                    $('#searchButton').click();
+            });
+
+            $('#searchButton').click(resetPage);
+
+            $('#btnNextPage').click(function () {
+                if (currentPage < maxPage) {
+                    ++currentPage;
+                    showPage();
+                }
+            });
+            $('#btnPreviousPage').click(function () {
+                if (currentPage > 0) {
+                    --currentPage;
+                    showPage();
+                }
+            });
+
+            $('#pageSize').val(50).change(resetPage);
+
+            $('#SecondaryRail .newsCategory').click(function () {
+                if (!$(this).hasClass('current')) {
+                    $('#SecondaryRail .newsCategory.current').removeClass('current');
+                    $(this).addClass('current');
+
+                    resetPage();
+                }
+            });
+
+            if (!$('#SecondaryRail .newsCategory.current').length) {    
+                $('#SecondaryRail .newsCategory:first').addClass('current');
+            }
+
+            $('#News .news').each(function (i) {
+                $(this).addClass('newsDiv' + i);
+            });
+
+            showPage();
+        });
+    </script>
+}
+@{
+    string header;
+    var menu = Html.CreateMenu(Model, out header); 
+}
+<div id="NewsTemplate" class="overflow">
+    <div class="LeftColumn FL">
+        <div class="SideColumn">
+            @if (menu != null && !string.IsNullOrEmpty(menu.ToString()) && menu.ToString() != "<ul class=\"navigation\"></ul>")
+            {
+                <div id="SecondaryNav" class="brdrAll secondaryNavContainer">
+                    <h3 class="secondaryNavHeader">@header</h3>
+                    @menu
+                </div>
+             }
+            <span class="clrall"></span>
+            @*<div id="SecondaryRail">
+                <div class="SavedReports">
+                    <h3>@Html.Term("News Categories")</h3>
+                    <div class="listBody">
+                        <ul class="listNav">
+                            <li>
+                                <a href="javascript:void(0);" class="newsCategory">
+                                    <span>
+                                        @Html.Term("AllCategories", "All Categories")
+                                    </span>
+                                </a>
+                            </li>
+                            @{IEnumerable<short> categories = ViewData["Categories"] as IEnumerable<short>;}
+                            @foreach (NewsType type in SmallCollectionCache.Instance.NewsTypes.Where(nt => categories.Contains(nt.NewsTypeID)))
+                            {
+                                <li>
+                                    <a id="@type.NewsTypeID" href="javascript:void(0);" class="newsCategory">
+                                        <span>@type.GetTerm()</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+
+        <div class="columnCms">
+            @Model.HtmlSections.GetBySectionName("NewsTemplate_AdSpace").ToDisplay(Model.PageID)
+        </div>
+    </div>
+    <div class="CenterColumn FR">
+        <div class="CenterContent">
+            @Model.HtmlSections.GetBySectionName("NewsTemplate_CenterContent").ToDisplay(Model.PageID)
+        </div>
+        <div class="centerCms">
+            @Model.HtmlSections.GetBySectionName("NewsTemplate_CenterAdSpace").ToDisplay(Model.PageID)
+        </div>
+    </div>
+</div>

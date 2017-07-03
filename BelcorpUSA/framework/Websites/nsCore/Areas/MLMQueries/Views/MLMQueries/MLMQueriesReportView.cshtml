@@ -1,0 +1,59 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+@using NetSteps.Commissions.Service.Models
+@using nsCore.Areas.MLMQueries.Models
+
+<script type="text/javascript">
+    $(function () {
+        exportE();
+        lookupID();
+    });
+
+    function exportE() {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/MLMQueries/MLMQueries/MLMQueriesExport")';
+        });
+    }
+
+</script>
+@{
+    var commissionsService = NetSteps.Encore.Core.IoC.Create.New<NetSteps.Commissions.Common.ICommissionsService>();
+    var titles = NetSteps.Data.Entities.Business.Title.ListTitles(); //commissionsService.GetTitles().Where(t => t.Active && !string.IsNullOrEmpty(t.TitleCode));
+    var periods = commissionsService.GetOpenPeriods(NetSteps.Commissions.Common.Models.DisbursementFrequencyKind.Monthly).OrderByDescending(p => p.PeriodId).ToList();
+    var lastPeriod = periods.LastOrDefault();
+    int periodsCount = periods.Count();
+    
+        int year = lastPeriod.PeriodId / 100;
+        int startYear = lastPeriod.PeriodId / 100;
+        int startMonth = lastPeriod.PeriodId % 100;
+        int periodConstructor = 0;
+        for (int i = periodsCount; i < 6; i++)
+        {
+            startMonth = startMonth == 12 ? 1 : startMonth + 1;
+            startYear = startMonth == 1 ? startYear + 1 : startYear;
+            periodConstructor = (startYear * 100) + startMonth;
+            periods.Add(new Period()
+            {
+                PeriodId = periodConstructor,
+                Description = String.Format("{0}-{1}", periodConstructor.ToString().Substring(0, 4), periodConstructor.ToString().Substring(4, 2))
+            });
+        }
+        var grid = Html.PaginatedGrid("~/MLMQueries/MLMQueries/MLMQueriesReport")
+       .AddInputFilter(Html.Term("MLMAccountNumber", "Account Number"), "accountNumber", ViewData["accountNumber"], false, false, false)
+       .AddInputFilter(Html.Term("MLMAccountName", "Account Name"), "accountName", ViewData["accountName"], false, false, false)
+       .AddSelectFilter(Html.Term("MLMCareerTitle"), "careerTitle", new Dictionary<string, string>() { { "", Html.Term("MLMSelectCareerTitle", "Select Career Title...") } }.AddRange(titles))
+       .AddSelectFilter(Html.Term("MLMPaidAsTitle"), "paidAsTitle", new Dictionary<string, string>() { { "", Html.Term("MLMSelectPaidAsTitles", "Select Paid As Titles...") } }.AddRange(titles))
+       .AddSelectFilter(Html.Term("MLMPeriods"), "periods", new Dictionary<int, string>() { { 0, Html.Term("MLMSelectPeriods", "Select Period...") } }.AddRange(periods.OrderByDescending(x => x.PeriodId).ToDictionary(p => p.PeriodId, p => p.Description)), addBreak: true)
+       .AddSelectFilter(Html.Term("MLMIndicators"), "indicators", new Dictionary<int, string>() { { 0, Html.Term("MLMSelectIndicators", "Select a Indicator...") } }.AddRange(MLMQueriesModel.DisplayIndicators))
+       .AddColumn(Html.Term("MLMColAccountNumber"), "AccountNumber")
+       .AddColumn(Html.Term("MLMColName"), "Name")
+       .AddColumn(Html.Term("MLMColPeriod"), "Period")
+       .AddColumn(Html.Term("MLMColCareerTitle"), "CareerTitle")
+       .AddColumn(Html.Term("MLMColPaidAsTitle"), "PaidAsTitle")
+       .AddColumn(Html.Term("MLMColIndicator"), "Indicator")
+       .AddColumn(Html.Term("MLMColAmount"), "Amount")       
+       .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+       .ClickEntireRow();
+    grid.Render(); 
+}

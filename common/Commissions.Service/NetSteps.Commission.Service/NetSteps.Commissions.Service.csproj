@@ -1,0 +1,362 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\csproj-import-before.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\csproj-import-before.targets')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <HomeSolution>NetSteps.Commissions.Service.sln</HomeSolution>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{89240639-79FE-4BFF-9D48-56785693FA5D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetSteps.Commissions.Service</RootNamespace>
+    <AssemblyName>NetSteps.Commissions.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fasterflect, Version=2.1.3.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BelcorpUSA\packages\fasterflect.2.1.3\lib\net40\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Commissions.Common, Version=2.1.6859.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\BelcorpUSA\packages\NetSteps.Commissions.Common.2.1.6859\lib\net40\NetSteps.Commissions.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetSteps.Common, Version=1.3.240.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BelcorpUSA\packages\NetSteps.Common.1.3.240\lib\net40\NetSteps.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Core.Cache, Version=1.4.140.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BelcorpUSA\LibrariesEC\Core.Cache\NetSteps.Core.Cache.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Diagnostics.Utilities">
+      <HintPath>..\..\..\BelcorpUSA\packages\NetSteps.Diagnostics.Utilities.1.0.23\lib\net40\NetSteps.Diagnostics.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Encore.Core">
+      <HintPath>..\..\..\BelcorpUSA\packages\NetSteps.Encore.Core_r2_3.2.4.143\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Foundation.Common">
+      <HintPath>..\..\..\BelcorpUSA\packages\NetSteps.Foundation.Common.1.3.7\lib\net40\NetSteps.Foundation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\BelcorpUSA\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountLedgerEntries\AccountLedgerEntryProvider.cs" />
+    <Compile Include="AccountLedgerEntries\AccountLedgerEntryRepository.cs" />
+    <Compile Include="AccountLedgerEntries\AccountLedgerEntryService.cs" />
+    <Compile Include="Accounts\AccountProvider.cs" />
+    <Compile Include="Accounts\AccountRepository.cs" />
+    <Compile Include="Accounts\AccountService.cs" />
+    <Compile Include="AccountTitleOverrides\AccountTitleOverrideProvider.cs" />
+    <Compile Include="AccountTitleOverrides\AccountTitleOverrideRepository.cs" />
+    <Compile Include="AccountTitleOverrides\AccountTitleOverrideService.cs" />
+    <Compile Include="AccountTitles\AccountTitleProvider.cs" />
+    <Compile Include="AccountTitles\AccountTitleRepository.cs" />
+    <Compile Include="AccountTitles\AccountTitleService.cs" />
+    <Compile Include="Base\BaseConnectionProvider.cs" />
+    <Compile Include="Base\CommissionsActiveMruCacheAdapter.TKey,TValue.cs" />
+    <Compile Include="Base\CommissionsConnectionProvider.cs" />
+    <Compile Include="Base\IConnectionProvider.cs" />
+    <Compile Include="Base\IDataReaderExtensions.cs" />
+    <Compile Include="Base\IRepository.T.cs" />
+    <Compile Include="Base\KnownFactorsDataWarehouseConnectionProvider.cs" />
+    <Compile Include="Base\ListProvider.cs" />
+    <Compile Include="Base\CommissionsPrepConnectionProvider.cs" />
+    <Compile Include="BonusKinds\BonusKindProvider.cs" />
+    <Compile Include="BonusKinds\BonusKindRepository.cs" />
+    <Compile Include="BonusKinds\BonusKindService.cs" />
+    <Compile Include="DisbursementKinds\DisbursementKind.cs" />
+    <Compile Include="DisbursementKinds\DisbursementKindProvider.cs" />
+    <Compile Include="DisbursementKinds\DisbursementKindRepository.cs" />
+    <Compile Include="DisbursementKinds\DisbursementKindService.cs" />
+    <Compile Include="DisbursementProfiles\DisbursementProfileResolver.cs" />
+    <Compile Include="DistributorPerformance\DistributorPerformanceService.cs" />
+    <Compile Include="Interfaces\AccountTitles\IAccountTitleProvider.cs" />
+    <Compile Include="Interfaces\AccountTitles\IAccountTitleRepository.cs" />
+    <Compile Include="Interfaces\AccountTitles\IAccountTitleService.cs" />
+    <Compile Include="Interfaces\Account\IAccountProvider.cs" />
+    <Compile Include="Interfaces\Account\IAccountService.cs" />
+    <Compile Include="Interfaces\Account\IAccountRepository.cs" />
+    <Compile Include="Interfaces\DisbursementKinds\IDisbursementKind.cs" />
+    <Compile Include="Interfaces\DisbursementKinds\IDisbursementKindProvider.cs" />
+    <Compile Include="Interfaces\DisbursementKinds\IDisbursementKindRepository.cs" />
+    <Compile Include="Interfaces\DisbursementKinds\IDisbursementKindService.cs" />
+    <Compile Include="Interfaces\DistributorPerformance\IDistributorPerformanceService.cs" />
+    <Compile Include="CommissionsConstants.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountTitle.cs" />
+    <Compile Include="Models\AccountTitleOverrideSearchResult.cs" />
+    <Compile Include="Models\BonusPayout.cs" />
+    <Compile Include="Models\CalculationKind.cs" />
+    <Compile Include="CalculationKinds\CalculationKindProvider.cs" />
+    <Compile Include="CalculationKinds\CalculationKindRepository.cs" />
+    <Compile Include="CalculationKinds\CalculationKindService.cs" />
+    <Compile Include="CalculationOverrides\CalculationOverrideProvider.cs" />
+    <Compile Include="CalculationOverrides\CalculationOverrideRepository.cs" />
+    <Compile Include="CalculationOverrides\CalculationOverrideService.cs" />
+    <Compile Include="Models\CalculationOverrideSearchResult.cs" />
+    <Compile Include="DisbursementHolds\DisbursementHoldProvider.cs" />
+    <Compile Include="DisbursementHolds\DisbursementHoldRepository.cs" />
+    <Compile Include="DisbursementHolds\DisbursementHoldResolver.cs" />
+    <Compile Include="DisbursementHolds\DisbursementHoldService.cs" />
+    <Compile Include="CommissionPlans\CommissionPlanProvider.cs" />
+    <Compile Include="CommissionPlans\CommissionPlanRepository.cs" />
+    <Compile Include="CommissionPlans\CommissionPlanService.cs" />
+    <Compile Include="Models\CheckHoldSearchResult.cs" />
+    <Compile Include="Models\DisbursementProfile.cs" />
+    <Compile Include="DisbursementProfiles\DisbursementProfileProvider.cs" />
+    <Compile Include="DisbursementProfiles\DisbursementProfileRepository.cs" />
+    <Compile Include="DisbursementProfiles\DisbursementProfileService.cs" />
+    <Compile Include="DownlineService.cs" />
+    <Compile Include="Interfaces\AccountLedger\IAccountLedgerEntryProvider.cs" />
+    <Compile Include="Interfaces\AccountLedger\IAccountLedgerEntryRepository.cs" />
+    <Compile Include="Interfaces\AccountLedger\IAccountLedgerEntryService.cs" />
+    <Compile Include="Interfaces\AccountTitleOverride\IAccountTitleOverrideProvider.cs" />
+    <Compile Include="Interfaces\AccountTitleOverride\IAccountTitleOverrideRepository.cs" />
+    <Compile Include="Interfaces\AccountTitleOverride\IAccountTitleOverrideService.cs" />
+    <Compile Include="Interfaces\BonusKind\IBonusKindProvider.cs" />
+    <Compile Include="Interfaces\BonusKind\IBonusKindRepository.cs" />
+    <Compile Include="Interfaces\BonusKind\IBonusKindService.cs" />
+    <Compile Include="Interfaces\CalculationKind\ICalculationKindProvider.cs" />
+    <Compile Include="Interfaces\CalculationKind\ICalculationKindRepository.cs" />
+    <Compile Include="Interfaces\CalculationKind\ICalculationKindService.cs" />
+    <Compile Include="Interfaces\CalculationOverride\ICalculationOverrideProvider.cs" />
+    <Compile Include="Interfaces\CalculationOverride\ICalculationOverrideRepository.cs" />
+    <Compile Include="Interfaces\CalculationOverride\ICalculationOverrideService.cs" />
+    <Compile Include="Interfaces\DisbursementHold\IDisbursementHoldProvider.cs" />
+    <Compile Include="Interfaces\DisbursementHold\IDisbursementHoldRepository.cs" />
+    <Compile Include="Interfaces\DisbursementHold\IDisbursementHoldService.cs" />
+    <Compile Include="Interfaces\CommissionPlan\ICommissionPlanProvider.cs" />
+    <Compile Include="Interfaces\CommissionPlan\ICommissionPlanRepository.cs" />
+    <Compile Include="Interfaces\CommissionPlan\ICommissionPlanService.cs" />
+    <Compile Include="Interfaces\DisbursementProfile\IDisbursementProfileProvider.cs" />
+    <Compile Include="Interfaces\DisbursementProfile\IDisbursementProfileRepository.cs" />
+    <Compile Include="Interfaces\DisbursementProfile\IDisbursementProfileResolver.cs" />
+    <Compile Include="Interfaces\DisbursementProfile\IDisbursementProfileService.cs" />
+    <Compile Include="Interfaces\LedgerEntryKind\ILedgerEntryKindProvider.cs" />
+    <Compile Include="Interfaces\LedgerEntryKind\ILedgerEntryKindRepository.cs" />
+    <Compile Include="Interfaces\LedgerEntryKind\ILedgerEntryKindService.cs" />
+    <Compile Include="Interfaces\LedgerEntryOrigin\ILedgerEntryOriginProvider.cs" />
+    <Compile Include="Interfaces\LedgerEntryOrigin\ILedgerEntryOriginRepository.cs" />
+    <Compile Include="Interfaces\LedgerEntryOrigin\ILedgerEntryOriginService.cs" />
+    <Compile Include="Interfaces\LedgerEntryReason\ILedgerEntryReasonProvider.cs" />
+    <Compile Include="Interfaces\LedgerEntryReason\ILedgerEntryReasonRepository.cs" />
+    <Compile Include="Interfaces\LedgerEntryReason\ILedgerEntryReasonService.cs" />
+    <Compile Include="Interfaces\OverrideKind\IOverrideKindProvider.cs" />
+    <Compile Include="Interfaces\OverrideKind\IOverrideKindRepository.cs" />
+    <Compile Include="Interfaces\OverrideKind\IOverrideKindService.cs" />
+    <Compile Include="Interfaces\OverrideReasonSource\IOverrideReasonSourceProvider.cs" />
+    <Compile Include="Interfaces\OverrideReasonSource\IOverrideReasonSourceRepository.cs" />
+    <Compile Include="Interfaces\OverrideReasonSource\IOverrideReasonSourceService.cs" />
+    <Compile Include="Interfaces\OverrideReason\IOverrideReasonProvider.cs" />
+    <Compile Include="Interfaces\OverrideReason\IOverrideReasonRepository.cs" />
+    <Compile Include="Interfaces\OverrideReason\IOverrideReasonService.cs" />
+    <Compile Include="Interfaces\Period\IPeriodProvider.cs" />
+    <Compile Include="Interfaces\Period\IPeriodRepository.cs" />
+    <Compile Include="Interfaces\Period\IPeriodService.cs" />
+    <Compile Include="Interfaces\ProductCreditLedger\IProductCreditLedgerEntryProvider.cs" />
+    <Compile Include="Interfaces\ProductCreditLedger\IProductCreditLedgerEntryRepository.cs" />
+    <Compile Include="Interfaces\ProductCreditLedger\IProductCreditLedgerEntryService.cs" />
+    <Compile Include="Interfaces\TitleKind\ITitleKindProvider.cs" />
+    <Compile Include="Interfaces\TitleKind\ITitleKindRepository.cs" />
+    <Compile Include="Interfaces\TitleKind\ITitleKindService.cs" />
+    <Compile Include="Interfaces\Title\ITitleProvider.cs" />
+    <Compile Include="Interfaces\Title\ITitleRepository.cs" />
+    <Compile Include="Interfaces\Title\ITitleService.cs" />
+    <Compile Include="LedgerEntryKinds\LedgerEntryKindProvider.cs" />
+    <Compile Include="LedgerEntryKinds\LedgerEntryKindRepository.cs" />
+    <Compile Include="LedgerEntryKinds\LedgerEntryKindService.cs" />
+    <Compile Include="LedgerEntryOrigins\LedgerEntryOriginProvider.cs" />
+    <Compile Include="LedgerEntryOrigins\LedgerEntryOriginRepository.cs" />
+    <Compile Include="LedgerEntryOrigins\LedgerEntryOriginService.cs" />
+    <Compile Include="LedgerEntryReasons\LedgerEntryReasonProvider.cs" />
+    <Compile Include="LedgerEntryReasons\LedgerEntryReasonRepository.cs" />
+    <Compile Include="LedgerEntryReasons\LedgerEntryReasonService.cs" />
+    <Compile Include="CommissionsServiceModuleWireup.cs" />
+    <Compile Include="Models\EarningReport.cs" />
+    <Compile Include="Models\OverrideKind.cs" />
+    <Compile Include="Models\ReportAccountKPIDetail.cs" />
+    <Compile Include="Models\ReportBonusDetail.cs" />
+    <Compile Include="Operations\EqualsOperation.cs" />
+    <Compile Include="Operations\GreaterThanOperation.cs" />
+    <Compile Include="Operations\IOperation.cs" />
+    <Compile Include="Operations\LessThanOperation.cs" />
+    <Compile Include="OverrideKinds\OverrideKindProvider.cs" />
+    <Compile Include="OverrideKinds\OverrideKindRepository.cs" />
+    <Compile Include="OverrideKinds\OverrideKindService.cs" />
+    <Compile Include="OverrideReasonSources\OverrideReasonSourceProvider.cs" />
+    <Compile Include="OverrideReasonSources\OverrideReasonSourceRepository.cs" />
+    <Compile Include="OverrideReasonSources\OverrideReasonSourceService.cs" />
+    <Compile Include="Models\OverrideReasonSource.cs" />
+    <Compile Include="Models\OverrideReason.cs" />
+    <Compile Include="OverrideReasons\OverrideReasonProvider.cs" />
+    <Compile Include="OverrideReasons\OverrideReasonRepository.cs" />
+    <Compile Include="OverrideReasons\OverrideReasonService.cs" />
+    <Compile Include="Periods\PeriodProvider.cs" />
+    <Compile Include="ProductCreditLedgerEntries\ProductCreditLedgerEntryProvider.cs" />
+    <Compile Include="ProductCreditLedgerEntries\ProductCreditLedgerEntryRepository.cs" />
+    <Compile Include="ProductCreditLedgerEntries\ProductCreditLedgerEntryService.cs" />
+    <Compile Include="Properties\AssemblyInfo.version.cs" />
+    <Compile Include="AccountLedgerService.cs" />
+    <Compile Include="Models\CommissionRunStep.cs" />
+    <Compile Include="CommissionsJobService.cs" />
+    <Compile Include="CommissionsService.cs" />
+    <Compile Include="Models\AccountKPI.cs" />
+    <Compile Include="AccountLedgerEntries\AccountLedgerEntry.cs" />
+    <Compile Include="Models\AccountTitleOverride.cs" />
+    <Compile Include="Models\BonusKind.cs" />
+    <Compile Include="Models\CalculationOverride.cs" />
+    <Compile Include="Models\CheckDisbursementProfile.cs" />
+    <Compile Include="Models\DisbursementHold.cs" />
+    <Compile Include="Models\CommissionJob.cs" />
+    <Compile Include="Models\CommissionPlan.cs" />
+    <Compile Include="Models\CommissionRun.cs" />
+    <Compile Include="Models\CommissionRunOutput.cs" />
+    <Compile Include="Models\CommissionRunPlan.cs" />
+    <Compile Include="Models\DistributorPeriodPerformanceData.cs" />
+    <Compile Include="Models\EFTAccount.cs" />
+    <Compile Include="Models\EFTDisbursementProfile.cs" />
+    <Compile Include="Models\SystemEventLog.cs" />
+    <Compile Include="Models\LedgerEntryKind.cs" />
+    <Compile Include="Models\LedgerEntryOrigin.cs" />
+    <Compile Include="Models\LedgerEntryReason.cs" />
+    <Compile Include="Models\Period.cs" />
+    <Compile Include="Models\ProductCreditLedgerEntry.cs" />
+    <Compile Include="Models\PropayDisbursementProfile.cs" />
+    <Compile Include="Models\SystemEvent.cs" />
+    <Compile Include="Models\SystemEventSetting.cs" />
+    <Compile Include="Models\TitleKind.cs" />
+    <Compile Include="TitleKinds\TitleKindProvider.cs" />
+    <Compile Include="TitleKinds\TitleKindRepository.cs" />
+    <Compile Include="TitleKinds\TitleKindService.cs" />
+    <Compile Include="Models\Title.cs" />
+    <Compile Include="ProductCreditLedgerService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Periods\PeriodRepository.cs" />
+    <Compile Include="Periods\PeriodService.cs" />
+    <Compile Include="Titles\TitleProvider.cs" />
+    <Compile Include="Titles\TitleRepository.cs" />
+    <Compile Include="Titles\TitleService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BaseListRepository.T.cs" />
+    <Compile Include="Base\BaseSearchProvider.T.cs" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 y x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)..\csproj-import-after.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\csproj-import-after.targets')" />
+</Project>

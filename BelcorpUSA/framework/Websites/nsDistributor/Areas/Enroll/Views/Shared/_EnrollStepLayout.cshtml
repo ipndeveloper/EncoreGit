@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollLayout.cshtml";
+}
+
+@section head
+{
+    @RenderSection("head", false)
+     @*CS.12JUN.2016.Inicio*@
+    @if (Session["AccountInfoPolicy"] != null)
+    {
+        <script type="text/javascript">
+		//<![CDATA[
+            $(function () {
+                $('<div></div>').prependTo('body').attr('id', 'OverlayPolicy');
+                $('#OverlayPolicy').css({ 'height': $(document).height(), 'width': $(document).width() });
+            });
+		//]]>
+        </script>
+    }
+    @*CS.12JUN.2016.Fin*@
+}
+
+<div class="pageTitle">
+    <h1>@Html.Term("Enrollment_Master_Title", "Enrollment Application")</h1>
+</div>
+
+<div class="steps enrollment">
+    @Html.Partial("_HeaderSteps", ViewBag.HeaderSteps as object)
+    <span class="clr"></span>
+</div>
+
+<div class="enrollmentContentPane">
+    <h2 class="step">@ViewBag.StepCounter</h2>
+    @if (ViewBag.HeaderTotals != null)
+    {
+        <div id="CartTotals" class="brdr brdrAll pad5">
+            @Html.Partial("_HeaderTotals", ViewBag.HeaderTotals as object)
+            <span class="clr"></span>
+        </div>
+    }
+    @Html.Messages()
+    <span class="clr"></span>
+    @RenderBody()
+    <span class="clr"></span>
+</div>
+
+@section bodyFooter
+{
+    @RenderSection("bodyFooter", false)
+}

@@ -1,0 +1,18 @@
+﻿@model DistributorBackOffice.Models.AuthenticationModel
+@section title{
+    "Redirect"
+}
+
+<form action="https://itworks.sd.success.com/account/login" method="POST" id="frmSubmit">
+    <input type='hidden' name='email_address' value='@Model.EmailAddress' />
+    <input type='hidden' name='password' value='@Model.Password' />
+</form>
+
+<script type="text/javascript">
+    $(function ()
+    {
+        document.forms["frmSubmit"].submit();
+        alert('aha');
+    });
+    
+</script>

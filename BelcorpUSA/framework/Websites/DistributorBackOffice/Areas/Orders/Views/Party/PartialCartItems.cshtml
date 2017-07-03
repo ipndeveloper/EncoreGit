@@ -1,0 +1,17 @@
+﻿@using DistributorBackOffice.Areas.Orders.Models.Party
+@model OrderItemsModel
+@{ 
+    var addedItemOperationID = (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderLineOperationKind.AddedItem;
+    var nonPromotionalItems = Model.OrderCustomer.ParentOrderItems.Where(x => !x.OrderAdjustmentOrderLineModifications.Any(y => y.ModificationOperationID == addedItemOperationID)).ToList();
+    var promotionalItems = Model.OrderCustomer.ParentOrderItems.Except(nonPromotionalItems).ToList();
+    var adjustments = promotionalItems.GroupBy(x => x.OrderAdjustmentOrderLineModifications.Single(y => y.ModificationOperationID == addedItemOperationID).OrderAdjustment).ToList();
+}
+@Html.Partial("PartialOrderEntryItems", nonPromotionalItems.Where(x => x.HostessRewardRuleID == null))
+@Html.Partial("PartialOrderEntryPromotionItems", new PartyPromotionOrderItems { Items = adjustments, OrderCustomerAccountID = Model.OrderCustomer.AccountID })
+@if (Model.OrderCustomer.IsHostess)
+{
+	foreach (var orderItem in Model.HostessRewardParentOrderItems)
+	{
+		 @Html.Partial("HostRewardOrderItem", new OrderItemModel { Hostess = Model.Hostess, Order = Model.Order, OrderItem = orderItem })
+	}
+}

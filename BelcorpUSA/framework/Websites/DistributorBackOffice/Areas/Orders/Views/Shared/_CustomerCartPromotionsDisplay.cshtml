@@ -1,0 +1,62 @@
+﻿@using NetSteps.Data.Common.Services
+@using NetSteps.Encore.Core.IoC
+@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components
+@model OrderCustomer
+
+@*Start Qualified for Promotions Notification*@
+	@{
+		var orderAdjustments = ((Order)Model.Order).OrderAdjustments;
+		var customerAdjustments = orderAdjustments
+            .Where(adjustment =>
+			    adjustment.OrderLineModifications
+                    .Any(orderlineMod => ((OrderAdjustmentOrderLineModification)orderlineMod).OrderItem.OrderCustomer == Model) ||
+			adjustment.OrderModifications
+                    .Any(orderMod => ((OrderAdjustmentOrderModification)orderMod).OrderCustomer == Model) ||
+			adjustment.InjectedOrderSteps.Any(s => s.CustomerAccountID == Model.AccountID));
+	}
+	<div class="UI-mainBg m1 pad5" id="promotionHeader@(Model.Guid.ToString("N"))" style='display:@(customerAdjustments.Any() ? "block" : "none")'>
+		<div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+			@Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions")
+		</div>
+		<div id="promotionList">
+			@foreach (var adjustment in customerAdjustments)
+   {
+	   // this next check is not robust - this needs to be refactored to handle situations in which order adjustments may return a message as part of normal process (etc.).
+	   // For now it only checks to determine if the order has a message, then assumes that it is a promotional error message (out of stock).
+	   if (adjustment.OrderModifications.Any(modification => modification.ModificationOperationID == (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderOperationKind.Message))
+	   {
+		   // at the moment it is assumed that the only message is an out of stock message
+					<div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+						<span class="UI-icon FL icon-star"></span>
+						<span class="UI-icon FL icon-star"></span><span class="FL promoItem">@adjustment.Description</span>
+						<span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+					</div>
+	   }
+	   else
+	   {
+					<div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+						<span class="UI-icon FL icon-star"></span>
+						<span class="FL promoItem">@adjustment.Description</span>
+						@{	
+		   var giftStep = adjustment.InjectedOrderSteps.OfType<IUserProductSelectionOrderStep>().FirstOrDefault(s => s.CustomerAccountID == Model.AccountID);
+		   var inventoryService = Create.New<IInventoryService>();
+						}
+						@if (giftStep != null && !adjustment.OrderAdjustmentOrderLineModifications.Any(m => m.OrderItem.OrderCustomerID == Model.OrderCustomerID))
+	  {
+		  var hasAvailableOptions = giftStep.AvailableOptions.Any(option => inventoryService.GetProductAvailabilityForOrder(Model.Order, option.ProductID, option.Quantity).CanAddNormally == option.Quantity);
+		  if (hasAvailableOptions)
+		  {
+								<a href="javascript:void(0);" stepId="@adjustment.InjectedOrderSteps.First(s => s.CustomerAccountID == Model.AccountID).OrderStepReferenceID" class="bold selectGift">@Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>
+		  }
+		  else
+		  { 
+								<span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+		  }
+	  }
+					</div>
+	   }
+   }
+		</div>
+		<span class="clr"></span>
+	</div>
+	@*End Qualified for Promotions Notification*@

@@ -1,0 +1,16 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.DateModel
+
+@{
+    string elementClass = "";
+    ModelState modelState = null;
+    if(ViewData.ModelState.TryGetValue(ViewData.TemplateInfo.HtmlFieldPrefix, out modelState) && modelState.Errors.Any())
+    {
+        elementClass += " input-validation-error";
+    }
+}
+
+@Html.TextBox("Month", string.Format("{0:D2}", Model.Month), new { @class = elementClass + " datemodelmonth", maxlength = "2", size = "2", placeholder = Html.Term("mm"), data_autotab = "next", data_inputfilter = "[0-9]" })
+-
+@Html.TextBox("Day", string.Format("{0:D2}", Model.Day), new { @class = elementClass + " datemodelday", maxlength = "2", size = "2", placeholder = Html.Term("dd"), data_autotab = "next", data_autotab_prev = "prev", data_inputfilter = "[0-9]" })
+-
+@Html.TextBox("Year", string.Format("{0:D4}", Model.Year), new { @class = elementClass + " datemodelyear", maxlength = "4", size = "4", placeholder = Html.Term("yyyy"), data_autotab_prev = "prev", data_inputfilter = "[0-9]" })

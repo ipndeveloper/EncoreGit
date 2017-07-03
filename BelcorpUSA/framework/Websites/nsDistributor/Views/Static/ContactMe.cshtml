@@ -1,0 +1,163 @@
+﻿@model nsDistributor.Models.ContactMeModel
+@{
+	if (BaseController.CurrentSite.IsBase)
+	{
+		ViewBag.Title = Html.Term("ContactCorporate", "Contact Corporate");
+	}
+	else
+	{
+		ViewBag.Title = Html.Term("ContactMe", "Contact Me");
+	}
+}
+@section head
+{
+	<script type="text/javascript">
+		//<![CDATA[
+		$(function () {
+			$('#FirstName').watermark('@Html.JavascriptTerm("First Name", "First Name")');
+			$('#LastName').watermark('@Html.JavascriptTerm("Last Name", "Last Name")');
+			$('#Email').watermark('@Html.JavascriptTerm("Email", "E-Mail Address")');
+			$('#Phone').watermark('@Html.JavascriptTerm("PhoneNumber", "Phone Number")');
+			$('#Comments').watermark('@Html.JavascriptTerm("AnyComments", "Any Comments?")');
+            $('#State').watermark('@Html.JavascriptTerm("State", "State")');
+			$('#ContactMeForm').setupRequiredFields();
+			$('#submit').click(function () {
+                var checkingState = true;
+				if ($('#ContactMeForm').checkRequiredFields()) {
+					$('#ContactMeForm input.required').each(function () {
+						if ($(this).val() == $(this).data('watermark')) {
+							$(this).val('');
+						}
+					});
+                    $('.errorMessageBubble').each(function () {
+						if ($(this).is(':visible')) {
+                            checkingState = false;
+							return false;
+						}
+					});
+                    if (checkingState)
+					$('#ContactMeForm').submit();
+				}
+			});
+
+			if (parseBool('@(ViewBag.SuccessfullySubmitted != null)')) {
+				@{ 
+					var alertMessage = "";
+
+					if (BaseController.CurrentSite.IsBase && BaseController.PageMode != NetSteps.Common.Constants.ViewingMode.Edit)
+					{
+						alertMessage = Html.Term("CorporateContactFormThankYou", "Thank you for your interest. An email has been sent to the owner of this site with your information.");
+					}
+					else
+					{
+						alertMessage = Html.Term("ContactFormThankYou", "Thank you for your interest. An email has been sent to the owner of this site with your information.");
+					}  
+				 }                
+				
+				alert('@alertMessage');      
+			}
+		});
+		//]]>
+	</script>
+}
+ @if (BaseController.CurrentSite.SiteTypeID != (short)Constants.SiteType.Corporate)
+{
+	//if your client is party plan, override the _BioWidget partial and uncomment the "my parties" section in there.  
+   @Html.Partial("_BioWidget")
+}
+<div class="ContentColumn contactPage">
+   
+	<div class="UI-cmsWrap">
+		<div class="myStory">
+			@(((HtmlSection)ViewBag.MyStory).ToDisplay())
+		</div>
+	</div>
+  
+	<div id="ContactMeWrapper">
+		@if (BaseController.CurrentSite.SiteTypeID == (short)Constants.SiteType.Corporate)
+		{
+			<div class="formPreText">
+				<h3>
+					@Html.Term("ContactCorporate", "Contact Corporate")</h3>
+				<p>
+					@Html.Term("CorporeatePleaseFillOutTheFormBelowForMoreInformation", "Please fill out the form below for more information.")
+				</p>
+			</div>
+		}
+		else
+		{
+			<div class="formPreText">
+				<h3>
+					@Html.Term("ContactMe", "Contact Me")</h3>
+				<p>
+					@Html.Term("PleaseFillOutTheFormBelowForMoreInformation", "Please fill out the form below for more information.")
+				</p>
+			</div>
+		}
+		@if (!string.IsNullOrEmpty(ViewBag.Error))
+		{
+			<div class="ErrorMessage">
+				@Html.Raw(ViewBag.Error)
+			</div>
+		}
+		<div id="consultantForm" class="FormContainer">
+			<form id="ContactMeForm" action="@Url.Resolve(BaseController.CurrentSite.IsBase ? "~/ContactCorporate" : "~/ContactMe")" method="post">
+			<p>
+				<input type="text" tabindex="1" id="FirstName" class="required" name="@Html.Term("FirstNameRequired", "First Name is required.")" value="@(Model != null ? Model.FirstName : "")" />
+			</p>
+			<p>
+				<input type="text" tabindex="1" id="LastName" class="required" name="@Html.Term("LastNameRequired", "Last Name is required.")" value="@(Model != null ? Model.LastName : "")" />
+			</p>
+            <p id="jsonState" style="position:relative;">
+				<input type="text" tabindex="2" id="State" autocomplete = "off" class="required" name="@Html.Term("StateRequired", "State is required.")" value="@(Model != null ? Model.State : "")" />
+			</p>
+			<p>
+				<input type="text" tabindex="3" id="Email" class="required" name="@Html.Term("EmailRequired", "Email is required.")" value="@(Model != null ? Model.Email : "")" />
+            </p>
+			<p>
+				<input type="text" tabindex="4" id="Phone" class="required" name="@Html.Term("PhoneRequired", "Phone Number is required.")" value="@(Model != null ? Model.Phone : "")" />
+            </p>
+			<p>
+				<textarea tabindex="5" id="Comments" class="required" name="@Html.Term("CommentsRequired", "Comments are required.")" cols="55" rows="5">@(Model != null ? Model.Comments : "")</textarea>
+			</p>
+			<p class="FormSubmit">
+				<a tabindex="6" id="submit" href="javascript:void(0);" class="Button btnSendEmail"><span>
+					@Html.Term("Submit")</span></a>
+			</p>
+			</form>
+		</div>
+	</div>
+    <script type="text/javascript">
+        $(function () {
+            var SelectedResult = false;
+            $('#State').keyup(function (e) {
+                $(this).val($(this).val().toUpperCase());
+                SelectedResult = false;
+            }).jsonSuggest('@Url.Resolve("~/SearchState")', { onSelect: function (item) {
+                $('#State').clearError();
+                SelectedResult = true;
+            }, minCharacters: 1, ajaxResults: true, maxResults: 50, showMore: true
+            }).blur(function () {
+                if (!SelectedResult) {
+                    var objectJson = $.getJSON('@Url.Resolve("~/SearchState")', { query: $('#State').val() }, function (data) {
+                        if (!data) {
+                            $('#State').showError('@Html.JavascriptTerm("StateInvalid", "State is invalid.")');
+                        }
+                        else {
+                            if (data[0].text == $('#State').val())
+                                $('#State').clearError();
+                            else
+                                $('#State').showError('@Html.JavascriptTerm("StateInvalid", "State is invalid.")');   
+                        }
+                    });
+                } else {
+                    if (typeof (objectJson) == 'object') {
+                        objectJson.abort();
+                        objectJson = false;
+                    }
+                }                
+            });
+        });
+    </script>
+</div>
+<!--/ End Contact Page Wrapper -->

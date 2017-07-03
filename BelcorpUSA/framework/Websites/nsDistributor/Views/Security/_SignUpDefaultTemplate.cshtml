@@ -1,0 +1,84 @@
+﻿<div class="signUpActionTitle">
+	<h3>
+		<!--ko text: HeadingText--><!--/ko-->
+		<a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="javascript:void(0)" data-bind="attr: { 'content-qmark': ToolTipText }"></a>
+	</h3>
+</div>
+<div class="target signUpActionContent" data-bind="slideToggle: IsVisible">
+	<div class="FormContainer loginForm">
+		<div class="FRow splitCol firstName">
+			<div class="FLabel">
+				<label for="txtFirstName">
+					@Html.Term("FirstName", "First Name"):</label>
+			</div>
+			<div class="FInput">
+				<input type="text" id="txtFirstName" class="required" name="@Html.Term("FirstNameIsRequired", "First Name is required.")" data-bind="value: $parent.FirstName, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<div class="FRow splitCol lastName">
+			<div class="FLabel">
+				<label for="txtLastName">
+					@Html.Term("LastName", "Last Name"):</label>
+			</div>
+			<div class="FInput">
+				<input type="text" id="txtLastName" class="required" name="@Html.Term("LastNameIsRequired", "Last Name is required.")" data-bind="value: $parent.LastName, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<div class="FRow fullWidth email">
+			<div class="FLabel">
+				<label for="txtEmail">
+					@Html.Term("Email"):</label>
+			</div>
+			<div class="FInput">
+				<input type="text" id="txtEmail" class="required" name="@Html.Term("EmailIsRequired", "Email is required.")" data-bind="value: $parent.Email, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<div class="FRow splitCol username" data-bind="visible: ShowUsername">
+			<div class="FLabel">
+				<label for="txtUsername">
+					@Html.Term("Username"):</label>
+			</div>
+			<div class="FInput">
+				<input type="text" id="txtNewUsername" class="required" name="@Html.Term("UsernameIsRequired", "Username is required.")" data-bind="value: $parent.Username, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<div class="FRow splitCol password" data-bind="visible: ShowPassword">
+			<div class="FLabel">
+				<label for="txtPassword">
+					@Html.Term("Password"):</label>
+			</div>
+			<div class="FInput">
+				<input type="password" id="txtNewPassword" class="required" name="@Html.Term("PasswordIsRequired", "Password is required.")" data-bind="value: $parent.Password, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<div class="FRow splitCol confirmPassword" data-bind="visible: ShowPassword">
+			<div class="FLabel">
+				<label for="txtPassword">
+					@Html.Term("ConfirmPassword", "Confirm Password"):</label>
+			</div>
+			<div class="FInput">
+				<input type="password" id="txtNewPasswordConfirm" class="required" name="@Html.Term("PasswordConfirmationIsRequired", "Password confirmation is required.")" data-bind="value: $parent.ConfirmPassword, attr: { tabindex: $root.nextTabIndex() }" />
+			</div>
+			<span class="clr"></span>
+		</div>
+		<span class="clr"></span>
+		<div class="FRow options visible" data-bind="visible: ShowOptOut">
+			<input type="checkbox" data-bind="checked: $parent.OptOut, attr: { tabindex: $root.nextTabIndex() }" />
+			<label>@Html.Term("PWS_SignUp_OptOut_Label", "Opt-out of being contacted") </label>
+			<a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="javascript:void(0);" content-qmark="@Html.Term("AccountToolTip_OptOut", "Opt out to avoid being contacted.")" data-bind="attr: { tabindex: $root.nextTabIndex() }"></a>
+			@if (CoreContext.CurrentOrder.ParentOrderID.HasValue)
+			{
+			<p><label>@Html.Term("PWS-SignUp_OptOut_Warning", "Your order is currently attached to a party, this option will detach the order from the party")</label></p>
+			}
+	   </div>
+	</div>
+	<p class="FormSubmit">
+		<a class="Button MinorButton btnSignUp" href="javascript:void(0);" id="btnSignUp" data-bind="click: $parent.submit, attr: { tabindex: $root.nextTabIndex() }"><span>
+			@Html.Term("PWS_SignUp_Continue_Button", "Continue")</span></a>
+	</p>
+</div>

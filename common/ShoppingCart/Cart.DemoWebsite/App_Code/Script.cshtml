@@ -1,0 +1,7 @@
+﻿@helper Make(string url) {
+	<script src="@(url)" type="text/javascript"></script>
+	if (Cart.DemoWebsite.Config.Settings.TestMode)
+	{
+		<script src="@(url.Insert(url.LastIndexOf(".js"), ".tests.integration"))" type="text/javascript"></script>
+	}
+}

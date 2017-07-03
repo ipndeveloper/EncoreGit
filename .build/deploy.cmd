@@ -1,0 +1,1 @@
+"c:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync -source:contentPath="%~1" -dest:package="%~2"

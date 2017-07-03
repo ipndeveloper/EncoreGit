@@ -1,0 +1,75 @@
+﻿@model dynamic
+@{
+    ViewBag.Title = Html.Term("SignUp", "Sign up");
+}
+@section head {
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSignUp').click(function () {
+                if (!$('#signUp').checkRequiredFields()) {
+                    return false;
+                }
+                if ($('#txtNewPassword').val() != $('#txtNewPasswordConfirm').val()) {
+                    $('#txtNewPasswordConfirm').showError('@Html.JavascriptTerm("PasswordsDoNotMatch", "Passwords do not match.")');
+                }
+                var t = $(this);
+                showLoading(t);
+                $('#signUpError').empty();
+                $.post('@Url.Resolve("~/HostedParties/SignUp") ', {
+                    accountId: '@ViewBag.AccountID',
+                    username: $('#txtNewUsername').val(),
+                    password: $('#txtNewPassword').val()
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        window.location = '@Url.Resolve("~/HostedParties")';
+                    } else {
+                        $('#signUpError').html(response.message).fadeIn();
+                    }
+                });
+            });
+        });
+    </script>
+}
+<div class="ContentColumn hostedPartiesDashboard">
+    <div class="pageTitle">
+        <h1>@Html.Term("SignUp", "Sign up")</h1>
+    </div>
+    <div class="pad10">
+        <div id="signUpError" class="UI-errorBg mb10 pad10 center clr" style="display: none;">
+        </div>
+        <div class="UI-darkBg brdrAll pad5 newSignUpHeader">
+            <h2>@Html.Term("SignUpWithANewAccount", "Sign up with a new account")</h2>
+        </div>
+        <div class="FormContainer loginForm">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtUsername">
+                        @Html.Term("Username"):</label></div>
+                <div class="FInput">
+                    <input type="text" id="txtNewUsername" class="required" name="@Html.Term("UsernameIsRequired", "Username is required.")" /></div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtPassword">
+                        @Html.Term("Password"):</label></div>
+                <div class="FInput">
+                    <input type="password" id="txtNewPassword" class="required" name="@Html.Term("PasswordIsRequired", "Password is required.")" /></div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtPassword">
+                        @Html.Term("ConfirmPassword", "Confirm Password"):</label></div>
+                <div class="FInput">
+                    <input type="password" id="txtNewPasswordConfirm" class="required" name="@Html.Term("PasswordConfirmationIsRequired", "Password confirmation is required.")" /></div>
+                <span class="clr"></span>
+            </div>
+        </div>
+        <p class="FormSubmit">
+            <a id="btnSignUp" href="javascript:void(0);" class="Button MinorButton btnSignUp"><span>
+                @Html.Term("SignUp", "Sign up")</span></a>
+        </p>
+    </div>
+</div>

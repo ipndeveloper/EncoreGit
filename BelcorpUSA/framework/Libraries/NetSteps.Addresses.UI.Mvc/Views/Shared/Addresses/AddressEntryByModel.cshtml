@@ -1,0 +1,130 @@
+﻿@model NetSteps.Addresses.UI.Mvc.Models.AddressEntrySettings
+@using NetSteps.Addresses.UI.Mvc.Controllers;
+@using NetSteps.Addresses.UI.Common.Services;
+@using NetSteps.Encore.Core.IoC;
+@using NetSteps.Addresses.UI.Mvc.Models;
+@{
+    IAddressesService service = Create.New<IAddressesService>();
+    var settings = service.GetCountrySettings(Model.AddressModel.CountryCode);
+
+    var countries = from none in new List<object>()
+                    select new { countryCode = string.Empty, countryID = 0, countryName = string.Empty };
+    
+    if(Model.CountryListMode == AddressEntryCountryListModes.NoRestrictions)
+    {
+        countries = from country in NetSteps.Data.Entities.Cache.SmallCollectionCache.Instance.Countries
+                    select new { countryCode = country.CountryCode, countryID = country.CountryID, countryName = country.Name };
+    } else {
+        countries = from country in service.GetAvailableCountries(Model.MarketID)
+                    select new { countryCode = country.CountryCode, countryID = country.CountryID, countryName = country.Name };
+    }
+
+    var countrySettingCleansingMode =
+        settings.RequiresScrubbing
+        ? "ns.addressEditor.prototype.consts.cleansingMode.none"
+        : "ns.addressEditor.prototype.consts.cleansingMode.required";
+        
+    var countrySettingAllowPostalCodeLookup = 
+        settings.PostalCodeLookupEnabled 
+        ? "ns.addressEditor.prototype.consts.boolOverride.yes"
+        : "ns.addressEditor.prototype.consts.boolOverride.no";
+
+}           
+<script type="text/javascript" src="@Url.Content("~/Resource/Scripts/ns.addresses.js")"></script>
+@{
+    Action<AddressEntryCountrySpecificOverrideSettings> countrySettingWriter = new Action<AddressEntryCountrySpecificOverrideSettings>(settingsPair =>
+    {
+        var settingsPairFieldOutput = String.Empty;
+        foreach (var fieldSetting in settingsPair.FieldOverrides)
+        {
+            var fieldTemplate = "{0}'{1}': $.extend(true, {{}}, defaults.countryFieldOverrideSetting, {{fieldName:'{1}', fieldIncluded:{2}, fieldEnabled:{3}, label:'{4}'}}) ";
+
+            settingsPairFieldOutput += String.Format(fieldTemplate,
+                (settingsPairFieldOutput != String.Empty ? "," : ""),
+                fieldSetting.FieldName.Replace("'", "\'"),
+                fieldSetting.FieldIncluded.ToShort(),
+                fieldSetting.FieldEnabled.ToShort(),
+                fieldSetting.LabelOverride.Replace("'", "\'")
+            );
+        }
+        var countryOverrideTemplate = "'{0}':$.extend (true, {{}}, defaults.countryOverrideSetting, {{key:'{0}', cleansingMode: {1}, allowPostalCodeLookup:{2}, fieldOverrides:{{{3}}}}})";
+
+        var writeOutput = String.Format(countryOverrideTemplate,
+            settingsPair.CountryCode,
+            settingsPair.CleansingMode.ToShort(),
+            settingsPair.AllowZipPostalLookup.ToShort(),
+            settingsPairFieldOutput
+            );
+
+        Write(Html.Raw(writeOutput));
+    });     
+}
+
+    
+<script language="javascript">
+    $(function () {
+        var addressEntryObjID = '@{Write(Model.ClientHtmlID);}';
+        var addressEntryDivID = '@{Write(Model.ClientJsObjID);}';
+        var address = @Html.Raw(Json.Encode(Model.AddressModel).Replace("\"", "'"));
+
+        if (addressEntryObjID == '') throw 'An attempt to create an address editor with an invalid addressEntryObjID in the ViewData has been encountered.  Please ensure you provide addressEntryDivID and addressEntryObjID values';
+        if (addressEntryDivID == '') throw 'An attempt to create an address editor with an invalid addressEntryDivID in the ViewData has been encountered.  Please ensure you provide addressEntryDivID and addressEntryObjID values';
+        if (address === undefined || address == null) throw 'An attempt to create an address editor with an invalid addressEntryDivID in the ViewData has been encountered.  Please ensure you provide addressEntryDivID and addressEntryObjID values';
+
+        var templateDiv = $('#' + addressEntryDivID);
+        var validationDivID = addressEntryDivID + 'CleanseValidation';
+        var consts = ns.addressEditor.prototype.consts;
+        var defaults = ns.addressEditor.prototype._.defaults;
+
+        // addressValues, editorSettings, templateDiv, editorID, termTranslations
+        var editor = new ns.addressEditor(
+                {
+                    address: address,
+                    editorID: addressEntryObjID,
+                    templateDivID: addressEntryDivID,
+                    cleansingMode: @countrySettingCleansingMode,
+                    allowPostalCodeLookup: @countrySettingAllowPostalCodeLookup,
+                    countries: @Html.Raw(Json.Encode(countries)),
+                    countryOverrideSettings:
+                    {
+                        @{
+                            countrySettingWriter(Model.CommonCountryOverrideSettings);
+                            foreach (var countrySettings in Model.CountryOverrideSettings)
+                            {
+                                Write(",");
+                                countrySettingWriter(countrySettings.Value);
+                            }
+                        }
+                        
+                    }
+                }
+            ); 
+    });
+</script>
+
+@* Links for AJAX calls *@
+@Ajax.ActionLink("CountryTemplate", "CountryTemplate", "Addresses", null, new AjaxOptions() { UpdateTargetId = Model.ClientHtmlID }, new { id = Model.ClientHtmlID + "CountryTemplateLink", style = "display:none;" })
+@Ajax.ActionLink("ScrubAddress", "ScrubAddress", "Addresses", null, new AjaxOptions() { }, new { id = Model.ClientHtmlID + "ScrubAddressLink", style = "display:none;" })
+@Ajax.ActionLink("PostalCodeLookup", "PostalCodeLookup", "Addresses", null, new AjaxOptions() { }, new { id = Model.ClientHtmlID + "PostalCodeLookupLink", style = "display:none;" })
+
+<div id="@{Write(Model.ClientHtmlID);}">
+    @Html.EditorFor((m) => m.AddressModel, new { Settings = Model })
+
+    <div id="@{Write(Model.ClientHtmlID);}CleanseWindow" style="display:none;">
+        <table><tr>
+            <td>
+                @Html.EditorFor((m) => m.AddressModel)
+            </td>
+            <td data-bind="foreach: lists.suggesstions">
+                <div class="addressSuggestion">
+                    @Html.DisplayFor((m) => m.AddressModel)
+                    <button data-bind="click: selectSuggestion($data)" value="@Html.Term("AddressCleansing_Select", "Select")" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><button data-bind="click: cancelCleansePrompt" value="@Html.Term("AddressCleansing_Cancel", "Cancel")" /></td>
+        </tr>
+        </table>
+    </div>
+</div>

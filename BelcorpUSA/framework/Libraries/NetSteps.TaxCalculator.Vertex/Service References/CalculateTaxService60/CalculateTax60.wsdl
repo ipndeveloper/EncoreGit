@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:vev="urn:vertexinc:o-series:tps:6:0" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://www.vertexinc.com/oseries/services/CalculateTax60" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://www.vertexinc.com/oseries/services/CalculateTax60" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=1" namespace="urn:vertexinc:o-series:tps:6:0" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="calculateTaxRequest">
+    <wsdl:part name="part" element="vev:VertexEnvelope" />
+  </wsdl:message>
+  <wsdl:message name="calculateTaxResponse">
+    <wsdl:part name="VertexEnvelope" element="vev:VertexEnvelope" />
+  </wsdl:message>
+  <wsdl:portType name="CalculateTaxWS60">
+    <wsdl:operation name="calculateTax60">
+      <wsdl:input name="calculateTaxRequest" message="tns1:calculateTaxRequest" />
+      <wsdl:output name="calculateTaxResponse" message="tns1:calculateTaxResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CalculateTax60SoapBinding" type="tns1:CalculateTaxWS60">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="calculateTax60">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="calculateTaxRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="calculateTaxResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CalculateTaxWSService60">
+    <wsdl:port name="CalculateTax60" binding="tns1:CalculateTax60SoapBinding">
+      <wsdlsoap:address location="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

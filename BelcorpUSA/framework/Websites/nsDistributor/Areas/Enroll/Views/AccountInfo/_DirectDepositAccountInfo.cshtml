@@ -1,0 +1,265 @@
+﻿@model EFTAccountInfoViewModel
+@{ 
+   var accountNumber = Model.ProfileNumber;
+   var marketID = Model.MarketID;
+   var countryID = SmallCollectionCache.Instance.Markets.GetById(marketID).GetDefaultCountryID();
+  var bank1=  ViewBag.bankID1;
+  var bank2 = ViewBag.bankID2;
+   
+   }
+<script type="text/javascript">
+    $(function () {
+        $('#bankPhoneAccount@(accountNumber)').phone({ areaCodeId: 'txtBankPhoneAreaCodeAccount@(accountNumber)', firstThreeId: 'txtBankPhoneFirstThreeAccount@(accountNumber)', lastFourId: 'txtBankPhoneLastFourAccount@(accountNumber)' });
+        $('#bankPhoneAccount@(accountNumber)').phone('setPhone', '@Model.EFTProfile.BankPhone'.replace(/\D/g, ''));
+        $('#txtBankAddressLine1Account@(accountNumber)').watermark('Line 1');
+        $('#txtBankAddressLine2Account@(accountNumber)').watermark('Line 2');
+        $('#txtBankAddressLine3Account@(accountNumber)').watermark('Line 3');
+        $('#txtNameAccount@(accountNumber)').val("Cuenta");
+        //        $('#BankID1').val(@(bank1));
+        //        $('#BankID2').val(@(bank2));
+        var total = 0;
+        $('.percentToDeposit').numeric().each(function () {
+            if (!isNaN($(this).val()))
+                total += parseFloat($(this).val());
+        });
+        if ('@(accountNumber)' == 1 && total == 0) {
+            $('#percentToDepositLabelAccount@(accountNumber)').val('100');
+        }
+        $('#chkEnabledAccount@(accountNumber)').click(function () {
+            $('#txtNameAccount@(accountNumber),#txtRoutingNumberAccount@(accountNumber),#txtAccountNumberAccount@(accountNumber)')[$(this).is(':checked') ? 'addClass' : 'removeClass']('required').clearError();
+        });
+
+        $('input.eftCheckEnabled').each(function () {
+            checkUseEftEnabled($(this).attr('id'));
+        });
+
+
+    });
+
+    function valida(e)
+    {
+        tecla = (document.all) ? e.keyCode : e.which;
+
+        //Tecla de retroceso para borrar, siempre la permite
+        if (tecla == 8)
+        {
+            return true;
+        }
+
+        // Patron de entrada, en este caso solo acepta numeros
+        patron = /[0-9]/;
+        tecla_final = String.fromCharCode(tecla);
+        return patron.test(tecla_final);
+    }
+
+</script>
+
+@{
+    var dropDownText = @Html.Term("PleaseEnteraValidZip", "Please enter a valid zip");
+    var attrs = new Dictionary<string, object>();
+    var bankAddress = Model.EFTProfile.AddressId > 0 ? Address.Load(Model.EFTProfile.AddressId) : new Address();
+    if (bankAddress.CountryID == 0)
+    {
+        bankAddress.CountryID = 1;
+    }
+
+    var enabled = Model.EFTProfile.IsEnabled;
+    var selectList = new[] { new SelectListItem { Text = string.Format("-- {0} --", dropDownText), Value = string.Empty } }.AsEnumerable();
+}
+
+<h4 class="UI-secBg pad5 brdrYYNN ModTitle">
+    <!-- TEST -->
+   @* @Html.Term("Account", "Account")
+    @(accountNumber):*@
+</h4>
+@*<div class=@string.Format("postalcodelookup-container{0}", accountNumber)*@
+<div class="pad5 brdr1 brdrNNYY postalcodelookup-container" 
+     data-postalcodelookup-url="@Model.LookupUrl" 
+     data-postalcodelookup-regex="^(\d{9}|\d{5})"
+     data-postalcodelookup-countryid="@bankAddress.CountryID"
+     data-postalcodelookup-city="@bankAddress.City.ToPascalCase()"
+     data-postalcodelookup-stateid="@(bankAddress.StateProvinceID ?? 0)"
+     data-postalcodelookup-dropdowntext="-- @dropDownText --">
+    <input id="EFTDisbursementProfileID@(accountNumber)" type="hidden" value="@Model.EFTProfile.DisbursementProfileId" name="EFTDisbursementProfileID@(accountNumber)" />
+    <table cellspacing="0" class="DataGrid EFTAccount">
+        
+        <tr style="display:none">
+            <td style="width: 130px;">
+                @Html.Term("Enabled"):
+            </td>
+            <td>
+                @*<input id="chkEnabledAccount@(accountNumber)" class="eftCheckEnabled" type="checkbox" @Html.Raw(enabled ? "checked=\"checked\"" : "") />*@
+                <input id="chkEnabledAccount@(accountNumber)" class="eftCheckEnabled" type="checkbox" checked=checked />
+            </td>
+        </tr>
+        <tr class="DirectDepositSytle">
+            <td>
+                @Html.Term("NameOnAccount", "Name on Account") * :
+            </td>
+            <td>
+                <input id="txtNameAccount@(accountNumber)"  type="text" value="@Model.EFTProfile.NameOnAccount"  name="@Html.Term("NameRequiredForAccountNumber", "Name is required for account ")@accountNumber" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankName", "Bank Name") * :
+            </td>
+            <td>
+       
+
+                   @{  
+                
+                       var selectL = new[] { new SelectListItem { Value = string.Empty } }.AsEnumerable();
+                    
+                       selectL = NetSteps.Data.Entities.AccountExtensions.GetBanksComissions().Select(x => new SelectListItem { Text = x.BankName, Value = x.BankID.ToString() });
+                }
+                <select id="BankID@(accountNumber)">
+                @foreach (var item in selectL)    
+                                                                       
+                    {
+                    <option value="@item.Value" @(Model.EFTProfile.BankName == item.Text ? "selected" : string.Empty)
+                    >@item.Text</option>
+                    }
+                    </select>
+            </td>
+        </tr>
+          <tr>
+            <td>
+                @Html.Term("AccountType", "Account Type"):
+            </td>
+            <td>
+                <select id="accountTypeAccount@(accountNumber)">
+                    <option value="1" @Html.Raw(Model.EFTProfile.BankAccountTypeId == (int)NetSteps.Data.Entities.Constants.BankAccountTypeEnum.Checking ? "selected=\"selected\"" : "")>@Html.Term("Checking")</option>
+                    <option value="2" @Html.Raw(Model.EFTProfile.BankAccountTypeId == (int)NetSteps.Data.Entities.Constants.BankAccountTypeEnum.Savings ? "selected=\"selected\"" : "")>@Html.Term("Savings")</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("Agency", "Agency") * :
+            </td>
+            <td>
+                <input id="txtRoutingNumberAccount@(accountNumber)" type="text" value="@Model.EFTProfile.RoutingNumber" maxlength="9"  name="@Html.Term("RoutingNumberRequiredForAccountNumber", "Routing Number is required for account ")@accountNumber" onkeypress="return valida(event)" required/>
+              
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankAccountNumber", "Account #") * :
+            </td>
+            <td>
+                <input id="txtAccountNumberAccount@(accountNumber)" type="text" value="@Model.EFTProfile.AccountNumber"  name="@Html.Term("AccountNumberRequiredForAccountNumber", "Account Number is required for account ")@accountNumber" onkeypress="return valida(event)" required/>
+            </td>
+        </tr>
+        
+       
+        <tr style="display:none">
+            <td>
+                @Html.Term("PercentToDeposit", "% to Deposit") * :
+            </td>
+            <td>
+                <span>
+                    @*<input id="percentToDepositAccount@(accountNumber)" type="text" class="percentToDeposit" size="2" value="@( (int)(Model.EFTProfile.Percentage * 100))" />%</span>*@
+                    <input id="percentToDepositAccount@(accountNumber)" type="text" class="percentToDeposit" size="2" value="100" />%</span>
+            </td>
+        </tr>
+
+    </table>
+
+   <div  style="display:none">
+   
+   <table>
+       <tr>
+            <td>
+                @Html.Term("RoutingTransitNumber", "Routing/Transit #") * :
+            </td>
+            <td>
+                <input id="txtRoutingNumberAccount@(accountNumber)" type="text" value="@Model.EFTProfile.RoutingNumber" maxlength="9"  />
+            </td>
+        </tr>
+
+
+ <tr>
+            <td>
+                @Html.Term("BankPhone", "Bank Phone"):
+            </td>
+            <td id="bankPhoneAccount@(accountNumber)">
+                @*<input id="txtBankPhoneAccount@(accountNumber)" type="text" />*@
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                @Html.Term("BankAddress", "Bank Address") * :
+            </td>
+            <td>
+                <p>
+                    <input id="bankAddressAddress1_@(accountNumber)" type="text" value="@bankAddress.Address1"   />
+                </p>
+                <p>
+                    <input id="bankAddressAddress2_@(accountNumber)" type="text" value="@bankAddress.Address2" /></p>
+                <input id="bankAddressAddress3_@(accountNumber)" type="text" value="@bankAddress.Address3" />
+                <br />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Term("BankZip", "Bank Zip") * :
+            </td>
+            <td>
+                <div id="bankAddressAddressControl@(accountNumber)">
+                    <input id="txtBankZipAccount@(accountNumber)" type="text" value="@bankAddress.PostalCode" class="postalcodelookup-postalcode profileZip PostalCode" />
+                </div>
+            </td>
+        </tr>
+        @if (marketID == 1)
+        {
+		 	<tr>
+				<td>
+					@Html.Term("BankCity", "Bank City") * :
+				</td>
+				<td>
+					<select id="bankAddressCity@(accountNumber)" class="postalcodelookup-city" >
+						@if (@bankAddress.City.IsNullOrEmpty())
+                          {
+							<option value="@bankAddress.City">@bankAddress.City</option>
+                          }
+					</select>
+				</td>
+			</tr>
+		 	<tr>            
+				<td>
+					@Html.Term("BankState", "Bank State") * :
+				</td>
+				<td>
+					<select id="bankAddressState@(accountNumber)" class="postalcodelookup-state" >
+						@if (@bankAddress.State.IsNullOrEmpty())
+                        {
+							<option value="@bankAddress.StateProvinceID">@bankAddress.State</option>
+                        }
+					</select>
+				</td>
+			</tr>
+        }
+        else
+        {
+		 	<tr>
+				<td>
+					@Html.Term("BankCity", "Bank City") * :
+				</td>
+				<td>
+                    <input type="text" id="bankAddressCity@(accountNumber)" value="@(bankAddress.City ?? "")"  />
+				</td>
+			</tr>
+		 	<tr>            
+				<td>
+					@Html.Term("BankState", "Bank State") * :
+				</td>
+				<td>
+                    <input type="text" id="bankAddressState@(accountNumber)" value="@(bankAddress.State ?? "")" >
+				</td>
+			</tr>
+			<input type="hidden" id="bankAddress@(accountNumber)Country" value="@countryID" />
+        }    
+        </table>
+   </div>
+</div>

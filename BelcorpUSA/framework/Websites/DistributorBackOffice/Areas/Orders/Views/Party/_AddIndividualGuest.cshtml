@@ -1,0 +1,55 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Party.AddIndividualGuestModel
+           
+<div class="GuestForm ui-accordion ui-widget ui-helper-reset ui-accordion-icons"
+    style="width: auto; margin: 10px;">
+    <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-state-active ui-corner-top">
+        <span class="collapse ui-icon ui-icon-triangle-1-s"></span><a href="javascript:void(0);"
+            class="GuestFormHeader" style="display: inline-block; width: 100%;"><span class="GuestName">
+                Guest Form</span><span class="FR UI-icon icon-x DeleteGuest"></span></a>
+    </h3>
+    <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+        style="padding-top: 0px;">
+        <div class="FormContainer">
+            
+            <div class="FRow">
+                <div class="FLabel has-wtrmk">
+                    <label for="txtFirstName@(Model.Id)">@Html.Term("Name"):</label>
+                </div>
+                <div class="FInput" data-id="@Model.Id">
+                    <input type="text" id="txtFirstName@(Model.Id)" class="FirstName required" value="@Model.FirstName" />
+                    <input type="text" id="txtLastName@(Model.Id)" class="LastName required" value="@Model.LastName" />
+                </div>
+                <br />
+            </div>
+            <div class="FRow">
+                <div class="FLabel has-wtrmk">
+                    <label for="txtEmail@(Model.Id)">@Html.Term("Email"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtEmail@(Model.Id)" class="Email required" value="@Model.Email" />
+                </div>
+                <br />
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="chkDirectShip@(Model.Id)">@Html.Term("Direct Ship"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="checkbox" id="chkDirectShip@(Model.Id)" class="directShip" />
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="DirectShipAddress"  id="hostAddressContainer@(Model.Id)"  style="display: none;">
+            @Html.Partial("Address", new AddressModel()
+                {
+                    Address = null,
+                    LanguageID = CoreContext.CurrentLanguageID,
+                    ShowCountrySelect = true,
+                    ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                    ExcludeFields = new List<string>() { "ProfileName", "Name" },
+                    Prefix = "address" + Model.Id
+                })
+        </div>
+    </div>
+</div>

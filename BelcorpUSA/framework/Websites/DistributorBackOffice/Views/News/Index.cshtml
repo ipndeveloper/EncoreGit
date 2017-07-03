@@ -1,0 +1,119 @@
+@model dynamic
+@section head {
+    <script type="text/javascript">
+        $(function () {
+            var currentPage = 0, maxPage,
+
+			resetPage = function () {
+			    currentPage = 0;
+			    showPage();
+			},
+
+			showPage = function () {
+			    $('#News').html('<tr><td colspan="5"><img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="loading..." /></td></tr>');
+
+			    $.get('@Href("~/News/Get")', {
+			        page: currentPage,
+			        pageSize: $('#pageSize').val(),
+			        fileType: $('#fileType').val(),
+			        query: $('#searchText').val(),
+			        category: !$('#SecondaryRail .newsCategory.current').length || !$('#SecondaryRail .newsCategory.current').attr('id') ? '' : $('#SecondaryRail .newsCategory.current').attr('id').replace(/\D/g, '')
+			    }, function (response) {
+			        if (response.result === undefined || response.result) {
+			            $('#News').html(response.page || '<div class="Resource">@Html.Term("NoRecords", "There are no records that match that criteria.  Please try again.")</div>');
+
+			            maxPage = !response.totalPages ? 0 : response.totalPages - 1;
+			            $('#btnNextPage,#btnPreviousPage').removeAttr('disabled').css({ color: '', cursor: '' });
+			            if (currentPage == maxPage)
+			                $('#btnNextPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' }); ;
+			            if (currentPage == 0)
+			                $('#btnPreviousPage').attr('disabled', 'disabled').css({ color: 'black', cursor: 'default' });
+
+			            $('#pages').text((!response.totalPages ? 0 : currentPage + 1) + ' of ' + response.totalPages);
+			        } else {
+			            showMessage(response.message, true);
+			        }
+			    });
+			};
+
+            $('#searchText').keyup(function (e) {
+                if (e.keyCode == 13)
+                    $('#searchButton').click();
+            });
+
+            $('#searchButton').click(resetPage);
+
+            $('#btnNextPage').click(function () {
+                if (currentPage < maxPage) {
+                    ++currentPage;
+                    showPage();
+                }
+            });
+            $('#btnPreviousPage').click(function () {
+                if (currentPage > 0) {
+                    --currentPage;
+                    showPage();
+                }
+            });
+
+            $('#pageSize').val(50).change(resetPage);
+
+            $('#SecondaryRail .newsCategory').click(function () {
+                if (!$(this).hasClass('current')) {
+                    $('#SecondaryRail .newsCategory.current').removeClass('current');
+                    $(this).addClass('current');
+
+                    resetPage();
+                }
+            });
+
+            if (!$('#SecondaryRail .newsCategory.current').length) {
+                $('#SecondaryRail .newsCategory:first').addClass('current');
+            }
+
+            $('#News .news').each(function (i) {
+                $(this).addClass('newsDiv' + i);
+            });
+
+            showPage();
+        });
+    </script>
+}
+@section title{
+    @Html.Term("News")
+}
+@section SideBarExtras {
+    <div class="SavedReports NewsMenu">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title  UI-btn">
+                @Html.Term("News Categories")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                <li><a href="javascript:void(0);" class="newsCategory"><span>
+                    @Html.Term("AllCategories", "All Categories")</span></a></li>
+                @{IEnumerable<short> categories = ViewData["Categories"] as IEnumerable<short>;}
+                @foreach (NewsType type in SmallCollectionCache.Instance.NewsTypes.Where(nt => categories.Contains(nt.NewsTypeID)))
+                {
+                    <li><a id="@type.NewsTypeID" href="javascript:void(0);" class="newsCategory"><span>
+                        @type.GetTerm()</span></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+<div class="UI-lightBg brdrAll GridFilters">
+    <p class="FL FilterSet">
+        <label>@Html.Term("SearchNews", "Search News"):</label>
+        <input id="searchText" type="text" class="TextInput" style="width: 200px;" value="" />
+    </p>
+    <p class="FL RunFilter">
+        <a id="searchButton" href="javascript:void(0);" class="Button"><span>
+            @Html.Term("Search")</span></a>
+    </p>
+    <span class="clr"></span>
+</div>
+<div id="NewsWrapper">
+    <div id="News">
+    </div>
+</div>

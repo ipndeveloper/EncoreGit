@@ -1,0 +1,160 @@
+@model NetSteps.Web.Mvc.Controls.Models.PhotoCropperModel
+<script type="text/javascript">
+    $(function () {
+        var width = '@Model.TargetWidth',
+			height = '@Model.TargetHeight',
+
+			originalWidth = '@Model.OriginalWidth',
+			originalHeight = '@Model.OriginalHeight',
+
+			boxHeight = '@Model.BoxHeight',
+			boxWidth = '@Model.BoxWidth',
+
+			showPreview = function (coords) {
+			    $('#@(Model.Mode)Coords').val(coords.x + ',' + coords.y + ',' + coords.x2 + ',' + coords.y2 + ',' + coords.w + ',' + coords.h);
+
+			    var rx = width / (coords.w * (width / originalWidth));
+			    var ry = height / (coords.h * (height / originalHeight));
+
+			    $('#@(Model.Mode)PreviewImage').css({
+			        width: Math.round(rx * width) + 'px',
+			        height: Math.round(ry * height) + 'px',
+			        marginLeft: '-' + Math.round(rx * (coords.x * (width / originalWidth))) + 'px',
+			        marginTop: '-' + Math.round(ry * (coords.y * (height / originalHeight))) + 'px'
+			    });
+			},
+
+			jcropOptions = {
+			    onChange: showPreview,
+			    onSelect: showPreview,
+			    aspectRatio: width / height,
+			    boxHeight: boxHeight || 400,
+			    boxWidth: boxWidth || 400,
+			    setSelect: [0, 0, width, height]
+			},
+
+			uploader = new qq.FileUploader({
+			    element: document.getElementById('@(Model.Mode)Upload'),
+			    params: {
+			        folder: '@Model.Folder'
+			    },
+			    action: '@("~/Edit/UploadPhoto".ResolveUrl())',
+			    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'tif', 'tiff', 'bmp'],
+			    messages: {
+			        typeError: '@Html.Term("InvalidExtension", "{0} has invalid extension. Only {1} are allowed.", "{file}", "{extensions}")',
+			        sizeError: '@Html.Term("FileTooLarge", "{0} is too large, maximum file size is {1}.", "{file}", "{sizeLimit}")',
+			        minSizeError: '@Html.Term("FileTooSmall", "{0} is too small, minimum file size is {1}.", "{file}", "{minSizeLimit}")',
+			        emptyError: '@Html.Term("EmptyFile", "{0} is empty, please select files again without it.", "{file}")',
+			        onLeave: '@Html.Term("FilesStillUploading", "The files are being uploaded, if you leave now the upload will be canceled.")'
+			    },
+			    template: '<div class="qq-uploader">' +
+					'<div class="qq-upload-drop-area"><span>@Html.Term("DropFilesHereToUpload", "Drop files here to upload")</span></div>' +
+					'<div class="qq-upload-button"><span class="uploaderLabel">@Html.Term(string.IsNullOrEmpty(Model.UploadButtonTermName) ? "UploadAFile" : Model.UploadButtonTermName, string.IsNullOrEmpty(Model.UploadButtonTerm) ? "Upload a file" : Model.UploadButtonTerm)</span></div>' +
+					'<ul class="qq-upload-list"></ul>' +
+				 '</div>',
+			    fileTemplate: '<li>' +
+					'<span class="qq-upload-file"></span>' +
+					'<span class="qq-upload-spinner"></span>' +
+					'<span class="qq-upload-size"></span>' +
+					'<a class="qq-upload-cancel" href="javascript:void(0);">@Html.Term("Cancel")</a>' +
+					'<span class="qq-upload-failed-text">@Html.Term("Failed")</span>' +
+				'</li>',
+			    onComplete: function (id, fileName, response) {
+			        originalWidth = response.originalWidth;
+			        originalHeight = response.originalHeight;
+			        $.Jcrop['new@(Model.Mode.ToPascalCase())Photo'](response.fileName);
+
+			        if ($('#Production #publishDate').length) {
+			            var now = new Date();
+			            $('#publishDate').val((now.getMonth() + 1) + '/' + now.getDate() + '/' + now.getFullYear());
+			            $('#publishTime').val(now.toLocaleTimeString());
+			        }
+			    }
+			}), jcrop, loadTimeout, o = {};
+
+        if ($('#@(Model.Mode)Crop').attr('src')) {
+            jcrop = $.Jcrop('#@(Model.Mode)Crop', jcropOptions);
+        } else {
+            $('#@(Model.Mode)Container').hide();
+        }
+
+        $('#@(Model.Mode)PreviewContainer').css({ width: width + 'px', height: height + 'px' });
+
+        o['new@(Model.Mode.ToPascalCase())Photo'] = function (src) {
+            if (jcrop) {
+                jcrop.destroy();
+                jcrop = undefined;
+            }
+            $('#@(Model.Mode)Container').show();
+            var loading = $('<img src="@Url.Content(Model.LoadingImage)" alt="" />'), p = $('#@(Model.Mode)Crop').parent().css({ overflow: 'hidden', width: '0px', height: '0px' });
+            $('#@(Model.Mode)PhotoCropper img').load(function () {
+                if (!jcrop && !loadTimeout) {
+                    loadTimeout = window.setTimeout(function () {
+                        p.css({ overflow: '', height: '', width: '' });
+                        originalWidth = $('#@(Model.Mode)Crop').width();
+                        originalHeight = $('#@(Model.Mode)Crop').height();
+                        jcropOptions.setSelect = [0, 0, originalWidth, originalHeight];
+                        $('#@(Model.Mode)PreviewImage,#@(Model.Mode)Crop').unbind('load').css({ visibility: '' });
+                        jcrop = $.Jcrop('#@(Model.Mode)Crop', jcropOptions);
+                        loadTimeout = undefined;
+                        loading.remove();
+                    }, 1);
+                }
+            }).css({ visibility: 'hidden' }).attr('src', src).filter(':first').parent().before(loading);
+        };
+        o['kill@(Model.Mode.ToPascalCase())'] = function () {
+            if (jcrop) {
+                jcrop.destroy();
+                jcrop = undefined;
+            }
+            $('#@(Model.Mode)Container').hide();
+            $('#@(Model.Mode)PreviewImage,#@(Model.Mode)Crop').attr('src', '');
+        };
+
+        $.extend($.Jcrop, o);
+
+        if ($.browser.msie) {
+            $('body').bind('selectstart', function (e) { return $(e.target).is(':input'); });
+        }
+    });
+
+	</script>
+
+<div id="@(Model.Mode)PhotoCropper" class="NS-PhotoEditor">
+    <div id="@(Model.Mode)Upload" class="NS-PhotoUploadButton">
+    </div>
+    <div id="@(Model.Mode)Container" class="NS-PhotoContainer">
+        <div class="FL NS-splitCol splitCol mr10">
+            <h2 class="UI-mainBg brdrAll pad5 adjustPhotoTitle">
+                <span class="FL">@Html.Term("AdjustYourPhoto", "Adjust Your Photo")</span> <a href="javascript:void(0);" id="btnEvitesHelp" class="FR UI-icon-container icon-24" title="@Html.Term("WhatIsThis", "What is this?")" style="height: 18px;margin-top: -2px;"><span class=" UI-icon icon-help"></span></a><span class="clr"></span>
+            </h2>
+            <div class="NS-PhotoCropperContainer">
+                <img src="@(Model.Content == null ? "" : Model.Content.GetImage().GetHtmlAttributeValue("src"))" alt="" id="@(Model.Mode)Crop" class="center" style="background-color: #c0c0c0;" />
+            </div>
+        </div>
+        <div class="FL NS-splitCol splitCol">
+            <h2 class="UI-mainBg brdrAll pad5 previewPhotoTitle">
+                @Html.Term("Preview", "Preview")</h2>
+            <div id="@(Model.Mode)PreviewContainer" class="center" style="overflow: hidden;">
+                <img src="@(Model.Content == null ? "" : Model.Content.GetImage().GetHtmlAttributeValue("src"))" alt="" id="@(Model.Mode)PreviewImage" class="image" />
+            </div>
+        </div>
+    </div>
+    @*<table id="@(Model.Mode)Container" cellspacing="0" class="NS_PhotoCropTable">
+        <tr>
+            <td class="NS_PhotoCropTool" width="50%">
+                <h2 class="NS_TitleB">
+                    @Html.Term("AdjustYourPhoto", "Adjust Your Photo")</h2>
+                <img src="@(Model.Content == null ? "" : Model.Content.GetImage().GetHtmlAttributeValue("src"))" alt="" id="@(Model.Mode)Crop" style="background-color: #c0c0c0;" />
+            </td>
+            <td class="NS_PhotoCropPreview">
+                <h2 class="NS_TitleB">
+                    @Html.Term("Preview", "Preview")</h2>
+                <div id="@(Model.Mode)PreviewContainer" style="overflow: hidden;">
+                    <img src="@(Model.Content == null ? "" : Model.Content.GetImage().GetHtmlAttributeValue("src"))" alt="" id="@(Model.Mode)PreviewImage" class="image" />
+                </div>
+            </td>
+        </tr>
+    </table>*@
+    <input type="hidden" id="@(Model.Mode)Coords" value="" class="coordinates" />
+</div>

@@ -1,0 +1,192 @@
+﻿	<script type="text/javascript">
+
+	    $(function () {
+	        $('.Tabber').each(function () {
+	            var activeTabs = $(this).attr('id');
+	            $('li', this).click(function () {
+	                var content_show = $(this).attr("rel");
+	                var defaultState = $(this).html();
+	                var t = activeTabs.replace('Tabber', 'Contents');
+	                $('#' + t + ' .TabContent').hide();
+	                $('#' + activeTabs + ' li').removeClass("current");
+	                $(this).addClass("current");
+	                $("#" + content_show).show();
+	                return false;
+	            });
+	        });
+
+
+	        $.postify = function (value) {
+	            var result = {};
+
+	            var buildResult = function (object, prefix) {
+	                for (var key in object) {
+
+	                    var postKey = isFinite(key)
+                            ? (prefix != "" ? prefix : "") + "[" + key + "]"
+                            : (prefix != "" ? prefix + "." : "") + key;
+
+	                    switch (typeof (object[key])) {
+	                        case "number": case "string": case "boolean":
+	                            result[postKey] = object[key];
+	                            break;
+
+	                        case "object":
+	                            if (object[key].toUTCString)
+	                                result[postKey] = object[key].toUTCString().replace("UTC", "GMT");
+	                            else {
+	                                buildResult(object[key], postKey != "" ? postKey : key);
+	                            }
+	                    }
+	                }
+	            };
+
+	            buildResult(value, "");
+
+	            return result;
+	        };
+
+	        $('#btnSave').click(function () {
+	            if (!$('#NameType, #RewardsPanel, #PromoOptions').checkRequiredFields()) {
+	                return;
+	            }
+                if (!($('#chkMinimumAmount').prop('checked') || $('#chkMinimumVolume').prop('checked')))
+                {
+                    showMessage('@Html.Term("Rules_OrderRuleSendCondition", "You must select at least one exit condition (minimum volume or minimum amount)")',true);
+                    return;
+                } else {
+                    var editorText = CKEDITOR.instances.txtContent.document.getBody().getText();
+                    
+                    if($.trim(editorText) == ""){
+                        showMessage('@Html.Term("Rules_OrderRuleMessage", "The message can not be empty.")',true);
+                        return;
+                    }else if($("#activeN").prop("checked") && $("#txtStartDate").val() == ""){
+                        showMessage('@Html.Term("Rules_OrderDateEmpty", "The start date can not be empty.")',true);
+                        return;
+                    }else if($("#activeN").prop("checked") && $("#txtStartDate").val() != "" && $("#txtEndDate").val() != "" && (($("#txtStartDate").val() + $("#txtStartTime").val()) > ($("#txtEndDate").val() + $("#txtEndTime").val()))){
+                        showMessage('@Html.Term("Rules_OrderDateCompare", "The start date can not be less than end date.")',true);
+                        return;
+                    }else if ($('#chkMinimumVolume').prop('checked') && parseFloat($('#txtMinimumVolumeQV').val()) <= 0 && $('#chkMinimumAmount').prop('checked') && parseFloat($('#txtMinimumAmount').val()) <= 0)
+                    {
+                        showMessage('@Html.Term("Rules_OrderRuleMinimumCondition", "The output conditions can not be less than equal to 0")',true);
+                        return;
+                    }else if($('#chkMinimumVolume').prop('checked') && parseFloat($('#txtMinimumVolumeQV').val()) <= 0)
+                    {
+                        showMessage('@Html.Term("Rules_OrderRuleMinimumVolumeCondition", "You must select at least one exit condition (minimum volume or minimum amount)")',true);
+                        return;
+                    } else if($('#chkMinimumAmount').prop('checked') && parseFloat($('#txtMinimumAmount').val()) <= 0)
+                    {
+                        showMessage('@Html.Term("Rules_OrderRuleMinimumAmountCondition", "You must select at least one exit condition (minimum volume or minimum amount)")',true);
+                        return;
+                    }
+                }
+
+	            var data = {
+	                RuleID: $('#RuleID').val(),
+	                Name: $('#txtName').val(),
+	                RuleStatus: 0,
+	                TermContent : $('#txtContent').val(),
+	                LanguageID: @CoreContext.CurrentLanguageID 
+	            };
+
+	            var dataRuleValidation = {
+	                RuleID: $('#RuleID').val(),
+	                RuleValidationID: $('#RuleValidationID').val()
+	            }
+
+	            var CustomerPriceTotalDTO = {};
+	            var CustomerPriceSubTotalDTO = {};
+	            var CustomerPriceTotalDTOQV = {};
+
+	            if ($('#chkMinimumAmount').prop('checked')) {
+	                if ($('#rbtnRetail').prop('checked')) {
+	                    CustomerPriceTotalDTO.ProductPriceTypeID = $('#ProductPriceTypeID').val();
+	                    CustomerPriceTotalDTO.MinimumAmount = $('#txtMinimumAmount').val();
+	                    CustomerPriceTotalDTO.MaximumAmount = 0;
+	                    CustomerPriceTotalDTO.CustomerPriceTotalID = $('#CustomerPriceTotalID').val();
+	                    CustomerPriceTotalDTO.CurrencyID = $('#CurrencyID').val();
+	                    CustomerPriceTotalDTO.RuleValidationID = $('#RuleValidationID').val();
+	                } else if ($('#rbtnSubtotal').prop('checked')) {
+	                    CustomerPriceSubTotalDTO.MinimumAmount = $('#txtMinimumAmount').val();
+	                    CustomerPriceSubTotalDTO.MaximumAmount = 0;
+	                    CustomerPriceSubTotalDTO.CustomerPriceSubTotalID = $('#CustomerPriceTotalID').val();
+	                    CustomerPriceSubTotalDTO.CurrencyID = $('#CurrencyID').val();
+	                    CustomerPriceSubTotalDTO.RuleValidationID = $('#RuleValidationID').val();
+	                }
+	            }
+
+	            if ($('#chkMinimumVolume').prop('checked')) {
+	                CustomerPriceTotalDTOQV.ProductPriceTypeID = $('#ProductPriceTypeIDQV').val();
+	                CustomerPriceTotalDTOQV.MinimumAmount = $('#txtMinimumVolumeQV').val();
+	                CustomerPriceTotalDTOQV.MaximumAmount = 0;
+	                CustomerPriceTotalDTOQV.CustomerPriceTotalID = $('#CustomerPriceTotalIDQV').val();
+	                CustomerPriceTotalDTOQV.CurrencyID = $('#CurrencyIDQV').val();
+	                CustomerPriceTotalDTOQV.RuleValidationID = $('#RuleValidationIDQV').val();
+	            }
+
+	            if (!(jQuery.isEmptyObject(CustomerPriceTotalDTO)) && !(jQuery.isEmptyObject(CustomerPriceTotalDTOQV)))
+	            { dataRuleValidation['CustomerPriceTotalDTO'] = [CustomerPriceTotalDTO, CustomerPriceTotalDTOQV]; }
+	            else if (!(jQuery.isEmptyObject(CustomerPriceTotalDTOQV)))
+	            { dataRuleValidation['CustomerPriceTotalDTO'] = [CustomerPriceTotalDTOQV]; }
+	            else if (!(jQuery.isEmptyObject(CustomerPriceTotalDTO)))
+	            { dataRuleValidation['CustomerPriceTotalDTO'] = [CustomerPriceTotalDTO]; }
+
+	            if ($('#activeN').prop('checked')) {
+	                data['HasDates'] = true;
+	                var date = new Date();
+	                data['StartDate'] = $('#txtStartDate').val() + ' ' + $('#txtStartTime').val();
+	                data['EndDate'] = $('#txtEndDate').val() + ' ' + $('#txtEndTime').val();
+	            }
+
+	            if ($('#acctRestrictY').prop('checked')) {
+	                $('.accountType:checked').each(function (i) { dataRuleValidation['AccountTypeIDs[' + i + ']'] = $(this).val(); });
+	            }
+
+	            if ($('#restrictOrderTypeY').prop('checked')) {
+	                $('.orderType:checked').each(function (i) { dataRuleValidation['OrderTypeIDs[' + i + ']'] = $(this).val(); })
+	            }
+
+	            if ($('#restrictMarketsY').prop('checked')) {
+	                $('.market:checked').each(function (i) { dataRuleValidation['StoreFrontIDs[' + i + ']'] = $(this).val(); });
+	            }
+
+	            if ($('#acctIDsY').prop('checked')) {
+	                $('.accountId').each(function (i) { dataRuleValidation['AccountIDs[' + i + ']'] = $(this).val(); })
+	            }
+
+	            if ($('#restrictProductTypeY').prop('checked')) {
+	                $('.productType:checked').each(function (i) { dataRuleValidation['ProductTypeIDs[' + i + ']'] = $(this).val(); })
+	            }
+
+	            $('#paginatedGrid tbody tr').each(function (i) {
+	                var row = $(this);
+	                dataRuleValidation['ProductIDs[' + i + ']'] = row.find('input.productId').val();
+	            });
+
+	            dataRuleValidation['CustomerPriceSubTotalDTO'] = [CustomerPriceSubTotalDTO];
+	            data['RuleValidationsDTO'] = [dataRuleValidation];
+
+	            var options = {
+	                url: '@Url.Content("~/Admin/OrderRules/SaveOrderRule")',
+	                success: onSuccess,
+	                showLoading: $('#btnSave'),
+	                data: $.postify(data)
+	            };
+
+	            NS.post(options);
+
+
+	            function onSuccess(result) {
+	                if (result.result) {
+	                    showMessage('@Html.Term("Rules_OrderRuleSaved", "Rule Successfully Saved!")');
+	                    window.location = '@Url.Content("~/Admin/OrderRules/")';
+	                }
+	                else {
+	                    showMessage(result.message, true);
+	                }
+	            }
+	        });
+
+	    });
+</script>
+	

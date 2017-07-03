@@ -1,0 +1,31 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.BasicInfoModel
+
+    <h3 class="UI-mainBg pad5">
+        @Html.Term("Enrollment_AccountInfo_BasicInfoTitle", "Account Info and Address")
+    </h3>
+
+@Model.FirstName @Model.LastName,
+@if (Model.IsEntity)
+{
+    @(Model.EntityName + ",")
+}
+@*@Model.MaskedTaxNumber<br />*@
+
+@if (Model.Gender != Constants.Gender.NotSet)
+{
+    @*@(SmallCollectionCache.Instance.Genders.GetById((short)Model.Gender).GetTerm() + ", ")*@
+    @(Model.Gender + ", ")
+}
+
+@*@string.Format(CoreContext.CurrentCultureInfo, "{0:d}", Model.RGIssueDate.Date)<br />
+@string.Format(CoreContext.CurrentCultureInfo, "{0:d}", Model.Birthday.Date)<br />*@
+
+@Model.MainAddressHtml<br />
+<label>@Html.Term("SSN",""): </label>@Model.TaxNumber<br /> 
+<label>@Html.Term("MainPhone", "Main Phone"): </label>@Model.MainPhone.Value<br />
+@*@Model.MobilePhone.Value<br />
+@Model.CommercialPhone.Value<br />
+@Model.MessagesPhone.Value<br />*@
+<label>@Html.Term("Email", "Email"): </label>@Model.Email<br />
+
+@*@Model.MainAddress.Street  @Model.MainAddress.ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine)*@

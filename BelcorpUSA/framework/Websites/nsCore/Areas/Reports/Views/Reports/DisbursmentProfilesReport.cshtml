@@ -1,0 +1,33 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/DisbursmentProfilesExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetDisbursmentProfilesReport") 
+        .AddInputFilter(Html.Term("AccountNumber30", "Account Number"), "accountNumber", ViewData["AccountNumber"])
+        .AddInputFilter(Html.Term("Name", "Name"), "name", ViewData["Name"])
+        .AddInputFilter(Html.Term("State", "State"), "state", ViewData["State"])
+
+        .AddInputFilter(Html.Term("PostalCodeIni4", "Postal Code --> Min"), "postalCodeIni2", ViewData["PostalCodeIni"])
+        .AddInputFilter(Html.Term("PostalCodeFin3", "--> Max"), "postalCodeFin2", ViewData["PostalCodeFin"])
+
+        .AddColumn(Html.Term("AccountNumber"), "AccountNumber")
+        .AddColumn(Html.Term("Name"), "Name")
+        .AddColumn(Html.Term("DisburmentType"), "DisburmentType")
+        .AddColumn(Html.Term("Address1"), "Address1")
+        .AddColumn(Html.Term("Address2"), "Address2")
+        .AddColumn(Html.Term("City"), "City")
+        .AddColumn(Html.Term("State"), "State")
+        .AddColumn(Html.Term("PostalCode"), "PostalCode")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

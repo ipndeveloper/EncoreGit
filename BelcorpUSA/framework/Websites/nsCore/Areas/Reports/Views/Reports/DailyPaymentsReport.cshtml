@@ -1,0 +1,56 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location.href = '@Href("~/Reports/Reports/DailyPaymentsExport")';
+        });
+
+        $('#completeDateIniInputFilter').val('@ViewBag.Yesterday')
+    });
+</script>
+
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetDailyPaymentsReport")
+        .AddSelectFilter(Html.Term("Status"), "status", new Dictionary<string, string>() { { "", Html.Term("SelectaStatus", "Select a Status...") } }.AddRange(SmallCollectionCache.Instance.OrderStatuses.ToDictionary(pt => pt.GetTerm(), pt => pt.GetTerm())))
+        .AddInputFilter(Html.Term("OrderNumber", "OrderNumber"), "orderNumber", ViewData["OrderNumber"])
+        
+        //.AddInputFilter(Html.Term("CompleteDateIni", "CompleteDateIni"), "completeDateIni", ViewData["CompleteDateIni"])
+        //.AddInputFilter(Html.Term("CompleteDateFin", "CompleteDateFin"), "completeDateFin", ViewData["CompleteDateFin"])
+
+        .AddInputFilter(Html.Term("DateRange16", "Complete Date"), "completeDateIni", (ViewData["CompleteDateIni"].IsNull()) ? "Start Date" : ViewData["CompleteDateIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "completeDateFin", (ViewData["CompleteDateFin"].IsNull()) ? "End Date" : ViewData["CompleteDateFin"], true)
+        
+        .AddInputFilter(Html.Term("OrderTotalIni4", "Order Total --> Min"), "orderTotalIni", ViewData["OrderTotalIni"])
+        .AddInputFilter(Html.Term("OrderTotalFin4", "--> Max"), "orderTotalFin", ViewData["OrderTotalFin"], false, true)
+
+        .AddInputFilter(Html.Term("TotalPaidOrderIni4", "Total Paid Order --> Min"), "totalPaidOrderIni", ViewData["TotalPaidOrderIni"])
+        .AddInputFilter(Html.Term("TotalPaidOrderFin4", "--> Max"), "totalPaidOrderFin", ViewData["TotalPaidOrderFin"])
+
+        .AddInputFilter(Html.Term("TotalBalanceIni4", "Total Balance --> Min"), "totalBalanceIni", ViewData["TotalBalanceIni"])
+        .AddInputFilter(Html.Term("TotalBalanceFin4", "--> Max"), "totalBalanceFin", ViewData["Totx1alBalanceFin"], false, true)
+
+        .AddInputFilter(Html.Term("PaymentDateIni16", "Payment Date"), "paymentDateIni", (ViewData["PaymentDateIni"].IsNull()) ? "Start Date" : ViewData["PaymentDateIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "paymentDateFin", (ViewData["PaymentDateFin"].IsNull())?"End Date":ViewData["PaymentDateFin"],true)
+
+        .AddInputFilter(Html.Term("PaymentAmountIni4", "Payment Amount --> Min"), "paymentAmountIni", ViewData["PaymentAmountIni"])
+        .AddInputFilter(Html.Term("PaymentAmountFin4", "--> Max"), "paymentAmountFin", ViewData["PaymentAmountFin"])
+        
+        .AddColumn(Html.Term("Order #"), "OrderNumber")
+        .AddColumn(Html.Term("Order ShipmentID"), "OrderShipmentID")
+        .AddColumn(Html.Term("Order Complete Date"), "CompleteDate")
+        .AddColumn(Html.Term("Order Type"), "OrderType")
+        .AddColumn(Html.Term("Order Status"), "OrderStatus")
+        .AddColumn(Html.Term("Order Total"), "GrandTotal")
+        .AddColumn(Html.Term("Total Paid Order"), "PaymentTotal")
+        .AddColumn(Html.Term("Total Balance Order"), "Balance")
+        .AddColumn(Html.Term("Payment Date"), "DateCreated")
+        .AddColumn(Html.Term("Payment Type"), "PaymentType")
+        .AddColumn(Html.Term("Payment Amount"), "Amount")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

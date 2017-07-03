@@ -1,0 +1,306 @@
+﻿@{
+    ViewBag.Title = "Invite Guests";
+}
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            $('input.inviteFirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")');
+            $('input.inviteLastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+            $('input.inviteEmail').watermark('@Html.JavascriptTerm("EmailAddress", "Email address")');
+
+            var inviteTxt = $.trim($('#inviteMessage').text());
+            $('#swapCustomText').click(function () {
+                $('#inviteMessage').html('<textarea class="UI-lightBg customMessage">' + inviteTxt + '</textarea>');
+                $('#write').fadeOut(50, function () { $('#saveMessage').fadeIn(); });
+                return false;
+            });
+
+            $('#cancelWrite').click(function () {
+                $('#inviteMessage').html(inviteTxt);
+                $('#saveMessage').fadeOut(50, function () { $('#write').fadeIn(); });
+                return false;
+            });
+
+            $('#saveContent').click(function () {
+                var t = $(this);
+                showLoading(t);
+                var message = $('#inviteMessage textarea').val();
+                $.post('@Url.Resolve("~/HostedParties/SaveMessage")', { partyId: '@ViewBag.Party.PartyID', emailTemplateTypeId: '@((short)Constants.EmailTemplateType.EvitesCustomerInvite)', message: message }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        inviteTxt = message;
+                        $('#inviteMessage').html(inviteTxt);
+                        $('#saveMessage').fadeOut(50, function () { $('#write').fadeIn(); });
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#previewInvitation').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Url.Resolve("~/HostedParties/SetupPreview")', {
+                    content: $.trim($('#inviteMessage textarea').length ? $('#inviteMessage textarea').val() : $('#inviteMessage').text())
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        var w = window.open('@Url.Resolve("~/HostedParties/PreviewEmail", new { emailTemplateTypeId = (short)Constants.EmailTemplateType.EvitesCustomerInvite })');
+                        if (!w) {
+                            showMessage('@Html.Term("GuestInvitePopupBlocked", "We have detected that your guest invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                        } else {
+                            //test for Chrome, since it still gives us a handle - DES
+                            w.onload = function () {
+                                setTimeout(function () {
+                                    if (w.screenX === 0)
+                                        showMessage('@Html.Term("GuestInvitePopupBlocked", "We have detected that your guest invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                                }, 0);
+                            };
+                        }
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#addMoreLines').click(function () {
+                $('tr').removeClass('newRow');
+                var newRow = '<tr class="newRow"><td><input type="text" name="" class="textInput pad5 fullWidth inviteFirstName" /></td><td><input type="text" name="" class="textInput pad5 fullWidth inviteLastName" /></td><td><input type="text" name="" class="textInput pad5 fullWidth inviteEmail" /></td></tr>';
+
+                $('#guests').append(newRow).append(newRow);
+                $('tr.newRow').effect("highlight", {}, 3000);
+                $('input.inviteFirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")');
+                $('input.inviteLastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+                $('input.inviteEmail').watermark('@Html.JavascriptTerm("EmailAddress", "Email address")');
+            });
+
+            $('#importGuests').click(function () {
+                $('#importGuestsForm').show();
+                $(this).hide();
+            });
+
+            $('#guestImportFile').change(function () {
+                if ($(this).val().length) {
+                    $('#importGuestsForm').submit();
+                }
+            });
+
+            $('#importGuestsForm').submit(function () {
+                var data = {};
+                $('#guests tr').filter(function () {
+                    return $('.inviteFirstName', this).val() != $('.inviteFirstName', this).data('watermark') ||
+                            $('.inviteLastName', this).val() != $('.inviteLastName', this).data('watermark') ||
+                            $('.inviteEmail', this).val() != $('.inviteEmail', this).data('watermark');
+                }).each(function (i) {
+                    data['guests[' + i + '].FirstName'] = $('.inviteFirstName', this).val();
+                    data['guests[' + i + '].LastName'] = $('.inviteLastName', this).val();
+                    data['guests[' + i + '].EmailAddress'] = $('.inviteEmail', this).val();
+                });
+                $.ajax({
+                    url: '@Url.Resolve("~/HostedParties/PersistGuests")',
+                    method: 'POST',
+                    data: data,
+                    async: false
+                });
+            });
+
+            $('#send').click(function () {
+                var data = { partyId: '@ViewBag.Party.PartyID' }, complete = true, t = $(this);
+                $('#guests tr').filter(function () {
+                    return $('.inviteFirstName', this).val() != '' ||
+                            $('.inviteLastName', this).val() != '' ||
+                            $('.inviteEmail', this).val() != '';
+                }).each(function (i) {
+                    var firstName = $('.inviteFirstName', this).val(), email = $('.inviteEmail', this).val();
+                    if (!firstName || !email || !/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i.test(email)) {
+                        //TODO: show validation error here - DES
+                        complete = false;
+                    }
+                    data['guests[' + i + '].FirstName'] = firstName;
+                    data['guests[' + i + '].LastName'] = $('.inviteLastName', this).val();
+                    data['guests[' + i + '].EmailAddress'] = email;
+                });
+
+                if (complete) {
+                    showLoading(t);
+                    $.post('@Url.Resolve("~/HostedParties/SendInvites")', data, function (response) {
+                        if (response.result) {
+                            window.location = '@Url.Resolve("~/HostedParties/GuestList", new { partyId = ViewBag.Party.PartyID })';
+                        } else {
+                            hideLoading(t);
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('#ImportHelp').jqm({
+                trigger: '#getImportHelp',
+                modal: false,
+                onShow: function (h) {
+                    h.o.fadeIn();
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut();
+                    if (h.o)
+                        h.o.fadeOut(function () { $(this).remove(); });
+                }
+            });
+        });
+    </script>
+}
+<!-- import help modal -->
+<div id="ImportHelp" class="jqmWindow LModal" style="display: none; width: 600px;">
+    <div class="mContent">
+        <h2>@Html.Term("HowToImportWindowTitle", "How Do I Import Guests From a File?")</h2>
+        <p>@Html.Term("HelpText-ImportGuestsFromFile","This is a term and can be replaced in GMP. NetSteps will update this soon.")</p>
+        <div class="clr mt10 pad10">
+            <a href="#" class="jqmClose">@Html.Term("Close")</a>
+        </div>
+    </div>
+</div>
+<!--/ end import help -->
+<div class="SideColumn">
+    @if (ViewBag.HasGuestInviteContent)
+    {
+        <div class="partyActions customizeMessage">
+            <h3>@Html.Term("CustomizeYourInviteMessage", "Customize your invitation message?")</h3>
+            <div class="UI-bg messageWrapper">
+                <div class="inviteMessage" id="inviteMessage">
+                    @if (string.IsNullOrEmpty(ViewBag.PersonalizedContent))
+                    {
+                        //TODO: Figure out how we're going to do "default corporate" here, possibly term? - DES
+                        @:Default overridable corporate content. Lorem ipsum dolor sit amet, consecteturadipiscingelit.Crasvitaesapiendiam.Inconguealiquameleifend.Morbinecmetusatarcudictumgravida.Integerbibendummivelodiodictumeuconsequatrisusluctus.
+                }
+                    else
+                    {
+                        @ViewBag.PersonalizedContent  
+                    }
+                </div>
+                <div class="pad5 messageControls">
+                    <div id="write">
+                        <a href="javascript:void(0);" class="" id="swapCustomText">@Html.Term("WriteYourOwn", "Click here to write your own")</a>
+                    </div>
+                    <div id="saveMessage" style="display: none;">
+                        <a id="saveContent" href="javascript:void(0);" class="FL Button MinorButton saveMessage">
+                            <span>@Html.Term("SaveMessage", "Save Message")</span></a> <a href="javascript:void(0);"
+                                class="FR cancelMessage" id="cancelWrite">@Html.Term("Cancel")</a> <span class="clr">
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <!-- end message wrapper -->
+        </div>
+        <!--/ end customize message -->
+        <hr />
+    }
+    <div class="mt10 messagePreview">
+        <h3>@Html.Term("PreviewEmailText", "Want to see what your invitation will look like?")</h3>
+        <div class="imagewrapper">
+            @if (string.IsNullOrEmpty(ViewBag.InvitationThumbnail))
+            {
+                <a id="previewInvitation" href="javascript:void(0);" class="mt10 previewInvitation" title="@Html.Term("EvitePortal_InviteGuests_PreviewLinkHint", "Preview your invitation")">
+                    @Html.Term("EvitePortal_InviteGuests_PreviewEmail","Click here to preview your invitation")
+                </a>
+            }
+            else
+            {
+                <a id="previewInvitation" href="javascript:void(0);" class="mt10 previewInvitation" title="@Html.Term("EvitePortal_InviteGuests_PreviewLinkHint", "Preview your invitation")">
+                    <img src="@ViewBag.InvitationThumbnail"  title="@Html.Term("EvitePortal_InviteGuests_PreviewLinkHint", "Preview your invitation")" /></a>
+            }
+        </div>
+    </div>
+</div>
+<div class="ContentColumn guestList">
+    <div class="pageTitle">
+        <div class="breadCrumb">
+            <a href="@Url.Resolve("~/HostedParties")">@Html.Term("MyPartiesDashboard", "My Parties Dashboard")</a>
+            &gt; <a href="@Url.Resolve("~/HostedParties/GuestList", new { partyId = ViewBag.Party.PartyID })">@ViewBag.Party.Name</a>
+        </div>
+        <h1>@Html.Term("InviteGuests", "Invite Guests")</h1>
+    </div>
+    <!-- confirmed section -->
+    <div class="guestListSection mt10 confirmedList">
+        <div class="header">
+            <h2 class="FL">@Html.Term("EnterGuestsHere", "Enter Your Guests Here")</h2>
+            <div class="FR inviteUtilities">
+                <a id="importGuests" href="javascript:void(0);"><span>@Html.Term("AddGuestsFromFile", "Add guests from a file")</span></a>
+                <form id="importGuestsForm" action="@Url.Resolve("~/HostedParties/ImportGuests")" method="post" enctype="multipart/form-data" style="display:none;" class="FL importForm">
+                <input type="file" id="guestImportFile" name="guestImportFile" />
+                <input type="hidden" name="partyId" value="@ViewBag.Party.PartyID" />
+                </form>
+                @*<a href="javascript:void(0);"><span>@Html.Term("AddSelfAsGuest", "Add myself as a guest")</span></a>*@
+                <a href="#" id="getImportHelp" class="FR icon-24 UI-icon-container" title="@Html.Term("HowToImportFromFile", "Click here to learn how to import from a file")">
+                    <span class="UI-icon icon-help"></span></a>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table class="DataGrid guestList">
+            <thead>
+                <tr>
+                    <th class="splitCol guestNameCol" colspan="2">@Html.Term("GuestName", "Guest Name")
+                    </th>
+                    <th class="splitCol guestEmailCol" colspan="2">@Html.Term("GuestEmail", "Guest Email")
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="guests">
+                @if (TempData["Guests"] != null)
+                {
+                    foreach (var guest in TempData["Guests"] as List<PartyGuest>)
+                    {
+                    <tr>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteFirstName" value="@guest.FirstName" />
+                        </td>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteLastName" value="@guest.LastName" />
+                        </td>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteEmail" value="@guest.EmailAddress" />
+                        </td>
+                        @*<td class="icon-24 right">
+                            <a href="#" class="UI-icon-container"><span class="UI-icon icon-xOnWht"></span></a>
+                        </td>*@
+                    </tr>
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                    <tr>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteFirstName" />
+                        </td>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteLastName" />
+                        </td>
+                        <td>
+                            <input type="text" name="" class="textInput pad5 fullWidth inviteEmail" />
+                        </td>
+                        @*<td class="icon-24 right">
+                            <a href="#" class="UI-icon-container center"><span class="UI-icon icon-xOnWht"></span>
+                            </a>
+                        </td>*@
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="pad10 icon-24">
+            <a href="javascript:void(0);" class="UI-icon-container" id="addMoreLines"><span class="UI-icon icon-plus">
+            </span><span>@Html.Term("AddMoreEntryLines", "Add more entry lines")</span></a>
+            <span class="clr"></span><a name="linesBottom"></a>
+        </div>
+        <div class="clr pad10 mt10 submitInvite">
+            <a id="send" href="javascript:void(0);" class="Button sendInvite"><span>@Html.Term("SendInvitationsNow", "Send your invitations now")</span></a>
+        </div>
+    </div>
+</div>
+<!--/ end content column -->
+@Html.Partial("MessageCenter")

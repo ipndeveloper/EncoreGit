@@ -1,0 +1,37 @@
+﻿@{
+	Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@section head{
+	@RenderSection("head", false)
+}
+@section breadcrumb {
+    @RenderSection("breadcrumb", false)
+}
+@section title {
+    @RenderSection("title", false)
+}
+@section ActionItems {
+    @RenderSection("ActionItems", false)
+}
+
+@section SavePendingChanges {
+    @RenderSection("SavePendingChanges", false)
+}
+@section SideBarExtras {
+    @if (IsSectionDefined("rail"))
+    {
+        @RenderSection("rail", false)
+    }
+	else
+    {
+		var party = ViewBag.Party as Party;
+		if (party != null && party.PartyID > 0)
+		{
+			@Html.Partial("PartySummary", party)
+		}
+    }
+}
+@RenderBody()
+@section bodyFooter {
+	@RenderSection("bodyFooter", false)
+}

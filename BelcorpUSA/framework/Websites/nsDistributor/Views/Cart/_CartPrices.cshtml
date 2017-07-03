@@ -1,0 +1,19 @@
+﻿@model nsDistributor.Models.Cart.CartPriceModel
+
+<td>
+
+     @{
+         var adjustedPrice = Model.OrderItem.GetAdjustedPrice();
+         var originalPrice = Model.OrderItem.GetPreAdjustmentPrice();
+     }  
+
+    @if (originalPrice != adjustedPrice)
+    {
+        <span class="block price strikethrough originalPrice">@originalPrice.ToString(Model.CurrencyID)</span>
+        <span class="block price discountPrice">@adjustedPrice.ToString(Model.CurrencyID)</span>
+    }
+    else
+    {
+        <span class="price originalPrice">@originalPrice.ToString(Model.CurrencyID)</span>
+    }
+</td>

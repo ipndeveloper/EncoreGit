@@ -1,0 +1,133 @@
+﻿@using NetSteps.Common.Globalization
+@model NetSteps.Data.Entities.Party
+@{
+    bool hasDirectShips = Model.Order.OrderShipments.Any(os => os.IsDirectShipment);
+    bool showShippingAndTax = Model.Order.AsOrder().OrderPendingState != Constants.OrderPendingStates.Open;
+}
+
+<div class="SideModule" id="SideModule">
+    <div class="UI-bg UI-header brdrYYNN SideModuleTop">
+        <span class="pad5">@Html.Term("PartySummary", "Party Summary")</span>
+    </div>
+    <div class="brdr1 brdr1 SideModuleWrap">
+        <div class="SideModuleContent">
+            <div class="pad5">
+                <a href="@Href("~/Orders/Party", new { partyId = Model.PartyID })" class="FR UI-lightBg brdrAll brdr1 pad2 editPartyInfoBtn waitOnPendingSave">
+                    @Html.Term("EditPartyInfo", "Edit Party Info")</a>
+                    @Html.Partial("ShopPartyOrder")
+                <h4>@Model.Name</h4>
+                <p>
+                    @Html.Raw(Model.Address.ToDisplay(false))
+                </p>
+            </div>
+            <div class="brdr1 UI-mainBg guestsTitle">
+                <span class="pad5">@Html.Term("Guests")</span>
+            </div>
+            <div id="ParySumGuestWrap">
+                <table width="100%" class="DataGrid bold OverviewTable invitedGuestList" style="margin: 0px;">
+                    <tbody>
+                        @foreach (var customer in Model.Order.OrderCustomers)
+						{
+							string title = string.Empty;
+							string guestDivClass = "";
+                            if (showShippingAndTax)
+                            {
+                                title = string.Format("Subtotal: {0}\nS/H: {1}\nTax: {2}",
+                                                              customer.Subtotal.ToString(Model.Order.CurrencyID),
+                                                              (customer.ShippingTotal + customer.HandlingTotal).ToString(Model.Order.CurrencyID),
+                                                              customer.TaxAmount.ToString(Model.Order.CurrencyID));
+
+								guestDivClass = "invitedGuestListHoverDetails";
+							}
+                            <tr title='@title' class="@guestDivClass">
+                                <td style="width: 150px;">
+									<a href="@Href("~/Orders/Party/Cart")#orderCustomerHeader@(customer.Guid.ToString("N"))" class="openCustomer" title="@Html.Term("Workstation_PartyEntry_EditGuest", "Edit guest")">@customer.FullName<input type="hidden" class="orderCustomerId" value="@customer.Guid.ToString("N")" /></a> <span class="ClearAll"></span>
+								</td>
+								<td class="@("orderCustomerTotals" + customer.Guid.ToString("N"))" style="text-align: right;">
+									<span class="subtotal Total">@(showShippingAndTax ? customer.Total.ToString(Model.Order.CurrencyID) : customer.Subtotal.ToString(Model.Order.CurrencyID))</span>
+								</td>
+							 </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="brdr1 UI-mainBg totalsTitle">
+                <span class="pad5">@Html.Term("Totals")</span>
+            </div>
+            <table class="OrderTotals">
+                <tbody>
+                    <tr class="hostCredit">
+                        <td>
+                            @Html.Term("HostCredit", "Host Credit"):
+                        </td>
+                        <td id="partyHostCredit" class="bold rewardsEarned" style="text-align: right;">
+                            @Model.Order.HostessRewardsEarned.ToString(Model.Order.CurrencyID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            @Html.Term("CV_QV"):
+                        </td>
+                        <td id="partyCommissionableTotal" class="bold" style="text-align: right;">
+                            @Model.Order.CommissionableTotal.ToString(Model.Order.CurrencyID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><hr /></td>
+                    </tr>
+					<tr>
+						<td align="right" style="width: 150px;">
+							@Html.Term("Subtotal"):
+						</td>
+						<td id="partySubtotal" class="bold" style="text-align: right;">
+							@Model.Order.Subtotal.ToString(Model.Order.CurrencyID)
+						</td>
+					</tr>
+					@if (showShippingAndTax)
+     {
+                        <tr>
+                            <td align="right">
+                                @Html.Term("PartyShippingAndHandling", "Party S/H"):
+                            </td>
+                            <td id="partyShippingAndHandling" class="bold" style="text-align: right;">
+                                @((Model.Order.PartyShipmentTotal + Model.Order.PartyHandlingTotal).ToString(Model.Order.CurrencyID))
+                            </td>
+                        </tr>
+         if (hasDirectShips)
+         {
+                        <tr>
+                            <td align="right">
+                                @Html.Term("DirectShipmentsShippingAndHandling", "Direct S/H"):
+                            </td>
+                            <td id="directShippingAndHandling" class="bold" style="text-align: right;">
+                                @{
+             List<int> directShipOCIDs = Model.Order.OrderShipments.Where(os => os.IsDirectShipment && os.OrderCustomerID.HasValue).Select(os => os.OrderCustomerID.Value).ToList();
+             decimal dsSH = Model.Order.OrderCustomers.Where(oc => directShipOCIDs.Contains(oc.OrderCustomerID)).Sum(oc => oc.ShippingTotal + oc.HandlingTotal).Value;
+                                }
+                                @dsSH.ToString(Model.Order.CurrencyID)
+                            </td>
+                        </tr>
+         }
+					    <tr>
+						    <td align="right">
+							    @Html.Term("Tax"):
+						    </td>
+						    <td id="partyTax" class="bold" style="text-align: right;">
+							    @Model.Order.TaxAmountTotal.ToString(Model.Order.CurrencyID)
+						    </td>
+					    </tr>
+     }
+                    <tr class="UI-secBg">
+                        <td>
+                            <b>@Html.Term("OrderTotal", "Order Total"):</b>
+                        </td>
+                        <td id="partyGrandTotal" class="bold" style="text-align: right;">
+                            @(showShippingAndTax ? Model.Order.GrandTotal.ToString(Model.Order.CurrencyID) : Model.Order.Subtotal.ToString(Model.Order.CurrencyID))
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <span class="SideModuleBottom"></span>
+</div>

@@ -1,0 +1,25 @@
+@if (BaseController.CurrentSite.Languages.Count > 1)
+{
+    <div id="languagePicker" class="Language">
+    <a href="javascript:void(0);" class="languageBtn topLabel"><span>
+        @(CoreContext.CurrentLanguage.GetTerm())</span></a>
+    @if (BaseController.CurrentSite != null)
+    {
+       
+        <div class="UI-lightBg dropDown LanguageDropDown">
+            <ul class="flatList listNav">
+                @{
+        Site baseSite = BaseController.CurrentSite.IsBase ? BaseController.CurrentSite :
+                                                            SiteCache.GetSiteByID(BaseController.CurrentSite.BaseSiteID.ToInt());
+                }
+                @foreach (var language in BaseController.CurrentSite.Languages)
+                {
+                    <li class="@(language.LanguageID == CoreContext.CurrentLanguageID ? "selected" : "")">
+                        <a href="javascript:void(0);" class="languageSelector" id="@("language" + language.LanguageID)">
+                            @language.GetTerm(language.LanguageID)</a></li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+}

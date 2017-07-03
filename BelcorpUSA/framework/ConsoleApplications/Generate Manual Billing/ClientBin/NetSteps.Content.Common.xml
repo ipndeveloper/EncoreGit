@@ -1,0 +1,1904 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Content.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Content.Common.ITermResolver">
+      <summary>
+            Resolves terms.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.ITermResolver.TranslateLanguageID(System.Int32)">
+      <summary>
+            Translates a language ID to an IETF language code.
+            </summary>
+      <param name="langID">the id</param>
+      <returns>the IETF language code</returns>
+    </member>
+    <member name="M:NetSteps.Content.Common.ITermResolver.TranslateIetfLanguageCode(System.String)">
+      <summary>
+            Translates an IETF language code to a language ID.
+            </summary>
+      <param name="ietfCode">an IETF language code</param>
+      <returns>the language ID</returns>
+    </member>
+    <member name="M:NetSteps.Content.Common.ITermResolver.Term(System.String,System.String,System.String)">
+      <summary>
+            Gets a localized term.
+            </summary>
+      <param name="termID" />
+      <param name="ietfLang" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Content.Common.ITermResolver.InterpolateTerm(System.String,System.String,System.String,System.Object[])">
+      <summary>
+            Gets a localized term.
+            </summary>
+      <param name="termID" />
+      <param name="ietfLang" />
+      <param name="defaultValue" />
+      <param name="args" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Content.Common.ITermResolver.DefaultLanguageID">
+      <summary>
+            Gets the default language ID.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.ITermResolver.DefaultIetfLanguageCode">
+      <summary>
+            Gets the default IETF langauge code.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.TermResolverExtensions">
+      <summary>
+        <see cref="T:NetSteps.Content.Common.ITermResolver" /> extension methods.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.TermResolverExtensions.Term(NetSteps.Content.Common.ITermResolver,System.String)">
+      <summary>
+            Gets a localized term in the default language.
+            </summary>
+      <param name="self" />
+      <param name="termID" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Content.Common.TermResolverExtensions.Term(NetSteps.Content.Common.ITermResolver,System.String,System.String)">
+      <summary>
+            Gets a localized term in the default language.
+            </summary>
+      <param name="self" />
+      <param name="termID" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Content.Common.TermResolverExtensions.InterpolateTerm(NetSteps.Content.Common.ITermResolver,System.String,System.Object[])">
+      <summary>
+            Gets a localized term in the default language.
+            </summary>
+      <param name="self" />
+      <param name="termID" />
+      <param name="args" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IDescriptionTranslation">
+      <summary>
+            Common interface for DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.DescriptionTranslationID">
+      <summary>
+            The DescriptionTranslationID for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.LanguageID">
+      <summary>
+            The LanguageID for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.Name">
+      <summary>
+            The Name for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.ShortDescription">
+      <summary>
+            The ShortDescription for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.LongDescription">
+      <summary>
+            The LongDescription for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IDescriptionTranslation.ImagePath">
+      <summary>
+            The ImagePath for this DescriptionTranslation.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IFileResource">
+      <summary>
+            Common interface for FileResource.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResource.AddFileResourceProperty(NetSteps.Content.Common.Models.IFileResourceProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to the FileResourceProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResource.RemoveFileResourceProperty(NetSteps.Content.Common.Models.IFileResourceProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> from the FileResourceProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.FileResourceID">
+      <summary>
+            The FileResourceID for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.FileResourceTypeID">
+      <summary>
+            The FileResourceTypeID for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.FileResourcePath">
+      <summary>
+            The FileResourcePath for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.DateCreatedUTC">
+      <summary>
+            The DateCreatedUTC for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.Active">
+      <summary>
+            The Active for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this FileResource.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResource.FileResourceProperties">
+      <summary>
+            The FileResourceProperties for this FileResource.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IFileResourceProperty">
+      <summary>
+            Common interface for FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.FileResourcePropertyID">
+      <summary>
+            The FileResourcePropertyID for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.FileResourceID">
+      <summary>
+            The FileResourceID for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.FileResourcePropertyTypeID">
+      <summary>
+            The FileResourcePropertyTypeID for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.PropertyValue">
+      <summary>
+            The PropertyValue for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.Active">
+      <summary>
+            The Active for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.FileResource">
+      <summary>
+            The FileResource for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceProperty.FileResourcePropertyType">
+      <summary>
+            The FileResourcePropertyType for this FileResourceProperty.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IFileResourcePropertyType">
+      <summary>
+            Common interface for FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResourcePropertyType.AddFileResourceProperty(NetSteps.Content.Common.Models.IFileResourceProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to the FileResourceProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResourcePropertyType.RemoveFileResourceProperty(NetSteps.Content.Common.Models.IFileResourceProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> from the FileResourceProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResourceProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.FileResourcePropertyTypeID">
+      <summary>
+            The FileResourcePropertyTypeID for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.Name">
+      <summary>
+            The Name for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.DataType">
+      <summary>
+            The DataType for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.Required">
+      <summary>
+            The Required for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.SortIndex">
+      <summary>
+            The SortIndex for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.TermName">
+      <summary>
+            The TermName for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.Description">
+      <summary>
+            The Description for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.Active">
+      <summary>
+            The Active for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.Editable">
+      <summary>
+            The Editable for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.IsInternal">
+      <summary>
+            The IsInternal for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourcePropertyType.FileResourceProperties">
+      <summary>
+            The FileResourceProperties for this FileResourcePropertyType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IFileResourceType">
+      <summary>
+            Common interface for FileResourceType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResourceType.AddFileResource(NetSteps.Content.Common.Models.IFileResource)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IFileResource" /> to the FileResources collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResource" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IFileResourceType.RemoveFileResource(NetSteps.Content.Common.Models.IFileResource)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IFileResource" /> from the FileResources collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IFileResource" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.FileResourceTypeID">
+      <summary>
+            The FileResourceTypeID for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.Name">
+      <summary>
+            The Name for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.TermName">
+      <summary>
+            The TermName for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.Description">
+      <summary>
+            The Description for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.Active">
+      <summary>
+            The Active for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.Editable">
+      <summary>
+            The Editable for this FileResourceType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IFileResourceType.FileResources">
+      <summary>
+            The FileResources for this FileResourceType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContent">
+      <summary>
+            Common interface for HtmlContent.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.AddHtmlContentHistory(NetSteps.Content.Common.Models.IHtmlContentHistory)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to the HtmlContentHistories collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.RemoveHtmlContentHistory(NetSteps.Content.Common.Models.IHtmlContentHistory)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> from the HtmlContentHistories collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.AddHtmlContentWorkflow(NetSteps.Content.Common.Models.IHtmlContentWorkflow)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to the HtmlContentWorkflows collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.RemoveHtmlContentWorkflow(NetSteps.Content.Common.Models.IHtmlContentWorkflow)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> from the HtmlContentWorkflows collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.AddHtmlElement(NetSteps.Content.Common.Models.IHtmlElement)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to the HtmlElements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.RemoveHtmlElement(NetSteps.Content.Common.Models.IHtmlElement)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> from the HtmlElements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.AddHtmlSectionChoice(NetSteps.Content.Common.Models.IHtmlSectionChoice)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to the HtmlSectionChoices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.RemoveHtmlSectionChoice(NetSteps.Content.Common.Models.IHtmlSectionChoice)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> from the HtmlSectionChoices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.AddHtmlSectionContent(NetSteps.Content.Common.Models.IHtmlSectionContent)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to the HtmlSectionContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContent.RemoveHtmlSectionContent(NetSteps.Content.Common.Models.IHtmlSectionContent)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> from the HtmlSectionContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlContentStatusID">
+      <summary>
+            The HtmlContentStatusID for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.LanguageID">
+      <summary>
+            The LanguageID for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.Name">
+      <summary>
+            The Name for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.PublishDateUTC">
+      <summary>
+            The PublishDateUTC for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.SortIndex">
+      <summary>
+            The SortIndex for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.CreatedByUserID">
+      <summary>
+            The CreatedByUserID for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlContentHistories">
+      <summary>
+            The HtmlContentHistories for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlContentWorkflows">
+      <summary>
+            The HtmlContentWorkflows for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlElements">
+      <summary>
+            The HtmlElements for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlSectionChoices">
+      <summary>
+            The HtmlSectionChoices for this HtmlContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContent.HtmlSectionContents">
+      <summary>
+            The HtmlSectionContents for this HtmlContent.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentAccountStatus">
+      <summary>
+            Common interface for HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.Consultant">
+      <summary>
+            The Consultant for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.SectionName">
+      <summary>
+            The SectionName for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.Uploaded">
+      <summary>
+            The Uploaded for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.Status">
+      <summary>
+            The Status for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.Comments">
+      <summary>
+            The Comments for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.ID">
+      <summary>
+            The ID for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentAccountStatus.SiteID">
+      <summary>
+            The SiteID for this HtmlContentAccountStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentEditorType">
+      <summary>
+            Common interface for HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentEditorType.AddHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentEditorType.RemoveHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> from the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.HtmlContentEditorTypeID">
+      <summary>
+            The HtmlContentEditorTypeID for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.Name">
+      <summary>
+            The Name for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.TermName">
+      <summary>
+            The TermName for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.Description">
+      <summary>
+            The Description for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.Active">
+      <summary>
+            The Active for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentEditorType.HtmlSections">
+      <summary>
+            The HtmlSections for this HtmlContentEditorType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentHistory">
+      <summary>
+            Common interface for HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.HtmlContentHistoryID">
+      <summary>
+            The HtmlContentHistoryID for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.HtmlContentStatusID">
+      <summary>
+            The HtmlContentStatusID for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.UserID">
+      <summary>
+            The UserID for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.HistoryDateUTC">
+      <summary>
+            The HistoryDateUTC for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.Comments">
+      <summary>
+            The Comments for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentHistory.MessageSeen">
+      <summary>
+            The MessageSeen for this HtmlContentHistory.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentStatus">
+      <summary>
+            Common interface for HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentStatus.AddHtmlContentHistory(NetSteps.Content.Common.Models.IHtmlContentHistory)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to the HtmlContentHistories collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentStatus.RemoveHtmlContentHistory(NetSteps.Content.Common.Models.IHtmlContentHistory)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> from the HtmlContentHistories collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentHistory" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentStatus.AddHtmlContent(NetSteps.Content.Common.Models.IHtmlContent)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlContent" /> to the HtmlContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContent" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentStatus.RemoveHtmlContent(NetSteps.Content.Common.Models.IHtmlContent)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlContent" /> from the HtmlContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContent" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.HtmlContentStatusID">
+      <summary>
+            The HtmlContentStatusID for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.Name">
+      <summary>
+            The Name for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.TermName">
+      <summary>
+            The TermName for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.Description">
+      <summary>
+            The Description for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.Active">
+      <summary>
+            The Active for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.HtmlContentHistories">
+      <summary>
+            The HtmlContentHistories for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentStatus.HtmlContents">
+      <summary>
+            The HtmlContents for this HtmlContentStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow">
+      <summary>
+            Common interface for HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.HtmlContentWorkflowID">
+      <summary>
+            The HtmlContentWorkflowID for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.UserID">
+      <summary>
+            The UserID for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.HtmlContentWorkflowTypeID">
+      <summary>
+            The HtmlContentWorkflowTypeID for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.WorkflowDateUTC">
+      <summary>
+            The WorkflowDateUTC for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.Comments">
+      <summary>
+            The Comments for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.Title">
+      <summary>
+            The Title for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflow.HtmlContent">
+      <summary>
+            The HtmlContent for this HtmlContentWorkflow.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlContentWorkflowType">
+      <summary>
+            Common interface for HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.AddHtmlContentWorkflow(NetSteps.Content.Common.Models.IHtmlContentWorkflow)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to the HtmlContentWorkflows collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.RemoveHtmlContentWorkflow(NetSteps.Content.Common.Models.IHtmlContentWorkflow)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> from the HtmlContentWorkflows collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlContentWorkflow" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.HtmlContentWorkflowTypeID">
+      <summary>
+            The HtmlContentWorkflowTypeID for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.Name">
+      <summary>
+            The Name for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.TermName">
+      <summary>
+            The TermName for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.Description">
+      <summary>
+            The Description for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.Active">
+      <summary>
+            The Active for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlContentWorkflowType.HtmlContentWorkflows">
+      <summary>
+            The HtmlContentWorkflows for this HtmlContentWorkflowType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlElement">
+      <summary>
+            Common interface for HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.HtmlElementID">
+      <summary>
+            The HtmlElementID for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.HtmlElementTypeID">
+      <summary>
+            The HtmlElementTypeID for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.Contents">
+      <summary>
+            The Contents for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.Active">
+      <summary>
+            The Active for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.SortIndex">
+      <summary>
+            The SortIndex for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.HtmlContent">
+      <summary>
+            The HtmlContent for this HtmlElement.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElement.HtmlElementType">
+      <summary>
+            The HtmlElementType for this HtmlElement.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlElementType">
+      <summary>
+            Common interface for HtmlElementType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlElementType.AddHtmlElement(NetSteps.Content.Common.Models.IHtmlElement)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to the HtmlElements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlElementType.RemoveHtmlElement(NetSteps.Content.Common.Models.IHtmlElement)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> from the HtmlElements collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlElement" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.HtmlElementTypeID">
+      <summary>
+            The HtmlElementTypeID for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.Name">
+      <summary>
+            The Name for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.ContainerTagName">
+      <summary>
+            The ContainerTagName for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.ContainerCssClass">
+      <summary>
+            The ContainerCssClass for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.Active">
+      <summary>
+            The Active for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.TermName">
+      <summary>
+            The TermName for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlElementType.HtmlElements">
+      <summary>
+            The HtmlElements for this HtmlElementType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlInputType">
+      <summary>
+            Common interface for HtmlInputType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlInputType.HtmlInputTypeID">
+      <summary>
+            The HtmlInputTypeID for this HtmlInputType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlInputType.Name">
+      <summary>
+            The Name for this HtmlInputType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlInputType.TermName">
+      <summary>
+            The TermName for this HtmlInputType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlInputType.Description">
+      <summary>
+            The Description for this HtmlInputType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlInputType.Active">
+      <summary>
+            The Active for this HtmlInputType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlSection">
+      <summary>
+            Common interface for HtmlSection.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSection.AddHtmlSectionChoice(NetSteps.Content.Common.Models.IHtmlSectionChoice)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to the HtmlSectionChoices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSection.RemoveHtmlSectionChoice(NetSteps.Content.Common.Models.IHtmlSectionChoice)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> from the HtmlSectionChoices collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionChoice" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSection.AddHtmlSectionContent(NetSteps.Content.Common.Models.IHtmlSectionContent)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to the HtmlSectionContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSection.RemoveHtmlSectionContent(NetSteps.Content.Common.Models.IHtmlSectionContent)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> from the HtmlSectionContents collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSectionContent" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.HtmlSectionID">
+      <summary>
+            The HtmlSectionID for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.HtmlSectionEditTypeID">
+      <summary>
+            The HtmlSectionEditTypeID for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.SectionName">
+      <summary>
+            The SectionName for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.RequiresApproval">
+      <summary>
+            The RequiresApproval for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.HtmlContentEditorTypeID">
+      <summary>
+            The HtmlContentEditorTypeID for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.Width">
+      <summary>
+            The Width for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.Height">
+      <summary>
+            The Height for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.HtmlSectionChoices">
+      <summary>
+            The HtmlSectionChoices for this HtmlSection.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSection.HtmlSectionContents">
+      <summary>
+            The HtmlSectionContents for this HtmlSection.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlSectionChoice">
+      <summary>
+            Common interface for HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionChoice.HtmlSectionChoiceID">
+      <summary>
+            The HtmlSectionChoiceID for this HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionChoice.HtmlSectionID">
+      <summary>
+            The HtmlSectionID for this HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionChoice.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionChoice.SortIndex">
+      <summary>
+            The SortIndex for this HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionChoice.SiteID">
+      <summary>
+            The SiteID for this HtmlSectionChoice.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlSectionContent">
+      <summary>
+            Common interface for HtmlSectionContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionContent.HtmlSectionContentID">
+      <summary>
+            The HtmlSectionContentID for this HtmlSectionContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionContent.HtmlSectionID">
+      <summary>
+            The HtmlSectionID for this HtmlSectionContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionContent.HtmlContentID">
+      <summary>
+            The HtmlContentID for this HtmlSectionContent.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionContent.SiteID">
+      <summary>
+            The SiteID for this HtmlSectionContent.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IHtmlSectionEditType">
+      <summary>
+            Common interface for HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSectionEditType.AddHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IHtmlSectionEditType.RemoveHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> from the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.HtmlSectionEditTypeID">
+      <summary>
+            The HtmlSectionEditTypeID for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.Name">
+      <summary>
+            The Name for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.TermName">
+      <summary>
+            The TermName for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.Description">
+      <summary>
+            The Description for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.Active">
+      <summary>
+            The Active for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IHtmlSectionEditType.HtmlSections">
+      <summary>
+            The HtmlSections for this HtmlSectionEditType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.ILayout">
+      <summary>
+            Common interface for Layout.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.ILayout.AddHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.ILayout.RemoveHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> from the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.LayoutID">
+      <summary>
+            The LayoutID for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.Name">
+      <summary>
+            The Name for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.Description">
+      <summary>
+            The Description for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.ViewName">
+      <summary>
+            The ViewName for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.ThumbnailPath">
+      <summary>
+            The ThumbnailPath for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.Active">
+      <summary>
+            The Active for this Layout.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILayout.HtmlSections">
+      <summary>
+            The HtmlSections for this Layout.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.ILocalizedKind">
+      <summary>
+            Common interface for LocalizedKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILocalizedKind.LocalizedKindTableId">
+      <summary>
+            The LocalizedKindTableId for this LocalizedKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILocalizedKind.KindId">
+      <summary>
+            The KindId for this LocalizedKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILocalizedKind.LanguageId">
+      <summary>
+            The LanguageId for this LocalizedKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILocalizedKind.LocalizedName">
+      <summary>
+            The LocalizedName for this LocalizedKind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ILocalizedKind.SortIndex">
+      <summary>
+            The SortIndex for this LocalizedKind.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.INavigation">
+      <summary>
+            Common interface for Navigation.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.AddBaseChildrenNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to the BaseChildrenNavigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.RemoveBaseChildrenNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> from the BaseChildrenNavigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.AddChildNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to the ChildNavigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.RemoveChildNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> from the ChildNavigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.AddTranslation(NetSteps.Content.Common.Models.INavigationTranslation)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.INavigationTranslation" /> to the Translations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigationTranslation" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.INavigation.RemoveTranslation(NetSteps.Content.Common.Models.INavigationTranslation)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.INavigationTranslation" /> from the Translations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigationTranslation" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.NavigationID">
+      <summary>
+            The NavigationID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.BaseNavigationID">
+      <summary>
+            The BaseNavigationID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.NavigationTypeID">
+      <summary>
+            The NavigationTypeID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.SiteID">
+      <summary>
+            The SiteID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.LinkUrl">
+      <summary>
+            The LinkUrl for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.PageID">
+      <summary>
+            The PageID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.StartDateUTC">
+      <summary>
+            The StartDateUTC for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.EndDateUTC">
+      <summary>
+            The EndDateUTC for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.ParentID">
+      <summary>
+            The ParentID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.SortIndex">
+      <summary>
+            The SortIndex for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.MinChildren">
+      <summary>
+            The MinChildren for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.MaxChildren">
+      <summary>
+            The MaxChildren for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.Active">
+      <summary>
+            The Active for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.IsDeletable">
+      <summary>
+            The IsDeletable for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.IsDropDown">
+      <summary>
+            The IsDropDown for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.IsSecondaryNavigation">
+      <summary>
+            The IsSecondaryNavigation for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.BaseNavigation">
+      <summary>
+            The BaseNavigation for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.ParentNavigation">
+      <summary>
+            The ParentNavigation for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.BaseChildrenNavigations">
+      <summary>
+            The BaseChildrenNavigations for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.ChildNavigations">
+      <summary>
+            The ChildNavigations for this Navigation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigation.Translations">
+      <summary>
+            The Translations for this Navigation.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.INavigationTranslation">
+      <summary>
+            Common interface for NavigationTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationTranslation.NavigationTranslationID">
+      <summary>
+            The NavigationTranslationID for this NavigationTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationTranslation.NavigationID">
+      <summary>
+            The NavigationID for this NavigationTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationTranslation.LanguageID">
+      <summary>
+            The LanguageID for this NavigationTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationTranslation.LinkText">
+      <summary>
+            The LinkText for this NavigationTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationTranslation.Navigation">
+      <summary>
+            The Navigation for this NavigationTranslation.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.INavigationType">
+      <summary>
+            Common interface for NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.NavigationTypeID">
+      <summary>
+            The NavigationTypeID for this NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.SiteTypeID">
+      <summary>
+            The SiteTypeID for this NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.Name">
+      <summary>
+            The Name for this NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.TermName">
+      <summary>
+            The TermName for this NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.Description">
+      <summary>
+            The Description for this NavigationType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.INavigationType.Active">
+      <summary>
+            The Active for this NavigationType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IPage">
+      <summary>
+            Common interface for Page.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.AddHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.RemoveHtmlSection(NetSteps.Content.Common.Models.IHtmlSection)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> from the HtmlSections collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IHtmlSection" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.AddNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to the Navigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.RemoveNavigation(NetSteps.Content.Common.Models.INavigation)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.INavigation" /> from the Navigations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.INavigation" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.AddTranslation(NetSteps.Content.Common.Models.IPageTranslation)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IPageTranslation" /> to the Translations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IPageTranslation" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPage.RemoveTranslation(NetSteps.Content.Common.Models.IPageTranslation)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IPageTranslation" /> from the Translations collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IPageTranslation" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.PageID">
+      <summary>
+            The PageID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.ParentID">
+      <summary>
+            The ParentID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.SiteID">
+      <summary>
+            The SiteID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Name">
+      <summary>
+            The Name for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Url">
+      <summary>
+            The Url for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.RequiresAuthentication">
+      <summary>
+            The RequiresAuthentication for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Active">
+      <summary>
+            The Active for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Editable">
+      <summary>
+            The Editable for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.UseSsl">
+      <summary>
+            The UseSsl for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.IsStartPage">
+      <summary>
+            The IsStartPage for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.LayoutID">
+      <summary>
+            The LayoutID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.PageTypeID">
+      <summary>
+            The PageTypeID for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.ExternalUrl">
+      <summary>
+            The ExternalUrl for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.HtmlSections">
+      <summary>
+            The HtmlSections for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Navigations">
+      <summary>
+            The Navigations for this Page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPage.Translations">
+      <summary>
+            The Translations for this Page.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IPageTranslation">
+      <summary>
+            Common interface for PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.PageTranslationID">
+      <summary>
+            The PageTranslationID for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.PageID">
+      <summary>
+            The PageID for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.LanguageID">
+      <summary>
+            The LanguageID for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.Title">
+      <summary>
+            The Title for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.Description">
+      <summary>
+            The Description for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.Keywords">
+      <summary>
+            The Keywords for this PageTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageTranslation.Page">
+      <summary>
+            The Page for this PageTranslation.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IPageType">
+      <summary>
+            Common interface for PageType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPageType.AddLayout(NetSteps.Content.Common.Models.ILayout)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.ILayout" /> to the Layouts collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.ILayout" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPageType.RemoveLayout(NetSteps.Content.Common.Models.ILayout)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.ILayout" /> from the Layouts collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.ILayout" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPageType.AddPage(NetSteps.Content.Common.Models.IPage)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IPage" /> to the Pages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IPage" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IPageType.RemovePage(NetSteps.Content.Common.Models.IPage)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IPage" /> from the Pages collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IPage" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.PageTypeID">
+      <summary>
+            The PageTypeID for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.Name">
+      <summary>
+            The Name for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.TermName">
+      <summary>
+            The TermName for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.Description">
+      <summary>
+            The Description for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.Active">
+      <summary>
+            The Active for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.IsUserDefined">
+      <summary>
+            The IsUserDefined for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.Layouts">
+      <summary>
+            The Layouts for this PageType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IPageType.Pages">
+      <summary>
+            The Pages for this PageType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IProxyLink">
+      <summary>
+            Common interface for ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.ProxyLinkID">
+      <summary>
+            The ProxyLinkID for this ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.Name">
+      <summary>
+            The Name for this ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.URL">
+      <summary>
+            The URL for this ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.SortIndex">
+      <summary>
+            The SortIndex for this ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.Active">
+      <summary>
+            The Active for this ProxyLink.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IProxyLink.TermName">
+      <summary>
+            The TermName for this ProxyLink.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.ISiteWidget">
+      <summary>
+            Common interface for SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.SiteWidgetID">
+      <summary>
+            The SiteWidgetID for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.SiteID">
+      <summary>
+            The SiteID for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.WidgetID">
+      <summary>
+            The WidgetID for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.DisplayColumn">
+      <summary>
+            The DisplayColumn for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.SortIndex">
+      <summary>
+            The SortIndex for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.IsOnTop">
+      <summary>
+            The IsOnTop for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.Editable">
+      <summary>
+            The Editable for this SiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ISiteWidget.Widget">
+      <summary>
+            The Widget for this SiteWidget.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.ITermTranslation">
+      <summary>
+            Common interface for TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.TermTranslationID">
+      <summary>
+            The TermTranslationID for this TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.LanguageID">
+      <summary>
+            The LanguageID for this TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.TermName">
+      <summary>
+            The TermName for this TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.Term">
+      <summary>
+            The Term for this TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.LastUpdatedUTC">
+      <summary>
+            The LastUpdatedUTC for this TermTranslation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.ITermTranslation.Active">
+      <summary>
+            The Active for this TermTranslation.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IUserSiteWidget">
+      <summary>
+            Common interface for UserSiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IUserSiteWidget.UserSiteWidgetID">
+      <summary>
+            The UserSiteWidgetID for this UserSiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IUserSiteWidget.UserID">
+      <summary>
+            The UserID for this UserSiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IUserSiteWidget.SiteID">
+      <summary>
+            The SiteID for this UserSiteWidget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IUserSiteWidget.WidgetID">
+      <summary>
+            The WidgetID for this UserSiteWidget.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Content.Common.Models.IWidget">
+      <summary>
+            Common interface for Widget.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IWidget.AddSiteWidget(NetSteps.Content.Common.Models.ISiteWidget)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.ISiteWidget" /> to the SiteWidgets collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.ISiteWidget" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IWidget.RemoveSiteWidget(NetSteps.Content.Common.Models.ISiteWidget)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.ISiteWidget" /> from the SiteWidgets collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.ISiteWidget" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IWidget.AddUserSiteWidget(NetSteps.Content.Common.Models.IUserSiteWidget)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Content.Common.Models.IUserSiteWidget" /> to the UserSiteWidgets collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IUserSiteWidget" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Content.Common.Models.IWidget.RemoveUserSiteWidget(NetSteps.Content.Common.Models.IUserSiteWidget)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Content.Common.Models.IUserSiteWidget" /> from the UserSiteWidgets collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Content.Common.Models.IUserSiteWidget" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.WidgetID">
+      <summary>
+            The WidgetID for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.Name">
+      <summary>
+            The Name for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.TermName">
+      <summary>
+            The TermName for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.Description">
+      <summary>
+            The Description for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.ViewName">
+      <summary>
+            The ViewName for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.Path">
+      <summary>
+            The Path for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.Active">
+      <summary>
+            The Active for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.SiteWidgets">
+      <summary>
+            The SiteWidgets for this Widget.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Content.Common.Models.IWidget.UserSiteWidgets">
+      <summary>
+            The UserSiteWidgets for this Widget.
+            </summary>
+    </member>
+  </members>
+</doc>

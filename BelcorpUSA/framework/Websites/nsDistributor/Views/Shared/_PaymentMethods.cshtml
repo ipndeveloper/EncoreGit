@@ -1,0 +1,98 @@
+﻿@*Seccion ShippingMethods*@
+@{
+    var order = Session["Order"] as Order;
+    }
+<div class="UI-lightBg pad5 paymentSelectTitle">
+    <div id="dvB">
+    <span class="addtext"> Select a form of payment:</span> 
+       @Html.DropDownList("sPaymentMethod", (TempData["sPaymentMethod"] as IEnumerable<SelectListItem>))
+    </div>
+ </div>
+ <table class="PaymentSelector">
+     <tr>
+        <td>
+            <div class="UI-lightBg pad5 amountToApply">
+               @* <span class="FL" style="width:180px">
+                    <label>@Html.Term("Label-PayentAmountToApply", "Amount to Apply")</label>
+                    @System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol
+                    <input
+                        id="txtPaymentAmount" type="text" class="pad3 TextInput applyPaymentInput" style="width:40px;" value="@order.Balance.GetRoundedNumber()"
+                       style="background:white;border-width: 0px; display: block; font-size:medium; color:Black;"  />
+                </span> *@
+
+                 <table id="tbPayentAmountToApply" style="font-size:13px; display:block"><tr><td>
+            @*   <br />*@
+                  @*  <label style="background:white;border-width: 0px; display: block; font-weight: bold;font-size:18px;font-weight: bold;"
+                    >@Html.Term("Label-PayentAmountToApply", "Amount to Apply") R$</label> *@
+
+                      <input   type="text" class="addtext"
+                       style="border-width:0;font-weight: bold;font-size:18px;" readonly="readonly"
+                       value="@Html.Term("Label-PayentAmountToApply", "Amount to Apply")  "@CoreContext.CurrentCultureInfo.NumberFormat.CurrencySymbol.ToString()"
+                      />  
+                
+                    </td><td>
+@*                    <input id="txtPaymentAmount" type="text" class="addtext"  value="@order.Balance.GetRoundedNumber()"
+                         style="background:white;border-width: 0px; 
+                                 display: block; font-weight: bold;font-size:18px;"/>*@
+                                @{  var d = order.Balance;
+                                    if (d >= 0) 
+                                    { 
+                                        d = null;
+                                    }
+                                    else if (order.CurrencyID == (int)Constants.Currency.BrazilianReal)
+                                    { 
+                                        d = d * -1; d = d.ToDecimal().ToString(order.CurrencyID).Replace("R$", "").ToDecimal();
+                                    }
+                                    else if (order.CurrencyID == (int)Constants.Currency.UsDollar)
+                                    { 
+                                        d = d * -1; d = d.ToDecimal();
+                                    }
+                                 }
+                         <input id="txtPaymentAmount" type="text" class="addtext"  value="@d"
+                         style="background:white;border-width: 0px; 
+                                 display: block; font-weight: bold;font-size:18px;"/>
+                                 
+                       <input type="hidden" id="hdnPaymentAmount" /></td></tr>
+               </table>
+
+                <div id="dvBtnApplyPayment" >
+                <a id="btnApplyPayment" href="javascript:void(0);" class="UI-icon-container" title="@Html.Term("ApplyPayment", "ApplyPayment")">
+                    <div style="padding-top:5px">
+                        <span class="add"></span>
+                        <span class="addtext">@Html.Term("ApplyPayment", "ApplyPayment")</span>
+                    </div>
+                </a>
+                </div>
+               @*<img id="loaderApplyPayment" src="@Url("~/Resource/Content/Images/loader_20x20.gif")" style="display: none;" alt="loading" class="FR" />*@
+                <span class="clr"></span>
+            </div>
+   @*           <div class="UI-lightBg pad5 amountToApply"> 
+                  <p  class="InputTools" id="lblTargetCredit" >
+                    @Html.Term("NumberofSharestoDeferPayment", "Number of shares to defer payment")                
+                     <input id="txtNumberCuotas" type="text"  class="pad3 TextInput applyPaymentInput" style="width: 7px;display: none;background:white;border-width: 0px;" readonly="readonly" />							
+                     <input id="txtMsg"  type="text" class="pad3 TextInput applyPaymentInput" style="width: 120px; border-width:0;display: none;" readonly="readonly" />      						
+                     </p> 
+             </div>*@
+
+             <div class="UI-lightBg pad5 amountToApply">
+               
+                  <p  class="InputTools" style="font-weight: bold;font-size:15px;" id="lblTargetCredit" >
+
+                  <input id="txtNamePayment" type="text"  
+                  value="@Html.Term("NumberofSharestoDeferPayment", "Number of shares to defer payment")"
+                  style="width: 9px;background:white;border-width: 0px;font-weight: bold;font-size:15px;visibility:hidden;" readonly="readonly"
+                      />
+                
+                     <input id="txtNumberCuotas" type="text"  class="TextInput"
+                      style="width: 9px;background:white;border-width: 0px;font-weight: bold;font-size:15px;visibility:hidden;" readonly="readonly"
+                      />							
+                     <input id="txtMsg"  type="text" class="addtext"
+                       style="width: 470px; border-width:0;font-weight: bold;font-size:15px;" readonly="readonly"
+                      />      						
+                     </p>
+             
+             </div>
+        </td>
+     </tr>
+ </table>
+ 

@@ -1,0 +1,237 @@
+﻿@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = "Receipt";
+}
+@section head{
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/Receipts-Print.css")" media="print" />
+    <script type="text/javascript">
+
+        $(function () {
+            var static = true,
+				originalTop = $('#Follow').position().top,
+                width = $('#Follow').width();
+
+            $(window).scroll(function () {
+                if (static && originalTop < $(window).scrollTop()) {
+                    static = false;
+                    $('#Follow').css({ position: 'fixed', top: '0px', width: width + 'px' });
+                } else if (!static && originalTop > $(window).scrollTop()) {
+                    static = true;
+                    $('#Follow').css({ position: 'static', top: '' });
+                }
+            });
+
+            $('a.PrintCustomer').click(function (event) {
+                event.stopPropagation();
+                $(this).closest('.Customer').jqprint();
+            });
+        });
+
+        (function ($) {
+            var opt;
+            $.fn.jqprint = function (options) {
+                opt = $.extend({}, $.fn.jqprint.defaults, options);
+                var $element = (this instanceof jQuery) ? this : $(this);
+                if (opt.operaSupport && $.browser.opera) {
+                    var tab = window.open('', 'jqPrint-preview');
+                    tab.document.open();
+                    var doc = tab.document;
+                }
+                else {
+                    var $iframe = $('<iframe />');
+                    if (!opt.debug) { $iframe.css({ position: 'absolute', width: '0px', height: '0px', left: '-600px', top: '-600px' }); }
+
+                    $iframe.appendTo("body");
+                    var doc = $iframe[0].contentWindow.document;
+                }
+                if (opt.importCSS) {
+                    if ($('link[media=print]').length > 0) {
+                        $('link[media=print]').each(function () {
+                            doc.write('<link type="text/css" rel="stylesheet" href="' + $(this).attr('href') + '" media="print" />');
+                        });
+                    }
+                    else {
+                        $('link').each(function () {
+                            doc.write('<link type="text/css" rel="stylesheet" href="' + $(this).attr('href') + '" />');
+                        });
+                    }
+                }
+                if (opt.printContainer) { doc.write($element.outer()); }
+                else { $element.each(function () { doc.write($(this).html()); }); }
+                doc.close();
+                (opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).focus();
+                setTimeout(function () { (opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).print(); if (tab) { tab.close(); } }, 1000);
+            }
+            $.fn.jqprint.defaults = {
+                debug: false,
+                importCSS: true,
+                printContainer: true,
+                operaSupport: true
+            };
+            jQuery.fn.outer = function () {
+                return $($('<div></div>').html(this.clone())).html();
+            }
+        })(jQuery);
+    </script>
+}
+@section title{
+    @Html.Term("Receipt")
+}
+@section rail {
+    <div id="Follow">
+        <div class="SideModule" id="SideModule">
+            <div class="UI-bg UI-header brdrYYNN SideModuleTop">
+                <span class="pad5">@Html.Term("PartyInfo", "Party Info")</span>
+            </div>
+            <div class="brdr1 brdr1 SideModuleWrap">
+                <div class="SideModuleContent">
+                    <div class="pad5">
+                        <h4>@Model.Name</h4>
+                        <p>
+                            @Html.Raw(Model.Address.ToDisplay(false))
+                        </p>
+                        <p>@Model.StartDate.ToString(CoreContext.CurrentCultureInfo)</p>
+                    </div>
+                    <div class="pad5">
+                        @Html.Term("Host"):
+                        @{
+                            var hostess = Model.Order.GetHostess();
+                            if (hostess != null)
+                            { 
+                            @hostess.FullName                            
+                            }
+                        }
+                    </div>
+                    <div class="pad5">
+                        @Html.Term("Order Number: ") @Model.Order.OrderNumber
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="center pad10">
+            <a href="javascript:void(0);" onclick="window.print();" class="Button Primary"><span>@Html.Term("PrintPage", "Print Page")</span></a>
+        </div>
+    </div>
+}
+@section breadcrumb{
+}
+<div class="brdr1 brdrAll mb10 partySection-Customers">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="UI-header pad10">
+            @Html.Term("Customers")</div>
+    </div>
+    <div class="pad10">
+        @foreach (var customer in Model.Order.OrderCustomers)
+        {
+            if (customer.IsHostess)
+            {
+                @Html.Partial("CustomerReceipt", customer, new ViewDataDictionary { 
+                    { "CustomerDescription", string.Format("({0})", Html.Term("Host")) }, 
+                    { "HasEnrollmentCredit", ViewBag.HasEnrollmentCredit }, 
+                    { "ConsultantHasPWS", ViewBag.ConsultantHasPWS }, 
+                    { "EnrollmentSiteUrl", ViewBag.EnrollmentSiteUrl }, 
+                })
+            }
+            else
+            {
+                @Html.Partial("CustomerReceipt", customer)
+            }
+        }
+        @foreach (Order onlineOrder in ViewBag.OnlineOrders)
+        {
+            var orderStatus = SmallCollectionCache.Instance.OrderStatuses.GetById(onlineOrder.OrderStatusID);
+            @Html.Partial("CustomerReceipt", onlineOrder.OrderCustomers[0], new ViewDataDictionary { { "CustomerDescription", Html.Term("OnlineOrderIndicator", "(Online Order)") + string.Format(" - ({0})", orderStatus != null ? orderStatus.GetTerm() : string.Empty) } })
+        }
+        <div class="clr">
+        </div>
+    </div>
+</div>
+<div class="brdr1 brdrAll mb10 partySection-Customers">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="UI-header pad10">
+            @Html.Term("Payments")</div>
+    </div>
+    <div class="pad10">
+        <div class="FL splitCol30">
+            <h5>
+                @Html.Term("PartyShippingAddress", "Party Shipping Address")</h5>
+            @Html.Raw(Model.Order.GetDefaultShipment().ToDisplay())
+            @foreach (var shipment in Model.Order.OrderShipments.Where(op => !op.OrderCustomerID.HasValue))
+            {
+                foreach (var package in shipment.OrderShipmentPackages)
+                {
+                <br />
+                <br />
+                @package.ShippingMethodName
+                <br />
+                <span>@Html.Term("ShippedOn", "Shipped On"): @package.DateShipped.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span>
+                    if (!string.IsNullOrEmpty(package.TrackingNumber))
+                    {
+                        var baseUrl = SmallCollectionCache.Instance.ShippingMethods.GetById(package.ShippingMethodID.Value).TrackingNumberBaseUrl;
+                        if (!string.IsNullOrEmpty(baseUrl))
+                        {
+                <br />
+                <span>@Html.Term("TrackingNumber", "Tracking#"): <a href="@string.Format(baseUrl, package.TrackingNumber)" target="_blank" rel="external">
+                    @package.TrackingNumber</a></span>
+                        }
+                        else
+                        {
+                <br />
+                <span>@Html.Term("TrackingNumber", "Tracking#"): @package.TrackingNumber</span>
+                        }
+                    }
+                }
+            }
+        </div>
+        <div class="FR splitCol70">
+            <div class="FL splitCol">
+                <h5>
+                    Payments</h5>
+                <table width="100%" cellspacing="0" class="DataGrid responsive">
+                    <thead class="UI-bg UI-header">
+                        <tr>
+                            <th>
+                                @Html.Term("PaymentType", "Payment Type")
+                            </th>
+                            <th>
+                                @Html.Term("AccountNumber", "Account Number")
+                            </th>
+                            <th>
+                                @Html.Term("Amount")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model.Order.OrderPayments)
+                        {
+                            <tr>
+                                <td>
+                                    @SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm()
+                                </td>
+                                <td>
+                                    @Html.Raw(!payment.NameOnCard.IsNullOrEmpty() ? payment.NameOnCard + "<br />" : string.Empty)
+                                    @(payment.MaskedAccountNumber)&nbsp;@(SmallCollectionCache.Instance.OrderPaymentStatuses.GetById(payment.OrderPaymentStatusID).GetTerm())
+                                </td>
+                                <td>
+                                    @payment.Amount.ToString(Model.Order.CurrencyID)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+			<div class="FR splitCol">
+				<h5>
+					@Html.Term("Totals")
+				</h5>
+				<div class="UI-lightBg brdrAll orderTotals">
+					<table width="100%">
+						@Html.Partial("ReceiptTotals", Model.Order)
+					</table>
+				</div>
+			</div>
+        </div>
+        <div class="clr">
+        </div>
+    </div>
+</div>

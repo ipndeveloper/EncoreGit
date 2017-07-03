@@ -1,0 +1,34 @@
+@model NetSteps.Data.Entities.HtmlSection
+<div id="choicesSortable" class="sortingWindow 
+ @if (Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.Photo || Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PhotoCropper)
+    {
+        @Html.Raw("imgSorting")
+    }
+">
+    @{
+        var site = NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite;
+        var baseSite = site.IsBase ? site : SiteCache.GetSiteByID(site.BaseSiteID.ToInt());
+        var choices = baseSite.GetAllSectionChoices(Model.HtmlSectionID);
+        
+    }
+   
+    @foreach (var corporateChoice in choices)
+    {
+        <div id="choice@(corporateChoice.HtmlSectionChoiceID)" 
+        class="item">
+            @if (Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.Photo || Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PhotoCropper)
+            {
+                @Html.Raw(corporateChoice.HtmlContent.GetImage().SetHtmlAttributeValue("height", "100"))
+            }
+            else
+            {
+                <span class="titlecontent">
+                    @corporateChoice.HtmlContent.Name</span>
+            }
+        </div>
+    }
+</div>
+<span class="clr"></span>
+<a href="javascript:void(0);" class="FL jqmClose">
+    @Html.Term("Cancel")</a> <a href="javascript:void(0);" id="btnSaveChoicesSort" class="FR emButton NS-Primary"><span>
+        @Html.Term("Save")</span></a> <span class="clr"></span>

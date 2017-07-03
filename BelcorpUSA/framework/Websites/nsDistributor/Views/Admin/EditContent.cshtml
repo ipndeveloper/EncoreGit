@@ -1,0 +1,81 @@
+@model HtmlSectionEditModel
+@section head{
+    <link type="text/css" rel="Stylesheet" href="@Url.Content("~/Content/CSS/Edit.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/jcrop.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/fileuploader.css")" />
+
+    <script src="/fileuploads/resources/ckeditor/3.5.2/ckeditor.js" type="text/javascript"></script>
+
+    <script src="/fileuploads/resources/ckeditor/3.5.2/adapters/jquery.js" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Resource/Scripts/fileuploader.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    	$(function () {
+    		$('body').addClass('pwsAdmin');
+    		var handleSaveResponse = function (response) {
+    			if (response.redirect) {
+    				window.location = response.redirectUrl;
+    			} else if (response.result) {
+    				window.location = '@Url.Resolve("~/Admin/EditSection", Model.Section.HtmlSectionID)';
+    			} else {
+    				hideLoading(t);
+    				showMessage(response.message, true);
+    			}
+    		}, t;
+
+            $('#name').watermark('@Html.JavascriptTerm("EnterATitle", "Enter a title")');
+
+    		$('#btnSaveContent').live('click', function () {
+    			var data = {
+    				sectionId: $('#htmlSectionId').val(),
+    				contentId: $('#contentId').val()
+    			};
+    			t = $(this);
+    			showLoading(t, { float: 'right' });
+
+    			if ($('#name').length && !$('#name').val()) {
+    				$('#name').showError('@Html.JavascriptTerm("TitleIsRequired", "Title is required.")');
+    				hideLoading(t);
+    				return false;
+    			}
+
+    			if ($('#productionCrop').length) {
+    				if (!$('#productionCrop').attr('src')) {
+    					$('.uploaderLabel').showError('@Html.JavascriptTerm("UploadImageIsRequired", "An uploaded image is required.")').parent().mouseover(function () {
+    						$('.uploaderLabel').clearError();
+    						$(this).unbind('mouseover');
+    					});
+    					hideLoading(t);
+    					return false;
+    				}
+
+    				data.image = $('#productionCrop').attr('src');
+    				data.coordinates = $('#productionCoords').val();
+
+    				$.post('@Url.Resolve("~/Admin/SavePhoto")', data, handleSaveResponse);
+    			} else {
+    				data.name = $('#name').val();
+    				data.body = $('#productionBody').val();
+
+    				$.post('@Url.Resolve("~/Admin/SaveContent")', data, handleSaveResponse);
+    			}
+    		});
+    	});
+    </script>
+
+}
+<div id="corporateEditor" class="contentContainer">
+    <input type="hidden" id="htmlSectionId" value="@Model.Section.HtmlSectionID" />
+    <input type="hidden" id="contentId" value="@ViewData["ContentId"]" />
+    <div id="Production" class="EditContainer">
+        @{ Html.GetEditor((int?)ViewData["ContentId"], Constants.HtmlContentStatus.Production, false); }
+        <div class="NS-clr NS-pad10 NS-submitButtons">
+            <hr />
+            <a id="btnSaveContent" href="javascript:void(0);" class="FR NS-Button Button btnSave"><span>@Html.Term("Save")</span></a> <a href="@Url.Resolve("~/Admin/EditSection", Model.Section.HtmlSectionID)" class="jqmClose NS-FL"><span>@Html.Term("Cancel")</span></a> <span class="NS-clr"></span>
+        </div>
+    </div>
+</div>
+@Html.Partial("MessageCenter")

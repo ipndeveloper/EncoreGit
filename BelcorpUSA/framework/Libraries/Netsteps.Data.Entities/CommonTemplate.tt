@@ -1,0 +1,213 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="EnvDTE" #>
+<#@ include file="T4Toolbox.tt" #><#
+
+//List<string> smallCollectionClasses = GetSmallCollectionClasses();
+
+#><#+
+	private static string ToPascalCase(string text)
+	{
+		if (string.IsNullOrEmpty(text))
+			return string.Empty;
+		var s = text.Split(' ');
+		
+		if(Count(s) == 1)
+			return text;
+		
+		return ToStringFunc(s, i => i[0].ToString().ToUpper() + i.ToLower().Substring(1) + " ").Trim();
+	}
+	private static string ToStringFunc<T>(IEnumerable<T> list, Func<T, string> str)
+	{
+		if (list != null)
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			foreach (var i in list)	
+            {
+				if(!string.IsNullOrEmpty(i.ToString()))
+				builder.Append(str(i));
+			}
+			
+			return builder.ToString();
+		}
+		return string.Empty;
+	}
+	private static int Count<T>(IEnumerable<T> list)
+	{	
+		int count = 0;
+		foreach (var i in list)
+			count++;
+		
+		return count;
+	}
+		
+	private List<CodeEnum> FindEnums(List<CodeEnum> list, CodeElements elements)
+	{
+		foreach (CodeElement element in elements)
+		{
+			CodeEnum enumeration = element as CodeEnum;
+			if (enumeration != null)
+				list.Add(enumeration);
+			FindEnums(list, element.Children);
+		}
+		return list;
+	}	
+
+	private List<string> GetSmallCollectionClasses2()
+	{
+		// This will read the 'ConstantsGenerated.cs' file in this project and get the names of the Enums in a list. - JHE
+		List<string> results = new List<string>();
+		ProjectItem projectItem = TransformationContext.FindProjectItem("ConstantsGenerated.cs");
+		List<CodeEnum> enumerations = FindEnums(new List<CodeEnum>(), projectItem.FileCodeModel.CodeElements);
+		foreach (CodeEnum enumeration in enumerations)
+		{
+			results.Add(enumeration.Name);
+		}
+
+		// Read additional Types to be in the small collection cache - JHE
+		ProjectItem projectItem2 = TransformationContext.FindProjectItem("EntityCustomizationEnums.cs");
+		List<CodeEnum> enumerations2 = FindEnums(new List<CodeEnum>(), projectItem2.FileCodeModel.CodeElements);
+		foreach (CodeEnum enumeration in enumerations2)
+		{
+			results.Add(enumeration.Name);
+			if(enumeration.Name == "AdditionalEntitySmallCollectionCacheEntities")
+			{
+				foreach (CodeElement element in enumeration.Children)
+				{
+					CodeVariable value = element as CodeVariable;
+					if (value != null)
+						results.Add(value.Name);
+				}
+			}
+		}
+
+		results.Sort();
+		return results;
+	}
+	
+	private List<string> GetSmallCollectionClasses(string basePath)
+	{
+		string absolutePath = Host.ResolvePath(basePath + "ConstantsGeneratedEnums.cs"); 
+		string fileContents = GetFileContents(absolutePath);
+		
+		var matches = new System.Text.RegularExpressions.Regex("public enum .+\n").Matches(fileContents);
+		List<string> results = new List<string>();
+		foreach (System.Text.RegularExpressions.Match item in matches)
+		{
+			string name = item.Value.Replace("public enum ", string.Empty);
+			if (name.IndexOf(':') > 0)
+				name = name.Substring(0, name.IndexOf(':'));
+			results.Add(name.Trim());
+		}
+		
+		absolutePath = Host.ResolvePath(basePath + "SmallCollectionCacheEntities.txt"); 
+		fileContents = GetFileContents(absolutePath);
+		List<string> additionalResults = new List<string>();
+		foreach (string item in fileContents.Split(','))
+			if(!results.Contains(item.Trim()))
+				results.Add(item.Trim());
+		
+		results.Sort();
+		return results;
+	}
+	
+	private List<string> GetStringListFromFile(string basePath, string fileName)
+	{
+		List<string> results = new List<string>();
+		string absolutePath = Host.ResolvePath(basePath + fileName); 
+		string fileContents = GetFileContents(absolutePath);
+		List<string> additionalResults = new List<string>();
+		foreach (string item in fileContents.Split(','))
+			if(!results.Contains(item.Trim()))
+				results.Add(item.Trim());
+		
+		results.Sort();
+		return results;
+	}
+	
+	public static string GetFileContents(string fileName)
+	{
+		System.IO.StreamReader streamReader = null;
+		try
+		{
+			if (!System.IO.File.Exists(fileName))
+				return string.Empty;
+			bool opened = false;
+			while (!opened)
+			{
+				try
+				{
+					streamReader = System.IO.File.OpenText(fileName);
+					opened = true;
+				}
+				catch (System.IO.IOException e)
+				{
+					throw e;
+				}
+			}
+			string contents = streamReader.ReadToEnd();
+			streamReader.Close();
+			return contents;
+		}
+		catch
+		{
+			return string.Empty;
+		}
+		finally
+		{
+			if (streamReader != null)
+				streamReader.Close();
+		}
+	}
+	
+	
+	public class Formatting
+	{
+		private static readonly IList<string> Unpluralizables = new List<string>
+		{ "equipment", "information", "rice", "money", "species", "series", "fish", "sheep", "deer" };
+		private static readonly IDictionary<string, string> Pluralizations = new Dictionary<string, string>
+		{
+			// Start with the rarest cases, and move to the most common
+			{ "person", "people" },
+			{ "ox", "oxen" },
+			{ "child", "children" },
+			{ "foot", "feet" },
+			{ "tooth", "teeth" },
+			{ "goose", "geese" },
+			// And now the more standard rules.
+			{ "(.*)fe?", "$1ves" },         // ie, wolf, wife
+			{ "(.*)man$", "$1men" },
+			{ "(.+[aeiou]y)$", "$1s" },
+			{ "(.+[^aeiou])y$", "$1ies" },
+			{ "(.+z)$", "$1zes" },
+			{ "([m|l])ouse$", "$1ice" },
+			{ "(.+)(e|i)x$", @"$1ices"},    // ie, Matrix, Index
+			{ "(octop|vir)us$", "$1i"},
+			{ "(.+(s|x|sh|ch))$", @"$1es"},
+			{ "(.+)", @"$1s" }
+		};
+
+		public static string Pluralize(int count, string singular)
+		{
+			if (count == 1)
+				return singular;
+
+			if (Unpluralizables.Contains(singular))
+				return singular;
+
+			var plural = "";
+
+			foreach (var pluralization in Pluralizations)
+			{
+				if (System.Text.RegularExpressions.Regex.IsMatch(singular, pluralization.Key))
+				{
+					plural = System.Text.RegularExpressions.Regex.Replace(singular, pluralization.Key, pluralization.Value);
+					break;
+				}
+			}
+
+			return plural;
+		}
+	}
+
+#>

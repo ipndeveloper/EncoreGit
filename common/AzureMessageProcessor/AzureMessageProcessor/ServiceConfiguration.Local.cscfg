@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="AzureMessageProcessor" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2012-10.1.8">
+  <Role name="MessageProcessor">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://encoremail-ncus.servicebus.windows.net/;SharedSecretIssuer=owner;SharedSecretValue=r/mCGby0fOVBFF00Dmky2X86agLeu8HyczuaLJ/roBM=" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="mhamilton@netsteps.com" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEBlmPYRWKRePT+zpDATztF8wDQYJKoZIhvcNAQEBBQAEggEAVyxMOC2V0TOjCrTYBzLBkzrfFIm41RN6JwZuw1uBY7Loo88gSNIUCoE1yPdK1KX04pfQ5cQofvtILawZYrD8AOgylJp7uBEcTwaC5xU/L1/FYAnLfXWOClQb9AzlBa2ZdqVy98x494QqXh3Ps7nAkDiTntuuEKAtXf8aL7s/iiHH+Dj0vM0kLx5QwJks9aDSQGGpRXIniOxv6TLCIDIMZ02/IzbAD5akfEiZTw9RE1ROMY7vKChTJjJxfhr0RitkAXKAAOjDNtDnkfTSyulseQqeXjrbgIRKdBbXAlATgC8aqFZwdnPCOl0cpMZlZ+piWQFd5f+IqFzbE32M8tyJFzAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECAjswgEoAb6sgBBARq+EW7uW94TgT6HltW1S" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2014-03-30T23:59:59.0000000-06:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="SendGridUserName" value="azure_340cb093cad8748bb28b8c9fcb9d0ce1@azure.com" />
+      <Setting name="SendGridPassword" value="iazgpqxi" />
+      <Setting name="EmailQueueName" value="EncoreMail" />
+      <Setting name="Microsoft.BlobStorage.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=nsemailattachments;AccountKey=fqbsroZvpWZ1RErJ4mxbUK5BIAnvOg8dlwrubnZLiyphIE7cgC+cCj2DTmF6hDrJj6WIC03oVbjtp5DJ9TYa4Q==" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="792983E304AEE09F43F74062AB318FD3CDC8EE4C" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

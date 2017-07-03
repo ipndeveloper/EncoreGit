@@ -1,0 +1,33 @@
+@model NetSteps.Data.Entities.HtmlSection
+<div class="items">
+    @{
+        var site = NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite;
+        var baseSite = site.IsBase ? site : SiteCache.GetSiteByID(site.BaseSiteID.ToInt());
+        var productionContent = Model.ProductionContentForDisplay(baseSite);
+        var choices = baseSite.GetAllSectionChoices(Model.HtmlSectionID);
+        var uses = HtmlSection.GetChoiceUsage(Model.HtmlSectionID, productionContent.HtmlContentID, baseSite.SiteID);
+    }
+    @foreach (var corporateChoice in choices)
+    {
+        <div id="corporateContent@(corporateChoice.HtmlContent.HtmlContentID)" class="item@(corporateChoice.HtmlContent.HtmlContentID == productionContent.HtmlContentID ? " default" : "")">
+            @if (Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.Photo || Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PhotoCropper)
+            {
+                var image = corporateChoice.HtmlContent.GetImage().SetHtmlAttributeValue("width", "100");
+                if (corporateChoice.HtmlContentID == productionContent.HtmlContentID)
+                {
+                    image = image.SetHtmlAttributeValue("class", "active");
+                }
+                @Html.Raw(image)
+            }
+            else
+            {
+                <span class="titlecontent@(corporateChoice.HtmlContent.HtmlContentID == productionContent.HtmlContentID ? " active" : "")">
+                    @corporateChoice.HtmlContent.Name</span>
+            }
+            <input type="hidden" class="publishDate" value="@corporateChoice.HtmlContent.PublishDate.ToShortDateString()" />
+            <input type="hidden" class="publishTime" value="@corporateChoice.HtmlContent.PublishDate.ToShortTimeString()" />
+            <input type="hidden" class="choiceId" value="@corporateChoice.HtmlSectionChoiceID" />
+            <span class="usage">(@Html.Term("ChoiceUses", "{0} uses", uses.ContainsKey(corporateChoice.HtmlContentID) ? uses[corporateChoice.HtmlContentID] : 0))</span>
+        </div>
+    }
+</div>

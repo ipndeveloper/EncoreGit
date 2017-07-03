@@ -1,0 +1,75 @@
+﻿@using DistributorBackOffice.Areas.Orders.Models.Party
+@model DistributorBackOffice.Areas.Orders.Models.Party.PartyConfirmationModel   
+@section head
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').addClass('partyWizard');
+        });
+    </script>
+}
+@section breadcrumb
+{
+    <h1>@Html.Term("ScheduleParty_StepThree_BreadcrumbHeaderText", "Schedule a New Party")</h1>
+    @Html.Partial("PartyEntryNav", new StepActiveModel() { StepThreeActive = true })
+}
+@section title
+{
+}
+<div class="partyEntryHeader UI-mainTxt">
+    <h2>@Html.Term("ScheduleParty_StepThree_HeaderText", "Finished!")</h2>
+    @if (Model.IsNewParty)
+    {
+        <h4>@Html.Term("ScheduleParty_StepThree_NewPartySubHeaderText", "Congratulations, your party has been scheduled!")</h4>
+    }
+    else
+    {
+        <h4>@Html.Term("ScheduleParty_StepThree_EditPartySubHeaderText", "Your party has been successfully changed.")</h4>
+    }
+</div>
+<div id="partyActions" class="mt20 mb20 center">
+    <h2>@Html.Term("ScheduleParty_StepThree_CallToActionText", "What would you like to do now?")</h2>
+    <div class="inner plOuter plShadow">
+        <table>
+            <tr>
+                <td>
+                    <a href="@Url.Action("AddGuests", "Party")">@Html.Term("ScheduleParty_StepThree_GuestEntryLinkText", "Add Guests to this party now")<span
+                        class="partyAction addGuest"></span></a>
+                </td>
+                <td>
+                    <a href="@Url.Content("~/Orders")">@Html.Term("ScheduleParty_StepThree_UpcomingPartiesLinkText", "View All of My Upcoming Parties")<span
+                        class="partyAction viewParties"></span></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Index", "Party")">@Html.Term("ScheduleParty_StepThree_NewPartyLinkText", "Schedule Another Party")<span
+                        class="partyAction newParty"></span></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="partySummary mt20">
+    <div id="partyConfirmationDetails" class="pad10">
+        <a href="@Url.Action("PartyEntry", "Party", new { partyId = Model.PartyId, hostAccountId = Model.HostAccountId })" class="FR UI-icon-container">
+            <span class="UI-icon icon-edit"></span><span>@Html.Term("ScheduleParty_StepThree_EditPartyDetailsLinkText", "Edit party details")</span></a>
+        <ul id="confirmationDetails" class="splitCol70 flatList listNav">
+            <li>
+                <label class="bold">@Html.Term("ScheduleParty_StepThree_PartyNameText", "Party Name:")</label>
+                <p>@Model.PartyName</p>
+            </li>
+            <li>
+                <label class="bold">@Html.Term("ScheduleParty_StepThree_HostNameText", "Host:")</label>
+                <p>@Model.HostName</p>
+            </li>
+            <li>
+                <label class="bold">@Html.Term("ScheduleParty_StepThree_PartyTimeText", "When:")</label>
+                <p>@Model.PartyTime</p>
+            </li>
+            <li>
+                <label class="bold">@Html.Term("ScheduleParty_StepThree_PartyLocationText", "Where:")</label>
+                <p>@Model.PartyAddress</p>
+            </li>
+        </ul>
+    </div>
+</div>

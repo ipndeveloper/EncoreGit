@@ -1,0 +1,81 @@
+﻿@model OrderCustomer
+@using DistributorBackOffice.Areas.Orders.Models.Party
+
+<div id="@("orderCustomerBody" + Model.Guid.ToString("N"))" class="clr CustomerCart">
+	<div class="overflow BundleOption" style="display:@(string.IsNullOrEmpty(ViewBag.DynamicKitUpSaleHTML) ? "none" : "block");">
+		<span class="FL UI-bundle icon-bundle-option mr10">@Html.Term("BundleCarrotText", "Bundle and Save")</span>
+		<span class="FL optionText">@Html.Term("OneItemAwayFromCustomerBundle", "Get a deal by combining this guest's cart into one of these product bundles:")&nbsp;</span>
+		<span id="@("BundleOptionsSpan" + Model.Guid.ToString("N"))">
+			@Html.Raw(ViewBag.DynamicKitUpSaleHTML)
+		</span>
+	</div>
+	@Html.Partial("_CustomerCartProductSelect")
+    
+	@Html.Partial("_CustomerCartPromotionsDisplay")
+
+	
+	<table id="@("orderCustomer" + Model.Guid.ToString("N"))" width="100%" cellspacing="0" class="DataGrid">
+		@Html.Partial("PartialCartTableHeader")
+		<tbody>
+			<tr class="EmptyCart" style="@(Model.OrderItems.Count > 0 ? "display:none;" : "display:table-row;")">
+				<td class="Lawyer" colspan="8">
+					@Html.Term("CartIsCurrentlyEmpty", "Cart is currently empty")
+				</td>
+			</tr>
+		</tbody>
+		<tbody class="OrderItems">
+			@Html.Partial("PartialCartItems", new OrderItemsModel(Model))
+		</tbody>
+		<tbody class="@("orderCustomerTotals" + Model.Guid.ToString("N")) GuestTotals">
+			<tr class="updateRow">
+				<td colspan="4">
+					&nbsp;
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="DTL Update updateCart">
+						@Html.Term("Update")
+						<input type="hidden" value="@Model.Guid.ToString("N")" class="orderCustomerId" /></a>
+				</td>
+				<td colspan="3">
+					&nbsp;
+				</td>
+			</tr>
+			<tr class="GuestTotal">
+				<td colspan="6" class="right bold">
+					<span>@Html.Term("CV_QV")</span>:
+				</td>
+				<td>
+					<span class="commissionableTotal Total">@Model.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>
+				</td>
+			</tr>
+			<tr class="UI-secBg GuestTotal GuestTotalBalance">
+				<td colspan="6" class="right bold">
+					<span>@Html.Term("Subtotal")</span>:
+				</td>
+				<td>
+				@{ bool isSubtotalModified = Model.AdjustedSubTotal != Model.Subtotal.Value; }
+					<span class="subtotal Total @(isSubtotalModified ? "strikethrough" : "")">@Model.Subtotal.ToString(Model.Order.CurrencyID)</span>
+					<span class="adjustedSubtotal Total" style="display:@(isSubtotalModified ? "inline" : "none")">@Model.AdjustedSubTotal.ToString(Model.Order.CurrencyID)</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pad1 mb20 applyPromotionCode">
+		<div class="block">
+			<div class="UI-lightBg pad10">
+				<span class="FL">
+					<label>@Html.Term("ApplyPromotionCode", "Apply Promotion Code:")
+					</label>
+					<input type="text" class="pad3 TextInput applyPromotionInput"
+						style="width: 150px;" />
+				</span>
+				<a href="javascript:void(0);" orderCustomerId="@Model.Guid.ToString("N")" class="FL ml10 UI-icon-container applyPromotion" title="@Html.Term("AddPromotion", "Add This Promotion to Your Cart")"><span class="UI-icon icon-plus">
+					</span></a>
+				<img id="loaderApplyPromotion" src="/Resource/Content/Images/loader_20x20.gif" style="display: none;"
+					alt="loading" class="FR" />
+				<span class="clr"></span>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,1554 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Shared.IOrderEntryModel
+@using NetSteps.Addresses.Common.Models
+@using NetSteps.Web.Mvc.Models
+@{
+    // Use htmlFieldPrefix as a prefix for global vars inside a partial to avoid name collision.
+    var htmlFieldPrefix = Html.HtmlFieldPrefix();
+    var modelName = htmlFieldPrefix + "orderEntryModel";
+    string baseUrl = Href("~/") + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";
+
+    var MonedaCI = CoreContext.CurrentCultureInfo;
+    
+    //Model.Order.CurrencyID MonedaCI
+}
+<style type="text/css">
+    .remove-hover
+    {
+        background-color: #FFD1D1;
+    }
+    
+    .add:before
+    {
+        content: "\271A";
+        font-size: 2em;
+        font-family: 'encoreWkstnIcons';
+        speak: none;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        color: #4b0653;
+    }
+    
+    .addtext
+    {
+        color: #4b0653;
+        font-size: 17px;
+        font-family: 'Times New Roman' , Times, serif;
+    }
+</style>
+<script type="text/javascript" src="@Href("~/Scripts/Shared/PromotionFunctions/promotionsApi.js")"></script>
+<script type="text/javascript">
+    var lastProduct; 
+    $(function() {
+        $.post('@Href("~/Orders/OrderEntry/CanEditShippingAddress")', function (response) {
+                    if (response.result == 1) $( "#sShippingAddress" ).prop( "disabled", false ); 
+                    else $( "#sShippingAddress" ).prop( "disabled", true );
+                });
+                
+     $("#lblTargetCredit").hide();  
+//     **********************************
+    $('#ModalExistsProductInOrder').jqm({ modal: false, onShow: function (h) {
+        h.w.css({
+            top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+            left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+        }).fadeIn();
+       }
+    });
+
+    $('#lnkClosePopup1').click(function () {
+        $('#ModalExistsProductInOrder').jqmHide();
+    });
+    
+//     **********************************
+ 
+//     if ('@Session["GeneralParameterVal"]' == 'S') {
+
+//            $("#AddNewPaymentMethod").show();
+//            $('#dvB').hide();
+//            $('#dvU').show();
+//            $('#dvBtnApplyPayment').css("display", "block");
+//        } else {
+            $("#AddNewPaymentMethod").hide();
+            $('#dvB').show();
+            $('#dvU').hide();
+            $('#dvBtnApplyPayment').css("display", "none");
+            $('#txtPaymentAmount').attr('disabled', 'disabled');
+//        }
+
+    $("#sPaymentMethod").change(function () {
+            $('#hidShippingAddressId').val($('#sShippingAddress').val());
+             $('#hdnPaymentAmount').val($('#txtPaymentAmount').val());
+//          
+//            $.ajax({
+//                type: 'POST',
+//                url: '@Href("~/Orders/OrderEntry/IsCreditCard/")',
+//                data: ({ CollectionEntityID: $("#sPaymentMethod").val() }),
+//                asyn: false,
+//                success: function (data) { 
+//                    if (data.result == true) {
+//                    
+//                        if (data.IsBoleta) {
+//                            $("#lblTargetCredit").hide();
+//                         
+//                            //===================================================//
+//                            // Boleto anticipado se  hace  un solo pago( solo se debe de ingresar un metodo de pago con el monto  total(balanceAmount)
+//                            if (data.totals["balanceAmount"] < 0)
+//                                $('#txtPaymentAmount').val(data.totals["balanceAmount"] * (-1));
+//                            else
+//                                $('#txtPaymentAmount').val('');
+//                            //===================================================//
+//                            $("#txtPaymentAmount").prop("readonly", true);
+//                        } else {   
+//                                             
+//                            $("#txtNumberCuotas").val(data.numberTarget);  
+//                             calMsg();               
+//                            //Solo se habilita el txtPaymentAmount cuando es Tarjeta de Credito: "readonly", false.
+//                            $("#txtPaymentAmount").prop("readonly", false);   
+//                                                  
+//                        }
+
+//                    } else {                             
+//                        $("#lblTargetCredit").hide();                             
+//                        $("#txtPaymentAmount").prop("readonly", true);
+//                    }
+//                }
+//            });
+       
+
+           
+//            if ('@Session["GeneralParameterVal"]' == 'N') {
+//                //$('#btnApplyPayment').click();  
+                applyPayment();
+//            }
+
+        });
+      
+
+          function calMsg() {
+         
+            if ($("#sPaymentMethod").val() != 0 &&  $('#hdnPaymentAmount').val() != '') {
+
+                var total = $('#hdnPaymentAmount').val();// $('#txtPaymentAmount').val();
+                
+
+
+                var spl= total.split(',');
+                total=spl[0]+'.'+(spl[1]==null?'00':spl[1]);   
+
+                var num = $("#txtNumberCuotas").val();             
+                var div = parseFloat(parseFloat(total) / parseFloat(num)).toFixed(2);
+                var name=$('#txtNamePayment').val();
+                $("#txtMsg").val(name+'  '+num+'  ' +'@Html.Term("EachByValue ", "each by value ") ' + div);
+                $("#lblTargetCredit").show();
+            } else {
+                $("#txtMsg").val('');
+            }
+        }
+
+        $('#ProductLoad').hide();
+        $('.Loading').hide();
+
+        $('#shippingAddressModal').jqm({ modal: true, trigger: '#btnAddShippingAddress' });
+        $('#paymentMethodModal').jqm({ modal: true, trigger: '#btnAddPaymentMethod' });
+        toggleSidePromotions();
+        $('#btnApplyPayment').live('click', applyPayment);
+        $('#GiftCardCode').live('change', lookupGiftCardBalance);
+        $('#btnLookupGC').live('click', lookupGiftCardBalance);
+        $('#txtPaymentAmount').numeric();
+
+        $('#bulkAddModal').jqm({
+            modal: false,
+            trigger: '#btnOpenBulkAdd',
+            onShow: function(h) {
+                h.w.css({
+                    top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                    left: '0px'
+                }).fadeIn();
+            },
+            onHide: function(h) {
+                h.w.fadeOut('slow');
+            }, overlay: 0
+        });
+       
+ 
+        $('#btnQuickAdd').click(function() {
+            hideMessage();
+            var productId = $('#hQuickAddProductId').val();
+            if (productId) {
+                $.post('@Href("~/Orders/OrderEntry/ExistsProductInOrder")', { productId: productId }, function (results) {
+                    if (results.result) {
+                        $('#ModalExistsProductInOrder').jqmShow();
+                    }
+                    else {
+                        AddToCart();
+                    }
+                });
+            }
+            
+        });
+
+        $("#btnAddToCart").click(function () {
+            $('#ModalExistsProductInOrder').jqmHide();
+            AddToCart();
+        });
+
+        function AddToCart() 
+        {
+        if (!$('.QuickAdd').checkRequiredFields()) {
+                var bubbles = $('.errorMessageBubble:visible'); //get all visible error bubbles.
+                $(bubbles[0]).offset({ top: 314, left: 522 }); //reposition bubble 1 & 2 so that the message is clearly visible.
+                $(bubbles[1]).offset({ top: 314, left: 662 });
+                return false;
+            }
+
+			var addToCartData = {
+				productId: $('#hQuickAddProductId').val(),
+				quantity: parseInt($('#txtQuickAddQuantity').val())
+			};
+
+            if (!addToCartData.productId || !addToCartData.quantity) {
+				showMessage('@Html.Term("InvalidProductOrQuantity", "Invalid product or quantity.")', true);
+				return false;
+			}
+
+                if ($('#hQuickAddNeedsBackOrderConfirmation').val() == "true") {
+                    if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                        return false;
+                    }
+                }
+
+			var cartItemAddingEvent = @(modelName).raiseCartItemAdding(addToCartData);
+			if (cartItemAddingEvent.isDefaultPrevented()) {
+				return false;
+			}
+
+            var t = $(this);
+            showLoading(t);
+            $('#ProductLoad').show();
+            NS.post({
+				url: '@(baseUrl)AddToCart',
+				data: addToCartData,
+				success: function(results) {               
+                    if (results.result) {
+                        lastProduct = $('#txtQuickAddSearch').val();
+
+						@(modelName).customizationType('');
+                        @{if (ViewData["Products"] == null)
+                          {
+                            @Html.Raw("$('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');");
+                          }
+                        }
+                        
+                        $('#lblDateEstimated').html(results.dateEstimated); 
+                        updateCartAndTotals(results);
+                        $('#txtQuickAddSearch').focus();
+                        if (results.isBundle) {
+                            var queryString = "?productId=" + results.productId + "&bundleGuid=" + results.bundleGuid;
+                            window.location.href = '@Url.Content(baseUrl + "BundlePackItems")' + queryString;
+                        }
+                        else {
+                            updateBundleOptions(results.BundleOptionsSpanHTML, results.AvailableBundleCount);
+                        }
+                        BalanceCredit(results);
+                      //==============================================================================================
+                      // btnSubmitOrder y btnSaveOrder
+                        HabBotonesSubmitOrderSaveOrder(results);
+                      //==============================================================================================
+                       updPayments(results);
+                      //==============================================================================================
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    } else {
+                        // Developed by BAL - CSTI - A04
+                            if (results.restricted) {
+                                showMessage(results.message, true);
+                                return false;
+                            }
+
+						if (results.products !== null && results.products !== undefined) {
+                            $.each(results.products, function(index, value) {
+                                $('.shippingExceptionItems').append('<li>' + value + '</li>');
+                            });
+                            $("#productShippingExceptionModal").jqm({ modal: true }).jqmShow();
+                        }
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    }
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }, 
+				complete: function () {
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }
+			});
+        }
+
+        $('#txtQuickAddSearch').jsonSuggest('@(baseUrl)SearchProducts', {
+            minCharacters: 3,
+            source: $('#txtQuickAddSearch'),
+            ajaxResults: true,
+            onSelect: function(item) {
+                $('#hQuickAddProductId').val(item.id).clearError();
+                if (item.isDynamicKit) {
+                    $('#txtQuickAddQuantity').val('1').clearError();
+                    $('#txtQuickAddQuantity').attr("disabled", "disabled");
+                } else {
+                    $('#txtQuickAddQuantity').val('1').clearError();
+                    $('#txtQuickAddQuantity').removeAttr("disabled");
+                }
+                $('#hQuickAddNeedsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+				@(modelName).customizationType(item.customizationType);
+				@(modelName).raiseProductSelected({
+					productId: item.id,
+					isDynamicKit: item.isDynamicKit,
+					needsBackOrderConfirmation: item.needsBackOrderConfirmation,
+					customizationType: item.customizationType
+				});
+            }
+        });
+
+        $('#BundleModal').jqm({
+            trigger: "#BundleTrigger",
+            modal: true,
+            onShow: function (h) {
+                h.w.css({
+                    top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + ($(window).scrollTop() - 20) + 'px',
+                    left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                }).fadeIn();
+            },
+            onHide: function (h) {
+                h.w.fadeOut();
+                if (h.o)
+                    h.o.fadeOut(function () { $(this).remove(); });
+            }
+        });
+
+        $("#gvProductSelect").change(function () {
+            var productId = "",
+				isDynamicKit = "",
+				needsBackOrderConfirmation = "",
+				customizationType = "";
+				
+            $("#gvProductSelect option:selected").each(function () {
+				var $elem = $(this);
+				productId = $elem.attr("productid");
+				isDynamicKit = $elem.attr("data-isdynamickit");
+				needsBackOrderConfirmation = $elem.attr("quickaddconfirmation");
+				customizationType = $elem.attr("data-customizationtype");
+            });
+
+            $('#hQuickAddProductId').val(productId);
+            $('#hQuickAddNeedsBackOrderConfirmation').val(needsBackOrderConfirmation);
+
+			@(modelName).customizationType(customizationType);
+			@(modelName).raiseProductSelected({
+				productId: productId,
+				isDynamicKit: isDynamicKit,
+				needsBackOrderConfirmation: needsBackOrderConfirmation,
+				customizationType: customizationType
+			});
+        });
+
+        $('#txtQuickAddQuantity').numeric().keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#btnQuickAdd').click();
+        });
+        $('#txtPaymentAmount').keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#btnApplyPayment').click();
+        });
+        $('#products input.quantity').numeric().live('keyup', function (e) {
+            if (e.keyCode == 13) {
+                @(modelName).updateQuantities();
+            }
+
+            if (e.keyCode == 38) {
+                var qty = parseInt(this.value);
+                qty = qty + 1;
+
+                this.value = qty;
+            }
+
+            if (e.keyCode == 40) {
+                var qty = parseInt(this.value);
+                qty = qty - 1;
+
+                if (qty >= 0)
+                    this.value = qty;
+            }
+        });
+
+        $('#shippingMethods input:radio[name=shippingMethod]').live('click', function () {
+            $.post('@(baseUrl)SetShippingMethod', { shippingMethodId: $(this).val() }, function (results) {
+                if (results.result) { 
+                    $('#lblDateEstimated').html(results.dateEstimate);  
+                    updateTotals(results); 
+                }
+                else {
+                    showMessage('@Html.Term("ErrorChangingShippingMethod", "The shipping method could not be changed"): ' + results.message, true);
+                }
+            });
+        });
+
+        getSelectedShippingProfile();
+        $('#sShippingAddress').live('change', function()
+        {
+
+        updateShippingAddress(true);
+        
+                  
+        });
+
+        getSelectedPaymentMethod();
+        $('#sPaymentMethod').live('change', function() {  
+            getSelectedPaymentMethod(); 
+        });
+
+        $('.CreateBundle').live('click', function () {
+            var t = $(this);
+            var span = t.closest('.bundleOption');
+            var productId = span.find('.dynamicKitProductSuggestion').val();
+            $.post('@(baseUrl)CreateDynamicBundleUpSale', { productId: productId }, function (response) {
+                if (response.result) {
+                    var queryString = "?productId=" + productId + "&bundleGuid=" + response.guid + "&orderCustomerId=" + response.orderCustomerId;
+                    window.location.href = '@Url.Content(baseUrl + "BundlePackItems")' + queryString;
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+
+        });
+
+		$('#btnApplyPromotion').click(function() {
+			var promotionCode = $('#txtPromotionCode').val();
+			if (promotionCode){
+                var btns = $('#btnApplyPromotion');
+                showLoading(btns);
+				var options = {
+					url: '@(baseUrl)ApplyPromotionCode',
+					data: { promotionCode: promotionCode },
+					success: function(response) {
+						if (response.result){
+							showMessage('@Html.Term("PromotionAppliedSuccessfully", "Promotion applied successfully.")');
+							updateCartAndTotals(response);
+							$('#txtPromotionCode').val('');
+						}
+						else {
+							showMessage(response.message, true);
+						}
+                        hideLoading(btns);
+					}
+				};
+				NS.post(options);
+			}
+		});
+
+    });
+
+    function applyPayment () {
+         $('.Radio').attr('disabled','disabled');
+
+         $('#hdnPaymentAmount').val($('#txtPaymentAmount').val());
+    
+         var selecPaymentMethod = '';
+         var selecPaymentMethodHtml = '';
+          
+//        if ('@Session["GeneralParameterVal"]' == 'N') { 
+            selecPaymentMethod = $('#sPaymentMethod').val();
+            selecPaymentMethodHtml = $('#sPaymentMethod option:selected').html();
+//        } else {
+//            selecPaymentMethod = $('#sPaymentMethod02').val();
+//            selecPaymentMethodHtml = $('#sPaymentMethod02 option:selected').html();
+//        }
+
+         var GiftCardCode = 0
+        if ($('#GiftCardCode').val()) {
+            GiftCardCode = $('#GiftCardCode').val();
+        } else {
+            GiftCardCode = 0;                
+        }
+
+       
+        if (selecPaymentMethod!="0" && $('#txtPaymentAmount').val()!=''  ) {
+            $('#btnApplyPayment').hide();
+            $('#loaderApplyPayment').show();
+            $.post('@(baseUrl)ApplyPayment', {NameOnCard: selecPaymentMethodHtml,
+                                              paymentMethodId: selecPaymentMethod, 
+                                              amountConfiguration: $('#txtPaymentAmount').val(), 
+                                              giftCardCode: GiftCardCode },
+            function (results) {
+                // deshabilitamos
+                $("#sShippingAddress").attr('disabled', true);
+                $('#AddNewShippingAddress').hide();
+                $('#btnApplyPayment').show();
+                $('#loaderApplyPayment').hide();
+                if (results.result) {
+                    $('#GiftCardCode').val('');
+                    $('#GiftCardBalance').html('-');
+                    $('#noPaymentsRow').hide();
+                    $('#paymentsGridContainer').html(results.paymentsGrid);
+
+
+
+                     //------------
+                    if(results.numberTarget > 0){
+
+                    
+                    $("#txtNumberCuotas").val(results.numberTarget);
+                     var total = results.amount                    
+                        var spl= total.split(',');
+                        total=spl[0]+'.'+(spl[1]==null?'00':spl[1]);                           
+                        var num = results.numberTarget; 
+                        var div = parseFloat(parseFloat(total) / parseFloat(num)).toFixed(2);
+                        
+                        var cultura = '@CoreContext.CurrentCultureInfo.Name';
+                        var div1 = new Intl.NumberFormat(cultura, { maximumFractionDigits: 2 ,  minimumFractionDigits: 2}).format(div);
+
+
+                        var name=$('#txtNamePayment').val();
+                        $("#txtMsg").val(name+'  '+num+'  ' +'@Html.Term("EachByValue ", "each by value ") ' + div1);
+                        $("#lblTargetCredit").show();
+                      }
+                     //------------
+
+                    updateCartAndTotals(results);
+                    BalanceCredit(results);
+             
+                   
+                 
+                }
+                else {
+                    showMessage(results.message, true);
+                }
+            });
+        }
+       
+         
+    }
+
+    function lookupGiftCardBalance() {
+        $('#gcLoader').show();
+        $('#btnLookupGC').hide();
+        $.post('@(baseUrl)LookupGiftCardBalance', { giftCardCode: $('#GiftCardCode').val() }, function (results) {
+            hideMessage();
+            $('#gcLoader').hide();
+            $('#btnLookupGC').show();
+            if (results.result && results.balance) {
+                $('#GiftCardBalance').html(results.balance);              
+                $('#txtPaymentAmount').val(results.amountToApply);
+            }
+            else {
+                $('#GiftCardBalance').html('-');
+                if (results.message) {
+                    showMessage(results.message, true);
+                }
+            }
+        });
+    }
+
+    function getSelectedShippingProfile() {
+        if (!$('#hidShippingAddressId').val())
+        {
+        $('#hidShippingAddressId').val($('#sShippingAddress').val());
+        }
+        var shippingAddressId = $('#hidShippingAddressId').val();
+        $('#shippingAddressContainer .shippingAddressDisplay').hide();
+        $('#sShippingAddress').val(shippingAddressId);
+        $('#shippingAddress' + shippingAddressId).show();
+        
+    }
+
+    function getSelectedPaymentMethod() {
+        $('#paymentMethodContainer .paymentMethodDisplay').hide();
+        $('#paymentMethod' + $('#sPaymentMethod').val()).show();
+    }
+
+    function displayAddresses(results) { 
+        var original = $('#shippingAddressContainer .shippingAddressDisplay').length;
+        $('#shippingAddressContainer').html(results.addresses);
+        $('#sShippingAddress').html(results.options); 
+        if ($('#shippingAddressContainer .shippingAddressDisplay').length > original) {
+            $('#sShippingAddress').val($('#sShippingAddress option:last').val()).change();
+            updateShippingAddress(true);
+        }
+        else
+        {
+        updateShippingAddress(false);
+        }
+        getSelectedShippingProfile();
+    }
+
+    function displayPaymentMethods(results) {
+        updatePaymentMethods(results);
+    }
+    function updPayments(results)
+    {
+
+      // solo invocarlo para los item(products) remove, update,  y para cuando eliminemos payment
+  
+     $("#lblTargetCredit").hide();
+     $('#sPaymentMethod').val('0');
+    
+    
+   $('#paymentsGridContainer').html(results.paymentsGrid);
+       HabBotonesSubmitOrderSaveOrder(results);
+    }
+    function updateBundleOptions(bundleOptionsSpanHTML, availableBundleCount) {
+            var spanElement = $('#BundleOptionsSpan');
+
+        if (bundleOptionsSpanHTML == null || bundleOptionsSpanHTML == "") {
+            spanElement.closest('div').hide();
+        } else {
+            var modalDiv = $('#BundleModal');
+            modalDiv.html(bundleOptionsSpanHTML);
+
+            var bundleCountLink = $('#BundleTrigger');
+            bundleCountLink.html(availableBundleCount + ' bundles available');
+            spanElement.closest('div').show();
+        }
+    }
+
+    function updateCartAndTotals(results) {
+        if (results.OrderEntryModelData) {
+            @(modelName).updateFromJS(results.OrderEntryModelData);
+        }
+
+        if (results.orderItems) {
+            var itemsHtml = '';
+            var orderItem, i;
+            for (i = 0; i < results.orderItems.length; i++) {
+                itemsHtml = itemsHtml + results.orderItems[i].orderItem;
+            }
+
+            $('#CartItems').html(itemsHtml).find('.quantity').numeric({ allowNegative: false, allowDecimal: false });
+        }
+
+        if(results.outOfStockItems && results.outOfStockItems.length > 0 && results.showOutOfStockMessage) {
+            $('#outOfStockProducts li').remove();
+            $('#outOfStockMessage').show();
+            for(var i = 0; i < results.outOfStockItems.length; i++) {
+                $('#outOfStockProducts').append('<li>' + results.outOfStockItems[i] + '</li>');
+            }
+        }
+        else {
+            $('#outOfStockMessage').hide();
+        }
+          
+        // refresh the totals
+        updateTotals(results);
+
+        if (results.shippingMethods != null && results.shippingMethods != undefined && results.shippingMethods != '')
+            results.shippingMethods = results.shippingMethods.toUpperCase().replace('DAY(S)', '@Html.Term("DayPlural", "day(s)").ToUpper()');
+
+        $('#shippingMethods').html(results.shippingMethods);
+        $('.quantity').numeric();
+    }
+    
+
+    function updateTotals(results) { 
+       $('#hdnValidarApplyPayment').val(results.totals['balanceAmount']);
+        updateLabels();
+        
+        $.each(['subtotal', 'commissionableTotal', 'qualificationTotal' , 'taxTotal', 'shippingTotal', 'handlingTotal', 'grandTotal', 'balanceDue','paymentTotal'], function (i, item) {
+            $('.' + item).text(results.totals[item]);
+        });
+
+        var submitButton = $('.Submit');
+        if (!submitButton.hasClass('ButtonOff'))
+            submitButton.addClass('ButtonOff');
+        if (results.totals['balanceAmount'] >= 0) {
+            $('.balanceDue').css('color', 'green');
+            if ($('#sShippingAddress').val())
+                submitButton.removeClass('ButtonOff');
+        } else {
+            $('.balanceDue').css('color', 'red');
+        }
+       
+        if(results.totals['balanceAmount']<0){
+      
+            $('#txtPaymentAmount').val(results.totals['balanceAmount']*(-1));
+            var Amount=$('#txtPaymentAmount').val();
+             var spl= Amount.split('.');
+             var Amount=spl[0]+','+ (spl[1]==null?'00':spl[1]);             
+             $('#hdnPaymentAmount').val(Amount);
+             $('#txtPaymentAmount').val(Amount);
+            }            
+        else
+            $('#txtPaymentAmount').val('');
+
+      
+
+        toggleSidePromotions();
+    }
+
+    function updateLabels() {
+        $('#ContentColumn').find('table').each(function () {
+            var $table = $(this),
+                $topRow = $table.find('tr:eq(0)'),
+                $secondRow = $table.find('tr:eq(1)'),
+                $dataBody,
+                arr = [];
+            if ($secondRow.is(':visible')) {
+                $dataBody = $secondRow.parent();
+            }
+            else {
+                $dataBody = $table.find('tr:eq(2)').parent();
+            }
+            $topRow.find('th').each(function () {
+                arr.push($(this).html().trim());
+            });
+            $dataBody.find('tr').each(function (i, row) {
+                $(row).children('td').each(function (j, cell) {
+                    $(cell).attr({ 'data-label': arr[j] });
+                });
+            });
+        });
+    }
+
+    function toggleSidePromotions() {
+                   $("div[id^='appliedPromotion']").each(function () {
+                    var code = $(this).attr('id').replace("appliedPromotion", "");
+                       var $containerSpan = $('#PromotionsContainer span.block').filter(':contains(' + code + ')');
+                       if($containerSpan.parents('div.promotionCoupon').is(':visible')) {
+                        $containerSpan.parents('div.promotionCoupon').toggle();                           
+                       }
+                    });
+    }
+
+    function removePayment(id, vindice) {
+        $(".Radio").removeAttr('disabled');
+
+        $('#pmtLoader' + id).show();
+        $('#pmtRemove' + id).hide();
+        $.post('@(baseUrl)RemovePayment', { paymentId: id , indice:vindice}, function (results) {
+            $('#pmtLoader' + id).hide();
+            $('#pmtRemove' + id).show();
+            if (results.result) {
+            
+                // Habilitamos
+                $("#sShippingAddress").attr('disabled', false);
+                $('#AddNewShippingAddress').show();
+                var payment = $('#pmt' + id);
+                if (payment.length) {
+                    payment.remove();
+                }
+                if (!$('#payments .paymentItem').length)
+                    $('#noPaymentsRow').show();
+
+                updateCartAndTotals(results);
+
+                //==============================================================================================
+	            // btnSubmitOrder y btnSaveOrder
+	              HabBotonesSubmitOrderSaveOrder(results);
+                  
+	            $('#sPaymentMethod').val('0');
+	            $("#lblTargetCredit").hide();
+	            $('#sPaymentMethod').attr('disabled', false);
+	            $('#sShippingAddress').attr('disabled', false);
+                $('#AddNewShippingAddress').show();
+	            //==============================================================================================
+            }
+            else {
+                showMessage('@Html.Term("ErrorRemovingPayment", "There was a problem removing the payment"): ' + results.message, true);
+            }
+        }, 'json');
+    }
+
+    function HabBotonesSubmitOrderSaveOrder(results) { 
+        var ProductCredit='@Session["ProductCredit"]';
+      
+        if(results.totals['numberOfItems'] > 0 &&  results.totals['numberofPayment'] == 0) { 
+            $('#btnSaveOrder').removeClass("ButtonOff"); 
+	        $('#btnSaveOrder').attr('disabled', false);            
+        }else{
+       
+          $('#btnSaveOrder').addClass("ButtonOff"); 
+	        $('#btnSaveOrder').attr('disabled', true);
+        }
+
+	    if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) { 
+     
+	        $('#btnSubmitOrder').removeClass("ButtonOff");
+	        $('#btnSubmitOrder').attr('disabled', false);
+	    }
+	    else { 
+         
+	        $('#btnSubmitOrder').addClass("ButtonOff");
+	        $('#btnSubmitOrder').attr('disabled', true);            
+	    }
+
+
+
+
+	}
+    function showPaymentModal(id) {
+        $.get('@(baseUrl)GetPayment', { paymentId: id }, function (response) {
+            if (response.result === undefined || response.result) {
+                $('#paymentInfoModal #paymentInfo').empty().append(response);
+                $('#paymentInfoModal').jqm({ modal: false }).jqmShow();
+            } else {
+                showMessage(response.message, true);
+            }
+        });
+    }
+
+    function updatePaymentMethods(results)
+    {
+        var originalSelection = $('#sPaymentMethod').val();
+        $('#paymentMethodsBlock').html(results.paymentMethodsBlock);
+        $('#sPaymentMethod').val(originalSelection);
+        getSelectedPaymentMethod();
+        $('#txtPaymentAmount').numeric();
+    }
+     
+    $('#lnkClosePopup').click(function () {
+        $('#addMovementModel').jqmHide();
+    });
+
+    function closeFunc() {
+        $('#addMovementModel').jqmHide();
+        getSelectedShippingProfile();
+    };
+
+    function closeFunc1() {
+        $('#ModalExistsProductInOrder').jqmHide();
+    };
+
+    function updateShippingAddress(updateHidden) {
+        //TODO: change order shipment address in controller and get shipping methods   
+        if (updateHidden)     
+            $('#hidShippingAddressId').val($('#sShippingAddress').val());
+
+        $.post('@(baseUrl)ChangeShippingAddress', { shippingAddressId: $('#sShippingAddress').val(), paymentMethodID: 0 }, function (results) {
+            updateCartAndTotals(results);
+            if (results.result && results.isPopup) {
+                getSelectedShippingProfile(); 
+                //updatePaymentMethods(results); 
+
+                BalanceCredit(results);
+                //==============================================================================================
+                // btnSubmitOrder y btnSaveOrder
+                HabBotonesSubmitOrderSaveOrder(results);
+                //==============================================================================================                
+               $('#paymentsGridContainer').html(results.paymentsGrid);
+
+           } else if (!results.result && results.isPopup) {
+                shippingAddressId = results.sourceAddressID; 
+                $('#hidShippingAddressId').val(shippingAddressId); 
+                $('#sShippingAddress').val(shippingAddressId); 
+                getSelectedShippingProfile();  
+                $("#addMovementModel").jqm({ modal: true }).jqmShow(); 
+                //showMessage('@Html.Term("ThereWasaProblemSettingTheShippingAddress", "There was a problem setting the shipping address"): ' + results.message, true);
+            } else if (!results.result && !results.isPopup) { 
+                //updatePaymentMethods(results);
+                BalanceCredit(results);
+                //==============================================================================================
+                // btnSubmitOrder y btnSaveOrder
+                HabBotonesSubmitOrderSaveOrder(results);
+                //==============================================================================================
+                $('#paymentsGridContainer').html(results.paymentsGrid);
+                //==============================================================================================
+                getSelectedShippingProfile(); 
+                
+                 
+            }else if (results.result && !results.isPopup) { 
+               //updatePaymentMethods(results);
+                BalanceCredit(results);
+                //==============================================================================================
+                // btnSubmitOrder y btnSaveOrder
+                HabBotonesSubmitOrderSaveOrder(results);
+                //==============================================================================================
+                $('#paymentsGridContainer').html(results.paymentsGrid);
+                //==============================================================================================
+                getSelectedShippingProfile();   
+            } 
+        });       
+    }
+    
+	 function addPromotion(promotionCode) {
+        var returnValue = false;
+        var btns = $('a.promotionCodeBtn');
+        showLoading(btns);
+        $('#ProductLoad').show();
+        $.ajax({
+            url: '@(baseUrl)ApplyPromotionCode',
+            data: { promotionCode: promotionCode },
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            complete: function (results) {
+                try {
+                    var response = $.parseJSON(results.responseText);
+                    
+                    if (response.result) {
+                        returnValue = true;
+                        showMessage('@Html.Term("PromotionAppliedSuccessfully", "Promotion applied successfully.")', false);                        
+                        updateCartAndTotals(response);
+                        toggleSidePromotions();
+                        $('#txtPromotionCode').val('');
+                    }
+                    else {
+                        showMessage('@Html.Term("ThePromotionCouldNotBeAdded", "The promotion could not be added"): ' + response.message, true);
+                    }
+                    $('#ProductLoad').hide();
+                    hideLoading(btns);
+
+                }
+                catch(e)
+                {
+                    showMessage('@Html.Term("ThePromotionCouldNotBeAdded", "The promotion could not be added")', true);
+                }
+            }
+        });
+        return returnValue;
+    }
+
+         
+    function removePromotion(promotionCode) {
+        var btns = $('a.DeletePromotion');
+        showLoading(btns);
+        $('#ProductLoad').show();
+        $.post('@(baseUrl)RemovePromotionCode', { promotionCode: promotionCode }, function (results) {
+            if (results.result) {
+                updateCartAndTotals(results);
+
+                if (results.message !== undefined) {
+                    showMessage(results.message, true);
+                }
+                updateBundleOptions(results.BundleOptionsSpanHTML, results.AvailableBundleCount);
+                $('#PromotionsContainer').find('a.promotionCodeBtn').show();
+                // reshow all promos since we can only ever have 1
+                $('#PromotionsContainer div').show();
+            }
+            else {
+                showMessage('@Html.Term("ThePromotionCouldNotBeRemoved", "The promotion could not be removed"): ' + results.message, true);
+            }
+            $('#ProductLoad').hide();
+            hideLoading(btns);
+        });
+    }
+
+</script>
+<input type="hidden" id="hidShippingAddressId" value="" />
+<div id="productWait" class="PModal WaitWin">
+    @Html.Term("PleaseWaitWhileWeLoadTheProducts", "Please wait while we load the products...")
+    <br />
+    <img src="@Href("~/Resource/Content/Images/processing.gif")" alt="@Html.Term("loading")" />
+</div>
+@if (NetSteps.Common.ApplicationContextCommon.Instance.UseDefaultBundling)
+{
+    <div class="overflow BundleOption" style="display:@(ViewBag.DynamicKitUpSaleHTML == "" ? "none" : "block");">
+        <span class="FL UI-bundle icon-bundle-option mr10">@Html.Term("BundleCarrotText", "Bundle and Save")</span>
+        <span class="FL optionText">@Html.Term("OneItemAwayFromBundle", "You are 1 item away from a money saving bundle!")
+            <span id="BundleOptionsSpan"><a href="#" id="BundleTrigger" class="jqModal bold">@ViewBag.AvailableBundleCount
+                bundles available</a> </span></span>
+    </div>
+}
+
+@*Here "envio"*@
+<div class="FL splitCol mr10">
+    <br />
+    <h5>
+        @Html.Term("Shipping", "Shipping")
+    </h5>
+    @if (Convert.ToString(Session["ParameterVEA"]) == "SI")
+    { 
+    <div class="UI-secBg brdrAll icon-24 GridUtility">
+        <div class="FL FilterSet">
+            <div class="FL">
+            </div>
+        </div>
+        <a id="AddNewShippingAddress" href="javascript:void(0);" style="cursor: pointer" onclick="editAddress();" class="UI-icon-container Add ">
+            <span class="UI-icon icon-plus-hover"></span><span>
+                @Html.Term("AddNewShippingAddress", "Add New Shipping Address")</span></a>
+        <span class="clr"></span>
+    </div>   
+    }
+    <div class="block">
+        <div class="UI-lightBg pad5 shipSelectTitle">
+            <label>@Html.Term("ShipTo", "Ship To"):</label>
+            <select id="sShippingAddress" class="clr">
+                @{
+                    var shippingAddresses = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == (int)NetSteps.Data.Entities.Constants.AddressType.Shipping).ToList();
+
+                    bool showActualShippingAddress = false;
+                    OrderShipment shipment = null;
+                }
+                @if (shippingAddresses.Count == 0)
+                {
+                    <option value="">-- @Html.Term("PleaseAddShippingAddress", "Please add a shipping address")
+                        --</option>
+                }
+                else
+                {
+                    int shippingAddressId = 0;
+                    if (Model.Order.IsTemplate && Model.Order.GetDefaultShipment() != null)
+                    {
+                        shipment = Model.Order.GetDefaultShipment();
+
+                        IAddress selectedShippingAddress = null;
+
+                        if (shipment.SourceAddressID.HasValue)
+                        {
+                            selectedShippingAddress = shippingAddresses.FirstOrDefault(x => x.AddressID == shipment.SourceAddressID.Value);
+                        }
+                        else
+                        {
+                            selectedShippingAddress = shippingAddresses.FirstOrDefault(sa => sa.Address1 == shipment.Address1 && sa.City == shipment.City);
+                        }
+
+                        if (selectedShippingAddress.IsNotNull())
+                        {
+                            shippingAddressId = selectedShippingAddress.AddressID;
+                        }
+                        else
+                        {
+                            showActualShippingAddress = true;
+                    <option value="">--@Html.Term("PleaseAddShippingAddress")--</option>
+                        }
+                    }
+                    foreach (Address shippingAddress in shippingAddresses.OrderByDescending(a => a.IsDefault))
+                    {
+                        string profileName = shippingAddress.ProfileName + (shippingAddress.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                        if (string.IsNullOrEmpty(profileName))
+                        {
+                            profileName = SmallCollectionCache.Instance.AddressTypes.GetById(shippingAddress.AddressTypeID).GetTerm();
+                        }
+                    <option value="@shippingAddress.AddressID" @Html.Raw(shippingAddress.AddressID == shippingAddressId ? "selected=\"selected\"" : "")>
+                        @profileName</option>
+                    }
+                }
+            </select>
+        </div>
+        <table class="ShippingSelector">
+            <tr>
+                <td>
+                    <div class="pad5" id="shippingAddressContainer">
+                        <input type="hidden" id="hdnValidarApplyPayment" value="0" />
+                        @foreach (Address shippingAddress in shippingAddresses)
+                        {
+                            <div id="shippingAddress@(shippingAddress.AddressID)" class="shippingAddressDisplay">
+                                @*<a class="FR UI-icon-container"
+                                        onclick="editAddress(@shippingAddress.AddressID);" title="@Html.Term("Edit")">
+                                    <span class="UI-icon icon-edit"></span></a>*@ @*<b>@shippingAddress.ProfileName</b>*@
+                                @Html.Raw(shippingAddress.ToDisplay())
+                            </div>
+                        }
+                        @*if order shipping address doesn't match an existing account shipping address, just show the actual order shipping address (for accuracy)*@
+                        @if (showActualShippingAddress && shipment.IsNotNull())
+                        {
+                            <div id="Div1" class="shippingAddressDisplay">
+                                @Html.Raw(shipment.ToDisplay())
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="FR splitCol">
+    <br />
+    <table>
+        <tr>
+            <td class="Label">
+                @Html.Term("Period", "Period")
+            </td>
+            <td>
+                <label id="lblPeriod">
+                    @*csti-mescobar-20160219-inicio*@
+                    @if ((Convert.ToString(Session["Period"]).Length > 0) && Convert.ToInt32(Session["Period"]) > 0 )
+                    {
+                        @Convert.ToString(Session["Period"])
+                    }
+                    else
+                    { 
+                        @ViewBag.Period
+                    }
+                    @*csti-mescobar-20160219-fin*@
+                </label>
+            </td>
+        </tr>
+        @*csti-mescobar-EB-486-16-02-2016-inicio*@ @*<tr>
+            <td class="Label">
+                @Html.Term("MinimumAmount", "Minimum Amount")
+            </td>
+            <td>
+                <label id="lblMinimunAmount">
+                    $0.00
+                </label>
+            </td>
+        </tr>*@ @*csti-mescobar-EB-486-16-02-2016-fin*@
+        <tr>
+            @{
+                var _color = "";
+                var dat = ViewBag.EstadoCredito;
+                if (dat == "S")
+                {
+                    _color = "red";
+                }
+                var CreditAvailable = Convert.ToInt32(Convert.ToDecimal(ViewBag.CreditAvailable));//Convert.ToDecimal(ViewBag.CreditAvailable);
+                var _CreditAvailable = CreditAvailable.ToString(); //CreditAvailable.ToString(MonedaCI);
+            }
+            <td class="Label" style="color:@_color" >
+                @if (ViewBag.EstadoCredito == "N")
+                {
+                    @Html.Term("CreditAvailable", "Credit Available")}
+                else
+                {
+                    @Html.Term("CreditBlocked", "Credit Blocked")}
+            </td>
+            <td>
+                <label id="lblCreditAvailable" style="color:@_color" >
+                    @_CreditAvailable
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="Label">
+                @Html.Term("QualificationTotal", "Qualification Total")
+            </td>
+            <td>
+                @*<label id="lblQualificationTotal">
+                    @ViewBag.CommisionableTotal
+                </label>*@ @*@{
+                    decimal sum = 0;
+                    foreach (var item in Model.Order.OrderCustomers[0].OrderItems)
+                    {
+                        foreach (var price in item.OrderItemPrices)
+                        {
+                            if (price.ProductPriceTypeID == 21) { sum += price.UnitPrice * item.Quantity; }
+                        }
+                    }
+                }
+                <span>@sum.GetRoundedNumber(2).ToString(MonedaCI)</span>*@ 
+                <span class="qualificationTotal">
+                @((Convert.ToDecimal(Model.Order.QualificationTotal)).ToString("N0", CoreContext.CurrentCultureInfo))
+                
+                </span>
+            </td>
+        </tr>
+        @*CS.05MAY2016.Inicio.Muestra CV*@
+        @{ 
+            string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+            if (valorSCV == "S")
+            {
+            <tr>
+                <td class="Label">
+                    @Html.Term("CommissionableTotal", "Commissionable Total"):
+                </td>
+                <td>
+                    @*<label id="lblCommissionableTotal">@ViewBag.QualificationTotal
+                </label>*@ <span class="commissionableTotal">
+                   @((Convert.ToDecimal(Model.Order.CommissionableTotal)).ToString("N0", CoreContext.CurrentCultureInfo))</span>
+                </td>
+            </tr>
+            }
+        }
+        @*CS.05MAY2016.Fin.Muestra CV*@
+        <tr>
+            @{
+               
+                decimal ProductCredit = Convert.ToDecimal(ViewBag.ProductCredit);
+            }
+            <td class="Label">
+                @Html.Term("ProductCreditBalance", "Product Credit Balance")
+            </td>
+            @{
+                var _colorPC = "";
+
+
+                if (ProductCredit.ToString().Substring(0, 1) == "-")
+                {
+                    _colorPC = "red";
+                    ProductCredit = ProductCredit * -1;
+                }
+                var pc = ProductCredit.ToString("C",MonedaCI);
+            }
+            <td>
+                @if (ProductCredit == 0)
+                {
+                    @pc
+                }
+                else
+                {
+                
+                    <a href="javascript:void(0);" id="btnProductCreditLedger" class="BigBlue'"><span>
+                        <label id="lblProductCredit" style="color: @_colorPC">@pc
+                        </label>
+                    </span></a>
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="orderEntryArea" class="PersonalOrderDetails @(ViewData["AvailablePromotionsList"] != null ? "FL splitCol70" : "")">
+    @if (ViewData["Products"] != null)
+    {
+        @Html.Partial("_GraphicalProductSelect")
+    }
+    else
+    {
+        @Html.Partial("_ProductSelect")	
+    }
+    <img id="ProductLoad" src="@Href("~/Resource/Content/Images/processing.gif")"alt="@Html.Term("loading", "loading...")" data-bind="visible: isUpdating" />
+    @Html.Partial("_OrderItemsModel", Model.Order)
+    <table class="FormTable Section" width="100%">
+        <tr>
+            <td>
+                <div id="outOfStockMessage" style="background: none repeat scroll 0pt 0pt rgb(254, 233, 233);
+                    border: 1px solid rgb(255, 0, 0); color: rgb(255, 0, 0); display: none;">
+                    @Html.Term("ProductsAreOutOfStock", "The following product(s) that you tried to add to your order are out of stock:")
+                    <ul id="outOfStockProducts">
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="pad2 mb10 applyPromotionCode">
+        <h5>@Html.Term("DWS_Promotions", "Promotions")</h5>
+        <div class="block">
+            <div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification promoNotAvailable">
+                <span class="FL">
+                    <!-- If one promotion ONLY per order allowed then after promotion is applied to cart, hide the <input> and show the Promotion Code within <strong> -->
+                    <label>@Html.Term("ApplyPromotionCode", "Apply Promotion Code:")
+                        <!--<strong>PC45323-ab56</strong>-->
+                    </label>
+                    <input type="text" id="txtPromotionCode" class="pad3 TextInput applyPromotionInput"
+                        style="width: 150px;" />
+                </span>
+                <!-- If one promotion ONLY per order allowed then after promotion is applied to cart, hide the #btnApplyPromotion link below -->
+                <a href="javascript:void(0);" id="btnApplyPromotion" class="FL ml10 UI-icon-container" title="@Html.Term("AddPromotion", "Add This Promotion to Your Cart")">
+                    <span class="UI-icon icon-plus"></span></a>
+                <img id="loaderApplyPromotion" src="/Resource/Content/Images/loader_20x20.gif" style="display: none;"
+                    alt="loading" class="FR" />
+                <span class="clr"></span>
+            </div>
+            @*@(Html.Partial("~/Views/Promotions/_AppliedPromotions.cshtml", ViewBag.ExistingPromoDisplayInfos as IEnumerable<NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo>))*@
+        </div>
+    </div>
+    @*Seccion ShippingMethods*@
+    <h5 class="UI-mainBg pad5 brdrYYNN">
+        @Html.Term("ShipMethod", "Ship Method")  
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="javascript:void(0);" id="btnViewProductsLacks" class="Button BigBlue ButtonOff'">
+        <span>
+        @Html.Term("ViewProductsLacks", "View Products Lacks")
+        </span></a>  
+    </h5>
+    <div class="pad10 UI-lightBg brdrNNYY orderTotals">
+        <div class="clr mt10">
+            <ul id="shippingMethods" class="listNav flatList">
+                @{
+                    int selectedShippingMethod = Model.Order.GetDefaultShipment() == null ? 0 : Model.Order.GetDefaultShipment().ShippingMethodID ?? 0;
+                    var shippingMethodWithRates = ViewData["ShippingMethods"] as IEnumerable<ShippingMethodWithRate>;
+                    var shipmentAdjustmentAmount = Model.Order.OrderCustomers[0].ShippingAdjustmentAmount;
+                }
+                @if (shippingMethodWithRates != null && shippingMethodWithRates.Any())
+                {
+                    foreach (ShippingMethodWithRate shippingMethod in shippingMethodWithRates.OrderBy(sm => sm.ShippingAmount))
+                    {
+                        string methodName = string.IsNullOrEmpty(shippingMethod.Name) == true ? string.Empty : shippingMethod.Name.ToUpper().Replace("DAY(S)", Html.Term("DayPlural", "day(s)").ToUpper()); 
+                    <li class="AddressProfile">
+                        <input id="shippingMethod@(shippingMethod.ShippingMethodID)" type="radio" name="shippingMethod"
+                                class="Radio" value="@shippingMethod.ShippingMethodID" @Html.Raw(shippingMethod.ShippingMethodID == selectedShippingMethod ? "checked=\"checked\"" : "") />
+                        <label for="shippingMethod@(shippingMethod.ShippingMethodID)">
+                            <b>@methodName</b>
+                            @if (shipmentAdjustmentAmount != 0)
+                            {
+                                <span class="shipMethodPrice originalPrice strikethrough">@(shippingMethod.ShippingAmount.ToString("C",MonedaCI))</span>
+                                <span class="shipMethodPrice discountPrice">@((Model.Order.OrderCustomers[0].GetShippingAmountAfterAdjustment(shippingMethod.ShippingAmount)).ToString("C",MonedaCI))</span>
+                            }
+                            else
+                            {
+                                <span class="shipMethodPrice originalPrice">@(shippingMethod.ShippingAmount.ToString("C",MonedaCI))</span>;
+                            }
+                        </label>
+                    </li>
+                    }
+                }
+                else
+                {
+                    <li class="AddressProfile">
+                        @Html.Term("NoShippingRatesAvailable", "No shipping rates available. Please enter a shipping address if one is not yet added to order.")
+                    </li>
+                }
+            </ul>
+        </div>
+        @*  @if (Convert.ToString(Session["DateEstimated"]).Length > 0)
+         {*@
+        <div class="clr mt10" id="divDateEstimated">
+            <h5 class="UI-mainBg pad5 brdrAll">@Html.Term("DateEstimated", "Date Estimated"):
+                <label id="lblDateEstimated">@Convert.ToString(Session["DateEstimated"])</label>
+            </h5>
+        </div>
+        @* } *@
+    </div>
+    <br />
+    <h5 class="UI-mainBg pad5 brdrYYNN">
+        @Html.Term("BillingInformation", "Billing Information")
+    </h5>
+    <div class="pad10 UI-lightBg brdrNNYY orderTotals">
+        @*derecha FR splitCol *@
+        <div id="AddNewPaymentMethod" class="FL splitCol">
+            <a href="javascript:void(0);" style="cursor: pointer" onclick="editPaymentMethod();"
+                class="UI-icon-container Add "><span class="UI-icon icon-plus-hover"></span><span>
+                    @Html.Term("AddNewPaymentMethod", "Add New Payment Method")</span></a> <span class="clr">
+                    </span>
+        </div>
+        <div id="paymentMethodsBlock" class="FL splitCol">
+            @Html.Partial("_PaymentMethods", Model.Order)
+        </div>
+    </div>
+    <div id="paymentsGridContainer">
+        @Html.Partial("OEPaymentsGrid", Model.Order)
+    </div>
+    <div class="UI-lightBg pad10 clr" id="ProcessingTimeDisclaimer">
+        <p>@Html.Term("ShippingMethodHighVolumeDisclaimer", "Processing times may increase during periods of high sales volume.")</p>
+        <p>@Html.Term("ShippingMethodProcessingTimeDisclaimer", "Estimated shipping times do not include processing.")</p>
+    </div>
+    <div class="clr mt10">
+        <h5 class="UI-mainBg pad5 brdrYYNN">
+            @Html.Term("Totals", "Totals")
+        </h5>
+        <div class="pad10 UI-lightBg brdrNNYY orderTotals">
+            <table width="100%">
+                <tr id="totalBar">
+                    <td colspan="2" style="text-align: right; white-space: nowrap">
+                        <div class="FL Loading" id="TotalsLoad">
+                        </div>
+                        @Html.Term("Subtotal", "Subtotal"):<br />
+                        @*CS.05MAY2016.Inicio.Muestra CV*@
+                        @{ 
+                            if (valorSCV == "S")
+                            {
+                            @Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                                                 }
+                        }
+                        @*CS.05MAY2016.Fin.Muestra CV*@
+                        @Html.Term("Tax", "Tax"):<br />
+                        @Html.Term("Shipping"):<br />
+                        @Html.Term("Handling"):<br />
+                        <b>@Html.Term("OrderTotal", "Order Total"):</b>
+                    </td>
+                    <td>
+                        <span data-bind="text: Subtotal, css: { strikethrough: isSubtotalModified }"></span>
+                        <span data-bind="text: SubtotalAdjusted, visible: isSubtotalModified"></span>
+                        <br />
+                        @*CS.05MAY2016.Inicio.Muestra CV*@
+                        @{ 
+                            if (valorSCV == "S")
+                            {
+                            <span class="commissionableTotal">
+                                @Model.Order.CommissionableTotal.Value.ToString("C",MonedaCI)</span>
+                            <br />
+                            }
+                        }
+                        @*CS.05MAY2016.Fin.Muestra CV*@ <span class="taxTotal">
+                            @((Model.Order.TaxAmountTotalOverride != null) ? Model.Order.TaxAmountTotalOverride.ToString(MonedaCI) : Model.Order.TaxAmountTotal.ToString(MonedaCI))</span>
+                        <br />
+                        <span class="shippingTotal">
+                            @((Model.Order.ShippingTotalOverride != null) ? Model.Order.ShippingTotalOverride.ToString(MonedaCI) : Model.Order.ShippingTotal.ToString(MonedaCI))
+                        </span>
+                        <br />
+                        <span class="handlingTotal">
+                            @Model.Order.HandlingTotal.ToString(MonedaCI) </span>
+                        <br />
+                        <b><span class="grandTotal">
+                            @Model.Order.GrandTotal.ToString(MonedaCI)</span></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">
+                        @Html.Term("PaymentsMade", "Payments Made"):<br />
+                        @Html.Term("BalanceDue", "Balance Due"):
+                    </td>
+                    <td>
+                        @{
+                            var paymentsTotal =Model.Order.PaymentTotal;
+                            if( paymentsTotal<0){
+                                  paymentsTotal= 0;}}
+                        <b class="paymentTotal">@paymentsTotal.ToString(MonedaCI)
+                        </b>
+                        <br />
+                        <b style="color: @((Model.Order.Balance ?? 0) < 0 ? "Red" : "Green")" class="balanceDue">
+                        @Model.Order.Balance.ToString(MonedaCI)
+                    </td>
+                </tr>
+            </table>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>
+<!-- New Promotions Display Content -->
+@if (ViewData["AvailablePromotionsList"] != null)
+{
+    @Html.Partial("~/Views/Promotions/_PromotionList.cshtml", ViewData["AvailablePromotionsList"])
+}
+<!-- Modals -->
+@Html.Partial("GiftSelection", new GiftSelectionModel(Href("~/Orders/OrderEntry/GetGiftStepInfo"), Href("~/Orders/OrderEntry/AddGifts"), "updateCartAndTotals"))
+@Html.Partial("GiftSelection", new GiftSelectionModel(Href("~/Orders/OrderEntry/GetGiftStepInfo"), Href("~/Orders/OrderEntry/AddGifts"), "updateCartAndTotals"))
+@Html.Partial("AddBulkOrder", (DistributorBackOffice.Models.IBulkAddModel)ViewBag.BulkAddModel)
+<div id="paymentInfoModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <h3>
+            @Html.Term("BillingInformation", "Billing Information")</h3>
+        <table id="paymentInfo" width="100%">
+        </table>
+        <a href="javascript:void(0);" class="jqmClose">
+            @Html.Term("Close", "Close")</a>
+    </div>
+</div>
+@Html.Partial("BillingShippingModal", Model.Order)
+<div id="promotionWarningModal" class="LModal jqmWindow PromotionNotComplete">
+    <h1 class="FL">@Html.Term("PromotionWarningHeading", "Wait, are you sure you want to continue?")</h1>
+    <a href="javascript:void(0);" class="FR jqmClose" title="Close"><span>X</span></a>
+    <span class="clr"></span>
+    <div class="mContent">
+        <div class="mb10">
+            <h3>@Html.Term("Warning", "Warning!!!")</h3>
+            <p>
+                @Html.Term("PromotionRewardsNotEntirelyUsed", "You have not entirely used all of the rewards for the applied promotions.")
+                <label id="unusedPromotionCodes">
+                </label>
+            </p>
+        </div>
+        <p class="clr">
+            <a href="javascript:void(0);" class="FL Button CancelOrder"><span>@Html.Term("ContinueShopping", "Continue Shopping")</span></a>
+            <a href="javascript:void(0);" class="FR Button submitOrder"><span>@Html.Term("SubmitOrderAnyway", "Submit My Order Anyway")</span></a>
+            <span class="clr"></span>
+        </p>
+    </div>
+</div>
+<div id="productShippingExceptionModal" class="jqmWindow LModal">
+    <div class="mContent modalContent">
+        <h2>@Html.Term("InvalidShippingForProducts_Header", "No available shipping methods")</h2>
+        <div class="mb10 invalidShippingDescription">@Html.Term("InvalidShippingForProducts", "No available shipping methods, try changing your shipping address, updating your order subtotal or call customer service.")</div>
+        <div class="UI-lightBg brdrAll pad5">
+            <div class="bold">@Html.Term("InvalidShippingForProductsTitle", "Product's that have shipping exceptions:")</div>
+            <ol class="mt5 ml20 pad2 shippingExceptionItems">
+            </ol>
+        </div>
+        <div class="mt10 center ClearAll">@Html.ActionLink(Html.Term("InvalidShippingForProducts_CloseModal", "Back to Cart"), "Index", "OrderEntry", new { area = "Orders" }, new { @class = "" })</div>
+    </div>
+</div>
+<div id="addMovementModel" class="jqmWindow LModal Overrides">
+    <div class="mContent">
+        <p>
+            the shipping addres couldn´t be modified
+            <br />
+            because is attended for a different warehouse.</p>
+        <p>
+            if you really want to chanfe the shipping address,<br />
+            @Html.ActionLink(" click here to start new order", "RedirectPage", "OrderEntry/NewOrder");
+            with the selected
+            <br />
+            address or <a href="javascript:void(0)" onclick="closeFunc();">close click here to continue</a>;
+            with the current<br />
+            information</p>
+    </div>
+</div>
+<div id="ModalExistsProductInOrder" class="jqmWindow LModal Overrides">
+    <div class="mContent" style="text-align: center">
+        <p>
+            @Html.Term("ExistsProductInOrder", "This product already exists in the order. You want to add the amount ?")
+            <br />
+            <a href="javascript:void(0)" id="btnAddToCart">@Html.Term("Yes", "Yes")</a>
+            <br />
+            <a href="javascript:void(0)" onclick="closeFunc1();">@Html.Term("No", "No")</a>
+        </p>
+    </div>
+</div>
+@Html.Partial("AddressValidation")
+<!-- Available Bundles Modal -->
+<div id="BundleModal" class="jqmWindow LModal bundleModal" style="display: none;">
+    @Html.Raw(ViewBag.DynamicKitUpSaleHTML)
+</div>
+<script type="text/javascript">
+apiPromoFunctions.wireUpClickHandlers({
+        mainSelector: "#PromotionsContainer",
+        subSelector: "a.promotionCodeBtn",
+        actionName: "addPromotion",
+        promoFunctions: {
+            addPromotion: function ($element) {
+                var id = this.getPromotionId();
+                if (id !== null || id !== "") {
+                    var coupon = this["getCouponCode"]($element);
+                    if (addPromotion(coupon)) {
+                        this["hideElementSetPromotionId"]($element);
+                    }
+                }
+            }
+        }
+    });
+
+    var @(modelName);
+    $(function () {
+        var orderEntryModelOptions = @Model.OptionsJson();
+        var orderEntryModelData = @Model.DataJson();
+        @(modelName) = new OrderEntryModel(orderEntryModelOptions, orderEntryModelData);
+    });
+</script>
+@Html.Partial("_OrderEntryExtensions")
+<script type="text/javascript">
+    $(function () {
+        ko.applyBindings(@(modelName), document.getElementById('orderEntryArea'));
+		$("#gvProductSelect").change();
+    });
+
+  
+         function BalanceCredit(results) { 
+                if (parseFloat(results.totals['balanceAmount']) >= 0) {
+                    $('.balanceDue').css('color', 'green');
+                }
+                else {
+                    $('.balanceDue').css('color', 'red');                  
+                }               
+              
+                if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) { 
+           
+                    $('#btnSubmitOrder').removeClass("ButtonOff"); 
+                    $('#btnSubmitOrder').attr('disabled', false);
+
+                    $('#btnSaveOrder').addClass("ButtonOff"); 
+                    $('#btnSaveOrder').attr('disabled', true);
+                }
+                else { 
+              
+                    //Opacar
+                    $('#btnSubmitOrder').addClass("ButtonOff");
+                    $('#btnSubmitOrder').attr('disabled', true);
+                    //Enfocar
+                    $('#btnSaveOrder').removeClass("ButtonOff");
+                    $('#btnSaveOrder').attr('disabled', false); 
+                }
+              
+                if (parseFloat(results.totals['balanceAmount']) >= 0) {
+                    $('#btnApplyPayment').addClass("ButtonOff");    
+
+                      $('#txtPaymentAmount').attr('disabled', 'disabled');
+                  
+                     $('#sPaymentMethod').attr('disabled', 'disabled');
+//                     $('#sShippingAddress').attr('disabled', 'disabled');
+//	                 $('#AddNewShippingAddress').hide();
+                                 
+                }
+                else {
+                    $('#btnApplyPayment').removeClass("ButtonOff");   
+                    $('#txtPaymentAmount').attr('disabled', false);
+                    $('#sPaymentMethod').attr('disabled', false); 
+                    $('#sPaymentMethod').val('0'); 
+//	                $("#sShippingAddress").attr('disabled', false); 
+//                    $('#AddNewShippingAddress').show();
+                }
+            
+        };
+
+</script>

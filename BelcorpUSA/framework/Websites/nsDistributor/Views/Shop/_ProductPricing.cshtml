@@ -1,0 +1,30 @@
+﻿@model NetSteps.Data.Entities.Product
+           
+@{
+    var currentAccount = CoreContext.CurrentAccount;
+    var currentOrder = CoreContext.CurrentOrder;
+    var accountTypeId = currentAccount != null ? currentAccount.AccountTypeID : (int)Constants.AccountType.RetailCustomer;
+    var priceType = AccountPriceType.GetPriceType(accountTypeId, Constants.PriceRelationshipType.Products, currentOrder.OrderTypeID);
+    var adjustedPrice = Model.GetCurrentPromotionalPrice(CoreContext.CurrentOrderContext, (ConstantsGenerated.ProductPriceType)priceType.ProductPriceTypeID, currentOrder.CurrencyID, CoreContext.CurrentMarketId);
+    var originalPrice = Model.GetPrice(accountTypeId, currentOrder.CurrencyID);
+    bool isPriceAdjusted = adjustedPrice != originalPrice;
+}
+
+@if (adjustedPrice != originalPrice)
+{
+	<h3 class="OriginalPrice">
+            <span class="priceLabel">@Html.Term("ProductDetails_Was", "Was"):&nbsp;</span>
+            <span class="price OriginalPrice strikethrough">@originalPrice.ToString(currentOrder.CurrencyID)</span>
+    </h3>
+	<h2 class="PromotionalPrice">
+        <span class="priceLabel">@Html.Term("ProductDetails_YourPrice", "Your Price"):&nbsp;</span>
+        <span class="price discountPrice">@adjustedPrice.ToString(currentOrder.CurrencyID)</span>
+    </h2> 
+}
+else
+{
+	<h2>
+        <span class="priceLabel">@Html.Term("ProductDetails_Price", "Price"):&nbsp;</span>
+        <span id="price productPrice">@originalPrice.ToString(currentOrder.CurrencyID)</span>
+    </h2> 
+}

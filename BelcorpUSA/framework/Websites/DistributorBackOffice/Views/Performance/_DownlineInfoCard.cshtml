@@ -1,0 +1,75 @@
+﻿@using NetSteps.Accounts.Downline.UI.Service
+<div class="UI-secBg pad2 bold brdrYYNN titleBar">
+    <a class="block center UI-icon-container" href="javascript:void(0);" data-bind="attr: { title: TitleHoverText }, click: title_click">
+		<span class="UI-icon" data-bind="css: TitleIconCss"></span>
+		<span data-bind="text: ComputedTitleText"></span>
+	</a>
+</div>
+<div class="Inner pad5" data-bind="slideToggle: IsVisible">
+    @{
+        @*CS.03MAY2016.Inicio.Muestra Email*@
+        string MuestraEmail = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "MEM");
+        if (MuestraEmail == "S")
+        {
+            <div class="UI-mainBg icon-24 brdrAll brdr1 GridSelectOptions GridUtility">
+                <a class="UI-icon-container Email icon-24" data-bind="visible: IsEmailButtonVisible, disable: IsUpdating, attr: { href: EmailUrl }">
+			        <span class="UI-icon icon-email"></span>
+			        <span>@Html.Term("Email")</span>
+		        </a>
+                <span class="clr"></span>
+            </div>
+        }
+    }
+	<div id="treeViewNodeDetails" class="FormTable">
+		<ul class="lr dash flat info DataGrid" data-bind="template: { name: getItemTemplate, foreach: ListItems }"></ul>
+        <table style="width:100%">
+            <tr>
+                <td style="padding-left:80%">
+                    <a id="lkMoreInf" href="javascript:void(0);" style="color: #808080; font-family: calibri; font-style: italic; font-weight: bold; text-decoration: underline"><span>More Information</span></a>
+                </td>
+            </tr>
+        </table>
+        <div id="divShowMore" style="display:none"> 
+            <ul class="lr dash flat info DataGrid" data-bind="template: { name: getItemTemplate, foreach: HiddenListItems }"></ul>
+            <table style="width:100%">
+                <tr>
+                    <td style="padding-left:80%">
+                        <a id="lkHideInf" href="javascript:void(0);" style="color: #808080; font-family: calibri; font-style: italic; font-weight: bold; text-decoration: underline"><span>Hide Information</span></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+	</div>
+	<div style="position: absolute; left: 50%; top: 50%" data-bind="visible: IsUpdating">
+		<img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="@Html.Term("loading")" class="loadingIcon" />
+	</div>
+</div>
+
+<script type="text/html" id="@DownlineUIService.DownlineInfoCardItemTemplates.TwoColumnListItem">
+@{
+        @*CS.03MAY2016.Inicio.Muestra URL*@
+        //string MuestraURL = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "MUR");
+        //if (MuestraURL == "S")
+        //{
+	        <li>
+		        <label class="bold" data-bind="text: Label"></label>
+		        <div data-bind="text: Value, visible: $root.IsNotUpdating"></div><br />
+	        </li>
+        //}
+    }
+</script>
+
+<script type="text/javascript">
+    //Developed by WCS - CSTI
+    $(document).ready(function () {
+        $('#lkMoreInf').click(function () {
+            $("#divShowMore").show("slow");
+            $(this).hide();
+        });
+
+        $('#lkHideInf').click(function () {
+            $("#divShowMore").hide("slow");
+            $('#lkMoreInf').show();
+        });
+    });
+</script>

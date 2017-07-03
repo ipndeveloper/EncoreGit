@@ -1,0 +1,41 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.PaymentMethodModel
+
+<div class="FRow">
+    <div class="FLabel">
+        @Html.LabelFor(m => m.PaymentTypeID):
+    </div>
+    <div class="FInput">
+        @Html.DropDownListFor(m => m.PaymentTypeID, Model.PaymentTypes.SetSelectedValue(Model.PaymentTypeID))
+        @Html.ValidationMessageFor(m => m.PaymentTypeID)
+    </div>
+</div>
+<div class="FRow">
+    <div class="FLabel">
+        @Html.LabelFor(m => m.NameOnCard):
+    </div>
+    <div class="FInput">
+        @Html.TextBoxFor(m => m.NameOnCard)
+        @Html.ValidationMessageFor(m => m.NameOnCard)
+    </div>
+</div>
+<div class="FRow">
+    <div class="FLabel">
+        @Html.LabelFor(m => m.CreditCardNumber):
+    </div>
+    <div class="FInput">
+        @Html.TextBoxFor(m => m.CreditCardNumber, new { maxlength = "16" })
+        @Html.ValidationMessageFor(m => m.CreditCardNumber)
+    </div>
+</div>
+<div class="FRow">
+    <div class="FLabel">
+        @Html.LabelFor(m => m.CreditCardMonth):
+    </div>
+    <div class="FInput">
+        @Html.DropDownListFor(m => m.CreditCardMonth, Model.CreditCardMonths.SetSelectedValue(Model.CreditCardMonth), Html.Term("Month"))
+        @Html.ValidationMessageFor(m => m.CreditCardMonth)
+        /
+        @Html.DropDownListFor(m => m.CreditCardYear, Model.CreditCardYears.SetSelectedValue(Model.CreditCardYear), Html.Term("Year"))
+        @Html.ValidationMessageFor(m => m.CreditCardYear)
+    </div>
+</div>

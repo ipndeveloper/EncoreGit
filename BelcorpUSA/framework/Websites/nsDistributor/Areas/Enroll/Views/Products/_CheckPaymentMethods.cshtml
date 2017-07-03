@@ -1,0 +1,351 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.CheckPaymentMethodsModel
+<script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+
+        
+
+
+        if (!$('input[name="paymentShipping"]:checked').is(':visible')) {
+            $('#chkIsSameShippingAddressTrue').click();
+            $('#ShippingAddress').toggle(false);
+        }
+
+         $("#paymentCountry").width(380);
+         $("#txtAddressLine1").width(375);
+         $("#txtAddressLine2").width(375);
+         $("#txtAddressLine3").width(375);
+         $("#mainAddressZip").width(70);
+         $("#mainAddressZipPlusFour").width(60);
+
+         $("#mainAddressCity").width(380);
+         $("#mainAddressCounty").width(380);
+         $("#mainAddressState").width(380);
+
+
+//        $('#chkIsSameShippingAddressTrue, #chkIsSameShippingAddressFalse').click(function () {
+//            var showShippingAddress = $('#chkIsSameShippingAddressFalse').is(':checked');
+//            $('#ShippingAddress').toggle(showShippingAddress);
+//            $('#ShippingAddress_IsVisible').val(showShippingAddress);
+//            CleanValidationsControlsCheck();
+//        });
+
+
+
+//        $('input[name="paymentShipping"]').click(showPreferenceShipping);
+//        showPreferenceShipping();
+
+		$('#btnSubmit').unbind("click");
+
+		$('#btnSubmit').click(function () {
+			ValidateAddress();
+		});
+	});
+
+   
+   function ClearPostalCodeValidate(){
+
+            $('#mainAddressZip').removeClass('input-validation-error');
+            //$('#spnmainAddressZip').removeClass('field-validation-error-Direct-Deposit-Profile');
+            $('#spnmainAddressZip').css('display','none');
+
+            //City
+            $('#mainAddressCity').removeClass('input-validation-error');
+            $('#spnmainAddressCity').removeClass('field-validation-error-Direct-Deposit-Profile');
+            $('#spnmainAddressCity').hide();
+
+            //County
+            $('#mainAddressCounty').removeClass('input-validation-error');
+            $('#spnmainAddressCounty').removeClass('field-validation-error-Direct-Deposit-Profile');
+            $('#spnmainAddressCounty').hide();
+
+            //State
+            $('#mainAddressState').removeClass('input-validation-error');
+            $('#spnmainAddressState').removeClass('field-validation-error-Direct-Deposit-Profile');
+            $('#spnmainAddressState').hide();
+    }
+
+    function ValidateAddress() {
+        // address validation
+        var city = "";
+        var postalcode = "";
+        @{
+            if (Model.ShippingAddress.CountryID == 1)
+            {
+                <text>
+                    city = $("#ShippingAddress_City :selected").text();
+                    postalcode =  $('#ShippingAddress_PostalCode1').val();
+                </text>
+            }
+            else
+            {
+                <text>
+                    city = $('#ShippingAddress_City').val();
+                    postalcode = $('#ShippingAddress_PostalCode').val();
+                </text>
+            }
+        }
+        var validation = abstractAddressValidation({
+            address1: $('#ShippingAddress_Address1').val(),
+            address2: $('#ShippingAddress_Address2').val(),
+            address3: undefined,
+            city: $("#ShippingAddress_City :selected").val(),
+            state: $('#ShippingAddress_StateProvinceID :selected').text(),
+            postalCode: postalcode,
+            country: $('#ShippingAddress_CountryCode').val()
+        });
+
+        validation.init();
+
+        $(document).bind("validAddressFound", function (event, address) {
+            $('#ShippingAddress_Address1').val(address.address1);
+            $('#ShippingAddress_Address2').val(address.address2);
+            $('#ShippingAddress_Address3').val(address.address3);
+            $('#ShippingAddress_City :selected').text(address.city);
+            $('#ShippingAddress_StateProvinceID :selected').text(address.state);
+            @{if (Model.ShippingAddress.CountryID == 1)
+              {
+                @Html.Raw("$('#ShippingAddress_PostalCode1').val(address.postalCode.substring(0, 5));");
+                @Html.Raw("$('#ShippingAddress_PostalCode2').val(address.postalCode.substring(5, address.postalCode.length));");
+              }
+              else
+              {
+                @Html.Raw("$('#ShippingAddress_PostalCode').val(address.postalCode);");
+              }
+            }
+            var formId = $('#btnSubmit').attr('data-click-submit');
+            if ((formId !== undefined) && (formId.length !== 0)) {
+                if (formId.toLowerCase() == 'parent') {
+                    $('#btnSubmit').closest('form').submit();
+                } else {
+                    $(formId).submit();
+                }
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    //<![CDATA[
+    $(function () {
+        var ignoreKeys = [8, 9, 13, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 91, 92, 144];
+
+        $('#zip').keyup(function (e) {
+            var val = $(this).val();
+
+            $(this).clearError();
+            if (!new RegExp(/\d{5}/).test(val) && val.length == $(this).attr('maxlength')) {
+                $(this).showError('Invalid zip code');
+            }
+
+            if (!ignoreKeys.contains(e.keyCode) && val.length == $(this).attr('maxlength') && !$(this).data('hasError')) {
+                $('#zipPlusFour').focus();
+            }
+
+        });
+
+        $('#zipPlusFour').keyup(function (e) {
+            var val = $(this).val();
+
+            $(this).clearError();
+            if (!new RegExp(/\d{4}/).test(val) && val.length == $(this).attr('maxlength')) {
+                $(this).showError('Invalid zip code');
+            }
+
+        });
+
+        var zipXHR, postalCodeControl = $('.PostalCode'), city = "", cityControl = $('.City'), state = '0', stateControl = $('.State'), county = "", countyControl = $('.County');
+        var postalCodeRegExp = /^(\d{9}|\d{5})/;
+        var lastZip;
+
+        if (postalCodeControl.numeric)
+            postalCodeControl.numeric();
+
+        function clearCityCountyStateControls() {
+            cityControl.add(stateControl).html('<option value=\"\">-- Please enter a valid zip --</option>');
+            cityControl.add(countyControl).html('<option value=\"\">-- Please enter a valid zip --</option>');
+        }
+
+        function postalCodeLookup(zip) {
+            postalCodeControl.clearError();
+            if (!zipXHR) {
+                $('.zipLoading').show();
+                cityControl.add(countyControl).add(stateControl).empty();
+                zipXHR = $.getJSON('/Checkout/LookupZip', { countryId: $('#country').length ? $('#country').val() : '1', zip: zip }, function (results) {
+                    zipXHR = undefined;
+                    lastZip = zip;
+                    $('.zipLoading').hide();
+                    if (!results.length) {
+                        if (showMessage && results.message) {
+                            showMessage(results.message, true);
+                        }
+                        clearCityCountyStateControls();
+                    } else {
+                        for (var i = 0; i < results.length; i++) {
+                            if (!cityControl.contains(results[i].city.trim())) {
+                                cityControl.append('<option' + (city && results[i].city == city ? ' selected=\"selected\"' : '') + ' value=\"' + results[i].city + '\">' + results[i].city.trim() + '</option>');
+                            }
+                            if (!countyControl.contains(results[i].county.trim())) {
+                                countyControl.append('<option' + (county && results[i].county == county ? ' selected=\"selected\"' : '') + ' value=\"' + results[i].county + '\">' + results[i].county.trim() + '</option>');
+                            }
+                            if (!stateControl.contains(results[i].state.trim())) {
+                                stateControl.append('<option' + (state && results[i].stateId == state ? ' selected=\"selected\"' : '') + ' value=\"' + results[i].stateId + '\">' + results[i].state.trim() + '</option>');
+                            }
+                            cityControl.add(countyControl).add(stateControl).clearError();
+                            ClearPostalCodeValidate();
+                        }
+                    }
+                    if (window['postalCodeLookupComplete'] !== undefined)
+                        window['postalCodeLookupComplete']();
+                });
+            }
+        }
+
+        postalCodeControl.keyup(function () {
+            if (postalCodeControl.length > 0 && postalCodeControl[0].value.length != 5) {
+                clearCityCountyStateControls();
+                lastZip = undefined;
+                return;
+            }
+
+            var postalCodeMatches = postalCodeRegExp.exec(postalCodeControl.fullVal());
+            if (!postalCodeMatches) {
+                lastZip = undefined;
+                clearCityCountyStateControls();
+                return;
+            }
+
+            // Check lastZip to avoid repeat lookups
+            if (lastZip === postalCodeMatches[0]) {
+                return;
+            }
+
+            postalCodeLookup(postalCodeMatches[0]);
+        }).keyup();
+
+    });
+    //]]>
+</script>
+<div id="check">
+    <h3 class="UI-mainBgNew pad20">
+        @Html.Term("Enrollment_Products_CheckPaymentMethods_CheckProfileTitle", "Check Profile:")
+    </h3>
+</div>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_function = "PaymentMethodsEditFormSubmit", id = "_FormCheckPaymentMethods" }))
+{
+    @Html.ValidationSummary(true)
+    <h2>@Html.Term("Enrollment_Products_CheckPaymentMethods_ShippingAddressTitle", "Shipping Address")</h2>
+    <ul class="inlineNav disbursementOptions">
+        <li>
+            @*<div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol30">*@
+                    <label for="chkIsSameShippingAddressTrue" class="clsSameAsMainAddress">
+                        <input type="radio" name="paymentShipping" id="chkIsSameShippingAddressTrue" value="MainAddress"checked="checked" />
+                        @Html.Term("SameAsMainAddress", "Same as Main Address")
+                        <br />
+                        <div class="clsSameAsMainAddress2">
+                            @Model.MainAddressHtml
+                        </div>
+                        @*<span class="clsSameAsMainAddress2">@Model.MainAddressHtml</span>*@
+                    </label>
+                @*</div>
+                <div class="FL splitCol30" style="padding-left: 427px;">*@
+                    <label for="chkIsSameShippingAddressFalse" class="clsOtherAddress">
+                        <input type="radio" name="paymentShipping" id="chkIsSameShippingAddressFalse" value="OtherAddress" />
+                        @Html.Term("OtherAddress", "Other Address")
+                    </label>
+                @*</div>
+            </div>*@
+        </li>
+    </ul>
+    <span class="clr"></span>
+    
+@*<div id="ShippingAddress" class="FormContainer splitCol pad5 FR" style="@(Model.ShippingAddress.IsVisible ? "" : "display:none")">
+        <input type="hidden" id="ShippingAddress_CountryCode" value="@SmallCollectionCache.Instance.Countries.GetById(Model.ShippingAddress.CountryID).CountryCode" />
+        @Html.EditorFor(m => m.ShippingAddress)
+    </div>*@
+    <div id="ShippingAddress">
+        <div class="FormContainer" style="margin: 25px 0px 0px 0px;padding:0;">
+            @*Country*@
+            <div class="FRow mb10 mt10">
+                <span class="requiredMarker">*</span>
+                <label for="paymentCountry">@Html.Term("Country", "Country"):</label><br />
+                    <select id="paymentCountry" name="@Html.Term("ExpYearIsRequired", "Exp Year is required.")" class="required">
+                        @foreach (var item in @SmallCollectionCache.Instance.Countries)
+                        {
+                            <option value="@item.CountryID">@item.Name</option>
+                        }
+                    </select>
+                <span id="spnpaymentCountry" style="display: none" class="field-validation-valid">Country is required.</span>
+                <span class="clr"></span>
+            </div>
+            @*address 1*@
+            <div class="FRow mb10 mt10">
+                <span class="requiredMarker">*</span>
+                <label for="txtAddressLine1">@Html.Term("AddressLine1", "Address Line 1"):</label><br />
+                <input type="text" id="txtAddressLine1" maxlength="200" class="pad6 fullWidth" />
+                <span id="spntxtAddressLine1" style="display: none" class="field-validation-valid">Addrees Line 1 is required.</span>
+            </div>
+            @*address 2*@
+            <div class="FRow mb10 mt10">
+                <label for="txtAddressLine2">@Html.Term("AddressLine2", "Address Line 2"):</label><br />
+                <input type="text" id="txtAddressLine2" maxlength="200" class="pad6 fullWidth" />                
+                <span class="clr"></span>
+            </div>
+            @*address 3*@
+            <div class="FRow mb10 mt10">
+                <label for="txtAddressLine3">@Html.Term("AddressLine3", "Address Line 3"):</label><br />
+                <input type="text" id="txtAddressLine3" maxlength="200" class="pad6 fullWidth" />
+            </div>
+            @*city*@
+            <div class="FRow mb10 mt10">
+                <span class="requiredMarker">*</span>
+                <label for="mainAddressCity">@Html.Term("City", "City"):</label><br />
+                <select class="City required" id="mainAddressCity" name="City is required.">
+                </select>
+                <span id="spnmainAddressCity" style="display: none" class="field-validation-valid">City is required.</span>
+            </div>
+            @*state*@
+            <div class="FRow mb10 mt10">
+                <span class="requiredMarker">*</span>
+                <label for="mainAddressState">@Html.Term("State", "State"):</label><br />
+                <select class="State required" id="mainAddressState" name="State is required.">
+                </select>
+                <span id="spnmainAddressState" style="display: none" class="field-validation-valid">
+                    State is required.</span>
+                <input type="hidden" id="country" value="1" name="country" />                
+            </div>
+            @*postal code*@
+            <div class="FRow mb10 mt10">
+                <span class="requiredMarker">*</span>
+                <label for="mainAddressZip">@Html.Term("PostalCode", "Postal Code"):</label><br />
+                <input class="PostalCode required" id="mainAddressZip" maxlength="5" name="Postal Code is required."
+                        size="5" />&nbsp;-&nbsp; <span id="spnmainAddressZip" style="display: none; position: absolute; margin-top: 10px; margin-left: 0px;" class="field-validation-valid">
+                            Postal Code is required.</span>
+                <input class="PostalCode" id="mainAddressZipPlusFour" maxlength="4" name="" size="4" /><img
+                    class="zipLoading" src="/Resource/Content/Images/Icons/loading-blue.gif" alt=""
+                    style="height: 15px; display: none;" />
+                <span class="clr"></span>
+            </div>
+            @*county*@
+            <div class="FRow mb10 mt10">
+            <span class="requiredMarker">*</span>
+                    <label for="mainAddressCounty">@Html.Term("County", "County"):</label><br />
+                    <select class="County required" id="mainAddressCounty" name="County is required.">
+                    </select>
+                    <span id="spnmainAddressCounty" style="display: none" class="field-validation-valid">
+                        County is required.</span>
+            </div>
+        </div>
+    </div>
+    
+    <span class="ClearAll"></span>
+    
+    <p class="FormSubmit">
+        <span class="FR"><a id="btnSubmitCheck" class="Button" href="javascript:void(0);"
+            data-click-submit="parent"><span>@Html.Term("Next")</span> </a></span>
+    </p>
+    
+    @Html.AntiForgeryToken()
+}
+@Html.Partial("_AddressValidation")

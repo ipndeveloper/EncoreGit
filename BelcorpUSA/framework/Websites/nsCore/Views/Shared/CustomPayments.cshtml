@@ -1,0 +1,15 @@
+﻿@model int
+@*
+This view is used to display additional information about selected payment types via overriding.
+This should be done by comparing the model (PaymentTypeID) to custom payment types,
+then writing html for the additional information*@
+
+@*Example:
+@if (Model == (int)ItWorks.Data.Entities.ItWorksConstants.PaymentType.PerkPoints)
+{
+<div>
+    <label style="font-weight:bold;">Perk Points</label>
+    <br />
+    @string.Format("{0:0.00}", ItWorks.Data.Entities.Business.Account.GetPerkPointsRedemptionsDateUTC(NetSteps.Web.Mvc.Helpers.CoreContext.CurrentAccount.AccountID).Item1)
+</div>
+}*@

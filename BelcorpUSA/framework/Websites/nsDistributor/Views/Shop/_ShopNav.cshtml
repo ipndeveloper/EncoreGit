@@ -1,0 +1,25 @@
+﻿<div id="LeftColumn" class="layoutColumn sideCol shoppingCol_a">
+    <div class="ShopNav">
+        <div class="UI-secBg pad5 shopNavHeader">
+            <span>@Html.Term("BrowseOurCatalog", "Browse Our Catalog")</span>
+        </div>
+        <div class="shopNavListContain">
+            @Html.Raw(ViewBag.Categories)
+        </div>
+        <div class="ShopNavBottomCap">
+        </div>
+    </div>
+    <div id="partyInfo">
+        @if (ViewBag.Party != null)
+        {
+            @Html.Partial("PartyInfo", (Party)ViewBag.Party)
+        }
+    </div>
+    <div class="cw block1 AdBanners">
+        @{
+            var page = Model as NetSteps.Data.Entities.Page;
+            var modelIsPage = page != null;
+        }
+        @BaseController.CurrentSite.GetHtmlSectionByName("ShoppingAds").ToDisplay(modelIsPage ? page.PageID : (int?)null)
+    </div>
+</div>

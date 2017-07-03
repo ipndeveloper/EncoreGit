@@ -1,0 +1,29 @@
+@model NetSteps.Data.Entities.AccountPaymentMethod
+@section head {
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("ul.lr li:odd").addClass("Alt");
+        });
+
+        function displayPaymentMethods(response) {
+            if (response.result === undefined || response.result) {
+                window.location = '@Href("~/Account")';
+            }
+            else
+                showMessage(response.message, true);
+        }
+
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+    @(Model.BillingAddressID == 0 ? Html.Term("NewBillingProfile", "New Billing Profile") : Html.Term("EditBillingProfile", "Edit Billing Profile"))
+}
+@Html.Partial("PaymentMethodModalCustom", Model)
+@Html.Partial("BillingShippingModal", ViewData)

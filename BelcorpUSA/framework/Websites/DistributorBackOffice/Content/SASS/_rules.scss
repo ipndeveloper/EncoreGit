@@ -1,0 +1,131 @@
+/************************************************************************************
+* Reusable Stuff
+************************************************************************************/
+.clr, .clrall, .Clear, .ClearAll {
+	display: block;
+	clear: both;
+}
+.clrall {
+	margin: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+}
+ul {
+	&.flatList br, &.lr br {
+		display: block;
+		clear: both;
+	}
+}
+//Structural//
+.block    { display: block;        }
+.inline   { display: inline-block; }
+.overflow { overflow: hidden;      }
+.visible  { overflow: visible;     }
+.relative { position: relative;    }
+//Floats//
+.FL { float: left;  }
+.FR { float: right; }
+//Border Radius//
+.brALL, .brdrAll   { @include BorderRadius;         }
+.brYYNN, .brdrYYNN { @include BorderRadius(top);    }
+.brNNYY, .brdrNNYY { @include BorderRadius(bottom); }
+//Text Styles//
+.center { text-align: center; }
+.left   { text-align: left;   }
+.right  { text-align: right;  }
+.bold   { font-weight: bold;  }
+//Padding//
+.pad20 { padding: em(20);}
+.pad10 { padding: em(10);}
+.pad5  { padding: em(5);}
+.pad2  { padding: em(2);}
+.pad1  { padding: em(1);}
+//Margin//
+.mauto { margin: auto;   }
+.m1    { margin: em(1);  }
+.m5    { margin: em(5);  }
+.m10   { margin: em(10); }
+//Right Margin//
+.mr5   { margin-right: em(5);  }
+.mr10  { margin-right: em(10); }
+.mr20  { margin-right: em(20); }
+//Left Margin//
+.ml5   { margin-left: em(5);   }
+.ml10  { margin-left: em(10);  }
+.ml20  { margin-left: em(20);  }
+//Bottom Margin//
+.mb5   { margin-bottom: em(5);  }
+.mb10  { margin-bottom: em(10); }
+.mb20  { margin-bottom: em(20); }
+//Top Margin//
+.mt5   { margin-top: em(5);  }
+.mt10  { margin-top: em(10); }
+.mt20  { margin-top: em(20); }
+.mt30  { margin-top: em(30); }
+//Borders//
+.brdr0 { border: 0;           }
+.brdr  { border: em(1) solid; }
+.brdr1 { border: em(1) solid; }
+
+.inlineNav a, .ShopNav a, .InlineNav a, .listNav a, .qq-upload-button-hover span.uploaderLabel {
+	display: block;
+}
+.inlineNav, .InlineNav, ul.flatList, .SavedReports ul, .WidgetBody ul, .Language li, .flatUL, .ShopNav ul, .TreeNodeDetails ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.inlineNav li, .InlineNav li {
+	float: left;
+}
+.listNav a {
+	padding: em(5);
+	&.UI-icon-container {
+		padding: inherit;
+	}
+}
+.dropDown, .DropDown, .navigationItem ul.navigation {
+	display: none;
+	position: absolute;
+}
+td {
+	text-align: left;
+	vertical-align: top;
+}
+.DataGrid {
+	clear: both;
+}
+hr {
+	border: none;
+}
+.hide {
+	display: none;
+}
+.strikethrough {
+	text-decoration: line-through;
+}
+#EncoreIframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+.qty {
+	width: em(25);
+}
+.watermark, .lawyer {
+	@include opacity(.7);
+	font-size: 90%;
+	line-height: 1.15em;
+}
+a.UI-icon-container, #SiteNav a {
+	cursor: pointer;
+}
+
+/************************************************************************************
+* CKEditor Templates Behaviours
+************************************************************************************/
+.CKEditorTemplate {
+	border-collapse: collapse;
+	width: 100%;
+}

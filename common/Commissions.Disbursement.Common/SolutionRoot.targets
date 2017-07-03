@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This file prepares the build-root, probes for the file system offset to
+	the BuildTools.targets, imports the build tools for use. It is used during 
+	MSBuild command line execution as well as during Visual Studio builds.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">			
+	<PropertyGroup>
+		<SolutionDir>$(MSBuildThisFileDirectory.Trim('\\'))</SolutionDir>
+		<BuildToolsRoot>$(MSBuildThisFileDirectory).build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\..\.build\</BuildToolsRoot>		
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\..\.build\trunk\</BuildToolsRoot>
+	</PropertyGroup>
+	
+	<Import Condition="Exists('$(BuildToolsRoot)BuildTools.targets')" 
+		Project="$(BuildToolsRoot)BuildTools.targets" />	
+
+	<Import Condition="Exists('$(SolutionDir)\sln-import-before.targets')" 
+		Project="$(SolutionDir)\sln-import-before.targets" />
+</Project>

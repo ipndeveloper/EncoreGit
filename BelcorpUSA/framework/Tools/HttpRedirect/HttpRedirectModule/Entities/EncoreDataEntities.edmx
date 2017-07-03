@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MicheCoreModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MicheCoreModelStoreContainer">
+          <EntitySet Name="SiteUrls" EntityType="MicheCoreModel.Store.SiteUrls" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RedirectMappingData" EntityType="MicheCoreModel.Store.RedirectMappingData" store:Type="Tables" Schema="miche" />
+        </EntityContainer>
+        <EntityType Name="SiteUrls">
+          <Key>
+            <PropertyRef Name="SiteUrlID" />
+          </Key>
+          <Property Name="SiteUrlID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SiteID" Type="int" />
+          <Property Name="Url" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExpirationDateUTC" Type="datetime" />
+          <Property Name="IsPrimaryUrl" Type="bit" Nullable="false" />
+          <Property Name="LanguageID" Type="int" />
+          <Property Name="ModifiedByUserID" Type="int" />
+        </EntityType>
+        <EntityType Name="RedirectMappingData">
+          <Key>
+            <PropertyRef Name="MappingRedirectID" />
+          </Key>
+          <Property Name="MappingRedirectID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" />
+          <Property Name="SponsorID" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="255" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="255" />
+          <Property Name="OldWebsiteName" Type="nvarchar" MaxLength="255" />
+          <Property Name="SiteID" Type="int" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MicheCoreModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MicheCoreEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="SiteUrls" EntityType="MicheCoreModel.SiteUrl" />
+          <EntitySet Name="RedirectMappingDatas" EntityType="MicheCoreModel.RedirectMappingData" />
+        </EntityContainer>
+        <EntityType Name="SiteUrl">
+          <Key>
+            <PropertyRef Name="SiteUrlID" />
+          </Key>
+          <Property Name="SiteUrlID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SiteID" Type="Int32" />
+          <Property Name="Url" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ExpirationDateUTC" Type="DateTime" />
+          <Property Name="IsPrimaryUrl" Type="Boolean" Nullable="false" />
+          <Property Name="LanguageID" Type="Int32" />
+          <Property Name="ModifiedByUserID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RedirectMappingData">
+          <Key>
+            <PropertyRef Name="MappingRedirectID" />
+          </Key>
+          <Property Name="MappingRedirectID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="Int32" />
+          <Property Name="SponsorID" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="OldWebsiteName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="SiteID" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MicheCoreModelStoreContainer" CdmEntityContainer="MicheCoreEntities">
+          <EntitySetMapping Name="SiteUrls"><EntityTypeMapping TypeName="MicheCoreModel.SiteUrl"><MappingFragment StoreEntitySet="SiteUrls">
+            <ScalarProperty Name="SiteUrlID" ColumnName="SiteUrlID" />
+            <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+            <ScalarProperty Name="Url" ColumnName="Url" />
+            <ScalarProperty Name="ExpirationDateUTC" ColumnName="ExpirationDateUTC" />
+            <ScalarProperty Name="IsPrimaryUrl" ColumnName="IsPrimaryUrl" />
+            <ScalarProperty Name="LanguageID" ColumnName="LanguageID" />
+            <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="RedirectMappingDatas"><EntityTypeMapping TypeName="MicheCoreModel.RedirectMappingData"><MappingFragment StoreEntitySet="RedirectMappingData">
+            <ScalarProperty Name="MappingRedirectID" ColumnName="MappingRedirectID" />
+            <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+            <ScalarProperty Name="SponsorID" ColumnName="SponsorID" />
+            <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+            <ScalarProperty Name="LastName" ColumnName="LastName" />
+            <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+            <ScalarProperty Name="OldWebsiteName" ColumnName="OldWebsiteName" />
+            <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="EncoreDataEntities" ZoomLevel="142">
+        <EntityTypeShape EntityType="MicheCoreModel.SiteUrl" Width="1.75" PointX="2.875" PointY="0.5" Height="2.3648893229166665" IsExpanded="true" />
+        <EntityTypeShape EntityType="MicheCoreModel.RedirectMappingData" Width="2" PointX="0.5" PointY="0.5" Height="2.5571907552083326" IsExpanded="true" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

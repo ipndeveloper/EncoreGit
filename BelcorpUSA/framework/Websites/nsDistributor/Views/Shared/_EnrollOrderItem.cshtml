@@ -1,0 +1,116 @@
+﻿<tr data-bind="fadeOut: isRemoving, css: { 'remove-hover': isRemoveHovering }">
+    <td data-label="" class="icon-24">
+    <div class="UI-icon icon-star"></div>
+        @*<a href="javascript:void(0);" 
+               class="UI-icon icon-star"               
+               data-bind="disable: false">
+        </a>*@
+    </td>
+    <td data-label="@Html.Term("SKU")" data-bind="text: SKU"></td>
+    <!-- ko if: IsKit -->
+    <td data-label="@Html.Term("Product")">
+        <!-- ko if: IsDynamicKit -->
+        <a data-bind="text: ProductName"></a> 
+        @*<a data-bind="attr: { href: BundlePackItemsUrl }, text: ProductName"></a> *@
+        <!-- /ko -->
+        <!-- ko ifnot: IsDynamicKit -->
+        <span data-bind="text: ProductName"></span>
+        <!-- /ko -->
+       @* <div data-bind="foreach: Messages">
+            <span class="block" data-bind="text: $data"></span>
+        </div>*@
+     
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: IsKit -->
+    <td>
+            <span data-label="@Html.Term("Product")" data-bind="text: ProductName"></span> 
+            <div data-bind="foreach: Messages">
+                <span class="block" data-bind="text: $data"></span>
+            </div>
+    </td>
+   <!-- /ko -->
+    <td>
+        <span data-label="@Html.Term("retailPricePerItem", "retailPricePerItem")" data-bind="text: retailPricePerItem">
+    </td>
+     
+     <!-- ko if: SamePrice -->
+    <td data-label="@Html.Term("UnitPrice", "Unit Price")" data-bind="text: OriginalUnitPrice"></td>
+    
+       <!-- /ko -->
+    <!-- ko ifnot: SamePrice -->
+    <td>
+        <span data-label="@Html.Term("OriginalUnitPrice", "Original Unit Price")" class="block originalPrice strikethrough" data-bind="text: OriginalUnitPrice">
+        </span><span data-label="@Html.Term("ActualUnitPrice", "Actual Unit Price")" class="block discountPrice" data-bind="text: AdjustedUnitPrice">
+        </span>
+    </td>
+    <!-- /ko -->
+
+    <!-- ko if: SameCommissionableTotal -->
+   @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+                                    <td data-label="@Html.Term("CommissionablePrice", "Commissionable Price")" data-bind="text: OriginalCommissionableTotal">
+                                    </td>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+                                                 
+    <!-- /ko -->
+    <!-- ko ifnot: SameCommissionableTotal -->
+     @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                if (valorSCV == "S")
+                                {
+    <td>
+        <span data-label="@Html.Term("OriginalCommissionablePrice", "Original Commissionable Price")" class="block originalPrice strikethrough" data-bind="text: OriginalCommissionableTotal">
+        </span><span data-label="@Html.Term("ActualCommissionablePrice", "Actual Commissionable Price")" class="block discountPrice" data-bind="text: AdjustedCommissionableTotal">
+        </span>
+    </td>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+    <!-- /ko -->
+    <!-- ko if: IsQuantityEditable -->
+     <td data-label="@Html.Term("Quantity")" style="text-align: center;">
+        <input type="text" style="width: 50px;" class="quantity" data-bind="value: Quantity, valueUpdate: 'afterkeydown'" />
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: IsQuantityEditable -->
+    <td style="text-align: center;" data-bind="text: Quantity"></td>
+    <!-- /ko -->
+    @*CGI(CMR)-29/10/2014-Inicio*@
+    <!-- ko if: TotalQV -->
+     <td>
+        <span data-bind="text: TotalQV_Currency"></span>
+    </td>
+    <!-- /ko -->
+    <!-- ko ifnot: TotalQV -->
+    <td>
+        <span class="block originalPrice strikethrough" data-bind="text: TotalQV_Currency"></span>
+    </td>
+    <!-- /ko -->
+    @*CGI(CMR)-29/10/2014-Fin*@
+    <!-- ko if: SameTotal -->
+    <td data-bind="text: AdjustedTotal"></td>
+    <!-- /ko -->
+    <!-- ko ifnot: SameTotal -->
+    <td>
+        <span class="block originalPrice strikethrough" data-bind="text: OriginalTotal">
+        </span><span class="block discountPrice" data-bind="text: AdjustedTotal"></span>
+    </td>
+    <!-- /ko -->
+   
+</tr>
+<tr> 
+<td>
+</td>   
+ <td colspan=2>
+       <div class="bundlePackItemList" data-bind="with: KitItemsModel">
+            @Html.Partial("_KitItemsModel")
+        </div>
+ </td>
+</tr>

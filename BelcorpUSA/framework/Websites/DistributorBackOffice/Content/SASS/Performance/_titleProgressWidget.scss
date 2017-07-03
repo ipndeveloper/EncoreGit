@@ -1,0 +1,126 @@
+﻿$RecognizedColor: shade($copy, 10%);
+$PaidColor: $SuccessMessage;
+
+#TitleChart .chart {
+	position:absolute;
+	z-index: 10;
+}
+#TitleRadial_Chart_Paid {
+	top:15px;
+	left:28px;
+}
+.chart .highcharts-container {
+	background:transparent !important;
+}
+#TitleChart.circularChartWrap {
+    position: relative;
+    height: 150px;
+    min-width: 176px;
+	width:40%
+}
+#TitleBar_Chart {
+	width:60%;
+	position:absolute;
+	right:0;
+	top:0;
+
+	.highcharts-container {
+		top: 0 !important;
+	}
+}
+#TitleBar_View {
+	position:relative;
+}
+#TitleLevels {
+	height:$WidgetHeight - 65;
+	width:100%;
+}
+#TitleLevels span {
+	display:block;
+	padding-left:10px;
+}
+
+#TitleProgressLegend {
+	height:35px;
+}
+#TitleLevel {
+    font-size: 15px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    left:60px;
+    top:60px;
+    width:55px;
+	span {
+		display:block;
+	}
+}
+.titleProgressLegend {
+	.chartLegend {
+		overflow:hidden;
+		.label {
+			color:$LightBgText;
+		}
+		.term {
+			color:tint($LightBgText, 20%);
+			font-weight:normal;
+		}
+	}
+	.chartLegendColor {
+		display:block;
+		width:15px;
+		height:15px;
+	}
+}
+#TitleChart, #TitleProgressLegend2 {
+	float:left;
+}
+.titleProgressLegend {
+	div.FL {
+		margin:2px;
+	}
+	div {
+		line-height:15px;
+		margin:0 10px 0 0;
+	}
+}
+#TitleProgressLegend2 {
+	margin:15px 0 0 15px;
+	padding:5px 0;
+	.chartLegend {
+		margin: 5px 10px;
+		span {
+			float:left;
+			clear:left;
+		}
+	}
+}
+
+#TitleLevels span {
+	background:tint($LightBg, 50%);
+}
+#TitleLevels span:nth-child(2n){
+	background:$LightBg;
+}
+.TitleProgress {
+	.recognized {
+		color:$RecognizedColor;
+		font-weight:bold;
+	}
+	.paidAs {
+		color:$PaidColor;
+		font-weight:bold;
+	}
+}
+.chartLegendColor {
+	@include BorderRadius();
+	&.recognizedLegend {
+		background-color:$RecognizedColor;
+	}
+	&.paidAsLegend {
+		background-color:$PaidColor;
+	}
+}
+.titleLevel.complete {
+	color:tint($copy, 40%);
+}

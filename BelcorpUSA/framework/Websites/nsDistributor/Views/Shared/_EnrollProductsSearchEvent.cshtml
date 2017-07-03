@@ -1,0 +1,244 @@
+﻿
+@model nsDistributor.Models.Shared.MiniShopModel
+@{
+    var modelName = "orderEntryModel";
+    string baseUrl = Href("~/") + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";
+}
+
+<script type="text/javascript">
+
+$(function() {
+
+        var @(modelName);
+		$(function () {
+			var orderEntryModelOptions = @Model.OptionsJsonModel;
+			var orderEntryModelData = @Model.DataJsonModel;
+			@(modelName) = new OrderEntryModel(orderEntryModelOptions, orderEntryModelData); 
+            
+		}); 
+
+         ///Agregar Item
+             $('#btnQuickAdd2').click(function() {
+     
+                if (!$('.QuickAdd').checkRequiredFields()) {
+                    var bubbles = $('.errorMessageBubble:visible'); //get all visible error bubbles.
+                    $(bubbles[0]).offset({ top: 314, left: 522 }); //reposition bubble 1 & 2 so that the message is clearly visible.
+                    $(bubbles[1]).offset({ top: 314, left: 662 });
+                    return false;
+                }
+
+			    var addToCartData = {
+				    productId: $('#hQuickAddProductId').val(),
+				    quantity: parseInt($('#txtQuantity').val())
+			    };
+
+                if (!addToCartData.productId || !addToCartData.quantity) {
+				    showMessage('@Html.Term("InvalidProductOrQuantity", "Invalid product or quantity.")', true);
+				    return false;
+			    }
+
+                    if ($('#hQuickAddNeedsBackOrderConfirmation').val() == "true") {
+                        if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                            return false;
+                        }
+                    }
+
+                
+//                var cartItemAddingEvent = @(modelName).raiseCartItemAdding(addToCartData);
+//			    if (cartItemAddingEvent.isDefaultPrevented()) {
+//				    return false;
+//			    }
+				
+
+			var t = $(this);
+            showLoading(t);
+            $('#ProductLoad').show();
+            NS.post({
+				url: '@(baseUrl)AddToCart',
+				data: addToCartData,
+				success: function(results) {
+                    if (results.result) {
+                        lastProduct = $('#txtQuickAddSearch').val();
+
+						@(modelName).customizationType('');
+                        @{if (ViewData["Products"] == null)
+                          {
+                            @Html.Raw("$('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');");
+                          }
+                        }
+                        
+                        $('#lblDateEstimated').html(results.dateEstimated); 
+                        updateCartAndTotals(results);
+                        $('#txtQuickAddSearch').focus();
+                        if (results.isBundle) {
+                            var queryString = "?productId=" + results.productId + "&bundleGuid=" + results.bundleGuid;
+                            window.location.href = '@Url.Content(baseUrl + "BundlePackItems")' + queryString;
+                        }
+                        else {
+                            updateBundleOptions(results.BundleOptionsSpanHTML, results.AvailableBundleCount);
+                        }
+                        BalanceCredit(results);
+
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    } else {
+                        // Developed by BAL - CSTI - A04
+                            if (results.restricted) {
+                                showMessage(results.message, true);
+                                return false;
+                            }
+
+						if (results.products !== null && results.products !== undefined) {
+                            $.each(results.products, function(index, value) {
+                                $('.shippingExceptionItems').append('<li>' + value + '</li>');
+                            });
+                            $("#productShippingExceptionModal").jqm({ modal: true }).jqmShow();
+                        }
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    }
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }, 
+				complete: function () {
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }
+			});
+        });
+
+    ///Agregar Item
+     $('#btnQuickAdd').click(function() {
+     
+     
+//                if (!$('.QuickAdd').checkRequiredFields()) {
+//                    var bubbles = $('.errorMessageBubble:visible'); //get all visible error bubbles.
+//                    $(bubbles[0]).offset({ top: 314, left: 522 }); //reposition bubble 1 & 2 so that the message is clearly visible.
+//                    $(bubbles[1]).offset({ top: 314, left: 662 });
+//                    return false;
+//                }
+
+			    var addToCartData = {
+				    productId: $('#hQuickAddProductId').val(),
+				    quantity: parseInt($('#txtQuickAddQuantity').val())
+			    };
+
+//                if (!addToCartData.productId || !addToCartData.quantity) {
+//				    showMessage('@Html.Term("InvalidProductOrQuantity", "Invalid product or quantity.")', true);
+//				    return false;
+//			    }
+
+//                    if ($('#hQuickAddNeedsBackOrderConfirmation').val() == "true") {
+//                        if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+//                            return false;
+//                        }
+//                    }
+
+//                
+////                var cartItemAddingEvent = @(modelName).raiseCartItemAdding(addToCartData);
+////			    if (cartItemAddingEvent.isDefaultPrevented()) {
+////				    return false;
+////			    }
+				
+
+			var t = $(this);
+            showLoading(t);
+            $('#ProductLoad').show();
+            NS.post({
+				url: '@(baseUrl)AddToCart',
+				data: addToCartData,
+				success: function(results) {
+                    if (results.result) {                        
+                        lastProduct = $('#txtQuickAddSearch').val(); 
+						//orderEntryModelData.customizationType('');
+                        @{if (ViewData["Products"] == null)
+                          {
+                            @Html.Raw("$('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');");
+                          }
+                        } 
+                        $('#lblDateEstimated').html(results.dateEstimated); 
+                       
+                        updPayments(results);
+                        updateCartAndTotals(results);
+                        $('#txtQuickAddSearch').focus();
+                        if (results.isBundle) {
+                            var queryString = "?productId=" + results.productId + "&bundleGuid=" + results.bundleGuid;
+                            window.location.href = '@Url.Content(baseUrl + "BundlePackItems")' + queryString;
+                        }
+                        else {
+                            //updateBundleOptions(results.BundleOptionsSpanHTML, results.AvailableBundleCount);
+                        }
+                        //BalanceCredit(results);
+
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    } else {
+                        // Developed by BAL - CSTI - A04
+                            if (results.restricted) {
+                                showMessage(results.message, true);
+                                return false;
+                            }
+
+						if (results.products !== null && results.products !== undefined) {
+                            $.each(results.products, function(index, value) {
+                                $('.shippingExceptionItems').append('<li>' + value + '</li>');
+                            });
+                            $("#productShippingExceptionModal").jqm({ modal: true }).jqmShow();
+                        }
+                        if (results.message) {
+                            showMessage(results.message, true);
+                        }
+                    }
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }, 
+				complete: function () {
+                    $('#ProductLoad').hide();
+                    hideLoading(t);
+                }
+			});
+        });
+
+    
+    
+
+    
+    
+
+
+
+    ///Agregar Item Rapido
+     miniShopModel.AddQuick = function () {
+    $("#wait").css("display", "block");
+    this.post('@Model.AddOrderItemUrl', self.getProduct());
+        if(_resultado)
+        {
+            //updateCartAndTotals(results);
+            //orderChanged();
+        }
+        else
+        {
+            showMessage('@Html.Term("TheProductCouldNotBeAdded", "The product could not be added"): ' + results.message, true);
+        }
+        
+    }
+
+    //Obtener Model tipo MiniShopProductModel 
+    self.getProduct = function () {
+        _productID = $('#hQuickAddProductId').val();
+        _quantity = $('#txtQuickAddQuantity').val();
+        var product = new Array();
+        product =
+        {
+            "ProductID": _productID, "Name": "", "RetailPrice": "" , "Quantity": _quantity, "ImageUrl": "", "Description": "", "YourPrice": "", "Volume": ""
+        }
+        return product;
+    }
+
+
+});
+
+</script>

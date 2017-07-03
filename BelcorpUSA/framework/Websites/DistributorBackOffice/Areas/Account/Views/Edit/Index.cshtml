@@ -1,0 +1,1009 @@
+@model DistributorBackOffice.Areas.Account.Models.Edit.AccountModel
+           
+
+@section head {
+
+    <style>
+        
+        #txtphoneNumberMain01 {        
+        max-width : 50px;
+        }
+
+        #txtphoneNumberMain02 {
+        max-width: 50px;
+        }
+
+        #txtphoneNumberMain03 {
+        max-width: 50px;
+        }
+        
+        #txtphoneNumberComercial01 {        
+        max-width : 50px;
+        }
+
+        #txtphoneNumberComercial02 {
+        max-width: 50px;
+        }
+
+        #txtphoneNumberComercial03 {
+        max-width: 50px;
+        }
+        
+        #txtphoneNumberMobile01 {        
+        max-width : 50px;
+        }
+
+        #txtphoneNumberMobile02 {
+        max-width: 50px;
+        }
+
+        #txtphoneNumberMobile03 {
+        max-width: 50px;
+        }
+        
+        #txtphoneNumberOther01 {        
+        max-width : 50px;
+        }
+
+        #txtphoneNumberOther02 {
+        max-width: 50px;
+        }
+
+        #txtphoneNumberOther03 {
+        max-width: 50px;
+        }
+        
+          #txtCPF01 {
+        max-width: 100px;
+        }
+
+        #txtCPF02 {
+        max-width: 50px;
+        }        
+        
+        #txtPIS01 {
+        max-width:100px;
+        }
+
+        #txtPIS02 {
+        max-width: 50px;
+        }
+       
+        #txtIssueMonth {
+        max-width: 80px;
+        }        
+        
+        #txtIssueDay {
+        max-width:80px;
+        }
+
+        #txtIssueYear {
+        max-width: 80px;
+        }
+    </style>
+    
+    
+    <script type="text/javascript">
+
+        //Ajax Validations: Global variables
+
+        //Documents
+        var validationReqCPF = 'CPF is Invalid.';
+        var validationCPF = '';
+
+        var validationReqRG = 'RG is Invalid.';
+        var validationRG = '';
+
+        //Email
+        var validationEmail = true;
+        var emailText = '';
+
+        $(function () {
+            var currentPhone = 0;
+
+
+            
+        // ********************************************************************************************************* */
+        /*  add IPN  para resolver el formato de fechas */
+
+        var cultureInfo = $('#culture').val(); ;
+        
+
+        if (cultureInfo === 'en-US') {
+
+           
+            $('#issuedate').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [ { id: 'txtIssueMonth', length: 2, size: 2 }, { id: 'txtIssueDay', length: 2, size: 2 },{ id: 'txtIssueYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.IssueDate == null) ? "" : Model.IssueDate.Replace("/", ""))');
+            $('#dob').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [ { id: 'txtDOBMonth', length: 2, size: 2 },{ id: 'txtDOBDay', length: 2, size: 2 }, { id: 'txtDOBYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.Account.Birthday == null) ? "" : Model.Account.Birthday.ToDateTime().ToString().Replace("/", ""))');
+        }
+
+        else if ((cultureInfo === 'es-US') || (cultureInfo === 'pt-BR')) {
+         
+            $('#issuedate').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [ { id: 'txtIssueDay', length: 2, size: 2 }, { id: 'txtIssueMonth', length: 2, size: 2 },{ id: 'txtIssueYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.IssueDate == null) ? "" : Model.IssueDate.Replace("/", ""))');
+            $('#dob').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [ { id: 'txtDOBDay', length: 2, size: 2 },{ id: 'txtDOBMonth', length: 2, size: 2 }, { id: 'txtDOBYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.Account.Birthday == null) ? "" : Model.Account.Birthday.ToDateTime().ToShortDateString().Replace("/", ""))');
+
+        
+
+        }
+
+
+
+        /*  Fin de codigo añadido    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $('#phoneNumberMain').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes: [{ id: 'txtphoneNumberMain01', length: 3, size: 3 }, { id: 'txtphoneNumberMain02', length: 5, size: 5 }, { id: 'txtphoneNumberMain03', length: 4, size: 4}] }).inputsByFormat('setValue', ($('#PhoneNumberMain').val() == null) ? "" : $('#PhoneNumberMain').val());
+            $('#phoneNumberMobile').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes: [{ id: 'txtphoneNumberMobile01', length: 3, size: 3 }, { id: 'txtphoneNumberMobile02', length: 5, size: 5 }, { id: 'txtphoneNumberMobile03', length: 4, size: 4}] }).inputsByFormat('setValue', ($('#PhoneNumberMobile').val() == null) ? "" : $('#PhoneNumberMobile').val());
+            $('#phoneNumberComercial').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes: [{ id: 'txtphoneNumberComercial01', length: 3, size: 3 }, { id: 'txtphoneNumberComercial02', length: 5, size: 5 }, { id: 'txtphoneNumberComercial03', length: 4, size: 4}] }).inputsByFormat('setValue', ($('#PhoneNumberComercial').val() == null) ? "" : $('#PhoneNumberComercial').val());
+            $('#phoneNumberOther').inputsByFormat({ format: '{0} - {1} - {2}', validateNumbers: true, attributes: [{ id: 'txtphoneNumberOther01', length: 3, size: 3 }, { id: 'txtphoneNumberOther02', length: 5, size: 5 }, { id: 'txtphoneNumberOther03', length: 4, size: 4}] }).inputsByFormat('setValue', ($('#PhoneNumberOther').val() == null) ? "" : $('#PhoneNumberOther').val());
+            $('#cpf').inputsByFormat({ format: '{0} - {1}', validateNumbers: true, attributes: [{ id: 'txtCPF01', length: 9, size: 9 }, { id: 'txtCPF02', length: 2, size: 2}] }).inputsByFormat('setValue', $('#AccountSuppliedIDValue_CPF').val());
+            $('#pis').find('input').prop('class', 'required');
+
+            $('#pis').inputsByFormat({ format: '{0} - {1}', validateNumbers: true, attributes: [{ id: 'txtPIS01', length: 9, size: 9 }, { id: 'txtPIS02', length: 2, size: 2}] }).inputsByFormat('setValue', $('#AccountSuppliedIDValue_PIS').val());
+            //$('#pis').find('input').prop('disabled', true);
+
+            $('#txtRG').val('@(Model.accountSuplieds[0].AccountSuppliedIDValue)');
+
+//            $('#issuedate').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [{ id: 'txtIssueDay', length: 2, size: 2 }, { id: 'txtIssueMonth', length: 2, size: 2 }, { id: 'txtIssueYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.IssueDate == null) ? "" : Model.IssueDate.Replace("/", ""))');
+            $('#txtIssueMonth').watermark('mm');
+            $('#txtIssueDay').watermark('dd');
+            $('#txtIssueYear').watermark('yyyy');
+
+//            $('#dob').inputsByFormat({ format: '{0} / {1} / {2}', validateNumbers: true, attributes: [{ id: 'txtDOBDay', length: 2, size: 2 }, { id: 'txtDOBMonth', length: 2, size: 2 }, { id: 'txtDOBYear', length: 4, size: 4}] }).inputsByFormat('setValue', '@((Model.Account.Birthday == null) ? "" : Model.Account.Birthday.ToDateTime().ToString("dd/MM/yyyy").Replace("/", ""))');
+            $('#txtDOBMonth').watermark('mm');
+            $('#txtDOBDay').watermark('dd');
+            $('#txtDOBYear').watermark('yyyy');
+
+            $('input[name=genders][value=' + '@Model.Account.GenderID' + ']').prop('checked', true);
+
+
+            //             
+            //            $('#txtphoneNumberOther01').style['width'] = '20px';
+
+            $('#btnAddPhone').click(function () {
+                var phoneControl = $('<span class="FL mr10 phone"></span>'),
+					container = $('<li class="pad5 phoneContainer"></li>').append(phoneControl).append('<select class="FL phoneType">@foreach (PhoneType phoneType in SmallCollectionCache.Instance.PhoneTypes)
+                                                                                                                      {<option value="@phoneType.PhoneTypeID">@phoneType.GetTerm()</option>}</select>')
+			.append('<a href="javascript:void(0);" class="FL ml10 DeletePhone UI-icon-container"><span class="UI-icon icon-x"></span></a><span class="clr"></span>');
+                $('#phones').prepend(container);
+                phoneControl.phone({
+                    areaCodeId: 'phone' + currentPhone + 'AreaCode',
+                    firstThreeId: 'phone' + currentPhone + 'FirstThree',
+                    lastFourId: 'phone' + currentPhone + 'LastFour'
+                });
+                ++currentPhone;
+                $(container).effect('highlight', {}, 3000);
+            });
+
+            $('#phones .phoneContainer').each(function () {
+                var phone = $('.phone', this), number = phone.text(), guid = newGuid();
+                phone.empty().phone({ areaCodeId: 'txtAreaCode' + guid, firstThreeId: 'txtFirstThree' + guid, lastFourId: 'txtLastFour' + guid });
+                phone.phone('setPhone', number);
+            });
+            $('#phones a.DeletePhone').live('click', function () {
+                $(this).parent().fadeOut('fast', function () {
+                    $(this).remove();
+                });
+            });
+
+            $('#btnSaveAccountMainInfo').click(function () {
+
+                var isComplete = true;
+
+                if (!$('#EditForm').checkRequiredFields()) {
+                    isComplete = false;
+                }
+
+                //RG Issue Date
+
+                var txtIssueDayControl = $("#txtIssueDay");
+                var txtIssueMonthControl = $("#txtIssueMonth");
+                var txtIssueYearControl = $("#txtIssueYear");
+
+                  /*CS.14JUL2016.Inicio.Quitar validación*/
+//                if(txtIssueDayControl.val().length  > 0 || txtIssueMonthControl.val().length  > 0 || txtIssueYearControl.val().length  > 0 )
+//                {
+//                    var isDateValidIssue = CheckValidDate(txtIssueDayControl.val(), txtIssueMonthControl.val(), txtIssueYearControl.val());
+
+//                    if (!isDateValidIssue) {
+//                        txtIssueDayControl.showError("");
+//                        txtIssueMonthControl.showError("");
+//                        txtIssueYearControl.showError('@Html.JavascriptTerm("InvalidIssueDate", "Please enter a valid Issue Date")');
+//                        isComplete = false;
+//                    }
+//                    else {
+//                        txtIssueDayControl.clearError();
+//                        txtIssueMonthControl.clearError();
+//                        txtIssueYearControl.clearError();
+//                    }
+//                }
+                  /*CS.14JUL2016.Fin.Quitar validación*/
+
+                //Date of Birth
+
+                var txtDOBDayControl = $("#txtDOBDay");
+                var txtDOBMonthControl = $("#txtDOBMonth");
+                var txtDOBYearControl = $("#txtDOBYear");
+
+                
+                    var isDateValid = CheckValidDate(txtDOBDayControl.val(), txtDOBMonthControl.val(), txtDOBYearControl.val());
+
+                    if (!isDateValid) {
+                        txtDOBDayControl.showError("");
+                        txtDOBMonthControl.showError("");
+                        txtDOBYearControl.showError('@Html.JavascriptTerm("InvalidDOB", "Please enter a valid DOB")');
+                        isComplete = false;
+                    }
+                    else {
+                        var isAgeValid = CheckValidAge(txtDOBDayControl.val(), txtDOBMonthControl.val(), txtDOBYearControl.val());
+
+                        if (!isAgeValid) {
+                            txtDOBDayControl.showError("");
+                            txtDOBMonthControl.showError("");
+                            txtDOBYearControl.showError('@Html.JavascriptTerm("DOBInValidYear", "Age should be greater than 18")');
+                            isComplete = false;
+                        }
+                        else {
+                            txtDOBDayControl.clearError();
+                            txtDOBMonthControl.clearError();
+                            txtDOBYearControl.clearError();
+                        }
+                    }
+
+                ///Document Validation
+                var txtCPF01 = $('#txtCPF01');
+                var txtCPF02 = $('#txtCPF02');
+
+                if (validationCPF != '') {
+                    isComplete = false;
+                    txtCPF01.showError('');
+                    txtCPF02.showError(validationCPF);
+                }
+                else {
+                    txtCPF01.clearError();
+                    txtCPF02.clearError();
+                }
+
+                var RG = $('#txtRG');
+
+                if (validationRG != '') {
+                    isComplete = false;
+                    RG.showError(validationRG);
+                }
+                else {
+                    RG.clearError();
+                }
+
+                //Email Validation
+                var emailControl = $('#txtEmail');
+                emailControl.clearError();
+
+                if ($.trim(emailControl.val()) == '') {
+                    emailControl.showError('@Html.JavascriptTerm("EmailRequired", "Email is required.")');
+                    isComplete = false;
+                }
+                else if (!validationEmail) {
+                    isComplete = false;
+                    emailControl.showError('@Html.JavascriptTerm("EmailAccountAlreadyExists", "An account with this e-mail already exists.")');
+                }
+
+                var emailConfirmationControl = $('#txtEmailConfirmation');
+                emailConfirmationControl.clearError();
+
+                if ($.trim(emailConfirmationControl.val()) == '') {
+                    emailConfirmationControl.showError('@Html.JavascriptTerm("ConfirmationRequired", "Confirmation Email is required")');
+                    isComplete = false;
+                }
+                else if (emailControl.val() != emailConfirmationControl.val()) {
+                    isComplete = false;
+                    emailConfirmationControl.showError('@Html.JavascriptTerm("EmailConfirmationMatch", "Email must match the Confirmation Email")');
+                }
+                //                if (!/^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/.test($('#txtEmail').val())) {
+                //                    $('#txtEmail').showError('@Html.JavascriptTerm("InvalidEmail", "Please enter a valid email address.")');
+                //                    isComplete = false;
+                //                }
+                //                else {
+                //                    $('#txtEmail').clearError();
+                //                    isComplete = true;
+                //                }
+
+                if (isComplete) {
+                    hideMessage();
+                    var data = {
+                        firstName: $('#txtFirstName').val(),
+                        lastName: $('#txtLastName').val(),
+                        email: $('#txtEmail').val(),
+                        dob: $('#dob').inputsByFormat('getValue', '{0}/{1}/{2}'),
+                        gender: $("input:radio[name=genders]:checked").val(),
+                        defaultLanguageId: $('#defaultLanguageId').val(),
+                        //profileName: $('#PrimaryAddressProfileName').val(),
+                        attention: $('#PrimaryAddressAttention').val(),
+                        address1: $('#PrimaryAddressAddress1').val(),
+                        address2: $('#PrimaryAddressAddress2').val(),
+                        address3: $('#PrimaryAddressAddress3').val(),
+                        zip: $('#PrimaryAddressControl .PostalCode').fullVal(),
+                        city: $('#PrimaryAddressCity').val(),
+                        county: $('#PrimaryAddressCounty').val(),
+                        state: $('#PrimaryAddressState').val(),
+                        countryId: $('#PrimaryAddressCountry').val(),
+                        phone: $('#PrimaryAddressphone').length ? $('#PrimaryAddressphone').phone('getPhone') : ''
+                    };
+
+                    //                    $('#phones .phoneContainer').filter(function () {
+                    //                        return !!$('.phone', this).phone('getPhone');
+                    //                    }).each(function (i) {
+                    //                        data['phones[' + i + '].AccountPhoneID'] = $('.phoneId', this).length ? $('.phoneId', this).val() : 0;
+                    //                        data['phones[' + i + '].PhoneTypeID'] = $('.phoneType', this).val();
+                    //                        data['phones[' + i + '].PhoneNumber'] = $('.phone', this).phone('getPhone');
+                    //                    });
+
+                    //add Newsletters
+                    $('.groupCheckBox').each(function (i) {
+                        data['newsletterValues[' + i + '].Key'] = $(this).attr('id');
+                        data['newsletterValues[' + i + '].Value'] = $(this).is(':checked');
+
+                    });
+
+                    // Main
+                    data['phones[0].AccountPhoneID'] = $('#phoneIdMain').val();
+                    data['phones[0].PhoneTypeID'] = 1;
+                    data['phones[0].PhoneNumber'] = $('#phoneNumberMain').inputsByFormat('getValue', '{0}{1}{2}');
+                    // Mobile
+                    data['phones[1].AccountPhoneID'] = $('#phoneIdMobile').val();
+                    data['phones[1].PhoneTypeID'] = 2;
+                    data['phones[1].PhoneNumber'] = $('#phoneNumberMobile').inputsByFormat('getValue', '{0}{1}{2}');
+                    // Comercial
+                    data['phones[2].AccountPhoneID'] = $('#phoneIdComercial').val();
+                    data['phones[2].PhoneTypeID'] = 4;
+                    data['phones[2].PhoneNumber'] = $('#phoneNumberComercial').inputsByFormat('getValue', '{0}{1}{2}');
+                    // Other mensages
+                    data['phones[3].AccountPhoneID'] = $('#phoneIdOther').val();
+                    data['phones[3].PhoneTypeID'] = 5;
+                    data['phones[3].PhoneNumber'] = $('#phoneNumberOther').inputsByFormat('getValue', '{0}{1}{2}');
+
+
+                    var dateOfIssue = $('#issuedate').inputsByFormat('getValue', '{0}/{1}/{2}')
+
+                    data['accountSuplieds[0].AccountSuppliedID'] = $('#AccountSuppliedID_CPF').val();
+                    data['accountSuplieds[0].AccountSuppliedIDValue'] = $('#cpf').inputsByFormat('getValue', '{0}{1}');
+                    data['accountSuplieds[0].IsPrimaryID'] = true;
+                    data['accountSuplieds[0].IDTypeID'] = 8;
+
+                    data['accountSuplieds[1].AccountSuppliedID'] = $('#AccountSuppliedID_PIS').val();
+                    data['accountSuplieds[1].AccountSuppliedIDValue'] = $('#pis').inputsByFormat('getValue', '{0}{1}');
+                    data['accountSuplieds[1].IsPrimaryID'] = false;
+                    data['accountSuplieds[1].IDTypeID'] = 9;
+
+                    data['accountSuplieds[2].AccountSuppliedID'] = $('#AccountSuppliedID_RG').val();
+                    data['accountSuplieds[2].AccountSuppliedIDValue'] = $('#txtRG').val();
+                    data['accountSuplieds[2].IsPrimaryID'] = false;
+                    data['accountSuplieds[2].IDTypeID'] = 4;
+                    data['accountSuplieds[2].IDExpeditionIDate'] = dateOfIssue;
+                    data['accountSuplieds[2].ExpeditionEntity'] = $('#txtOrgExp').val();
+
+
+                    data['accountProperties[0].AccountPropertyID'] = $('#AccountPropertyID_Nationality').val();
+                    data['accountProperties[0].AccountPropertyTypeID'] = $('#Type_Nationality').val();
+                    data['accountProperties[0].AccountPropertyValueID'] = $('#ddlNationality').val();
+                    data['accountProperties[1].AccountPropertyID'] = $('#AccountPropertyID_Marital').val();
+                    data['accountProperties[1].AccountPropertyTypeID'] = $('#Type_Marital').val();
+                    data['accountProperties[1].AccountPropertyValueID'] = $('#ddlMaritalStatus').val();
+                    data['accountProperties[2].AccountPropertyID'] = $('#AccountPropertyID_Occupation').val();
+                    data['accountProperties[2].AccountPropertyTypeID'] = $('#Type_Occupation').val();
+                    data['accountProperties[2].AccountPropertyValueID'] = $('#ddlOccupation').val();
+
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Account/Edit/SaveAccountInfo")', data, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+
+                            $('#AccountPropertyID_Nationality').val(response.accountProperties[0].accountPropertyID);
+                            $('#AccountPropertyID_Marital').val(response.accountProperties[1].accountPropertyID);
+                            $('#AccountPropertyID_Occupation').val(response.accountProperties[2].accountPropertyID);
+                            $('#AccountSuppliedID_CPF').val(response.accountSuppliedIDs[0].accountSuppliedID);
+                            $('#AccountSuppliedID_PIS').val(response.accountSuppliedIDs[1].accountSuppliedID);
+                            $('#AccountSuppliedID_RG').val(response.accountSuppliedIDs[2].accountSuppliedID);
+
+                            showMessage('@Html.Term("AccountSaved", "Account saved successfully")', false);
+                            $('#editAccountMainInfoModal').jqmHide();
+
+                            $('#emailDisplay').html($('#txtEmail').val());
+                            $('#birthdayDisplay').html(data.dob);
+                            $('#languageDisplay').html($('#defaultLanguageId option:selected').text());
+                            $('#genderDisplay').html($('#gender option:selected').text());
+                            $('#mainAddressContainer').html(response.mainAddresHtml);
+                            window.location = '@Href("~/Account/")';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                } else {
+                    showMessage('@Html.Term("ErrorsBelow", "There are some errors below, please correct them before continuing.")', true);
+                }
+            });
+
+            $("ul.lr li:odd").addClass("Alt");
+
+            $('.FormRow .data input, .FormRow .data textarea, .FormRow .data select, .FRow .FInput input, .FRow .FInput textarea, .FRow .FInput select').focus(function () {
+                $(this).parent().parent().addClass('Focus');
+            });
+            $('.FormRow .data input, .FormRow .data textarea, .FormRow .data select, .FRow .FInput input, .FRow .FInput textarea, .FRow .FInput select').blur(function () {
+                $(this).parent().parent().removeClass('Focus');
+            });
+
+        });
+
+        $(document).ready(function () {
+            //Ajax Validations: Events
+            $('#txtFirstName, #txtLastName, #txtCPF01, #txtCPF02, #txtRG, #txtOrgExp, #txtIssueDay, #txtIssueMonth, #txtIssueYear').prop('disabled', true);
+            //$('#txtFirstName, #txtLastName, #txtCPF01, #txtCPF02, #txtPIS01, #txtPIS02, #txtRG, #txtOrgExp, #txtIssueDay, #txtIssueMonth, #txtIssueYear').prop('disabled', true);
+            $('#billingAddress :input, select').prop('disabled', true);
+
+            $('#txtRG').on('blur', function () {
+                var control = $(this);
+                var isCoApplicant = false;
+
+                if (control.val() != '@Model.accountSuplieds[0].AccountSuppliedIDValue') {
+                    if (control.val() > 0) {
+                        DocumentValidation(4, control.val(), control, null, isCoApplicant);
+                    }
+                    else {
+                        validationRG = validationReqRG;
+
+                        control.showError(validationReqRG);
+                    }
+                }
+                else {
+                    validationRG = '';
+                    control.clearError();
+                }
+
+            }).keydown(function () {
+                $(this).clearError();
+            });
+
+            $('#txtCPF01, #txtCPF02').keyup(function (e) {
+
+                var controlID = $(this).attr('id');
+                var validationMsg = '';
+                var isCoApplicant = false;
+
+                var cpfBaseID = '#' + controlID.substr(0, controlID.length - 1);
+                var cpfPart1 = $(cpfBaseID + '1');
+                var cpfPart2 = $(cpfBaseID + '2');
+
+                if (cpfPart1.val() + cpfPart2.val() != '@Model.accountSuplieds[2].AccountSuppliedIDValue') {
+                    if (cpfPart1.val().length == cpfPart1.prop('maxLength') &&
+                        cpfPart2.val().length == cpfPart2.prop('maxLength')) {
+                        DocumentValidation(8, cpfPart1.val() + cpfPart2.val(), cpfPart1, cpfPart2, isCoApplicant);
+                    }
+                    else {
+
+                        validationCPF = validationReqCPF;
+
+                        cpfPart1.showError('');
+                        cpfPart2.showError(validationReqCPF);
+                    }
+                }
+                else {
+                    validationCPF = '';
+                    cpfPart1.clearError();
+                    cpfPart2.clearError();
+                }
+
+            });
+
+            $('#txtEmail').on('blur', function () {
+                if ($.trim($(this).val()) == '') {
+                    validationEmail = false;
+                    emailText = '';
+                    $(this).showError('@Html.JavascriptTerm("EmailRequired", "Email is required.")');
+                }
+                else if ($.trim($(this).val()).indexOf(" ") > -1) {
+                    emailText = '';
+                    $(this).showError('@Html.JavascriptTerm("EmailRequired", "A valid Email is required.")');
+                }
+                else {
+
+                    if ($(this).val() != '@Model.Account.EmailAddress') {
+                        EmailValidation($(this).val());
+                    }
+                    else {
+                        $(this).clearError();
+                        emailText = $(this).val();
+                        validationEmail = true;
+                    }
+                }
+            }).keyup(function () {
+                if (emailText != '' && $(this).val() != emailText) {
+                    emailText = '';
+                    validationEmail = false;
+                }
+            });
+
+            $('#txtEmailConfirmation').on('blur', function () {
+                if ($.trim($(this).val()) == '') {
+                    $(this).showError('@Html.JavascriptTerm("ConfirmationRequired", "Confirmation Email is required")');
+                }
+                else if ($(this).val() != $('#txtEmail').val()) {
+                    $(this).showError('@Html.JavascriptTerm("EmailConfirmationMatch", "Email must match the Confirmation Email")');
+                }
+                else {
+                    $(this).clearError();
+                }
+            });
+        });
+
+        //Ajax Validations: Methods
+
+        function DocumentValidation(DocumentType, DocumentValue, Control1, Control2, isCoApplicant) {
+
+            Control1.clearError();
+
+            if (Control2 != null)
+                Control2.clearError();
+
+            var strURL = '@Href("~/Account/Edit/DocumentValidation")';
+            var Parameters = {
+                DocumentType: DocumentType,
+                DocumentValue: DocumentValue
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: strURL,
+                data: JSON.stringify(Parameters),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+
+                    switch (DocumentType) {
+                        case 8: //CPF
+                            validationCPF = data.message;
+                            break;
+                        case 4: //RGs
+                            validationRG = data.message;
+                            break;
+                    }
+
+                    if (!data.result && Control2 != null) {
+                        Control1.showError('');
+                        Control2.showError(data.message);
+                    }
+                    else if (!data.result && Control2 == null) {
+                        Control1.showError(data.message);
+                    }
+                }
+            });
+        }
+
+        function EmailValidation(Email) {
+
+            validationUserName = false;
+            var emailControl = $('#txtEmail');
+            emailControl.clearError();
+            emailControl.prop('disabled', true);
+
+            var emailConfirmationControl = $('#txtEmailConfirmation');
+            emailConfirmationControl.prop('disabled', true);
+
+            var strURL = '@Href("~/Account/Edit/EmailValidation")';
+            var Parameters = {
+                Email: Email
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: strURL,
+                data: JSON.stringify(Parameters),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+
+                    validationEmail = data.result;
+
+                    if (validationEmail) {
+                        emailText = Email;
+                        emailControl.clearError();
+                    }
+                    else {
+                        emailText = '';
+                        emailControl.showError(data.message);
+                    }
+                    emailControl.prop('disabled', false);
+                    emailConfirmationControl.prop('disabled', false);
+                }
+            });
+        }
+
+        function CheckValidDate(dayfield, monthfield, yearfield) {
+            var dayobj = new Date(yearfield, monthfield - 1, dayfield)
+            if ((dayobj.getMonth() + 1 != monthfield) || (dayobj.getDate() != dayfield) || (dayobj.getFullYear() != yearfield))
+                return false;
+            else
+                return true;
+        }
+
+        function CheckValidAge(dayfield, monthfield, yearfield) {
+            var age = 18;
+            var isAgeValid = false;
+            var mydate = new Date();
+            var passedDate = new Date(yearfield, monthfield - 1, dayfield)
+            var minRequiredCurrdate = new Date();
+            minRequiredCurrdate.setFullYear(minRequiredCurrdate.getFullYear() - age);
+
+            isAgeValid = passedDate <= minRequiredCurrdate;
+            return isAgeValid;
+        }
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+    @Html.Term("EditMyProfile", "Edit My Profile")
+}
+@{
+    NetSteps.Data.Entities.Account accountToEdit = Model.Account;
+    var mainAddress = accountToEdit.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Main);
+    var shippingAddress = accountToEdit.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);
+
+    if (mainAddress == default(Address))
+    {
+        mainAddress = new Address();
+        mainAddress.AddressTypeID = Constants.AddressType.Main.ToShort();
+        mainAddress.IsDefault = true;
+        mainAddress.CountryID = Constants.Country.Brazil.ToInt();
+    }
+
+    // Add por IPN : obtener la configuración de cultura inicio 12042017
+    @Html.Hidden("culture", CoreContext.CurrentCultureInfo.Name);
+    // fin 12042017
+}
+
+
+<table class="SectionTable" id="EditForm" width="100%">
+    <tr>
+        <td class="FormBlock splitCol">
+            <h5 class="SectionTitle PersonalData">
+                @Html.Term("AccountInfo", "Account Info")</h5>
+            <div class="FormTable">                  
+                    
+                 <div class="FormRow">
+                    <label for="txtFirstName">
+                        @Html.Term("First Name"):</label>
+                    <div class="data">                    
+                        <input type="text" id="txtFirstName" value="@accountToEdit.FirstName" class="required" style="width: 250px;" />
+                    </div>                    
+                    </div>
+                    <br />
+                    <div class="FormRow">
+                    <label for="txtLastName">
+                        @Html.Term("Last Name"):</label>
+                    <div class="data">
+                        <input type="text" id="txtLastName" value="@accountToEdit.LastName" class="required" style="width: 250px;" />
+                    </div>                    
+                    </div>
+                    <br />
+                  <div class="FormRow">
+                    <label>
+                        @Html.Term("CPF"):</label>
+                         <input type="hidden" id="AccountSuppliedIDValue_CPF"  value="@(Model.accountSuplieds[2].AccountSuppliedIDValue)" />   
+                         <input type="hidden" id="AccountSuppliedID_CPF" value='@(Model.accountSuplieds[2].AccountSuppliedID)' />   
+                    <div class="data" id="cpf">
+                    </div>
+                    <br />
+                 </div>
+
+                    <div class="FormRow">
+                    <label>
+                        @Html.Term("PIS"):</label>
+                         <input type="hidden" id="AccountSuppliedIDValue_PIS"  value='@(Model.accountSuplieds[1].AccountSuppliedIDValue)' />   
+                         <input type="hidden" id="AccountSuppliedID_PIS" value='@(Model.accountSuplieds[1].AccountSuppliedID)' /> 
+                    <div  id="pis">
+                    </div>
+                    <br />
+                 </div>
+
+                  <div class="FormRow">
+                  <table><tr><td>
+                    <label for="txtRG">
+                        @Html.Term("RG"):</label>  
+                        <input type="hidden" id="AccountSuppliedID_RG" value='@(Model.accountSuplieds[0].AccountSuppliedID)' />                                             
+                    <div class="data">
+                        <input type="text" id="txtRG"  class="required"   style="width:100px"  />
+                    </div>  
+                  </td><td align="right">
+                   <label for="txtOrgExp">
+                        @Html.Term("Org. Exp"):</label>
+                    <div class="data">
+                        <input type="text" id="txtOrgExp"  value="@Model.OrgExp"  style="width:100px" />
+                        @*<input type="text" id="txtOrgExp"  class="required" value="@Model.OrgExp"  style="width:100px" />*@ @*CS.14JUL2016.Comentado quitar dato obligatorio*@
+                    </div>              
+                  </td></tr></table>
+                   </div>
+                   <br />
+
+                <div class="FormRow">
+                    <label>
+                        @Html.Term("RG issue date"):</label>
+                    <div class="data" id="issuedate">
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="FormRow">
+                    <label for="gender">
+                        @Html.Term("Gender"):</label>
+                    <div class="data">
+                        <input type="radio" id="idradio" value="1"  name="genders" />Male
+                        <input type="radio" id="idradio02" value="2"  name="genders" />Female
+                        <input type="radio" id="idradio03" value=""  name="genders" />Prefer not to say
+                    </div>
+                    <br />
+                </div>
+                <!--
+                 <div class="FormRow">
+                    <label for="gender">
+                        @Html.Term("Gender"):</label>
+                    <div class="data">
+                      <select id="gender" name="genders">                            
+                            <option value="@((int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Male)"
+									@Html.Raw(accountToEdit.GenderID == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Male ? "selected=\"selected\"" : "")>
+                                @Html.Term("Male")</option>
+                            <option value="@((int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Female)"
+									@Html.Raw(accountToEdit.GenderID == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Female ? "selected=\"selected\"" : "")>
+                                @Html.Term("Female")</option>
+                                <option value="" @Html.Raw(accountToEdit.GenderID == null ? "selected=\"selected\"" : "")>
+                                    @Html.Term("PrefernoToSay", "Prefer not to say")</option>
+                        </select>
+
+      @*                  <input type="radio" id="idradio" value="01"  name="genders" />Male
+                        <input type="radio" id="idradio02" value="02"  name="genders" />Female
+                        <input type="radio" id="idradio03" value=""  name="genders" />Prefer not to say*@
+
+                    </div>
+                    <br />
+                </div>
+                -->
+                <div class="FormRow">
+                    <label>
+                        @Html.Term("DateOfBirth", "DOB"):</label>                       
+                    <div class="data" id="dob">
+                    </div>
+                    <br />
+                </div>
+            
+                <div class="FormRow">
+                    <label for="nationality">
+                        @Html.Term("Nationality"):</label>
+                        <input type="hidden" id="AccountPropertyID_Nationality" value='@(Model.accountProperties[0].AccountPropertyID)' /> 
+                        <input type="hidden" id="Type_Nationality" value='@(Model.accountProperties[0].AccountPropertyTypeID)' />                         
+                        @{
+                            int IDNationality = Model.accountProperties[0].AccountPropertyValueID;
+                        }
+                    <div class="data">
+                        @Html.DropDownNationality(selectedNationalityID: IDNationality, htmlAttributes: new { id = "ddlNationality" })
+                    </div>
+                    <br />
+                </div>
+                   <div class="FormRow">
+                    <label for="maritalStatus">
+                        @Html.Term("Marital Status"):</label>
+                        <input type="hidden" id="AccountPropertyID_Marital" value='@(Model.accountProperties[1].AccountPropertyID)' /> 
+                        <input type="hidden" id="Type_Marital" value='@(Model.accountProperties[1].AccountPropertyTypeID)' />    
+                         @{
+                             int MaritalStatusID = Model.accountProperties[1].AccountPropertyValueID;
+                        }
+                    <div class="data">
+                          @Html.DropDownMaritalStatus(selectedMaritalStatusID: MaritalStatusID, htmlAttributes: new { id = "ddlMaritalStatus" })
+                    </div>
+                    <br />
+                </div>
+                <div class="FormRow">
+                    <label for="ocupation">
+                        @Html.Term("Ocupation"):</label>
+                         <input type="hidden" id="AccountPropertyID_Occupation" value='@(Model.accountProperties[2].AccountPropertyID)' /> 
+                        <input type="hidden" id="Type_Occupation" value='@(Model.accountProperties[2].AccountPropertyTypeID)' />  
+                         @{
+                             int OccupationID = Model.accountProperties[2].AccountPropertyValueID;
+                        }
+                    <div class="data">
+                        @Html.DropDownOccupation(selectedOccupationID: OccupationID, htmlAttributes: new { id = "ddlOccupation" })
+                    </div>
+                    <br />
+                </div>
+                <div class="FormRow"  style="display:none">
+                    <label for="defaultLanguageId">
+                        @Html.Term("DefaultLanguage", "Default Language"):</label>
+                    <div class="data">
+                        <select id="defaultLanguageId">
+                            @foreach (var language in TermTranslation.GetLanguages(CoreContext.CurrentLanguageID).Where(x => x.Active))
+                            {
+                                <option value="@language.LanguageID" @Html.Raw(accountToEdit.DefaultLanguageID == language.LanguageID ? "selected=\"selected\"" : "")>
+                                    @language.GetTerm()</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+                </div>
+                <div class="FormRow">
+                     @*//@01 20150724 BR-COM-002 G&S LIB: Se carga los datos de los Newsletters*@
+                    @{
+                        var campaigns = NetSteps.Data.Entities.Campaign.BrowseCampaignsForNewsletters();
+                        if (campaigns != null && campaigns.Any())
+                        {
+                        <!-- Newsletters GYS - LIB -->
+                        <div class="pad10 FormTable">
+                            <div class="FormRow">
+                                <label for="newsLetters">
+                                    @Html.Term("NewsLetters", "News Letters"):</label>
+                            </div>
+                        </div>
+                        <div>
+                            @NewsLettersHelper(campaigns, Model.Account.CampaignSubscribers.ToList())
+                        </div>
+                        }
+                    }
+                   
+                </div>
+            </div>
+        </td>
+        <td class="FormBlock splitCol">
+      
+            <h5 class="SectionTitle LocationData">              
+                @Html.Term("ContactInfo(s)", "CONTACT INFO(S)")</h5>
+                <div class="FormTable">
+                 @{
+                     var numericMain = 0;
+                     var numericMobile = 0;
+                     var numericComercial = 0;
+                     var numericOther = 0;
+
+                     var phoneMain = "";
+                     var phoneMobile = "";
+                     var phoneComercial = "";
+                     var phoneOther = ""; 
+                    }
+                     @foreach (AccountPhone phone in accountToEdit.AccountPhones)
+                     {
+                         if (phone.PhoneTypeID == 1)
+                         {
+                             numericMain = @phone.AccountPhoneID;
+                             phoneMain = @phone.PhoneNumber;
+                         }
+
+                         if (phone.PhoneTypeID == 2)
+                         {
+                             numericMobile = @phone.AccountPhoneID;
+                             phoneMobile = @phone.PhoneNumber;
+                         }
+
+                         if (phone.PhoneTypeID == 4)
+                         {
+                             numericComercial = @phone.AccountPhoneID;
+                             phoneComercial = @phone.PhoneNumber;
+                         }
+
+                         if (phone.PhoneTypeID == 5)
+                         {
+                             numericOther = @phone.AccountPhoneID;
+                             phoneOther = @phone.PhoneNumber;
+                         }
+                     }
+                            <input type="hidden" id="PhoneNumberMain" class="phoneId" value="@phoneMain" />
+                            <input type="hidden" id="PhoneNumberMobile" class="phoneId" value="@phoneMobile" />
+                            <input type="hidden" id="PhoneNumberComercial" class="phoneId" value="@phoneComercial" />
+                            <input type="hidden" id="PhoneNumberOther" class="phoneId" value="@phoneOther" />
+
+                            <input type="hidden" id="phoneIdMain" class="phoneId" value="@numericMain" /> 
+                            <input type="hidden" id="phoneIdMobile" class="phoneId" value="@numericMobile" />                       
+                            <input type="hidden" id="phoneIdComercial" class="phoneId" value="@numericComercial" />                                      
+                            <input type="hidden" id="phoneIdOther" class="phoneId" value="@numericOther" />   
+
+                     <div class="FormRow">
+                      <label for="phoneMain">
+                        @Html.Term("Phone Number (Main)"):</label>                       
+                        <div class="data" id="phoneNumberMain">
+                         </div>
+                     </div>
+                     <br />
+                     <div class="FormRow">
+                      <label for="phoneMain">
+                        @Html.Term("Phone Number (Mobile)"):</label>                       
+                        <div class="data" id="phoneNumberMobile">
+                         </div>
+                     </div>
+                     <br />
+                     <div class="FormRow">
+                      <label for="phoneMain">
+                        @Html.Term("Phone Number (Comercial)"):</label>                       
+                        <div class="data" id="phoneNumberComercial">
+                         </div>
+                     </div>
+                     <br />
+                     <div class="FormRow">
+                      <label for="phoneMain">
+                        @Html.Term("Phone Number (To Leave Menssages)"):</label>                       
+                        <div class="data" id="phoneNumberOther">
+                         </div>
+                     </div>  
+
+                <br />
+                 @*<div class="FormRow">
+                    <label for="txtSpeakWith">
+                        @Html.Term("Speak  with"):</label>
+                    <div class="data">
+                        <input type="text" id="txtSpeakWith" class="required"  value="@Model.SpeakWith" style="width: 250px;" />
+                    </div>                    
+                    </div>*@
+                    <br />
+                   <div class="FormRow">
+                    <label for="txtEmail">
+                        @Html.Term("Email"):</label>
+                    <div class="data">
+                        <input type="text" id="txtEmail" value="@accountToEdit.EmailAddress" class="required"
+								name="@Html.Term("EmailRequired", "Email is required")" style="width: 250px;" />
+                    </div>                    
+                    </div>
+                    <br />
+                  <div class="FormRow">
+                    <label for="txtEmailConfirmation">
+                        @Html.Term("Email Consfirmation"):</label>
+                    <div class="data">
+                        <input type="text" id="txtEmailConfirmation" value="@accountToEdit.EmailAddress" class="required"
+								 style="width: 250px;" />
+                    </div>                    
+                    </div>
+                     </div>
+             <br />
+            <h5 class="SectionTitle LocationData">
+                @Html.Term("MAIN ADDREES")</h5>
+             <div class="FormTable">                      
+              <div id="billingAddress">
+                    @Html.Partial("Address", new AddressModel()
+               {
+                   Address = mainAddress,
+                   LanguageID = CoreContext.CurrentLanguageID,
+                   ShowCountrySelect = false,
+                   ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                   Prefix = "PrimaryAddress",
+                   ExcludeFields = new List<string>() { "ProfileName", "Name" }
+               })
+               </div>    
+            </div>
+        </td>
+    </tr>
+</table>
+<div class="center PageSaveButtons">
+    <a href="javascript:void(0);" id="btnSaveAccountMainInfo" class="Button FormSubmit FR">
+        <span>
+            @Html.Term("Save")</span></a> <a href="@Href("~/Account")" class="Cancel FL"><span>
+                @Html.Term("Cancel")</span></a> <span class="ClearAll"></span>
+</div>
+@helper NewsLettersHelper(List<Campaign> allCampaigns, List<CampaignSubscriber> subscribedCampaigns)
+    {    
+        foreach (var newsletters in allCampaigns)
+        {
+            string isChecked = subscribedCampaigns.Any(x => x.CampaignID == newsletters.CampaignID) ? "checked=checked" : string.Empty;
+    <p>
+        <input type="checkbox" class="groupCheckBox" id="@newsletters.CampaignID" value="@newsletters.CampaignID"  @isChecked />
+        <label>@newsletters.Name</label>
+    </p>
+        }
+}

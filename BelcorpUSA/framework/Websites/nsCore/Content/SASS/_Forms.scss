@@ -1,0 +1,97 @@
+﻿@import "_Base";
+
+/*************
+Some general rules
+*************/
+input, textarea, select {
+	font-family: $font_family;
+	font-size:1.091em;
+}
+input.fullWidth, textarea.fullWidth {width:98%;}
+body.IE7 {
+	input.fullWidth, textarea.fullWidth {width:96%;}
+}
+input.disabled, input.readOnly {background-color:#fbfbfb;color:#c0c0c0 !important;cursor:default;border-style:dotted;}
+input.assignedTo {width:8.333em;}
+
+input.buttons {border:none;	background:transparent;	text-align:left;width:auto;cursor:pointer;color:#548525;}
+.StartSearch input.TextInput {padding:.455em;}
+input.TextInput, textarea.TextBox {border-color:#B2B2B2 #B7B7B8 #B7B7B8 #B2B2B2;border-style:solid;border-width:.1em;font-size:1em;}
+/**********
+Date Picker
+**********/
+input.DatePicker, input.TimePicker {border:.1em dotted #dfdfdf;background-color: #fff;color:#00639B;cursor:pointer;padding:.182em;width:5.909em;font-size:1em;}
+.ui-datepicker.ui-widget {font-size:.75em;}
+input.DatePick {width:auto;color:#555;}
+
+.AddressProfile {margin:0 0 .909em 1.818em;min-width:18.182em;}
+.AddressProfile input.Radio {margin-left:-1.667em;}
+.NextSection {clear:both;margin-top:.909em;}
+.MSearchText {float:left;}
+a.ModSearch {margin-left: -.909em;line-height:1em;}
+table.FormButtons {clear:both;margin:0 auto;width:20%;}
+/*****************************
+	Labels on top of fields
+*****************************/
+.FormStyle1 .Label {display:block;}
+.FormStyle1 p {clear:both;}
+/*****************************
+	Labels left of fields
+*****************************/
+.FormStyle2 .Label {float:left;margin-right:.909em;width:9.091em;}
+.FormStyle2 p {clear:both;}
+
+.qty {width:2.917em;}
+.PostalCode {width:5em;}
+.SubmitPage {clear:both;display:block;margin:1.818em 0;}
+.Enrollment.SubmitPage {padding-left:15.909em;}
+/****************************
+Landing Page Searches 
+****************************/
+.StartSearch .SearchBox .TextInput {border:.08em solid #575759;padding:.08em 2.143em .08em .143em;width:21.429em;height:2.143em;float:left;font-size:1.273em;}
+body.IE8, body.IE7 {
+	.StartSearch .SearchBox .TextInput {
+		line-height:2.143em;
+	}
+ }
+.StartSearch .SearchBox .SearchIcon {
+	display:block;
+	width:2.143em;
+	height:1.929em;
+	margin:.295em 0 0 -2.143em;
+	float:left;
+	overflow:hidden;
+	font-size:1.364em;
+}
+body.IE7 {
+	.StartSearch .SearchBox .SearchIcon {
+		float:none;
+
+		span.ie7Icon {
+			margin:0 0 0 .1em;
+			height:1em;
+			line-height:1em;
+			cursor:pointer;
+		}
+	}
+}
+.StartSearch .SearchFocus .SearchIcon {background-position:bottom left;}
+.StartSearch .SearchBox .SearchIcon span {display:block;margin-top:-5em;}
+
+#mainAddressControl, #mainAddressCountryContainer, .FauxTable, #addressControl, #countryContainer {display:table;border-collapse:separate;border-spacing:.1em;width:100%;}
+#mainAddressControl .FRow, #mainAddressCountryContainer .FRow, .FauxTable .FRow, .FormContainer .FRow {display:table-row;}
+#mainAddressControl .FLabel, #mainAddressCountryContainer .FLabel, .FauxTable .FLabel, .FormContainer .FLabel {display:table-cell;width:13.636em;min-width:13.636em;padding:.273em .182em .273em .364em;font-weight:bold;color:#58585A;}
+#mainAddressControl .FInput, #mainAddressCountryContainer .FInput, .FauxTable .FInput, .FormContainer .FInput {display:table-cell;width:auto;padding:.273em .182em .273em .364em;}
+body.IE7 {
+	#mainAddressControl .FLabel, #mainAddressCountryContainer .FLabel, .FauxTable .FLabel, .FormContainer .FLabel,
+	#mainAddressControl .FInput, #mainAddressCountryContainer .FInput, .FauxTable .FInput, .FormContainer .FInput {
+		display:inline-block;
+	}
+}
+#mainAddressControl .SecondZip, #mainAddressControl .SecondZip .FLabel, #mainAddressControl .SecondZip .FInput {display:block;float:right;}
+/*Fix for enrollment form field misaligning when unchecking the Use Main Address checkbox*/
+.FauxTable {
+	&.enrollBillingInfo, &.enrollShippingInfo {
+		display:block;
+	}
+}

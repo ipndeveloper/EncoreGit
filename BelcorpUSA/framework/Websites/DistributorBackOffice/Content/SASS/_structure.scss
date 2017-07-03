@@ -1,0 +1,1139 @@
+﻿/******************************************************************************************************************************************
+* QUICK REFERENCE GUIDE
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* Minor Resets                * Standard Tags          * Re-used Structural Rules       * Containers, Columns, etc     * Icons
+* Buttons/Stylized Links      * Logo                   * Site Search/User Info          * SiteNav                      * Tabber
+* Forms                       * Tables                 * Grid Filters, Pagination...    * Resources                    * Docked Info Card...
+* Widgets                     * Downline Tree          * Bundle Pack Creation           * Bookings Calendar Theme      * Tooltip plugin
+* Alerts                      * Modals                 * Page Headers                   * Dashboard                    * Contacts Tab
+* Performance Tab KPIs        * News Tab               * Documents Tab                  * Orders/Parties Tab           * My Account Tab
+* Communication Tab           * Support Tab            * Misc Rules
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* END QUICK REFERENCE GUIDE
+*******************************************************************************************************************************************/
+
+/************************************************************************************
+* Minor Resets 
+************************************************************************************/
+h1, h2, h3, h4, h5, h6, p, #FooterLinks ul, img, br, form {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	border: 0;
+}
+a {
+	outline: none;
+}
+
+/************************************************************************************
+* Standard Tags
+************************************************************************************/
+body {
+	margin: 0;
+	padding: 0;
+}
+
+/************************************************************************************
+* Re-used Structural Rules
+************************************************************************************/
+.splitCol   { width: 45%; }
+.splitCol30 { width: 25%; }
+.splitCol40 { width: 35%; }
+.splitCol60 { width: 60%; }
+.splitCol70 { width: 70%; }
+
+/************************************************************************************
+* Containers, Columns, etc
+************************************************************************************/
+#PageContain {
+	width: 87em;
+	margin: em(20) auto;
+}
+
+body.IE .DropDown {
+	padding: 0;
+}
+table.DashboardLayout {
+	display: table;
+	width: 100%;
+}
+.DashCol1 {
+	width: em(240);
+}
+#SecondaryRail {
+	width: em(240);
+	.actionItems {
+		width: em(240);
+	}
+}
+.DashCol1, #SecondaryRail {
+	padding-right: em(20);
+}
+.DashCol2b {
+	width: em(240);
+	padding-left: em(20);
+}
+
+.DashboardSettings .flatList {
+	margin-bottom: em(10);
+}
+.DashColumns {
+	overflow:hidden;
+	width:100%;
+
+	.contents {
+		#SecondaryRail {
+			float:left;
+			
+		}
+		#ContentColumn {
+			float:left;
+			width: 72%;
+		}
+	}
+}
+/************************************************************************************
+* Icons
+************************************************************************************/
+.UI-icon {
+	display: inline-block;
+	overflow: hidden;
+}
+.UI-icon-container {
+	display: block;
+}
+.actionItems {
+	margin-bottom: em(20);
+	.UI-icon {
+		float: left;
+	}
+}
+.notext {
+	width: em(16);
+	display: block;
+	text-indent: -9999px;
+}
+.Button {
+	display: inline-block;
+	overflow: hidden;
+	span {
+		display: block;
+	}
+}
+.icon-24 .eviteStatsLink {
+	line-height:0;
+}
+
+/************************************************************************************
+* Buttons/Stylized Links
+************************************************************************************/
+
+/************************************************************************************
+* Logo
+************************************************************************************/
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+.globalSearchBar {
+	position: absolute;
+	top: em(170);
+	margin: em(0 0 0 -123);
+	.Search input.globalsearch {
+		width: em(200, $input_font_size);
+		padding: em(5, $input_font_size);
+	}
+}
+
+/************************************************************************************
+* SiteNav
+************************************************************************************/
+
+/************************************************************************************
+* Tabber
+************************************************************************************/
+.Tabber {
+	height: em(40);
+	li {
+		line-height: em(39);
+		margin-bottom: em(1);
+		a {
+			display: block;
+			padding: em(0 10);
+		}
+		&.current a {
+			line-height: em(40);
+		}
+	}
+}
+.TabberBody {
+	padding: em(10 5 5);
+}
+
+/************************************************************************************
+* Forms
+************************************************************************************/
+#creditCardEntry  {
+	#billZipcode {
+		width: em(75);
+	}
+}
+
+.DatePicker, .TimePicker {
+	width: em(75);
+}
+.partyName {
+	width: 80%;
+}
+.fullWidth {
+	width: 96%;
+}
+.firstNameField {
+	width: em(85);
+}
+input {
+	&.quantity {
+		width: em(25);
+		text-align: center;
+	}
+	&.ccvInput {
+		width: em(30);
+	}
+
+}
+.productLookUp {
+	width: em(200);
+}
+textarea.ticketDescription {
+	height: em(200);
+}
+input {
+	&.myURLInput {
+		border-right: none;
+		padding-right: em(0);
+	}
+	&.myURLDomainDisplay {
+		width: auto;
+		padding-left: 0px;
+	}
+}
+
+/************************************************************************************
+* Tables
+************************************************************************************/
+table {
+	display: table;
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 1px;
+	border: none;
+}
+.DataGrid {
+	margin-bottom: em(20);
+	thead {
+		th {
+			padding: em(5 3);
+		}
+	}
+	td, th {
+		padding: em(3);
+		vertical-align: middle;
+	}
+	tbody tr {
+		td {
+			@include DottedLine;
+		}
+		&.GuestTotal td {
+			border: none;
+		}
+	}
+}
+.ClickableDataGrid tr, .cell-hovered {
+	cursor: pointer;
+}
+.IconCol {
+	width: em(24);
+	text-align: center;
+}
+.FauxTable {
+	display: table;
+	width: 100%;
+	margin-bottom: em(20);
+	.FRow {
+		display: table-row;
+		label, p {
+			display: table-cell;
+			padding: em(2 0);
+			vertical-align: top;
+			text-align: left;
+		}
+		label {
+			width: em(120);
+		}
+	}
+}
+tbody td.clickable {
+	cursor: pointer;
+}
+body.IE7 .SortColumn {
+	margin-top: -17px;
+}
+th .SortColumn {
+	*margin-top: -17px;
+}
+.FormRow br, .FRow br {
+	height: em(2);
+	line-height: em(2);
+}
+
+/************************************************************************************
+* Grid Filters, Pagination, etc
+************************************************************************************/
+.GridFilters {
+	padding: em(10);
+	border-bottom: none;
+	.FL {
+		margin: em(4 8 0 0);
+		label {
+			display: block;
+		}
+	}
+	.RunFilter {
+		margin-top: 1.5em;
+	}
+}
+.GridUtility {
+	padding: em(3);
+	margin: em(2 0 );
+	overflow:hidden;
+	.UI-icon-container span {
+		float: left;
+		display: block;
+	}
+	.pipe {
+		display: none;
+	}
+	a {
+		float:left;
+		margin-right: em(5);
+	}
+}
+.Pagination {
+	.previousPage {
+		float: left;
+	}
+	.nextPage {
+		float: right;
+		*margin-top: em(-28);
+	}
+}
+body.IE7 .nextPage {
+	margin-top: em(-28);
+ }
+.PageSize {
+	float: right;
+}
+.Pagination .pages {
+	display: inline-block;
+}
+
+/************************************************************************************
+* Resources
+************************************************************************************/
+#ResourcesThumbs {
+	padding: em(10);
+}
+.Resource {
+	float: left;
+	width: em(222);
+	height: em(200);
+	padding: em(2);
+	margin: em(0 0 20 10);
+}
+.Rwrapper {
+	display: block;
+	width: em(150);
+	height: em(150);
+	img {
+		width: em(150);
+		height: em(150);
+	}
+}
+.Rtitle {
+	display: block;
+}
+.Rdesc {
+	height: em(200);
+	width: em(135);
+	overflow: hidden;
+	margin-left: em(8);
+}
+.Resource .Updated {
+	position: absolute;
+	padding: em(1);
+	z-index: 1;
+	width: em(100);
+}
+.tooltip {
+	display: none;
+	padding: em(5);
+	width: auto;
+	z-index: 10000;
+}
+.Resource .FileType {
+	display: block;
+	width: 16px;
+	height: 16px;
+	float: right;
+}
+
+/************************************************************************************
+* Docked Info Card (Media Bundle, Tree View, Graphical Viewer)
+************************************************************************************/
+.infoCardWindow {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	border-bottom: none;
+	@include opacity(.8);
+}
+//MediaBundle Creation//
+#mediaBundleContainer {
+	width: 400px;
+}
+#mediaBundleList li .FL {
+	width:80%;
+}
+
+/************************************************************************************
+* Widgets
+************************************************************************************/
+.WidgetContainer {
+	margin-bottom: em(5);
+	.loadingWrap {
+		display: block;
+		text-align: center;
+		padding: em(10);
+	}
+}
+.Widget {
+	padding: em(0 1 1 1);
+	overflow: hidden;
+}
+.WidgetTitle {
+	height: em(30);
+	overflow: hidden;
+	margin: em(10 0 2 0);
+	.Txt {
+		padding-left: em(20);
+		line-height: em(30);
+		display: block;
+	}
+}
+.SavedReports {
+	span {
+		padding-left: em(20);
+		line-height: em(30);
+		display: block;
+	}
+	a span {
+		padding-left: 0;
+	}
+}
+.WidgetUtility select {
+	width: em(150, $input_font_size);
+}
+.WidgetControls {
+	margin-right: em(20);
+	display: none;
+}
+.WidgetWrap.Performance span {
+	&.FL, &.FR {
+		width: 50%;
+	}
+}
+#siteWidgets li {
+	padding: em(3);
+	line-height: em(20);
+	label {
+		float: left;
+	}
+	div {
+		float: right;
+	}
+	br {
+		display: block;
+		clear: both;
+	}
+}
+.WidgetWrap.Resources .WidgetBody {
+	text-align: center;
+}
+.ResourcePreview {
+	margin: 0 auto;
+	width: 168px;
+	text-align: left;
+	.ImgWrapper, .scrollable {
+		float: left;
+		width: 126px;
+		height: 126px;
+		overflow: hidden;
+	}
+}
+#documentScroller {
+  width: 126px;
+}
+.ResourcePreviewInfo #documentScroller {
+	width: 138px;
+}
+.ResourcePreview {
+	.ImgWrapper .items {
+		width: 1500em;
+		div {
+			float: left;
+		}
+	}
+	a.IconLink {
+		margin-top: 50px;
+	}
+	span {
+		display: block;
+	}
+}
+.WidgetWrap.Resources .Details {
+	clear: both;
+	padding: 0 20px 0 20px;
+}
+
+.ResourcePreviewInfo {
+	.ScrollerItemContainer {
+		position: relative;
+	}
+	margin: 0 auto;
+	width: 225px;
+	text-align: left;
+	.ImgWrapper {
+		float: left;
+		width: 135px;
+		height: 170px;
+		overflow: hidden;
+		.items {
+			width: 1500em;
+			div {
+				float: left;
+				width: 138px;
+			}
+		}
+	}
+	.UI-icon {
+		margin-top: 50px;
+	}
+	span, a {
+		display: block;
+	}
+	.scrollable img {
+		border: none;
+		border-radius: 0;
+		-moz-border-radius: 0;
+		-webkit-border-radius: 0;
+		background: transparent;
+		margin: 0;
+		width: auto;
+		height: auto;
+		max-width:100%;
+	}
+	.resourceInfoText {
+		display: block;
+		bottom: 0;
+		@include opacity(.9);
+		color: #fff;
+		height: 70px;
+		text-align: center;
+		a {
+			padding: 2px;
+			&.downloadNow {
+				bottom: 0;
+			}
+		}
+		span.ResourceName {
+			display: block;
+			width: 130px;
+			word-wrap: break-word;
+			padding: 2px;
+			overflow: hidden;
+			text-overflow: ellipses;
+			white-space: nowrap;
+			word-wrap: break-word;
+		}
+	}
+	.scrollable .thumbWrapper {
+		width: 100%;
+		height: 100px;
+		overflow: hidden;
+	}
+}
+.WidgetContainer {
+	.Account div.autoship {
+		margin: 0;
+		float: none;
+	}
+	.Performance li {
+		padding: 5px;
+	}
+}
+.ordersDrillLinks .UI-icon-container {
+	line-height: em(24);
+}
+body.IE7 .next {
+	margin: -27px 3px 0 0;
+}
+.WidgetContainer {
+	display: inline-block;
+	width: 100%;
+}
+
+/************************************************************************************
+* Downline Tree
+************************************************************************************/
+.TreeNodeDetails {
+	width: 500px;
+	.GridUtility {
+		margin-bottom: 10px;
+	}
+}
+.FlatTree {
+	margin: 0 10px 10px 10px;
+	padding: 10px 10px 0 10px;
+}
+#treeViewNodeDetails li {
+	padding: 5px;
+	label {
+		float: left;
+		width: 220px;
+	}
+	div {
+		float: left;
+		display: block;
+		word-wrap: break-word;
+		width: 250px;
+		overflow: hidden;
+	}
+}
+.downlineColorKeys {
+	.TabColorKey li {
+		height: 15px;
+		line-height: 15px;
+		margin-bottom: 5px;
+		padding-left: 20px;
+		overflow: hidden;
+	}
+}
+
+/************************************************************************************
+* Bundle Pack Creation
+************************************************************************************/
+#BundlePackItems {
+	td {
+		padding: em(0 20 20 0);
+	}
+	h2 {
+		font-size: em(14);
+		line-height: em(26, 14);
+		margin: em(0 0 4, 14);
+		padding: em(0 0 4, 14);
+		&.UI-Warning span, &.UI-Complete span {
+			display: inline-block;
+		}
+	}
+	.removeProduct span {
+		a {
+			margin: 0 0 -6px 0;
+		}
+		padding-bottom: 8px;
+		margin-bottom: 5px;
+	}
+}
+.BundleOption {
+	height: 34px;
+	line-height: 32px;
+	.icon-bundle-option {
+		width: 134px;
+		height: 34px;
+		text-indent: 11px;
+	}
+	.optionText {
+		line-height: 34px;
+		font-size: 12px;
+	}
+}
+.bundlePackItemList {
+	padding: 10px 0 0;
+}
+
+/************************************************************************************
+* Bookings Calendar Theme
+************************************************************************************/
+
+/************************************************************************************
+* Tooltip plugin
+************************************************************************************/
+.has-tooltip {
+	.tooltip {
+		position: absolute;
+		display: none;
+	}
+	&:hover .tooltip {
+		display: block;
+	}
+}
+
+a.qmark_trigger {
+position:relative;
+right: em(-10)
+}
+
+.actionItems .icon-help:before {
+	font-size: em(21);
+}
+
+.qmark_close{
+position: absolute;
+right:em(-8);
+top: em(-6);
+pointer-events: auto;
+}
+
+.qmark {
+padding: em(20);
+width: em(170);
+margin-left: em(-95);
+left: 50%;
+text-align: center;
+text-indent: em(0);
+position: absolute;
+pointer-events: none;
+opacity: 0;
+box-shadow: em(1 1 2) rgba(0,0,0,0.1);
+border: em(3) solid #bbb;
+font-weight: normal;
+}
+
+.qmark::after {
+content: '';
+position: absolute;
+left: 50%;
+margin-left: em(-10);
+bottom: em(-9);
+width: 0;
+height: 0;
+border-left: em(0) solid transparent;
+border-right: em(10) solid transparent;
+border-top: em(8) solid #bbb;
+}
+
+
+
+/************************************************************************************
+* Alerts
+************************************************************************************/
+
+/************************************************************************************
+* Modals
+************************************************************************************/
+//Communication Email Template Selection Modal//
+#templates {
+	width:670px;
+}
+//Address Verification Modal//
+#UnverifiedAddress {
+	.suggestedAddressContainer:hover {
+		cursor: pointer;
+	}
+	.suggestedAddressList {
+		height: 335px;
+		overflow: auto;
+	}
+	.icon-label {
+		display: inline-block;
+	}
+	.FormContainer .FLabel {
+		float: left;
+		width: 9.2em;
+	}
+}
+
+/************************************************************************************
+* Page Headers
+************************************************************************************/
+.PageTitle {
+	h1 {
+		display: inline;
+		width: auto;
+	}
+}
+.Crumbs {
+	margin: em(0 0 15 0);
+}
+
+/************************************************************************************
+* Dashboard/Home
+************************************************************************************/
+.welcomeFlag {
+	text-align:center;
+	margin-bottom: em(15);
+	.inlineNav {
+		padding: em(10 0 15);
+		li {
+			width: 46%;
+			margin: 1%;
+		}
+	}
+	.UI-icon-container {
+		line-height:1em;
+	}
+	.UI-icon {
+		float:none;
+	}
+	.iconText {
+		display: block;
+		line-height: 1.25em;
+	}
+}
+//Breaking News Ticker//
+#BreakingNews {
+	height: em(50);
+	padding: em(10);
+	margin-bottom: em(10);
+}
+//Evite Stats//
+#EviteStats {
+	width: em(400);
+	.resendToggle {
+		line-height:em(30);
+	}
+}
+#resendInviteInput {
+	width: em(285, $input_font_size);
+	padding: em(7, $input_font_size);
+}
+.partyStatsList {
+	.onlineOrdersBreakdown span {
+		display: inline-block;
+	}
+	.custName {
+		width: em(150);
+	}
+	.custOrderSum {
+		width: em(75);
+	}
+}
+
+/************************************************************************************
+* Contacts Tab
+************************************************************************************/
+.ContactInfoColumn {
+	width:400px;
+	li {
+		padding: em(5);
+		label {
+			float: left;
+			width: em(100);
+			padding-right: em(5);
+		}
+		div {
+			float: left;
+			width: em(150);
+		}
+		br {
+			clear: both;
+		}
+	}
+}
+table.ContactActivity {
+	padding: em(0 10);
+}
+td {
+	&.ContactActivityColumn {
+		width: 60%;
+	}
+	&.ContactInfoColumn {
+		width: 40%;
+		padding-right: em(20);
+	}
+}
+
+/************************************************************************************
+* Performance Tab
+************************************************************************************/
+.PerfKPI.advancedTitleProgress {
+	width: 100%;
+}
+
+/************************************************************************************
+* News Tab
+************************************************************************************/
+#News .news {
+	padding: em(10);
+	.newsInfo {
+		width: 70%;
+		a {
+			display: block;
+		}
+	}
+	span {
+		display: block;
+	}
+	.newsInfo {
+		.title {
+			font-size: em(14);
+			padding: em(5 5 2 5, 14);
+		}
+		.caption {
+			padding: em(0 5 10 5);
+		}
+	}
+}
+
+/************************************************************************************
+* Documents Tab
+************************************************************************************/
+
+/************************************************************************************
+* Orders/Parties
+************************************************************************************/
+.CustomerCart .DataGrid {
+	table-layout: fixed;
+	.first-child {
+		width: em(20) !important;
+	}
+}
+.customerCartHeader {
+	position: relative;
+	*{zoom: 1;}
+}
+.Customer .GridUtility {
+	overflow:hidden;
+}
+.customerCartHeader {
+	.guestName span {
+		display: block;
+		float: left;
+	}
+}
+.TabOrdersOverview a {
+	display: block;
+	max-width: em(100);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+th#OrderNumber {
+	width: em(110);
+}
+
+/************************************************************************************
+* My Account Tab
+************************************************************************************/
+.acctSnapShot .infoList {
+	li {
+		padding: em(5 0);
+		ul li {
+			border: none;
+		}
+	}
+	label.FL {
+		width: 20%;
+	}
+	.data {
+		width: 70%;
+		word-wrap: break-word;
+		overflow: hidden;
+	}
+	li li {
+		padding: em(2);
+		margin: 0;
+	}
+}
+.disbursementOptions {
+	label {
+		cursor: pointer;
+		padding: em(11 10 11 5);
+		line-height: em(34);
+	}
+	li {
+		margin: em(10 5 10 0);
+	}
+}
+.disbursementContent {
+	h3 {
+		margin: em(0 3);
+	}
+	#txtPropayAccount {
+		width: em(220);
+	}
+}
+
+/************************************************************************************
+* Communication Tab
+************************************************************************************/
+.emailToFullContainer {
+	padding: em(1);
+}
+.emailToContainer {
+	float: left;
+	margin-bottom: em(5);
+}
+.emailEntry {
+	float: left;
+	padding: em(3);
+	margin-right: em(5);
+	span {
+		display: inline-block;
+		margin-left: em(5);
+		margin-right: em(5);
+		padding-top: em(2);
+		vertical-align: top;
+	}
+	img {
+		margin-right: em(5);
+		vertical-align: middle;
+		cursor: pointer;
+	}
+}
+.emailToTextBox {
+	float: left;
+}
+textarea.composeEmail {
+	height: em(200);
+}
+input#archiveLibrarySearch {
+	width:50%;
+}
+#uxAddresses {
+	max-height: em(200);
+	overflow: auto;
+}
+//Campaigns Scroller//
+#emailsContainer .EditContainer {
+	overflow: hidden;
+	width: 400px;
+}
+.CampaignEmailSlider {
+	border-top: none;
+	margin-bottom: 5px;
+}
+//Newsletter Management & Stats//
+#SelectedCampaignID {
+	margin-bottom: em(5);
+}
+.newsLetterStats {
+	border-top: none;
+}
+.newsLetterCountDown {
+	font-size: em(16);
+	margin-bottom: em(10, 16);
+}
+.contentOption {
+	width: 140px;
+}
+.personalizedContent {
+	height: 150px;
+}
+.newsletterImgWrap {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	margin: 5px 0 5px 0;
+	img {
+		width: 100px;
+		max-width: 120px;
+	}
+}
+
+/************************************************************************************
+* Support Tab
+************************************************************************************/
+.AcctNote {
+	padding:em(5);
+}
+
+/**************
+Performance Tab
+**************/
+
+.PerfKPI.advancedTitleProgress {
+  width: 100%; }
+
+/*************
+Tooltip plugin
+*************/
+
+.has-tooltip {
+  .tooltip {
+    position: absolute;
+    display: none; }
+  &:hover .tooltip {
+    display: block; } }
+
+a.qmark_trigger {
+	position:relative;
+	right: em(-10)
+}
+
+.actionItems .icon-help:before {
+	font-size: em(21);
+}
+
+.qmark_close{
+	position: absolute;
+	right:em(-8);
+	top: em(-6);
+	pointer-events: auto;
+}
+
+.qmark {
+	padding: em(20);
+	width: em(170);
+	margin-left: em(-95);
+	left: 50%;
+	text-align: center;
+	text-indent: em(0);
+	position: absolute;
+	pointer-events: none;
+	opacity: 0;
+	box-shadow: em(1 1 2) rgba(0,0,0,0.1);
+	border: em(3) solid #bbb;
+	font-weight: normal;
+}
+
+.qmark::after {
+	content: '';
+	position: absolute;
+	left: 50%;
+	margin-left: em(-10);
+	bottom: em(-9);
+	width: 0;
+	height: 0;
+	border-left: em(0) solid transparent;
+	border-right: em(10) solid transparent;
+	border-top: em(8) solid #bbb;
+}
+/************************************************************************************
+* Misc Rules
+************************************************************************************/
+.OrderItems .DynamicKit td a {
+	float: left;
+	line-height: em($IconSize);
+	margin-right: em(3);
+}
+.GuestControls a {
+	margin-left: em(5);
+}
+.errorMessageBubble {
+	margin-left: 13px;
+	margin-top: 2px;
+}
+
+
+
+	

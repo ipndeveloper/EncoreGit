@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Framework CONFIG-->
+<Enrollment>
+	<AccountTypes>
+		<AccountType AccountTypeID="3" Enabled="true">
+			<Steps>
+                <Step Name="Account Info" UseControl="AccountInfo" Skippable="false" />
+                <Step Name="Confirmation" UseControl="Confirmation" Skippable="false" />
+            </Steps>
+		</AccountType>
+		<AccountType AccountTypeID="2" Enabled="true">
+			<Steps>
+                <Step Name="Account Info" UseControl="AccountInfo" Skippable="false" />
+                <Step Name="Autoship" UseControl="Autoship" Skippable="true" />
+                <Step Name="Confirmation" UseControl="Confirmation" Skippable="false" />
+            </Steps>
+		</AccountType>
+		<AccountType AccountTypeID="1" Enabled="true">
+			<Steps>
+                <Step Name="Account Info" UseControl="AccountInfo" Skippable="false" />
+				<Step Name="Initial Order" UseControl="InitialOrder" Skippable="true" />
+				<Step Name="Autoship" UseControl="Autoship" Skippable="true" />
+				<Step Name="Disbursement Profiles" UseControl="DisbursementProfiles" Skippable="true" />
+				<Step Name="Site Subscriptions" UseControl="SiteSubscriptions" Skippable="true" />
+                <Step Name="Confirmation" UseControl="Confirmation" Skippable="false" />
+            </Steps>
+		</AccountType>
+	</AccountTypes>
+	<Controls>
+		<Control Name="SiteSubscriptions">
+			<Properties>
+				<Property Name="BaseSiteID">9218</Property>
+				<Property Name="AutoshipSchedules">
+					<AutoshipSchedule ID="3" />
+				</Property>
+			</Properties>
+		</Control>
+
+		<Control Name="Autoship">
+			<Properties>
+				<Property Name="PreBuiltAutoships">
+					<Autoship Name="Pre-built Autoship 1" AutoshipScheduleID="1">
+						<Description><![CDATA[This is an awesome autoship that distributors sign up for]]></Description>
+						<Products>
+							<Product SKU="ns1004" Quantity="1" />
+						</Products>
+					</Autoship>
+					<Autoship Name="Pre-built Autoship 2" AutoshipScheduleID="2">
+						<Description><![CDATA[This is an awesome autoship that preferred customers sign up for]]></Description>
+						<Products>
+							<Product SKU="ns1003" Quantity="1" />
+						</Products>
+					</Autoship>
+				</Property>
+				<Property Name="MinimumCV">0</Property>
+			</Properties>
+		</Control>
+
+		<Control Name="InitialOrder">
+			<Properties>
+				<Property Name="OrderType">Fixed</Property>
+				<Property Name="Products">
+					<Products>
+						<Product SKU="ns1004" Quantity="1" />
+					</Products>
+				</Property>
+				<Property Name="MinimumCV">0</Property>
+			</Properties>
+		</Control>
+
+		<!--This is to test variable orders - DES-->
+		<!--<Control Name="InitialOrder">
+			<Properties>
+				<Property Name="OrderType">Variable</Property>
+				<Property Name="FixedProducts"></Property>
+				<Property Name="MinimumCV">50</Property>
+			</Properties>
+		</Control>-->
+
+		<Control Name="DisbursementProfiles">
+			<Properties> 
+				<Property Name="EnableCheckProfile">true</Property>
+				<Property Name="EnableEFTProfile">true</Property>
+			</Properties>
+		</Control>
+	</Controls>
+</Enrollment>

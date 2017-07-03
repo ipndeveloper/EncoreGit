@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <AssemblyInfo>$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs</AssemblyInfo>
+        <MajorVersion Condition=" '$(MajorVersion)' == '' ">2</MajorVersion>
+        <MinorVersion Condition=" '$(MinorVersion)' == '' ">1</MinorVersion>
+        <TimeStampVersion Condition=" '$(TimeStampVersion)' == '' ">1</TimeStampVersion>
+        <SolutionPathFromProjectPath Condition=" '$(SolutionPathFromProjectPath)' == '' ">..\..\</SolutionPathFromProjectPath>
+        <PackageDestinationPath Condition=" '$(PackageDestinationPath)' == '' ">C:\</PackageDestinationPath>
+        <BranchName Condition=" '$(BranchName)' == '' ">Sprint9</BranchName>
+        <ProductName Condition=" '$(ProductName)' == '' ">ProductName</ProductName>
+        <TFExePath Condition=" '$(TFExePath)' == ''">C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE</TFExePath>
+        <TFExeUsername Condition=" '$(TFExeUsername)' == ''"></TFExeUsername>
+        <TFExePassword Condition=" '$(TFExePassword)' == ''"></TFExePassword>
+        <CoreDatabaseToken Condition=" '$(CoreDatabaseToken)' == '' "></CoreDatabaseToken>
+        <CommissionsDatabaseToken Condition=" '$(CommissionsDatabaseToken)' == '' "></CommissionsDatabaseToken>
+        <MailDatabaseToken Condition=" '$(MailDatabaseToken)' == '' "></MailDatabaseToken>
+        <TargetPackage Condition=" '$(TargetPackage)' == '' ">Debug</TargetPackage>
+        <NugetKey Condition=" '$(NugetKey)' == '' "></NugetKey>
+        <NugetExePath Condition=" '$(NugetExePath)' == '' ">c:\\utils\nuget</NugetExePath>
+        <NugetProperties Condition=" '$(NugetProperties)' == '' "></NugetProperties>
+        <RunTfsVersioning Condition=" '$(RunTfsVersioning)' == '' ">False</RunTfsVersioning>
+        <RunSvnVersioning Condition=" '$(RunSvnVersioning)' == '' ">False</RunSvnVersioning>
+        <PackageName Condition=" '$(PackageName)' == '' ">$(AssemblyName)</PackageName>
+        <PreReleaseString Condition=" '$(PreReleaseString)' == '' "></PreReleaseString>
+    </PropertyGroup>
+    <!-- For SVN tasks -->
+    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition=" '$(RunSvnVersioning)' == 'True' " />
+    <!-- For getting local change set id -->
+    <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)NetSteps.Tools.MSBuild.Tasks.dll" TaskName="NetSteps.Tools.MSBuild.Tasks.Tfs.GetLocalTfsChangeSet" />
+    <!-- For reading items -->
+    <UsingTask AssemblyFile="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MsBuildHelper" />
+    <!-- For checking out files from tfs -->
+    <UsingTask AssemblyFile="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.VisualStudio.TfsSource" />
+    <!-- For writing to AssemblyInfo.cs -->
+    <UsingTask AssemblyFile="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.FileSystem.File" />
+    <!-- for getting assembly info after build -->
+    <UsingTask AssemblyFile="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.Assembly" />
+    <Target Name="TfsVersioning" BeforeTargets="BeforeBuild" Condition=" '$(RunTfsVersioning)' == 'True' ">
+        <!-- Filter Items based on Name -->
+        <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="@(Reference)" RegexPattern="^NetSteps.Encore.MSBuild.Tasks">
+            <Output TaskParameter="OutputItems" ItemName="filtered" />
+        </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+        <Message Text="Filtered Items: %(filtered.HintPath)" />
+        <!-- Should only be one item, put it in a property. -->
+        <CreateProperty Value="%(filtered.HintPath)">
+            <Output TaskParameter="Value" PropertyName="NetStepsTasksPath" />
+        </CreateProperty>
+        <Message Text="NetStepsTasksPath: $(NetStepsTasksPath)" />
+        <Message Text="NetStepsTasksPath: $(Configuration)" />
+        <Message Text="Full path to DLL:$(MSBuildProjectDirectory)\Bin\NetSteps.Encore.MSBuild.Tasks.dll" />
+        <!-- Property holds value of where the DLL is stored, copy it to output folder -->
+        <Copy SkipUnchangedFiles="True" SourceFiles="$(NetStepsTasksPath)" DestinationFolder="$(MSBuildProjectDirectory)\Bin\" />
+        <!-- Get Tfs Change Set Id -->
+        <Message Text="$(TFExePath)" />
+        <NetSteps.Tools.MSBuild.Tasks.Tfs.GetLocalTfsChangeSet TargetDirectory="$(MSBuildProjectDirectory)" ToolDirectory="$(TFExePath)" Username="$(TFExeUsername)" Password="$(TFExePassword)">
+            <Output PropertyName="TfsChangeSetId" TaskParameter="ChangeSetId" />
+        </NetSteps.Tools.MSBuild.Tasks.Tfs.GetLocalTfsChangeSet>
+        <Message Text="Tfs ChangeSet: $(TfsChangeSetId)" />
+        <Message Text="Extensions Path: $(MSBuildExtensionsPath)" />
+        <!-- Read the current AssemblyInfo.cs to decide what to do. -->
+        <CreateProperty Value="$([System.DateTime]::Now.Ticks)">
+            <Output TaskParameter="Value" PropertyName="Now" />
+        </CreateProperty>
+        <CreateProperty Value="$([System.DateTime]::Today.Ticks)">
+            <Output TaskParameter="Value" PropertyName="Today" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Subtract($(Now),$(Today)))">
+            <Output TaskParameter="Value" PropertyName="Ticks" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Divide($(Ticks),10000000))">
+            <Output TaskParameter="Value" PropertyName="Seconds" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Divide(65535,86400))">
+            <Output TaskParameter="Value" PropertyName="Num" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Multiply($(Seconds), $(Num)))">
+            <Output TaskParameter="Value" PropertyName="TimeStamp" />
+        </CreateProperty>
+        <CreateProperty Value="$([System.Math]::Round($(TimeStamp)))">
+            <Output TaskParameter="Value" PropertyName="BuildNumber" />
+        </CreateProperty>
+        <!-- Update AssemblyInfo.cs, to increment the build -->
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyFileVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyInformationalVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyFileVersion(&quot;$(MajorVersion).$(MinorVersion).$(TfsChangeSetId).$(BuildNumber)&quot;)]" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyVersion(&quot;$(MajorVersion).$(MinorVersion).$(TfsChangeSetId).$(BuildNumber)&quot;)]" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyInformationalVersion(&quot;$(MajorVersion).$(MinorVersion).$(TfsChangeSetId)$(PreReleaseString)&quot;)]" />
+    </Target>
+    <Target Name="SvnVersioning" BeforeTargets="BeforeBuild" Condition=" '$(RunSvnVersioning)' == 'True' ">
+        <!-- Get SVN Revision -->
+        <SvnInfo RepositoryPath="$(MSBuildProjectFullPath)">
+            <Output TaskParameter="Revision" PropertyName="SVNRevision" />
+        </SvnInfo>
+        <Message Text="SVN Revision: $(SVNRevision)" />
+        <Message Text="Extensions Path: $(MSBuildExtensionsPath)" />
+        <!-- Create time stamp. -->
+        <CreateProperty Value="$([System.DateTime]::Now.Ticks)">
+            <Output TaskParameter="Value" PropertyName="Now" />
+        </CreateProperty>
+        <CreateProperty Value="$([System.DateTime]::Today.Ticks)">
+            <Output TaskParameter="Value" PropertyName="Today" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Subtract($(Now),$(Today)))">
+            <Output TaskParameter="Value" PropertyName="Ticks" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Divide($(Ticks),10000000))">
+            <Output TaskParameter="Value" PropertyName="Seconds" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Divide(65535,86400))">
+            <Output TaskParameter="Value" PropertyName="Num" />
+        </CreateProperty>
+        <CreateProperty Value="$([MSBuild]::Multiply($(Seconds), $(Num)))">
+            <Output TaskParameter="Value" PropertyName="TimeStamp" />
+        </CreateProperty>
+        <CreateProperty Value="$([System.Math]::Round($(TimeStamp)))">
+            <Output TaskParameter="Value" PropertyName="BuildNumber" />
+        </CreateProperty>
+        <!-- Update AssemblyInfo.cs, to increment the build -->
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyFileVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyInformationalVersion" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyFileVersion(&quot;$(MajorVersion).$(MinorVersion).$(SVNRevision).$(BuildNumber)&quot;)]" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyVersion(&quot;$(MajorVersion).$(MinorVersion).$(SVNRevision).$(BuildNumber)&quot;)]" />
+        <MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfo)" Lines="[assembly: AssemblyInformationalVersion(&quot;$(MajorVersion).$(MinorVersion).$(TfsChangeSetId)$(PreReleaseString)&quot;)]" />
+    </Target>
+    <Target Name="PackageForNuget">
+        <Exec Command="$(NugetExePath) pack $(MSBuildProjectFullPath) -Properties &quot;Configuration=$(Configuration);$(NugetProperties)&quot;" />
+    </Target>
+    <Target Name="PublishToNetStepsNuget">
+        <!-- Get the version number of the main FV assembly to insert into the nuspec files -->
+        <MSBuild.ExtensionPack.Framework.Assembly TaskAction="GetInfo" NetAssembly="$(MSBuildProjectDirectory)\Bin\$(Configuration)\$(AssemblyName).dll">
+            <Output TaskParameter="OutputItems" ItemName="Info" />
+        </MSBuild.ExtensionPack.Framework.Assembly>
+        <Message Text="AssemblyVersion: %(Info.AssemblyVersion)" />
+        <Message Text="FileVersion: %(Info.FileVersion)" />
+        <Message Text="AssemblyInformationalVersion: %(Info.AssemblyInformationalVersion)" />
+        <!-- Publish the package to both nuget servers-->
+        <Exec Command="$(NugetExePath) push $(PackageName).%(Info.AssemblyInformationalVersion).nupkg -s http://nuget1.netsteps.com/ $(NugetKey)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="$(NugetExePath) push $(PackageName).%(Info.AssemblyInformationalVersion).nupkg -s http://nuget2.netsteps.com/ $(NugetKey)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    </Target>
+</Project>

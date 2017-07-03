@@ -1,0 +1,562 @@
+﻿@using System.Configuration
+@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = Html.Term("Cart");
+}
+@section head{
+    <script type="text/javascript" src='@Href("~/Scripts/Shared/PromotionFunctions/Utility.js")'></script>
+    <script type="text/javascript">
+        $(function () {
+            var lastProduct,
+                static = true,
+                originalTop = $('#Follow').position().top,
+                width = $('#Follow').width(),
+                 callback = show.makeCallback('@Href("~/Orders/Fundraisers/HasMetTotal")');
+
+            callback();
+
+            $(window).scroll(function () {
+                if (static && originalTop < $(window).scrollTop()) {
+                    static = false;
+                    $('#Follow').css({ position: 'fixed', top: '0px', width: width + 'px' });
+                } else if (!static && originalTop > $(window).scrollTop()) {
+                    static = true;
+                    $('#Follow').css({ position: 'static', top: '' });
+                }
+            });
+
+
+
+            function toggleEmptyCart(orderCustomerId) {
+                if ($('#orderCustomer' + orderCustomerId + ' tbody.OrderItems tr').length == 0) {
+                    $('#orderCustomer' + orderCustomerId + ' tbody tr.EmptyCart').show();
+                } else {
+                    $('#orderCustomer' + orderCustomerId + ' tbody tr.EmptyCart').hide();
+                }
+            }
+
+            function updateCartAndTotals(orderCustomerId, results) {
+                if (results.orderItems) {
+                    var orderItem, i;
+                    var itemsHtml = '';
+
+                    for (i = 0; i < results.orderItems.length; i++) {
+                        //                        orderItem = $('#oi' + results.orderItems[i].orderItemId);
+                        //                        if (orderItem.length) {
+                        //                            orderItem.replaceWith(results.orderItems[i].orderItem);
+                        //                        } else {
+                        //                            $('#orderCustomer' + orderCustomerId + ' tbody.OrderItems').append(results.orderItems[i].orderItem);
+                        //                        }
+                        itemsHtml = itemsHtml + results.orderItems[i].orderItem;
+                    }
+                    $('#orderCustomer' + orderCustomerId + ' tbody.OrderItems').html(itemsHtml).find('.quantity').numeric({ allowNegative: false, allowDecimal: false });
+                }
+
+                if (results.showOutOfStockMessage) {
+                    $('#outOfStockMessage').show();
+                    $('#outOfStockProducts').append('<li>' + lastProduct + '</li>');
+                }
+                callback();
+                // refresh the totals
+                updateTotals(orderCustomerId, results);
+                $('input.quantity').numeric();
+            }
+
+            function updateTotals(orderCustomerId, results) {
+                updateLabels(orderCustomerId);
+                $.each(['subtotal', 'commissionableTotal', 'taxTotal', 'shippingAndHandlingTotal', 'grandTotal'], function (i, item) {
+                    $('.orderCustomerTotals' + orderCustomerId + ' .' + item).text(results.totals[item]);
+                });
+
+                $.each(['partyHostCredit', 'partySubtotal', 'partyShipping', 'partyHandling', 'partyTax', 'partyCommissionableTotal', 'partyGrandTotal', 'partyShippingAndHandling', 'directShippingAndHandling'], function (i, item) {
+                    $('#' + item).text(results.totals[item]);
+                });
+            }
+
+            function updateLabels(orderCustomerId) {
+                $('#orderCustomer' + orderCustomerId).parent().find('table').each(function () {
+                    var $table = $(this),
+                        $topRow = $table.find('tr:eq(0)'),
+                        $secondRow = $table.find('tr:eq(1)'),
+                        $dataBody,
+                        arr = [];
+                    if ($secondRow.is(':visible')) {
+                        $dataBody = $secondRow.parent();
+                    }
+                    else {
+                        $dataBody = $table.find('tr:eq(2)').parent();
+                    }
+                    $topRow.find('th').each(function () {
+                        arr.push($(this).html().trim());
+                    });
+                    $dataBody.find('tr').each(function (i, row) {
+                        $(row).children('td').each(function (j, cell) {
+                            $(cell).attr({ 'data-label': arr[j] });
+                        });
+                    });
+                });
+            }
+
+            $('input.quantity').numeric();
+            $('input.productLookUp').jsonSuggest('@Href("~/Orders/Fundraisers/SearchProducts")', {
+                minCharacters: 3,
+                ajaxResults: true,
+                onSelect: function (item) {
+                    var p = $(this).parent();
+                    p.find('input.productId').val(item.id);
+                    p.find('input.quantity').val('1');
+                    if (item.isDynamicKit) {
+                        p.find('input.quantity').attr("disabled", "disabled");
+                    } else {
+                        p.find('input.quantity').removeAttr("disabled");
+                    };
+                    p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+                }
+            });
+
+            $('a.collapseCart').click(function () {
+                var customerId = $('.orderCustomerId', this).val(), t = $(this);
+                if (!$('span.icon-arrowNext,span.icon-arrowNext-hover', this).length) {
+                    $('span.icon-arrowDown,span.icon-arrowDown-hover', this).addClass('icon-arrowNext');
+                    $('#orderCustomerBody' + customerId).slideUp(function () { t.parent().addClass('collapsedCart'); });
+                } else {
+                    $('span.icon-arrowDown,span.icon-arrowDown-hover', this).removeClass('icon-arrowNext icon-arrowNext-hover');
+                    t.parent().removeClass('collapsedCart');
+                    $('#orderCustomerBody' + customerId).slideDown();
+                }
+            });
+
+            $('a.openCustomer').click(function () {
+                var customerId = $('.orderCustomerId', this).val(), header = $('#orderCustomerHeader' + customerId);
+                if ($('span.icon-arrowNext,span.icon-arrowNext-hover', header).length) {
+                    header.find('span.icon-arrowDown,span.icon-arrowDown-hover').removeClass('icon-arrowNext icon-arrowNext-hover');
+                    $('#orderCustomerBody' + customerId).slideDown();
+                }
+            });
+
+            $('#collapseAll').click(function () {
+                collapseAllCarts($(this));
+            });
+            var viewportWidth = $(window).width();
+            if (viewportWidth < 640) {
+                collapseAllCarts($('#collapseAll'));
+            }
+            function collapseAllCarts($e) {
+                var collapse = $e.hasClass('collapseAll');
+                $('a.collapseCart').filter(function () { var l = $('span.icon-arrowNext,span.icon-arrowNext-hover', this).length; return collapse ? !l : l; }).click();
+                $e.toggleClass('collapseAll expandAll').text($e.hasClass('collapseAll') ? '@Html.Term("CollapseAll", "Collapse All")' : '@Html.Term("ExpandAll", "Expand All")');
+            }
+
+            $('a.addToCart').click(function () {
+                var p = $(this).parent(), t = $(this);
+                p.find('#item').css("border", "");
+                p.find('#quantity').css("border", "");
+
+                var prodId = p.find('input.productId').val();
+                var quantity = p.find('input.quantity').val();
+
+                if (prodId !== "" && quantity !== "") {
+
+                    if (p.find('input.needsBackOrderConfirmation').val() == "true") {
+                        if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                            return false;
+                        }
+                    }
+
+                    var btns = $('a.addToCart');
+                    showLoading(btns);
+
+                    $.post('@Href("~/Orders/Fundraisers/AddToCart")', {
+                        productId: prodId,
+                        quantity: quantity,
+                        orderCustomerId: p.find('input.orderCustomerId').val()
+                    }, function (response) {
+                        hideLoading(btns);
+                        if (response.result) {
+                            lastProduct = p.find('.productLookUp').val();
+                            updateCartAndTotals(p.find('input.orderCustomerId').val(), response);
+                            p.find('input.productLookUp,input.productId').val('');
+                            p.find('input.quantity').val('1');
+                            if (response.isBundle) {
+                                var queryString = "?productId=" + response.productId + "&bundleGuid=" + response.bundleGuid + "&orderCustomerId=" + response.orderCustomerId;
+                                window.location.href = '@Url.Content("~/Orders/Fundraisers/BundlePackItems")' + queryString;
+                            } else {
+                                updateBundleOptions(response.BundleOptionsSpanHTML, response.orderCustomerId);
+                                toggleEmptyCart(response.orderCustomerId);
+                            }
+
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+                else {
+                    if (prodId === "") {
+                        p.find('#item').css("border", "solid 1px red");
+                    }
+                    if (quantity === "") {
+                        p.find('#quantity').css("border", "solid 1px red");
+                    }
+                }
+            });
+
+            $('a.updateCart').click(function () {
+
+                var customerId = $('.orderCustomerId', this).val(), data = { orderCustomerId: customerId }, t = $(this);
+
+                if (!$('#orderCustomer' + customerId + ' tr.EmptyCart').isVisible()) {
+                    showLoading(t);
+                    $('#orderCustomer' + customerId + ' .OrderItems tr:has(input[type=text].quantity)').each(function (i) {
+                        data['orderItems[' + i + '].Key'] = $('.productId', this).val();
+                        data['orderItems[' + i + '].Value'] = $('.quantity', this).val();
+                    });
+
+                    $.post('@Href("~/Orders/Fundraisers/UpdateCart")', data, function (response) {
+                        hideLoading(t);
+                        if (response.result) {
+
+                            updateCartAndTotals(customerId, response);
+                            updateBundleOptions(response.BundleOptionsSpanHTML, response.orderCustomerId);
+                            toggleEmptyCart(response.orderCustomerId);
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('a.RemoveOrderItem').live('click', function () {
+                var t = $(this), btns = $('a.RemoveOrderItem');
+                var orderCustomerId = $('.orderCustomerId', t).val();
+                var orderItemGuid = $('.orderItemGuid', t).val();
+
+                showLoading(btns);
+
+                $.post('@Href("~/Orders/Fundraisers/RemoveFromCart")', {
+                    orderCustomerId: orderCustomerId,
+                    orderItemGuid: orderItemGuid
+                }, function (response) {
+                    hideLoading(btns);
+                    if (response.result) {
+                        var oi = t.closest('tbody.OrderItems');
+                        $('.' + orderItemGuid).each(function (i) {
+                            $(this).remove();
+                        });
+                        t.closest('tr').remove();
+                        if (oi.find('tr').length == 1)
+                            oi.find('tr').show();
+                        updateTotals(orderCustomerId, response);
+                        updateBundleOptions(response.BundleOptionsSpanHTML, response.orderCustomerId);
+                        toggleEmptyCart(response.orderCustomerId);
+                        callback();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#SecondaryRail a.UI-icon-container:has(span.AddMyself)').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Href("~/Orders/Fundraisers/AddMyself")', function (response) {
+                    if (response.result) {
+                        window.location.reload();
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            })[parseBool('@Model.Order.OrderCustomers.Any(oc => oc.AccountID == CoreContext.CurrentAccount.AccountID)') ? 'hide' : 'show']();
+
+            $('a.removeGuest').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWantToRemoveThisGuest", "Are you sure you want to remove this guest?")')) {
+                    var customerId = $('.orderCustomerId', this).val(), t = $(this);
+                    showLoading(t);
+                    $.post('@Href("~/Orders/Fundraisers/RemoveGuest")', { orderCustomerId: customerId }, function (response) {
+                        if (response.result) {
+                            $('#orderCustomerHeader' + customerId + ',#orderCustomerBody' + customerId).remove();
+                            $('.orderCustomerId').each(function (index) {
+                                if ($(this).val() == customerId) {
+                                    $(this).parent().parent().parent().remove();
+                                }
+                            });
+                            if (response.removedMyself) {
+                                $('#SecondaryRail a.UI-icon-container:has(span.AddMyself)').show();
+                            }
+                        } else {
+                            hideLoading(t);
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('#btnContinue').click(function () {
+                callback();
+                var t = $(this);
+                showLoading(t);
+                $.post('@Href("~/Orders/Fundraisers/FinalizeCart")', {}, function (response) {
+                    if (response.result) {
+                        var url = '@Href("~/Orders/Fundraisers/ShippingMethod")';
+                        window.location.href = url;
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+
+            });
+
+            $('.CreateBundle').live('click', function () {
+                var t = $(this);
+                var span = t.closest('span');
+                var customerDiv = t.closest('div.CustomerCart');
+
+                var productId = span.find('.dynamicKitProductSuggestion').val();
+                var orderCustomerGuid = customerDiv.attr("id").replace("orderCustomerBody", "");
+                $.post('@Href("~/Orders/Fundraisers/CreateDynamicBundleUpSale")', { productId: productId, orderCustomerGuid: orderCustomerGuid }, function (response) {
+                    if (response.result) {
+                        var queryString = "?productId=" + productId + "&bundleGuid=" + response.guid + "&orderCustomerId=" + orderCustomerGuid;
+                        window.location.href = '@Url.Content("~/Orders/Fundraisers/BundlePackItems")' + queryString;
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+
+            });
+        });
+
+
+
+        function updateBundleOptions(bundleOptionsSpanHTML, orderCustomerGuid) {
+            var spanElement = $('#BundleOptionsSpan' + orderCustomerGuid);
+            if (bundleOptionsSpanHTML == "") {
+                spanElement.closest('div').hide();
+            } else {
+                spanElement.closest('div').show();
+            }
+            spanElement.html(bundleOptionsSpanHTML);
+        }
+       
+    </script>
+}
+@section breadcrumb {
+    @Html.ActionLink(@Html.Term("Fundraiser", "Fundraiser"), "Index") &gt; @Html.Term("Workstation_PartyEntry_GuestCarts", "Guest Shopping Bags")
+}
+@section rail{
+    <div id="Follow">
+        <div class="UI-mainBg actionItems brdrAll">
+            <div class="pad10">
+                <ul class="flatList">
+                    @Html.ActionItem("~/Orders/Fundraisers/AddGuests", Html.Term("AddGuests", "Add Guests"), "icon-actionParty")
+                    @Html.ActionItem("javascript:void(0);", Html.Term("AddMyselfAsAGuest", "Add Myself As A Guest"), "icon-actionContactAdd AddMyself")
+                </ul>
+            </div>
+        </div>
+        @Html.Partial("PartySummary")
+        <div class="center pad10">
+            <a href="javascript:void(0);" id="btnContinue" class="Button Primary"><span>@Html.Term("Continue")></span></a>
+        </div>
+    </div>
+}
+@section title{
+    @Html.Term("Workstation_PartyEntry_GuestCarts", "Guest Shopping Bags")
+}
+<div id="partyOrderBelowMinimumAmountMessage" style="border: 1px solid red; padding: 10px;
+    margin-bottom: 7px; color: red; font-weight: bold;">@Html.Term("MinumumFundraiserAmount", "The minimum amount of $400 has not yet been met.")</div>
+<a id="collapseAll" href="javascript:void(0);" class="TextLink mb10 collapseAll"
+    style="display: inline-block;">@Html.Term("CollapseAll", "Collapse All")</a>
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td>
+            <div id="outOfStockMessage" style="background: none repeat scroll 0pt 0pt rgb(254, 233, 233);
+                border: 1px solid rgb(255, 0, 0); color: rgb(255, 0, 0); display: none;">
+                @Html.Term("ProductsAreOutOfStock", "The following product(s) that you tried to add to your order are out of stock:")
+                <ul id="outOfStockProducts">
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+@foreach (var customer in Model.Order.OrderCustomers)
+{
+    if (NetSteps.Common.ApplicationContextCommon.Instance.UseDefaultBundling)
+    {
+        Dictionary<string, string> upSaleDictionary = ViewBag.DynamicKitUpSaleHTML;
+        var DynamicKitUpSaleHTML = upSaleDictionary[customer.Guid.ToString("N")];
+    @Html.Partial("CustomerCart", customer, new ViewDataDictionary { { "DynamicKitUpSaleHTML", DynamicKitUpSaleHTML } })
+    }
+    else
+    {
+    @Html.Partial("CustomerCart", customer)
+    }
+}
+@foreach (Order onlineOrder in ViewBag.OnlineOrders)
+{
+    var customer = onlineOrder.OrderCustomers[0];
+    var orderStatus = SmallCollectionCache.Instance.OrderStatuses.GetById(onlineOrder.OrderStatusID);
+    <div class="UI-bg UI-header brdrYYNN pad5 GuestTag customerCartHeader">
+        <a href="javascript:void(0);" class="FL UI-icon-container collapseCart guestName"><span
+            class="UI-icon icon-arrowDown"></span><span>
+                @customer.FullName @Html.Term("OnlineOrderIndicator", "(Online Order)") - (@(orderStatus != null ? orderStatus.GetTerm() : string.Empty))
+                <input type="hidden" value="@customer.Guid.ToString("N")" class="orderCustomerId" />
+            </span></a><span class="clrall"></span>
+    </div>
+    <div id="@("orderCustomerBody" + customer.Guid.ToString("N"))" class="clr CustomerCart">
+        <table width="100%" cellspacing="0" class="DataGrid">
+            <thead class="UI-bg UI-header">
+                <tr>
+                    <th style="width: 80px;">@Html.Term("SKU")
+                    </th>
+                    <th>@Html.Term("Product")
+                    </th>
+                    <th style="width: 75px;">@Html.Term("Price")
+                    </th>
+                    <th style="width: 60px;">@Html.Term("Quantity")
+                    </th>
+                    <th style="width: 150px;">@Html.Term("CV_QV")
+                    </th>
+                    <th style="width: 175px;">@Html.Term("Total")
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="OrderItems">
+                @{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }
+                @foreach (var orderItem in customer.ParentOrderItems.OrderByDescending(oi => oi.OrderItemTypeID))
+                {
+                    decimal commissionableTotal = (orderItem.CommissionableTotalOverride != null) ? orderItem.CommissionableTotalOverride.ToDecimal() : orderItem.CommissionableTotal.ToDecimal();
+                    var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+                    <tr id="@(product.IsDynamicKit() ? "DynamickKit " : "")@("oi" + orderItem.Guid.ToString("N"))" @(Html.Raw(orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? "class=\"ExclusiveProductsRow\"" : ""))>
+                        <td class="icon-24">
+                            @orderItem.SKU
+                        </td>
+                        <td>
+                            @Html.Raw((orderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? String.Format("<span class=\"ExclusiveProductsIndicator\">{0}</span>", Html.Term("ExclusiveProductsIndicator", "*")) : ""))
+                            @product.Translations.Name()
+                            @if (product.IsDynamicKit())
+                            {
+                                int requiredItemsInBundleCount = product.DynamicKits[0].DynamicKitGroups.Sum(g => g.MinimumProductCount);
+                                if (orderItem.ChildOrderItems.Sum(oi => oi.Quantity) == requiredItemsInBundleCount)
+                                {
+                                <span class="UI-icon icon-bundle-full"></span>
+                                }
+                                else
+                                {
+                                <span class="UI-icon icon-bundle-add"></span>
+                                }
+                                <div class="bundlePackItemList">
+                                    <table cellspacing="0" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                </th>
+                                                <th>@Html.Term("SKU")
+                                                </th>
+                                                <th>@Html.Term("Product")
+                                                </th>
+                                                <th>@Html.Term("Quantity")
+                                                </th>
+                                            </tr>
+                                            @foreach (OrderItem childItem in orderItem.ChildOrderItems)
+                                            {
+                                                Product childProduct = inventory.GetProduct(childItem.ProductID.Value);
+                                                <tr>
+                                                    <td>
+                                                        <span class="UI-icon icon-bundle-arrow"></span>
+                                                    </td>
+                                                    <td class="KitSKU">
+                                                        @childItem.SKU
+                                                    </td>
+                                                    <td>
+                                                        @childProduct.Translations.Name()
+                                                    </td>
+                                                    <td>
+                                                        @childItem.Quantity
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @orderItem.ItemPrice.ToString(Model.Order.CurrencyID)
+                        </td>
+                        <td style="text-align: center;">
+                            @orderItem.Quantity
+                        </td>
+                        <td>
+                            @orderItem.CommissionableTotal.ToString(Model.Order.CurrencyID)
+                        </td>
+                        <td>
+                            @((orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(Model.Order.CurrencyID))
+                            @if (orderItem.IsHostReward)
+                            {
+                                decimal discount = 0;
+                                if (orderItem.Discount.HasValue)
+                                {
+                                    discount = orderItem.Discount.Value;
+                                }
+                                else if (orderItem.DiscountPercent.HasValue)
+                                {
+                                    discount = (orderItem.ItemPrice * orderItem.Quantity) * orderItem.DiscountPercent.ToDecimal();
+                                }
+                                @Html.Term("HostRewardDiscount", "(discounted {0})", discount.ToString(Model.Order.CurrencyID))
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tbody class="GuestTotals">
+                <tr class="GuestTotal">
+                    <td colspan="5" class="right bold">
+                        <span>@Html.Term("CV_QV")</span>:
+                    </td>
+                    <td>
+                        <span class="commissionableTotal Total">@onlineOrder.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+                <tr class="GuestTotal">
+                    <td colspan="5" class="right bold">
+                        <span>@Html.Term("Subtotal")</span>:
+                    </td>
+                    <td>
+                        <span class="subtotal Total">@onlineOrder.Subtotal.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+                <tr class="GuestTotal">
+                    <td colspan="5" class="right bold">
+                        <span>@Html.Term("Tax")</span>:
+                    </td>
+                    <td>
+                        <span class="taxTotal Total">@onlineOrder.TaxAmountTotal.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+                <tr class="GuestTotal">
+                    <td colspan="5" class="right bold">
+                        <span>@Html.Raw(Html.Term("ShippingAndHandling", "Shipping &amp; Handling")):</span>
+                    </td>
+                    <td>
+                        <span class="shippingAndHandlingTotal Total">@((onlineOrder.ShippingTotal + onlineOrder.HandlingTotal).ToString(Model.Order.CurrencyID))</span>
+                    </td>
+                </tr>
+                <tr class="UI-secBg GuestTotal GuestTotalBalance">
+                    <td colspan="5" class="right bold">
+                        <span>@Html.Term("Total"):</span>
+                    </td>
+                    <td class="bold">
+                        <span class="grandTotal Total">@onlineOrder.GrandTotal.ToString(Model.Order.CurrencyID)</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  
+}
+@*<div class="clr pad10 center PageSaveButtons">
+    <a href="@Href("~/Orders/Fundraisers/HostRewards")" id="btnContinue" class="Button Primary">
+        <span>@Html.Term("Continue")>
+        </span>
+    </a> <span class="clr"></span>
+</div>*@ 

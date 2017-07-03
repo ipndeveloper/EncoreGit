@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="FinancialsShippedRevenue">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+        <xsd:element ref="OrderItem"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderItem">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1" maxOccurs="1">
+        <xsd:element name="SKU" type="xsd:string" />
+        <xsd:element name="QuantityShipped" type="xsd:int" />
+        <xsd:element name="RetailPrice" type="Money" />
+        <xsd:element name="WholesalePrice" type="Money" />
+        <xsd:element name="ActualPrice" type="Money" />
+        <xsd:element name="ShippingCost" type="Money" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType mixed="false" name="Money">
+    <xsd:annotation>
+      <xsd:documentation>Describe a monetary amount in one of the allowed currencies. Also see the currency type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attribute name="Currency" type="Currency" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="Currency">
+    <xsd:annotation>
+      <xsd:documentation>The currency types available for use with the money type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USD"/>
+      <xsd:enumeration value="CAD"/>
+      <xsd:enumeration value="YEN"/>
+      <xsd:enumeration value="AUD"/>
+      <xsd:enumeration value="GBP"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

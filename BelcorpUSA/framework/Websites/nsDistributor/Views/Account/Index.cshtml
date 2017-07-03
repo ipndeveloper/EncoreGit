@@ -1,0 +1,297 @@
+@model nsDistributor.Models.Account.AccountIndexViewModel
+@{
+    ViewBag.Title = "";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('.generalAcctBox ul.flatList li:odd').addClass('Alt');
+            $('#editAccountSettings').jqm({
+                trigger: '#btnEditAccountSettings',
+                modal: true,
+                onShow: function (h) {
+                    h.o.fadeIn();
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut();
+                    if (h.o)
+                        h.o.fadeOut(function () { $(this).remove() });
+                    $('#txtNewUsername').val($('#username').html());
+                    hideMessage();
+                }
+            });
+            $('#changePasswordModal').jqm({
+                trigger: '#btnChangePassword',
+                modal: true,
+                onShow: function (h) {
+                    h.o.fadeIn();
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut();
+                    if (h.o)
+                        h.o.fadeOut(function () { $(this).remove() });
+                }
+            });
+
+            $('#btnSave').click(function () {
+                if (!$('#editAccountSettings').checkRequiredFields()) {
+                    return false;
+                }
+                var data = {
+                    firstName: $('#txtFirstName').val(),
+                    lastName: $('#txtLastName').val(),
+                    email: $('#txtEmail').val(),
+                    username: $('#txtNewUsername').val()
+                };
+                $.post('@Url.Resolve("~/Account/SaveSettings")', data, function (response) {
+                    if (response.result) {
+                        $('#editAccountSettings').jqmHide();
+                        $('#firstName').text(data.firstName);
+                        $('#lastName').text(data.lastName);
+                        $('#email').text(data.email);
+                        $('#username').text(data.username);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#btnCancelPassword').click(function () {
+                $('#txtOldPassword,#txtNewpassword,#txtConfirmPassword').val('');
+                hideMessage();
+            });
+
+            $('#btnSavePassword').click(function () {
+                if ($('#txtNewPassword').val() != $('#txtConfirmPassword').val()) {
+                    $('#txtNewPassword,#txtConfirmPassword').showError('@Html.JavascriptTerm("PasswordsMustMatch", "The passwords must match.")').focus().keyup(function () {
+                        if ($('#txtNewPassword').val() == $('#txtConfirmPassword').val())
+                            $('#txtNewPassword,#txtConfirmPassword').clearError().unbind('keyup');
+                    });
+                    return false;
+                }
+                $.post('@Url.Resolve("~/Account/ChangePassword")', {
+                    oldPassword: $('#txtOldPassword').val(),
+                    newPassword: $('#txtNewPassword').val(),
+                    confirmPassword: $('#txtConfirmPassword').val()
+                }, function (response) {
+                    if (response.result) {
+                        $('#changePasswordModal').jqmHide();
+                        hideMessage();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        });
+		//]]>
+    </script>
+}
+@{ 
+    NetSteps.Data.Entities.Account account = CoreContext.CurrentAccount;
+    var defaultShipping = account.Addresses.GetDefaultByTypeID(Constants.AddressType.Shipping);
+    var defaultBilling = account.AccountPaymentMethods.Count(apm => apm.IsDefault) > 0 ? account.AccountPaymentMethods.First(apm => apm.IsDefault) : account.AccountPaymentMethods.Count > 0 ? account.AccountPaymentMethods.First() : null;
+}
+<div class="pageTitle">
+    <h1>@Html.Term("MyAccount", "My Account")</h1>
+</div>
+<div class="SideColumn">
+    <ul class="flatList listNav accountMenu">
+        <li><a href="javascript:void(0);" class="EditMyAccount editUserNameLink overlay"
+            id="btnEditAccountSettings"><span>@Html.Term("Account_ChangeMyInformation", "Change My Information")</span></a></li>
+        <li><a href="javascript:void(0); }" class="EditMyAccount editPasswordLink overlay"
+            id="btnChangePassword"><span>@Html.Term("ChangeMyPassword", "Change My Password")</span></a></li>
+        <li><a href="@Url.Resolve("~/Account/ShippingAndBillingProfiles")" class="EditMyAccount editProfilesLink overlay">
+            <span>@Html.Term("ManageMyProfiles", "Manage Billing and Shipping Profiles")</span></a></li>
+        @if(Model.ShowUpgrade)
+        {
+            <li><a href="@Url.Resolve(@Model.UpgradeUrl)" title="@Html.Term("MyAccountDetails_AccountTypeLinkHint", "Upgrade your account today!")" class="EditMyAccount upgradeAccountLink" id="UpgradeAccount">
+                <span>@Html.Term("MyAccountMenu_UpgradeNavigationText","Upgrade My Account")</span></a></li>
+        }
+        <li><a href="@Url.Resolve("~/HostedParties/")" class="EditMyAccount hostedPartiesLink overlay">
+            <span>@Html.Term("MyHostedParties", "My Hosted Parties")</span></a></li>
+        <li>
+            @Html.ActionItem("~/Account/ProductCredit", Html.Term("ProductCredit", "Product Credit"), "EditMyAccount overlay", null, "Accounts-Product Credit Ledger")
+        </li>
+
+      @if (Model.HasAutoshipOrders)
+      { 
+       <li>
+            <span>
+               @Html.ActionLink(Html.Term("EditYourAutoship", "Edit Your Autoship"), "Edit","Autoship")                 
+            </span>
+        </li>
+      }
+    </ul>
+</div>
+<div class="ContentColumn">
+    <!-- General Account Info -->
+    <div class="FL mr10 acctBox generalAcctBox">
+        <div class="pad5">
+            <h4>@Html.Term("Account Details", "Account Details")</h4>
+            <ul class="flatList">
+                <li>
+                    <span class="mr10 FL">@Html.Term("MyAccountDetails_AccountType","Account Type"):</span>
+                    <span class="FR">
+                        @if (Model.ShowUpgrade)
+                        {
+                            <a href="@Url.Resolve(@Model.UpgradeUrl)" title="@Html.Term("MyAccountDetails_AccountTypeLinkHint", "Upgrade your account today!")">@Model.AccountType</a>
+                        }
+                        else
+                        {
+                            @Model.AccountType
+                        }
+                    </span>
+                    <span class="clr"></span>
+                </li>
+                <li><span class="mr10 FL">@Html.Term("FirstName", "First Name"):</span> <span class="FR"
+                    id="firstName">@account.FirstName</span><span class="clr"></span></li>
+                <li><span class="mr10 FL">@Html.Term("LastName", "Last Name"):</span> <span class="FR"
+                    id="lastName">@account.LastName</span><span class="clr"></span></li>
+                <li><span class="mr10 FL">@Html.Term("Email"):</span> <span class="FR" id="email">@account.EmailAddress</span><span
+                    class="clr"></span></li>
+					@if (Model.DisplayUsernameField)
+	 {
+                <li><span class="mr10 FL">@Html.Term("Username"):</span> <span class="FR" id="username">@account.User.Username</span><span
+                    class="clr"></span></li>
+	 }
+                <li><span class="mr10 FL">@Html.Term("Password"):</span> <span class="FR" id="password">
+                    ************</span><span class="clr"></span></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Default Profiles -->
+    <div class="FL mr10 acctBox  shippingDefaultBox">
+        <div class="pad5">
+            <h4>@Html.Term("DefaultShipping", "Default Shipping"):</h4>
+            @Html.Raw(defaultShipping != null ? defaultShipping.ToDisplay(false) : "N/A")
+        </div>
+    </div>
+    <div class="FL acctBox billingDefaultBox">
+        <div class="pad5">
+            <h4>@Html.Term("DefaultBilling", "Default Billing"):</h4>
+            @Html.Raw(defaultBilling != null ? ((IPayment)defaultBilling).ToDisplay() : "N/A")
+        </div>
+    </div>
+    <span class="clr"></span>
+    <!-- Recent Orders -->
+    <div class="clr mt10 myRecentOrders wall">
+        <h3>@Html.Term("RecentOrders", "Recent Orders"):</h3>
+        @{
+            Html.PaginatedGrid("~/Account/GetOrders")
+                        .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+                        .AddColumn(Html.Term("OrderNumber", "Order Number"), "OrderNumber", true)
+                        .AddColumn(Html.Term("OrderStatus", "Order Status"), "OrderStatus", false)
+                        .AddColumn("", "ResumeLink", false)
+                        //.AddColumn(Html.Term("OrderDate", "Order Date"), "CompleteDateUTC", true, true, Constants.SortDirection.Descending)
+                        .AddColumn(Html.Term("Started On"), "DateCreatedUTC", true, true, NetSteps.Common.Constants.SortDirection.Descending)
+                        .AddColumn(Html.Term("TrackingNumber", "Tracking Number"), "TrackingNumber", false)
+                        .AddColumn(Html.Term("GrandTotal", "Grand Total"), "GrandTotal", true)
+                        .ClickEntireRow()
+                        .Render();
+        }
+    </div>
+    <div id="editAccountSettings" class="jqmWindow LModal">
+        <div class="mContent">
+            <h2>
+                @Html.Term("EditAccountSettings", "Edit Account Settings")</h2>
+            <div class="FauxTable" style="margin-bottom: 0px;">
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("FirstName", "First Name"):
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtFirstName" class="required" name="@Html.Term("FirstNameRequired", "First Name is required.")" value="@account.FirstName" />
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("LastName", "Last Name"):
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtLastName" class="required" name="@Html.Term("LastNameRequired", "Last Name is required.")" value="@account.LastName" />
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("Email"):
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtEmail" class="required" name="@Html.Term("EmailRequired", "Email is required.")" value="@account.EmailAddress" />
+                    </div>
+                </div>
+				@if (Model.DisplayUsernameField)
+	{
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("Username"):
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtNewUsername" class="required" name="@Html.Term("UsernameRequired", "Username is required.")" value="@account.User.Username" />
+                    </div>
+                </div>
+	}
+                <div class="FRow">
+                    <div class="FLabel">
+                        <a href="javascript:void(0);" class="jqmClose">
+                            @Html.Term("Cancel")</a>
+                    </div>
+                    <div class="FInput">
+                        <a id="btnSave" href="javascript:void(0);" class="Button FR"><span>
+                            @Html.Term("Save")</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="changePasswordModal" class="jqmWindow LModal">
+        <div class="mContent">
+            <div class="FauxTable" style="margin-bottom: 0px;">
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("CurrentPassword", "Current Password"):
+                    </div>
+                    <div class="FInput">
+                        <input type="password" id="txtOldPassword" />
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("NewPassword", "New Password"):
+                    </div>
+                    <div class="FInput">
+                        <input type="password" id="txtNewPassword" />
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.Term("ConfirmPassword", "Confirm Password"):
+                    </div>
+                    <div class="FInput">
+                        <input type="password" id="txtConfirmPassword" />
+                    </div>
+                </div>
+                <div class="FRow">
+                    <div class="FLabel">
+                        <a id="btnCancelPassword" href="javascript:void(0);" class="jqmClose">
+                            @Html.Term("Cancel")</a>
+                    </div>
+                    <div class="FInput">
+                        <a id="btnSavePassword" href="javascript:void(0);" class="Button FR"><span>
+                            @Html.Term("Save")</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("MessageCenter")
+</div>
+<span class="clr"></span>

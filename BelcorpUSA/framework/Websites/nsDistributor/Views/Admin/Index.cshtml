@@ -1,0 +1,213 @@
+@model System.Collections.Generic.IEnumerable<NetSteps.Data.Entities.HtmlSection>
+@section head {
+    <link type="text/css" rel="Stylesheet" href="@Url.Content("~/Content/CSS/Edit.css")" />
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('pwsAdmin dashBoard');
+            $('body').addClass('pwsAdminCenter');
+            $('#btnSave').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Url.Resolve("~/Admin/SaveDisplayInfo")', {
+                    hideName: $('#hideName').is(':checked'),
+                    displayName: $('#displayName').val(),
+                    hideEmail: $('#hideEmail').is(':checked'),
+                    displayEmail: $('#displayEmail').val(),
+                    hidePhone: $('#hidePhone').is(':checked'),
+                    displayPhone: $('#displayPhone').val(),
+                    hideAddress: $('#hideAddress').length ? $('#hideAddress').is(':checked') : true,
+                    displayTitle: $('#displayTitle').val(),
+                    hideTitle: $('#hideTitle').is(':checked')
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.redirect) {
+                        window.location = response.redirectUrl;
+                    } else {
+                        showMessage(response.message || '@Html.Term("DisplayInformationSavedSuccessfully", "Display information saved successfully!")', !response.result);
+                    }
+                });
+            });
+
+            //Sets up the uneditable view of the Display Information on page load
+            $(sectionDisplayInfoClone);
+
+            //Creates a 'cancel' link and insert by the save button and add wrapping div around them then gets
+            //the saved display info settings and displays them, cancel button will switch between cloned and original
+            $('#EditSectionDisplayInfo').each(function () {
+                var cancelLink = '<a class="UI-icon-container NS_ButtonCancel" id="CancelEditInfo" href="javascript:void(0);"><span class="UI-icon icon-x"></span><span>@Html.Term("Cancel")</span></a>';
+                $(this).find('div.FormSubmit').append(cancelLink).wrap('<div class="UI-secBg NS-pad5 NS-brdrAll brdrAll GridUtility">');
+                $(this).find('#btnSave').click(function () {
+                    sectionDisplayInfoClone();
+                });
+                $('#CancelEditInfo').click(function () {
+                    $('#EditSectionDisplayInfo').hide();
+                });
+            });
+        });
+        /*******************************************************************************************
+        *    Functions
+        *******************************************************************************************/
+        function sectionDisplayInfoClone() {
+            //Removes any already existing cloned/added items
+            $('#DisplayInfoView').remove();
+
+            //Adds a class for hidden info, Create a clone of the div to display uneditable data
+            $('#EditSectionDisplayInfo').each(function () {
+                $(this).find('div.showHide')
+                .each(function () {
+                    var input = $(this).find('input');
+                    if (input.is(':checked')) {
+                        $(this).addClass('hidden');
+                    }
+                    else {
+                        $(this).removeClass('hidden');
+                    }
+                });
+                $(this).clone().attr('id', 'DisplayInfoView').insertAfter('#EditSectionDisplayInfo');
+            });
+
+            //This is the cloned version, adds an edit link, removes the save and added wrapper, gets and displays value of input
+            $('#DisplayInfoView').each(function () {
+                var htmlText;
+                var input;
+                var editLink = '<a class="NS-FR" id="EditDisplayInfo" href="javascript:void(0);">@Html.Term("Edit","Edit")</a>';
+                $(this).find(('div.emWidgetTitle')).append(editLink);
+                $(this).find(('#btnSave, div.UI-secBg.GridUtility')).remove();
+                $(this).find('div.FRow div')
+                .each(function () {
+                    input = $(this).find('input');
+                    htmlText = input.val();
+                    if (input.is(':checkbox')) {
+                        if (input.is(':checked')) {
+                            $(this).html('<span class="NS-FR UI-icon icon-hide"></span><span class="NS-FL icon-label">@Html.Term("YesHide","Yes")</span>');
+                        }
+                        else {
+                            $(this).html('<span class="NS-FR UI-icon icon-show"></span><span class="NS-FL icon-label">@Html.Term("NoDoNotHide","No")</span>');
+                        }
+                    }
+                    else { $(this).text(htmlText); }
+                });
+            });
+
+            //Hide original copy and when click the edit link, switch views.
+            $('#EditSectionDisplayInfo').hide();
+            $('#EditDisplayInfo').click(function () {
+                $('#EditSectionDisplayInfo').show();
+            });
+        }
+    </script>
+}
+<div class="NS-editHeader WelcomeBlock SectionHeader">
+    <h1>@Html.Term("Dashboard")</h1>
+    <div id="browserMessage" style="color: Red; font-weight: bold;">
+    </div>
+</div>
+
+@*Html.Action Allows Client Derived Controllers to Determine SiteName view/admin Behavior: see partylite *@
+@Html.Action("ViewMySiteName", (Site)ViewBag.CurrentSite)
+
+<div id="EditSectionDisplayInfo" class="emWidget Section section-DisplayInfo">
+    
+
+    <div class="emWidgetTitle brdrYYNN">
+        <span class="NS-FL bold">@Html.Term("MyDisplayInformation", "My Display Information")</span></div>
+    <div class="FormContainer">
+        @{AccountPublicContactInfo displayInfo = ViewBag.DisplayInfo;}
+        <form id="DisplayInfoForm" action="" method="post">
+        <div class="FormSubmit">
+            <a id="btnSave" href="javascript:void(0);" class="UI-icon-container"><span class="UI-icon icon-save"></span><span>
+                @Html.Term("Save")</span></a>
+        </div>
+        <div class="UI-mainBg FRow showHide name">
+            <div class="FLabel">
+                <label for="hideName">
+                    @Html.Term("HideName", "Hide Name"):</label></div>
+            <div class="FInput">
+                <input type="checkbox" id="hideName" @Html.Raw(displayInfo.HideName ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div class="FRow displayText name">
+            <div class="FLabel">
+                <label for="displayName">
+                    @Html.Term("DisplayName", "Display Name"):</label></div>
+            <div class="FInput">
+                <input type="text" id="displayName" value="@displayInfo.Name" />
+            </div>
+        </div>
+        <div class="UI-mainBg FRow showHide distributorTitle">
+            <div class="FLabel">
+                <label for="hideTitle">
+                    @Html.Term("HideTitle", "Hide Title"):</label></div>
+            <div class="FInput">
+                <input type="checkbox" id="hideTitle" @Html.Raw(displayInfo.HideTitle ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div class="FRow displayText distributorTitle">
+            <div class="FLabel">
+                <label for="displayTitle">
+                    @Html.Term("DisplayTitle", "Display Title"):</label></div>
+            <div class="pad5 FInput">
+                @ViewBag.AccountTitle
+            </div>
+        </div>
+        <div class="UI-mainBg FRow showHide email">
+            <div class="FLabel">
+                <label for="hideEmail">
+                    @Html.Term("HideEmail", "Hide Email"):</label></div>
+            <div class="FInput">
+                <input type="checkbox" id="hideEmail" @Html.Raw(displayInfo.HideEmailAddress ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div class="FRow displayText email">
+            <div class="FLabel">
+                <label for="displayEmail">
+                    @Html.Term("DisplayEmail", "Display Email"):</label></div>
+            <div class="FInput">
+                <input type="text" id="displayEmail" value="@displayInfo.EmailAddress" />
+            </div>
+        </div>
+        <div class="UI-mainBg FRow showHide phone">
+            <div class="FLabel">
+                <label for="hidePhone">
+                    @Html.Term("HidePhone", "Hide Phone"):</label></div>
+            <div class="FInput">
+                <input type="checkbox" id="hidePhone" @Html.Raw(displayInfo.HidePhoneNumber ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div class="FRow displayText phone">
+            <div class="FLabel">
+                <label for="displayPhone">
+                    @Html.Term("DisplayPhone", "Display Phone"):</label></div>
+            <div class="FInput">
+                <input type="text" id="displayPhone" value="@displayInfo.PhoneNumber" />
+            </div>
+        </div>
+        @* removing address display from ENCORE
+        <div class="UI-mainBg FRow showHide address">
+            <div class="FLabel">
+                <label for="hideAddress">
+                    @Html.Term("HideAddress", "Hide Address"):</label></div>
+            <div class="FInput">
+                <input type="checkbox" id="hideAddress" checked="checked" />
+            </div>
+        </div>*@
+        </form>
+    </div>
+</div>
+
+<div class="FR NS-editablePwsWidgets">
+
+    @foreach (HtmlSection section in Model.Where(x => x.SectionName.ToLower() != "sitedesigncenter"))
+    {
+        <div class="NS-editableBlock emWidget brdrAll Section section-@(section.SectionName)">
+            <div class="emWidgetTitle brdrYYNN">
+                <span class="NS-FL bold">@Html.Term(section.SectionName, section.SectionName.PascalToSpaced())</span>
+                <a class="NS-FR" href="@Url.Resolve("~/Admin/EditSection/")@(section.HtmlSectionID)">@Html.Term("EditSection", "Edit {0}", Html.Term(section.SectionName, section.SectionName.PascalToSpaced()))</a>
+                <span class="NS-clr"></span>
+            </div>
+            @Html.Raw(section.ToDisplay(NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite, NetSteps.Common.Constants.ViewingMode.Production))
+            <span class="NS-clr"></span>
+        </div>
+    }
+</div>
+@Html.Partial("MessageCenter")

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>loadAllFullQuery</Title>
+      <Author>DES</Author>
+      <Description>Add the override for loadAllFullQuery in the repositories</Description>
+      <Shortcut>loadAllFullQuery</Shortcut>
+    </Header>
+    <Snippet>
+		<Declarations>
+			<Literal>
+			  <ID>type</ID>
+			  <ToolTip>The type the repository is loading</ToolTip>
+			  <Default>Type</Default>
+			</Literal>
+		</Declarations>
+      <Code Language="csharp"><![CDATA[protected override Func<NetStepsEntities, IQueryable<$type$>> loadAllFullQuery
+		{
+			get
+			{
+				return CompiledQuery.Compile<NetStepsEntities, IQueryable<$type$>>(
+				 (context) => context.$type$s);
+			}
+		}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

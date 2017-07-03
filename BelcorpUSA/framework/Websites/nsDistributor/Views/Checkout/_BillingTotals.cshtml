@@ -1,0 +1,7 @@
+﻿@model NetSteps.Data.Entities.Order
+
+<div class="clr UI-Alert mt10 brdrAll BalanceDueContainer @(Model.Balance.HasValue && Model.Balance > 0 ? "" : "BalanceCovered")">
+    <div class="BalanceDue">
+        @Html.Term("BalanceDue", "Balance Due:") <span id="balanceDue">@Model.Balance.AsymmetricRoundedNumber().ToString(Model.CurrencyID)</span>
+    </div>
+</div>

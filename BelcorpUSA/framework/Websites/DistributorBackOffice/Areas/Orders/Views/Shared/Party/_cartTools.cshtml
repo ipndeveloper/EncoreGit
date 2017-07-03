@@ -1,0 +1,13 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.HostCreditItem
+<div class="brdrNNYY pad5 CartTools">
+	<div class="FL mr10">
+		<input id="@Model.CartPrefix.GetId("ProductLookup")" type="text" value="" class="TextInput productLookUp" title="@Html.Term("Item")" />
+		<input id="@Model.CartPrefix.GetId("ProductId")" type="hidden" value="" class="productId" />
+		<input type="hidden" value="" class="needsBackOrderConfirmation" />
+	</div>
+	<div class="FL mr10">
+		<input id="@Model.CartPrefix.GetId("Quantity")" type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" title="@Html.Term("Quantity")" />
+	</div>
+	<a id="@Model.CartPrefix.GetId("AddToCart")" class="FL UI-icon-container addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+		<span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+</div>

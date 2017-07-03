@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="OrderExportCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Order"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Order">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="1">
+        <xsd:element name="OrderNumber" type="xsd:string" />
+        <xsd:element name="CustomerID" type="xsd:int" />
+        <xsd:element name="OrderDate" type="xsd:dateTime" />
+        <xsd:element ref="OrderItem" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderItem">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderItemID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="SKU" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="Quantity" type="xsd:int" minOccurs="1" maxOccurs="1" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<nsCore.Areas.Reports.Models.ReportsServiceModel>
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+
+        $('#sltReporte').change(function ()
+        {
+            var opc = this.value;
+
+            //var divCont = "<object data='" + opc + "' style='" + "width:100%; height:1000px;'" + " type='" + "text/html'> </object>";
+            //$("#ReportDiv").html('');
+            //$("#ReportDiv").append(divCont);
+
+            var dataResul = { reporte: opc };
+            var url = $("#remotoUrl").val();
+
+            if (opc != 0)
+            {
+                $("#ReportDiv").attr("src", url + "?reporte=" + opc);
+            } else
+            {
+                $("#ReportDiv").attr("src", "");
+            }
+        });
+
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @Html.Label("Reporte", @Html.Term("ReportLabel","Elija Reporte"))
+        <select id="sltReporte">
+            <option value="0">@Html.Term("ReportOptionDefault","Seleccione Reporte")</option>
+            @foreach (var reports in Model)
+                {
+                <option value="@reports.reportURL">@reports.reportName</option>
+                }
+        </select>
+        <br />
+        
+
+        <iframe id="ReportDiv" src="" width="100%" height="1200px"></iframe>
+        <input type="hidden" value='@ViewData["reporteremoto"]' id="remotoUrl"/>
+    </fieldset>
+    @Html.ValidationSummary()
+
+}

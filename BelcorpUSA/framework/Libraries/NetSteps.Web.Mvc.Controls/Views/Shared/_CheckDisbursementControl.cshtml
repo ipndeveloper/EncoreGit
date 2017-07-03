@@ -1,0 +1,19 @@
+﻿@model CheckDisbursementViewModel
+<div id="check">
+    <h3 class="UI-mainBg pad5">
+        @Html.Term("CheckProfile", "Check Profile")
+    </h3>
+    <div class="pad10">
+    <div class="mb10 disbursementCheckbox"><input id="chkUseAddressOfRecord" @Html.Raw(Model.CheckProfile.IsEnabled ? "" : "checked=\"checked\"") type="checkbox" /><label for="chkUseAddressOfRecord">@Html.Term("UseAddressOfRecord", "Use Address Of Record")</label></div>
+    <input type="hidden" id="CheckDisbursementProfileID" value="@Model.CheckProfile.DisbursementProfileId" />
+    @Html.Partial("Address", new AddressModel
+   {
+       Address = Model.CheckAddress.AddressID > 0 ? Model.CheckAddress : Model.AddressOfRecord,
+       LanguageID = CoreContext.CurrentLanguageID,
+       ShowCountrySelect = true,
+       ChangeCountryURL = Model.ChangeCountryURL ?? "~/Account/BillingShippingProfiles/GetAddressControl",
+       ExcludeFields = new List<string> { "ProfileName", "PhoneNumber" },
+       Prefix = "checkProfile"
+   })
+   </div>
+</div>

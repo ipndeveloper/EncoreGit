@@ -1,0 +1,143 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+
+	<script type="text/javascript">
+	    $(function () {
+	        $('#txtProductSearch').keyup(function(e) {
+	             if (e.keyCode == 13) $('#btnSearchProducts').click();
+	        }).watermark('<%= Html.JavascriptTerm("QuickProductSearch(SKUorName)", "Quick Product Search (SKU or Name)") %>').jsonSuggest('<%= ResolveUrl("~/Products/Products/Search") %>', { onSelect: function (item) {
+	            if (item.isVariant || item.isVariantTemplate || item.productBaseHasProperties) {
+	                window.location = '<%= ResolveUrl("~/Products/Products/Overview/") %>' + item.productBaseId;
+	            } else {
+	                window.location = '<%= ResolveUrl(string.Format("~/Products/Products/Overview/")) %>' + item.productBaseId + '/' + item.id;
+	            }
+	        }, minCharacters: 3, ajaxResults: true, maxResults: 10, showMore: true, width: $('#txtProductSearch').outerWidth(true) + $('#btnSearchProducts').outerWidth() - 4
+	        });
+	        $('#btnSearchProducts').click(function () {
+	            if ($('#txtProductSearch').data('watermark') == $('#txtProductSearch').val())
+	                $('#txtProductSearch').val('');
+	            window.location = '<%= ResolveUrl("~/Products/Products") %>?query=' + $('#txtProductSearch').val();
+	        });
+	        $('#btnReloadInventory').click(function () {
+	            var t = $(this);
+	            showLoading(t, { height: '25px', marginTop: '11px', display: 'block' });
+	            $.ajax({
+	                type: 'POST',
+	                url: '<%= ResolveUrl("~/Products/ReloadInventory") %>',
+	                timeout: 480000,
+	                success: function (response) {
+	                hideLoading(t);
+	                showMessage(response.message, !response.result);
+	                },
+                    error: function (request, status, err) {
+                        hideLoading(t);
+                    }
+	            });
+	        });
+	    });
+    </script>
+
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">
+    <%--Developed by BAL - CSTI - A06--%>
+    <%= Html.DropDownNavigation(Html.Term("ScheduleManagement", "Schedule Management"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowsePlans", "Browse Plans"), Url = "~/Products/Plans", MappedUrls = new List<string>(){ "~/Products/Plans/*" } },
+			new NavigationItem() { LinkText = Html.Term("BrowsePeriods", "Browse Periods"), Url = "~/Products/Periods", MappedUrls = new List<string>(){ "~/Products/Periods/*" } }
+        })
+    %>
+
+	<%= Html.DropDownNavigation(Html.Term("CatalogManagement", "Catalog Management"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("BrowseCatalogs", "Browse Catalogs"), Url = "~/Products", MappedUrls = new List<string>(){ "~/Products/Catalogs/*" } },
+			new NavigationItem() { LinkText = Html.Term("BrowseCategoryTrees", "Browse Category Trees"), Url = "~/Products/Categories", MappedUrls = new List<string>(){ "~/Products/Categories/*" } }
+		}) %>
+	<%= Html.DropDownNavigation(Html.Term("ProductManagement", "Product Management"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("BrowseProducts", "Browse Products"), Url = "~/Products/Products", MappedUrls = new List<string>(){ "~/Products/Products/*" } },
+			new NavigationItem() { LinkText = Html.Term("AddaNewProduct", "Add a New Product"), Url = "~/Products/Products/Create" },
+            
+            //Developed by BAL - CSTI - A01
+            new NavigationItem() { LinkText = Html.Term("ProductQuota", "Product Quota"), Url = "~/Products/Quotas" },
+            
+			new NavigationItem() { LinkText = Html.Term("PropertiesManagement", "Properties Management"), Url = "~/Products/Properties", MappedUrls = new List<string>(){"~/Products/Properties/*"} },
+			new NavigationItem() { LinkText = Html.Term("ProductTypesManagement", "Product Types Management"), Url = "~/Products/ProductTypes", MappedUrls = new List<string>(){"~/Products/ProductTypes/*"} },
+			new NavigationItem() { LinkText = Html.Term("PriceTypesManagement", "Price Types Management"), Url = "~/Products/PriceTypes" },
+			new NavigationItem() { LinkText = Html.Term("ResourceTypesManagement", "Resource Types Management"), Url = "~/Products/ResourceTypes" },
+			new NavigationItem() { LinkText = Html.Term("CustomerTypesManagement", "Customer Types Management"), Url = "~/Products/CustomerTypes" },
+            
+            new NavigationItem() { LinkText = Html.Term("CampaignInformation", "Campaign Information"), Url = "~/Products/Campaign/Information" }
+		})%>
+	<%= Html.DropDownNavigation(Html.Term("Promotions", "Promotions"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("BrowsePromotions", "Browse Promotions"), Url = "~/Products/Promotions/", MappedUrls = new List<string>(){ "~/Products/Promotions/*" } },
+			new NavigationItem() { LinkText = Html.Term("CreateProductPromotion", "Create Product Promotion"), Url = "~/Products/ProductPromotions/Edit" },
+            new NavigationItem() { LinkText = Html.Term("CreateCartRewards", "Create Cart Rewards"), Url = "~/Products/CartRewardsPromotions/Edit" },
+            new NavigationItem() { LinkText = Html.Term("PromotionTypesConfiguration", "Promotion Types Configuration"), Url = "~/Products/PromotionType/Index" }
+		}) %>
+
+    <% //  wv: 20160616 Creacion Menu de mantenimiento para los Dispatch %>
+    <%= Html.DropDownNavigation(Html.Term("Dispatch", "Dispatch"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("BrowseDispatch", "Browse Dispatch"), Url = "~/Products/Dispatch/", MappedUrls = new List<string>(){ "~/Products/Dispatch/*" } },
+			new NavigationItem() { LinkText = Html.Term("CreateDispatch", "Create Dispatch"), Url = "~/Products/Dispatch/Create" },
+            new NavigationItem() { LinkText = Html.Term("BrowseDispatchLists", "Browse Dispatch Lists"), Url = "~/Products/DispatchLists/", MappedUrls = new List<string>(){ "~/Products/DispatchLists/*" } },
+            new NavigationItem() { LinkText = Html.Term("CreateDispatchList", "Create Dispatch List"), Url = "~/Products/DispatchLists/Create" }
+     }) %>
+
+	<%--<%= Html.SubTab("~/Products/Promotions", Html.Term("Promotions")) %>--%>
+	<%= Html.DropDownNavigation(Html.Term("WarehouseManagement", "Warehouse Management"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("WarehouseInventory", "Warehouse Inventory"), Url = "~/Products/Warehouses", MappedUrls = new List<string>(){ "~/Products/Warehouses/*" } },
+			new NavigationItem() { LinkText = Html.Term("ShippingRegions", "Shipping Regions"), Url = "~/Products/ShippingRegions", MappedUrls = new List<string>(){ "~/Products/ShippingRegions/*" } },
+            
+            //Developed by BAL - CSTI - A01
+            new NavigationItem() { LinkText = Html.Term("InventoryMovements", "Inventory Movements"), Url = "~/Products/InventoryMovements" },
+            
+            //Developed by KLC - CSTI - BR-IN-004
+            new NavigationItem() { LinkText = Html.Term("InventoryAllocated", "Inventory Allocated"), Url = "~/Products/InventoryAllocated" }
+		}) %>
+
+        <%= Html.DropDownNavigation(Html.Term("Materials", "Materials"), "", new List<NavigationItem>()
+        {
+        new NavigationItem() { LinkText = Html.Term("BrowseMaterial", "Browse Material"), Url = "~/Products/Materials", MappedUrls = new List<string>(){ "~/Products/Materials/*" } },
+      
+        }) %> 
+	<%= Html.SubTab("~/Products/Campaign", Html.Term("CampaignCreation", "Campaign Creation"))%>
+
+
+	<%--<%= Html.SubTab("~/Products/Warehouses", "Warehouses") %>--%>
+	<li class="pipe">&nbsp;</li>
+	<%--<li><a id="btnReloadInventory" href="javascript:void(0);">
+		<%= Html.Term("ReloadInventory", "Reload Inventory") %></a></li>--%>
+	<li class="TabSearch">
+        <div class="SearchBox">
+		    <input id="txtProductSearch" type="text" class="TextInput" />
+		<a id="btnSearchProducts" href="javascript:void(0);" class="SearchIcon"><span>
+			    <%= Html.Term("Go", "Go") %></span></a>
+        </div></li>
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<div class="TagInfo">
+					<asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+</asp:Content>

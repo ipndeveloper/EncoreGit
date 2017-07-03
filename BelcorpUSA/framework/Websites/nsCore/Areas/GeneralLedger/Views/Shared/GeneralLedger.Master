@@ -1,0 +1,41 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">
+    
+    <%= Html.SubTab("~/Holiday/Index", Html.Term("HolidayCalendar1", "Holiday Calendar"), onlyCheckController: true, function: "Products")%>
+   <%--KLC - BR-CC-010   --%>
+ <%--   <%= Html.DropDownNavigation(Html.Term("PaymentTickets", "Payment Tickets"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowseTickets", "Browse Tickets"), Url = "~/GeneralLedger/PaymentTicketsReport/BrowseTickets", MappedUrls = new List<string>(){ "~/TicketPayment/BrowseTickets/*" } }
+        })
+    %>
+--%>
+    <%--<%= Html.SubTab("~/GeneralLedger/PaymentTicketsReport/BrowseTickets", Html.Term("BrowseTickets", "Browse Tickets"), onlyCheckController: true, function: "Products")%>--%>
+
+    <%= Html.SubTab("~/GeneralLedger/ArrearsDefaultsReports/SpcReport", Html.Term("ArrearsDefaultReports", "Arrears and Defaults Reports"), onlyCheckController: true, function: "Products")%>
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <div class="TagInfo">
+					<asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+				</asp:ContentPlaceHolder>
+            </td>
+            <td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+        </tr>
+    </table>
+</asp:Content>

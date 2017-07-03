@@ -1,0 +1,25 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.WebsiteModel
+<div class="UI-lightBg brdrAll m5 active">
+	<div class="pad10">
+		<div class="FL mt10 mb20">
+			<span class="websiteReqUmsg">@Html.Term("Enrollment_Products_Website_RequirementsUnmet", "The requirements for your FREE Personal Website have not been met.")</span>
+		</div>
+		<span class="clr"></span>
+		<div class="FL mt10 mb20">
+			<span class="websiteReqURSubTtl">@Html.Term("Enrollment_Products_Website_RequiredOrderSubtotal", "Required Enrollment Order subtotal"):</span> <span>@Model.RequiredOrderValue.ToMoneyString()</span>
+		</div>
+		<span class="clr"></span>
+		<div class="FL mt10 mb20">
+			<span class="websiteReqUCSubTtl">@Html.Term("Enrollment_Products_Website_CurrentOrderSubtotal", "Current Enrollment Order subtotal"):</span> <span>@Model.CurrentOrderValue.ToMoneyString()</span>
+		</div>
+		<span class="clr"></span>
+		<div class="FL mt10 mb20">
+			<a href="@Url.Action("EnrollmentVariantKits")"><span class="websiteReqGoBack">@Html.Term("Enrollment_Products_Website_RequirementsUnmetGoBack", "Go back to add more items to the order or to change the Enrollment Kit option")</span></a>
+		</div>
+		<span class="clr"></span>
+		<div class="FL mt10 mb20">
+			<a href="@Url.Action(Model.Action)"><span class="websiteReqUskip">@Html.Term("Enrollment_Products_Website_RequirementsUnmetSkip", "Skip and loose this Benefit")</span></a>
+		</div>
+		<span class="clr"></span>
+	</div>
+</div>

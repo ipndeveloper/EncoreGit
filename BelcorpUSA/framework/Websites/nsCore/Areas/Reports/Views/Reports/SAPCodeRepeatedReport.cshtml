@@ -1,0 +1,32 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        exportE();
+        IsValid();
+    });
+
+    function IsValid() {
+        $('div.GridFilters a.filterButton').text('Refresh');
+    }
+
+    function exportE() {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/SAPCodeRepeatedExport")';
+        });
+    }
+
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetSAPCodeRepeatedReport")
+        .AddInputFilter(Html.Term("CUV", "CUV"), "cuv", ViewData["CUV"], false, true, true)
+
+        .AddColumn(Html.Term("SAPCode"), "SAPCode")
+        .AddColumn(Html.Term("Quantity"), "Quantity")      
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

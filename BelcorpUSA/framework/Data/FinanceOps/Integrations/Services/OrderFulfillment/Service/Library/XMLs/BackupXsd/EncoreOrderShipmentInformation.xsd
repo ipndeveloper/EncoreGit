@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:simpleType name="Country">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USA"/>
+      <xsd:enumeration value="CAN"/>
+      <xsd:enumeration value="AUS"/>
+      <xsd:enumeration value="IRL"/>
+      <xsd:enumeration value="SWE"/>
+      <xsd:enumeration value="NLD"/>
+      <xsd:enumeration value="BEL"/>
+      <xsd:enumeration value="GBR"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="OrderStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Pending"/>
+      <xsd:enumeration value="Pending Error"/>
+      <xsd:enumeration value="Paid"/>
+      <xsd:enumeration value="Cancelled"/>
+      <xsd:enumeration value="Partially Paid"/>
+      <xsd:enumeration value="Printed"/>
+      <xsd:enumeration value="Shipped"/>
+      <xsd:enumeration value="Credit Card Declined"/>
+      <xsd:enumeration value="Credit Card Declined - Retry"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="OrderType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Online Order"/>
+      <xsd:enumeration value="Workstation Order"/>
+      <xsd:enumeration value="Party Order"/>
+      <xsd:enumeration value="Portal Order"/>
+      <xsd:enumeration value="Autoship Template"/>
+      <xsd:enumeration value="Autoship Order"/>
+      <xsd:enumeration value="Override Order"/>
+      <xsd:enumeration value="Return Order"/>
+      <xsd:enumeration value="Comp Order"/>
+      <xsd:enumeration value="Replacement Order"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Currency">
+    <xsd:annotation>
+      <xsd:documentation>The currency types available for use with the money type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USD"/>
+      <xsd:enumeration value="CAD"/>
+      <xsd:enumeration value="YEN"/>
+      <xsd:enumeration value="AUD"/>
+      <xsd:enumeration value="GBP"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="WeightSystem">
+    <xsd:annotation>
+      <xsd:documentation>The weight unit types available for use with the weight type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="lbs">
+        <xsd:annotation>
+          <xsd:documentation>U.S. Customary Pound (453 g)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="g">
+        <xsd:annotation>
+          <xsd:documentation>Metric Gram (1 g)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="kg">
+        <xsd:annotation>
+          <xsd:documentation>Kilogram (1000 g)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="mg">
+        <xsd:annotation>
+          <xsd:documentation>Milligram (0.001 g)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="oz">
+        <xsd:annotation>
+          <xsd:documentation>U.S. Customary Ounce (28 g)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LengthSystem">
+    <xsd:annotation>
+      <xsd:documentation>The length unit types available for use with the length type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="m">
+        <xsd:annotation>
+          <xsd:documentation>Metric Meter (1 m)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="in">
+        <xsd:annotation>
+          <xsd:documentation>U.S. Customary Inch (0.0254 m)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="cm">
+        <xsd:annotation>
+          <xsd:documentation>Centimeter (0.01 m)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="mm">
+        <xsd:annotation>
+          <xsd:documentation>Millimeter (0.001 m)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="ft">
+        <xsd:annotation>
+          <xsd:documentation>U.S. Customary Foot (0.3048 m)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType mixed="false" name="Money">
+    <xsd:annotation>
+      <xsd:documentation>Describe a monetary amount in one of the allowed currencies. Also see the currency type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attribute default="USD" name="Currency" type="Currency" use="optional"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType mixed="false" name="Length">
+    <xsd:annotation>
+      <xsd:documentation>Describe a measurement of length in one of the allowed length systems. Also see the length_system type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute default="in" name="Units" type="LengthSystem" use="optional"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:element name="IDs">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="PrimaryID" type="xsd:int" minOccurs="1" />
+        <xsd:element name="VendorID" type="xsd:string" minOccurs="0" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Package">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="TrackingNumber" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="ShippedDate" type="xsd:dateTime" minOccurs="0" />
+        <xsd:element name="ActualShipCost" type="Money" minOccurs="0" />
+        <xsd:element ref="OrderItem" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element name="DeliveryConfirmation" type="xsd:boolean" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Order">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="AccountID" type="xsd:int" minOccurs="1"/>
+        <xsd:element name="Type" type="OrderType" minOccurs="1" />
+        <xsd:element name="Status" type="OrderStatus" minOccurs="1" />
+        <xsd:element ref="IDs" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="OrderCustomer" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderCustomer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="IDs" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="Shipping" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="ShippingProvider" type="xsd:string" minOccurs="0" />
+              <xsd:element name="ShippingMethod" type="xsd:string" minOccurs="0" />
+              <xsd:element ref="Package" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element ref="Package" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderItem">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="ProductID" type="xsd:int" minOccurs="1" />
+        <xsd:element name="Sku" type="xsd:string" minOccurs="1" />
+        <xsd:element name="Qty" type="xsd:int" minOccurs="1" />
+        <xsd:element name="ItemPrice" type="Money" minOccurs="1" />
+        <xsd:element name="Currency" type="Currency" minOccurs="1" />
+        <xsd:element name="CommodityCode" type="xsd:string" minOccurs="0" />
+        <xsd:element name="ItemWeight" type="WeightSystem" minOccurs="0" />
+        <xsd:element ref="IDs" minOccurs="1" maxOccurs="1" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Order" minOccurs="1" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

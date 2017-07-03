@@ -1,0 +1,7 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.ShippingMethodModel
+<span>
+@if (Model.SelectedShippingMethod != null && Model.ShippingRequired) 
+{
+    @string.Format("{0} - {1}", Html.Term(Model.SelectedShippingMethod.Name), Model.SelectedShippingMethod.ShippingAmount.ToString(Model.CurrencyID))
+}
+</span>

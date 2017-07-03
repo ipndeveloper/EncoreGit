@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=24" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=8" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=9" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=6" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=7" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=10" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=11" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=12" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=14">
+    <xsd:annotation>
+      <xsd:documentation />
+      <xsd:documentation>The request used to accept a combined total tax amount for a purchase and distribute that tax to the appropriate jurisdictions. The combined rates for the taxing jurisdictions are used with the total tax amount to determine the taxable base and then redistribute the calculated taxes to each level for remittance. Vertex Central rules in effect as of the date in the documentDate attribute are used. If records for jurisdiction registration, product exception, or customer exception or exemption are dated on or before that date, they are used in the calculation process. Distribute Consumer Use Tax transactions are written to the Tax Journal.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:include>
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=13">
+    <xsd:annotation>
+      <xsd:documentation>The request used to accept a combined total tax amount for a purchase and distribute that tax to the appropriate jurisdictions. The combined rates for the taxing jurisdictions are used with the total tax amount to determine the taxable base and then redistribute the calculated taxes to each level for remittance. Vertex Central rules in effect as of the date in the documentDate attribute are used. If records for jurisdiction registration, product exception, or customer exception or exemption are dated on or before that date, they are used in the calculation process. Distribute Sales Tax transactions are written to the Tax Journal.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:include>
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=15" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=17" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=18" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=19" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=20" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=21" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=22" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=23" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=16" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=28" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=29" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=26" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=27" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=30" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=31" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=32" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=33" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=34" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Vertex Envelope composite message. Declaration of structure and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="VertexEnvelope">
+    <xsd:annotation>
+      <xsd:documentation>Vertex envelope containing transaction information. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Login" type="LoginType" />
+        <xsd:choice>
+          <xsd:element name="AccrualRequest" type="AccrualRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Accrual Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="AccrualResponse" type="AccrualResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Accrual Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="AccrualSyncRequest" type="AccrualSyncRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Accrual Synchronization Request message</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="AccrualSyncResponse" type="AccrualSyncResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Accrual Synchronization Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="APInvoiceSyncRequest" type="APInvoiceSyncRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Account Payable Invoice Synchronization Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="APInvoiceSyncResponse" type="APInvoiceSyncResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Account Payable Invoice Synchronization Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ARBillingSyncRequest" type="ARBillingSyncRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Account Receivable Billing Synchronization Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ARBillingSyncResponse" type="ARBillingSyncResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Account Receivable Billing Synchronization Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="AssetMovementRequest" type="AssetMovementRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Asset Movement Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="AssetMovementResponse" type="AssetMovementResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Asset Movement Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="BuyerInputTaxRequest" type="BuyerInputTaxRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to pass Buyer Input Tax and Import Tax to the Tax Journal for return reporting.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="BuyerInputTaxResponse" type="BuyerInputTaxResponseType">
+            <xsd:annotation>
+              <xsd:documentation>The response used to indicate the recoverability of Input Tax and Import Tax amounts.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DeleteRequest" type="DeleteRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Delete Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DeleteResponse" type="DeleteResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Delete Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DistributeTaxProcurementRequest" type="DistributeTaxProcurementRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to accept a combined total tax amount for a purchase and distribute that tax to the appropriate jurisdictions. The combined rates for the taxing jurisdictions are used with the total tax amount to determine the taxable base and then redistribute the calculated taxes to each level for remittance. This request is also used for a tax-only adjustment (debit or credit) so you can reconcile a tax underpayment or overpayment. Vertex Central rules in effect as of the date in the documentDate attribute are used. If records for jurisdiction registration, product exception, or customer exception or exemption are dated on or before that date, they are used in the calculation process. A Distribute Tax Procurement transaction does impact revenue except when you designate it as a tax-only adjustment. Distribute Tax Procurement transactions are written to the Tax Journal.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DistributeTaxProcurementResponse" type="DistributeTaxProcurementResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Distribute Tax Procurement Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DistributeTaxRequest" type="DistributeTaxRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to accept a combined total tax amount for a purchase and distribute that tax to the appropriate jurisdictions. The combined rates for the taxing jurisdictions are used with the total tax amount to determine the taxable base and then redistribute the calculated taxes to each level for remittance. This request is also used for a tax-only adjustment (debit or credit) so you can reconcile a tax underpayment or overpayment. Vertex Central rules in effect as of the date in the documentDate attribute are used. If records for jurisdiction registration, product exception, or customer exception or exemption are dated on or before that date, they are used in the calculation process. A Distribute Sales Tax transaction does impact revenue except when you designate it as a tax-only adjustment. Distribute Sales Tax transactions are written to the Tax Journal.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="DistributeTaxResponse" type="DistributeTaxResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Distribute Tax Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ERSRequest" type="ERSRequestType">
+            <xsd:annotation>
+              <xsd:documentation>ERS Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ERSResponse" type="ERSResponseType">
+            <xsd:annotation>
+              <xsd:documentation>ERS Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InventoryRemovalRequest" type="InventoryRemovalRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Inventory Removal Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InventoryRemovalResponse" type="InventoryRemovalResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Inventory Removal Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InvoiceRequest" type="InvoiceRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to calculate tax at the time of shipping, billing, or invoicing from the seller's perspective. Because tax liability is typically incurred at the point of invoicing, Invoicing transactions are written to the Tax Journal.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InvoiceResponse" type="InvoiceResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Invoice Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InvoiceVerificationRequest" type="InvoiceVerificationRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Invoice Verification Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="InvoiceVerificationResponse" type="InvoiceVerificationResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Invoice Verification Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="PurchaseOrderRequest" type="PurchaseOrderRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Purchase Order Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="PurchaseOrderResponse" type="PurchaseOrderResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Purchase Order Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="QuotationRequest" type="QuotationRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Quotation Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="QuotationResponse" type="QuotationResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Quotation Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ReversalRequest" type="ReversalRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to post a reversal for a transaction in the Tax Journal. No calculations are performed; the original transaction is posted with negative amounts.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ReversalResponse" type="ReversalResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Reversal response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="RollbackRequest" type="RollbackRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Rollback Request message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="RollbackResponse" type="RollbackResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Rollback Response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="TransactionExistsRequest" type="TransactionExistsRequestType">
+            <xsd:annotation>
+              <xsd:documentation>The request used to determine whether or not a transaction with a specified transaction ID exists in the Tax Journal. Note: Transactions flagged as Deleted are considered to NOT exist in the Tax Journal.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="TransactionExistsResponse" type="TransactionExistsResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Transaction Exists response messsage.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="FindChangedTaxAreaIdsRequest" type="FindChangedTaxAreaIdsRequestType">
+            <xsd:annotation>
+              <xsd:documentation>A list of tax area identifiers changed within a period of time.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="FindChangedTaxAreaIdsResponse" type="FindChangedTaxAreaIdsResponseType">
+            <xsd:annotation>
+              <xsd:documentation>A list of tax area identifiers changed within a period of time.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="IsTaxAreaChangedRequest" type="IsTaxAreaChangedRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Determine if a tax area has changed.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="IsTaxAreaChangedResponse" type="IsTaxAreaChangedResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Result of a tax area changes lookup.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="TaxAreaRequest" type="TaxAreaRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Message sent from an external system to perform a single tax jurisdiction lookup.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="TaxAreaResponse" type="TaxAreaResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Tax Area lookup response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="FindTaxAreasRequest" type="FindTaxAreasRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Message sent from an external system to perform a batch of tax jurisdiction lookups.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="FindTaxAreasResponse" type="FindTaxAreasResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Find Tax Areas response message.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="VersionRequest" type="VersionRequestType">
+            <xsd:annotation>
+              <xsd:documentation>Request for version information</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="VersionResponse" type="VersionResponseType">
+            <xsd:annotation>
+              <xsd:documentation>Result of a version lookup</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:choice>
+        <xsd:element minOccurs="0" name="ApplicationData">
+          <xsd:annotation>
+            <xsd:documentation>Logging information for this transaction.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" name="Sender" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Identifies the application that created the request message. This can be the logical location of the application and/or database server, the application, or the task that was processing to create the request message.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="MessageLogging">
+                <xsd:annotation>
+                  <xsd:documentation>A group of logging parameters.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element minOccurs="0" maxOccurs="unbounded" name="OverrideLoggingThreshold">
+                      <xsd:annotation>
+                        <xsd:documentation>When present, registers a logging threshold for the transaction. When request-handling is complete, this logging threshold is unregistered.</xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:simpleContent>
+                          <xsd:extension base="LogLevelType">
+                            <xsd:attribute name="thresholdScope" type="xsd:string" use="optional">
+                              <xsd:annotation>
+                                <xsd:documentation>Names a package scope for the threshold override. If absent, override threshold is global.</xsd:documentation>
+                              </xsd:annotation>
+                            </xsd:attribute>
+                          </xsd:extension>
+                        </xsd:simpleContent>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                  <xsd:attribute name="returnLogEntries" type="xsd:boolean" use="optional">
+                    <xsd:annotation>
+                      <xsd:documentation>Indicates whether to return the LogEntry elements in the response.</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:attribute>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="LogEntry" type="LogEntryType">
+                <xsd:annotation>
+                  <xsd:documentation>A group of log entry data.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="LogLevelType">
+    <xsd:annotation>
+      <xsd:documentation>The log levels are listed below from most severe to least severe.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="FATAL" />
+      <xsd:enumeration value="ERROR" />
+      <xsd:enumeration value="WARNING" />
+      <xsd:enumeration value="OPS" />
+      <xsd:enumeration value="TRACE" />
+      <xsd:enumeration value="DEBUG" />
+      <xsd:enumeration value="SUPPORT" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="LogEntryType">
+    <xsd:sequence>
+      <xsd:element name="Message" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>The exception message text.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Exception" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>The exception name.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="logLevel" type="LogLevelType" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The specific log level for this entry.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="instanceId" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The service instance that processed the request.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="threadId" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The thread that processed the request.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="className" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The class that generated the log entry.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

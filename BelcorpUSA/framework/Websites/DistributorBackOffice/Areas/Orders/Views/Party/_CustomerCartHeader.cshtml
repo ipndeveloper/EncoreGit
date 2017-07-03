@@ -1,0 +1,28 @@
+﻿@model OrderCustomer
+<div id="@("orderCustomerHeader" + Model.Guid.ToString("N"))" class="UI-bg UI-header brdrYYNN pad5 GuestTag customerCartHeader">
+	<a href="javascript:void(0);" class="FL UI-icon-container collapseCart guestName"><span
+		class="UI-icon icon-arrowDown"></span><span>
+			@Model.FullName
+			@if (Model.IsHostess)
+			{
+				@Html.Term("HostIndicator", "(Host)")
+			}
+			<input type="hidden" value="@Model.Guid.ToString("N")" class="orderCustomerId" />
+		</span></a>
+	<div class="FR mr10 GuestControls">
+		<a href="@Href("~/Orders/Party/EditDirectShip", new { orderCustomerId = Model.Guid.ToString("N") })" class="directShip@(Model.OrderShipments.Count > 0 ? " isDirectShip" : "")">@(Model.OrderShipments.Count > 0 ? Html.Term("EditDirectShip", "Edit Direct Ship") : Html.Term("AddDirectShip", "Add Direct Ship"))</a>
+		@if (!Model.IsHostess)
+		{
+			<a href="javascript:void(0);" class="removeGuest">@Html.Term("RemoveGuest", "Remove Guest")<input type="hidden" value="@Model.Guid.ToString("N")" class="orderCustomerId" /></a>
+			if (Model.IsBookingCredit)
+			{
+				@Html.Term("FutureHostess", "Future Hostess")
+			}
+			else
+			{
+				<a href="javascript:void(0);" class="partyBooking">@Html.Term("BookAParty", "Book a party")<input type="hidden" value="@Model.Guid.ToString("N")" class="partyBookingOrderCustomerGuid" /></a>
+			}
+		}
+	</div>
+	<span class="clrall"></span>
+</div>

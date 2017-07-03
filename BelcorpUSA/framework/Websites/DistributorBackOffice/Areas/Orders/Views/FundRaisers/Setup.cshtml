@@ -1,0 +1,325 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Fundraisers.SetupModel
+@{
+    ViewBag.Title = Html.Term("FundraiserSetup", "Fundraiser Setup");
+}
+@section breadcrumb {
+    @Html.Term("Fundraiser", "Fundraiser")
+}
+@section title {
+    @Html.Term("FundraiserSetup", "Fundraiser Setup")
+}
+@section rail
+{
+}
+@section head
+{
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/timepickr.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Orders/Fundraisers/fundraiser-index.js")"></script>
+}
+@using (Html.BeginForm("Setup", "FundRaisers", FormMethod.Post, new { data_jsonsuggest_url = @Url.Action("SearchAccounts", "Fundraisers", new { area = "Orders" }), data_get_account = @Url.Action("GetAccount", "Fundraisers", new { area = "Orders" }), id = "FundraiserSetupForm" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="brdr1 brdrAll mb10 partySection-Host">
+        <div class="UI-secBg brdrYYNN sectionHeader">
+            <div class="pad10">
+                @Html.Term("WhoIsHostingYourFundraiser?", "Who is hosting your fundraiser?")</div>
+        </div>
+        <div class="pad10">
+            <div class="FL splitCol40">
+                <div class="FormTable">
+                    <div class="FormRow">
+                        <label for="txtFirstName">
+                            <span class="req">*</span>@Html.Term("HostName", "Host Name"): @Html.ValidationMessageFor(m => m.FirstName) @Html.ValidationMessageFor(m => m.LastName)</label>
+                        <div class="data">
+                            @Html.TextBoxFor(m => m.FirstName, new { placeholder = Html.Term("FirstName"), @class = "required" })
+                            @Html.TextBoxFor(m => m.LastName, new { placeholder = Html.Term("LastName"), @class = "required" })
+                            @Html.HiddenFor(m => m.AccountId)
+                        </div>
+                        <br />
+                    </div>
+                    <div class="FormRow">
+                        <label for="txtEmail">
+                            <span class="req">*</span>@Html.LabelFor(m => m.Email): </label>
+                        <div class="data">
+                            @Html.TextBoxFor(m => m.Email, new { placeholder = Html.Term("Email"), @class = "required" }) @Html.ValidationMessageFor(m => m.Email)
+                        </div>
+                        <br />
+                    </div>
+                    <div class="FormRow">
+                        <label for="txtAreaCode">
+                            <span class="req">*</span>@Html.Term("PhoneNumber", "Phone Number"):</label>
+                            @Html.EditorFor(m => m.PhoneNumber) @Html.ValidationMessageFor(m => m.PhoneNumber)
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="FL splitCol60">
+                <div id="hostAddressContainer">
+                  @Html.EditorFor(m => m.HostAddress)
+                </div>
+            </div>
+            <span class="clr"></span>
+        </div>
+    </div>
+    <div class="brdr1 brdrAll mb10 partySection-Specifics">
+        <div class="UI-secBg brdrYYNN sectionHeader">
+            <div class="pad10">
+                @Html.Term("FundraiserSpecifics", "Fundraiser Specifics")</div>
+        </div>
+        <div class="pad10">
+            <div class="FL FormTable splitCol40">
+                <div class="FormRow">
+                    <label for="txtPartyName">
+                        @Html.LabelFor(m => m.Party.Name):</label>
+                    <div class="data">
+                        @Html.TextBoxFor(m => m.Party.Name, new { @class = "partyName" }) @Html.ValidationMessageFor(m => m.Party.Name)
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="FL FormTable splitCol60">
+                <div class="FormRow">
+                    <label for="txtPartyDate">
+                        @Html.Term("FundRaiserDateAndTime", "Fundraiser Date and Time"): @Html.ValidationMessageFor(m => m.StartDate) @Html.ValidationMessageFor(m => m.StartTime)</label>
+                    <div class="data">
+                        @Html.TextBoxFor(m => m.StartDate, new { @class = "DatePicker", value = Model.StartDate.ToShortDateString() })
+                        @Html.TextBoxFor(m => m.StartTime, new { @class = "TimePicker", value = Model.StartTime.ToShortTimeString() })
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <span class="clr"></span>
+            <hr class="mb10" />
+            <div class="UI-lightBg pad5 brdrAll partyOptions">
+                <p class="FL ml10">
+                    <span class="FL mr10">
+                        @Html.CheckBoxFor(m => m.Party.UseEvites)<label for="chkUseEvites">@Html.Term("UseEVites", "Use e-Vites")</label>
+                    </span><a href="javascript:void(0);" id="btnEvitesHelp" class="FL UI-icon-container" title="@Html.Term("WhatAreEvites", "What are e-Vites?")"><span class=" UI-icon icon-help"></span></a><span class="clr"></span>
+                </p>
+                <span class="clr"></span>
+            </div>
+        </div>
+    </div>
+    <div class="brdr1 brdrAll mb10 partySection-Shipping">
+        <div class="UI-secBg brdrYYNN sectionHeader">
+            <div class="pad10">
+                @Html.Term("ShipThisFundraisersOrderTo", "Ship this fundraiser's order to...")</div>
+        </div>
+        <div class="pad10">
+            @{bool hasAddresses = CoreContext.CurrentAccount.Addresses.Any(a => a.AddressTypeID == ConstantsGenerated.AddressType.Shipping.ToInt());}
+            <div class="FormTable FL splitCol40 mr10">
+                @if (hasAddresses)
+                {
+                    <div class="FormRow">
+                        <div class="data">
+                            @Html.RadioButtonFor(m => m.ShipTo, DistributorBackOffice.Models.PartyShipTo.Consultant)
+                            @*<input id="rbPartyShipConsultant" type="radio" name="partyShip" value="Consultant" />*@
+                            <label for="rbPartyShipConsultant" style="float: none;">
+                                @Html.Term("Me")</label>
+                        </div>
+                        <br />
+                    </div>
+                }
+                <div class="FormRow">
+                    <div class="data">
+                        @Html.RadioButtonFor(m => m.ShipTo, DistributorBackOffice.Models.PartyShipTo.Other)
+                        @*<input id="rbPartyShipOther" type="radio" name="partyShip" value="Other" />*@
+                        <label for="rbPartyShipOther" style="float: none;">
+                            @Html.Term("Organization")</label>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="FormBlock FL splitCol60 ml10" id="PartyShipContainer">
+                @if (hasAddresses)
+                {
+@*@{var shippingAddress = CoreContext.CurrentAccount.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);}*@
+                    Address shippingAddress = ViewBag.ConsultantShippingAddress;
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = CoreContext.CurrentAccount.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);
+                        if (shippingAddress == null)
+                        {
+                            shippingAddress = CoreContext.CurrentAccount.Addresses[0];
+                        }
+                    }
+
+                    var shippingAddressList = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == Constants.AddressType.Shipping.ToInt()).OrderByDescending(a => a.IsDefault).ThenBy(a => a.AddressID);
+					@Html.HiddenFor(m => m.ShippingAddressId)			
+                    <div id="PartyShipConsultant" class="PartyShip" style="display: none;">
+                        <div class="splitpanel" style="width: auto;">
+                            @* <h5>
+                            @Html.Term("MyProfiles", "My Profiles")</h5>*@
+                            <div class="FL DefaultProfile pad5 UI-lightBg brdrAll bold mr10">
+                                @*  @Html.Term("Address"):*@
+                                <p id="addressPreview">
+                                    @Html.Raw(shippingAddress.ToDisplay(false, true, true))
+                                </p>
+                            </div>
+                            <div class="FL ProfilesList ml10">
+                                <div class="">
+                                    @Html.Term("MyProfiles", "My profiles"):
+                                    <div id="consultantProfiles" class="">
+                                        @foreach (var address in shippingAddressList)
+                                        {
+                                            string profileName = address.ProfileName + (address.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                                            if (string.IsNullOrEmpty(profileName))
+                                            {
+                                                profileName = SmallCollectionCache.Instance.AddressTypes.GetById(address.AddressTypeID).GetTerm();
+                                            }
+                                            <a href="javascript:void(0);" id="address@(address.AddressID)" data-address-id="@address.AddressID" class="address overlay@(address.AddressID == shippingAddress.AddressID ? " defaultProfile" : "")" title="@address.Address1">
+                                                @profileName</a> <span class="address" style="display: none;" data-address-id="@address.AddressID">
+                                                    @Html.Raw(address.ToDisplay(false, true, true))
+                                                </span>
+                                            <br />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="clr"></span>
+                }
+                @if (Model.Party != null && Model.Party.PartyID > 0) { 
+                <input type="hidden" name="id" value="@Model.Party.PartyID" />
+                }
+                <div id="PartyShipOther" class="PartyShip" style="@(Model.Party.PartyID > 0 ? "" : "display:none;")">
+                    <div id="partyShipAddressContainer">
+                        @Html.EditorFor(m => m.ShippingAddress)
+                    </div>
+                </div>
+            </div>
+            <span class="clr"></span>
+        </div>
+    </div>
+    <button type="submit">
+        Continue</button>
+}
+
+<script type="text/javascript">
+    $(function() {
+        $('label[for="HostAddress_Address1"]').prepend('<span class="req">*</span>');
+        $('label[for="HostAddress_PostalCode1"]').prepend('<span class="req">*</span>');
+        $('label[for="HostAddress_City"]').prepend('<span class="req">*</span>');
+        $('label[for="HostAddress_StateProvinceID"]').prepend('<span class="req">*</span>');
+        makeFormElementsRequired();
+    });
+    
+    // intercept the form submission to perform validation
+    $('#FundraiserSetupForm').submit(function () {   
+        
+        adjustFormElementNameAttributes();      //change name attributes so error messages display nicely
+        if (!$(this).checkRequiredFields()) {
+            return false;
+        }
+        adjustFormElementNameAttributes();      //change name attributes back so form can submit
+
+        var regexEmailValidaitonString = @Html.GetEmailValidaionRegex();
+
+        if (!regexEmailValidaitonString.test($('#Email').val())) {
+            $('#Email').showError('@Html.JavascriptTerm("InvalidEmail", "Please enter a valid email address.")');
+            return false;
+        }
+        else {
+            $('#Email').clearError();
+        }
+    });
+
+    // clears the error messages on city and state as soon as a valid postal code has been entered
+    $('#HostAddress_PostalCode1').keyup(function() {
+        if($('#HostAddress_City').hasClass('input-validation-error') || $('#HostAddress_StateProvinceID').hasClass('input-validation-error')) {
+            setTimeout(function() {
+                if($('#HostAddress_City').val() != '') {
+                    $('#HostAddress_City').clearError();
+                }
+                if($('#HostAddress_County').val() != '') {
+                    $('#HostAddress_County').clearError();
+                }
+                if($('#HostAddress_StateProvinceID').val() != '') {
+                    $('#HostAddress_StateProvinceID').clearError();
+                }
+            }, 100);
+        }
+    });
+
+    // makes adjustments to the DOM so we can use the client-side validation in utilities.js
+    function makeFormElementsRequired() {
+        $('#txtAreaCode').addClass('required');
+        $('#txtFirstThree').addClass('required');
+        $('#txtLastFour').addClass('required');
+        $('#HostAddress_Address1').addClass('required');
+        $('#HostAddress_PostalCode1').addClass('required');
+        $('#HostAddress_City').addClass('required');
+        $('#HostAddress_County').addClass('required');
+        $('#HostAddress_StateProvinceID').addClass('required');
+    }
+
+    function adjustFormElementNameAttributes() {
+        if($('#FirstName').attr('name') == 'FirstName') {
+            $('#FirstName').attr('name', '@Html.Term("FirstNameReqiured", "First Name is required.")');
+        }
+        else {
+            $('#FirstName').attr('name', 'FirstName');
+        }
+        if($('#LastName').attr('name') == 'LastName') {
+            $('#LastName').attr('name', '@Html.Term("LastNameReqiured", "Last Name is required.")');
+        }
+        else {
+            $('#LastName').attr('name', 'LastName');
+        }
+        if($('#Email').attr('name') == 'Email') {
+            $('#Email').attr('name', '@Html.Term("EmailReqiured", "Email is required.")');
+        }
+        else {
+            $('#Email').attr('name', 'Email');
+        }
+        if($('#txtAreaCode').attr('name') == 'PhoneNumber.AreaCode') {
+            $('#txtAreaCode').attr('name', '@Html.Term("AreaCodeRequired", "Area Code is required.")');
+        }
+        else {
+            $('#txtAreaCode').attr('name', 'PhoneNumber.AreaCode');
+        }
+        if($('#txtFirstThree').attr('name') == 'PhoneNumber.FirstThree') {
+            $('#txtFirstThree').attr('name', '@Html.Term("FirstThreeRequired", "First Three are required.")');
+        }
+        else {
+            $('#txtFirstThree').attr('name', 'PhoneNumber.FirstThree');
+        }
+        if($('#txtLastFour').attr('name') == 'PhoneNumber.LastFour') {
+            $('#txtLastFour').attr('name', '@Html.Term("LastFourReqiured", "Last Four are required.")');
+        }
+        else {
+            $('#txtLastFour').attr('name', 'PhoneNumber.LastFour');
+        }
+        if($('#HostAddress_Address1').attr('name') == 'HostAddress.Address1') {
+            $('#HostAddress_Address1').attr('name', '@Html.Term("AddressLine1Reqiured", "Address Line 1 is required.")');
+        }
+        else {
+            $('#HostAddress_Address1').attr('name', 'HostAddress.Address1');
+        }
+        if($('#HostAddress_PostalCode1').attr('name') == 'HostAddress.PostalCode1') {
+            $('#HostAddress_PostalCode1').attr('name', '@Html.Term("PostalCodeReqiured", "Postal Code is required.")');
+        }
+        else {
+            $('#HostAddress_PostalCode1').attr('name', 'HostAddress.PostalCode1');
+        }
+        if($('#HostAddress_City').attr('name') == 'HostAddress.City') {
+            $('#HostAddress_City').attr('name', '@Html.Term("CityReqiured", "City is required.")');
+        }
+        else {
+            $('#HostAddress_City').attr('name', 'HostAddress.City');
+        }
+        if($('#HostAddress_County').attr('name') == 'HostAddress.County') {
+            $('#HostAddress_County').attr('name', '@Html.Term("CountyReqiured", "County is required.")');
+        }
+        else {
+            $('#HostAddress_County').attr('name', 'HostAddress.County');
+        }
+        if($('#HostAddress_StateProvinceID').attr('name') == 'HostAddress.StateProvinceID') {
+            $('#HostAddress_StateProvinceID').attr('name', '@Html.Term("StateReqiured", "State is required.")');
+        }
+        else {
+            $('#HostAddress_StateProvinceID').attr('name', 'HostAddress.StateProvinceID');
+        }
+    }
+</script>

@@ -1,0 +1,61 @@
+﻿<Window x:Class="AutoshipProcessor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:local="clr-namespace:AutoshipProcessor" 
+        xmlns:controls="clr-namespace:NetSteps.Wpf.Controls;assembly=NetSteps.Wpf.Controls" 	
+        mc:Ignorable="d" 
+        Title="AutoshipProcessor" Height="350" Width="800" Icon="Rename.ico">
+	<Window.TaskbarItemInfo>
+		<TaskbarItemInfo/>
+	</Window.TaskbarItemInfo>
+    <Grid>
+
+
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="300" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<ListBox x:Name="uxAutoshipOrders" Margin="5,5,10,5" BorderThickness="1" BorderBrush="#FF7E7E7E" Grid.Row="1" SelectionChanged="uxAutoshipOrders_SelectionChanged">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{Binding TemplateOrderID}" FontWeight="Bold" Margin="0,0,10,0"/>
+							<TextBlock Text="{Binding NextDueDate}" />
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<GridSplitter Margin="0" Width="5" Grid.Row="1" Opacity="0" Panel.ZIndex="5"/>
+
+
+
+			<Grid Grid.Column="1" Grid.Row="1">
+
+
+			</Grid>
+			<StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+				<Button x:Name="uxGenerateTestTemplates" Content="Generate Test Templates" HorizontalAlignment="Left" Margin="5,0,0,0" Width="150" d:LayoutOverrides="Height" VerticalAlignment="Center" 
+							BorderThickness="1" Click="uxGenerateTestTemplates_Click"/>
+
+				<Button x:Name="uxFindTemplatesToGenerate" Content="Find Templates to Generate" HorizontalAlignment="Left" Margin="5,0,0,0" Width="170" d:LayoutOverrides="Height" VerticalAlignment="Center" 
+							BorderThickness="1" Click="uxFindTemplatesToGenerate_Click"/>
+
+				<Button x:Name="uxStartAutoshipGeneration" Content="Start Autoship Generation" HorizontalAlignment="Left" Margin="5,0,0,0" Width="170" d:LayoutOverrides="Height" VerticalAlignment="Center" 
+							BorderThickness="1" Click="uxStartAutoshipGeneration_Click"/>
+			</StackPanel>
+			<controls:BusyControl x:Name="uxBusyControl" Margin="0" d:LayoutOverrides="Width, Height" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+			<controls:ItemProgressControl x:Name="uxAutoshipProgressControl" Margin="0" d:LayoutOverrides="Width, Height" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+
+		</Grid>
+	</Grid>
+</Window>

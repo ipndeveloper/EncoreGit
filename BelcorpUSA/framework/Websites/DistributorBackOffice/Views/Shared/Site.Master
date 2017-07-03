@@ -1,0 +1,293 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+<%@ Import Namespace="NetSteps.Web.Mvc.Controls.Analytics" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <%: Html.Partial("ServerInfo") %>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>ENCORE Distributor Workstation - Powered by NETSTEPS</title>
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/main.css") %>" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/Structure.css") %>" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/Theme.css") %>" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/Buttons.css") %>" />
+    <%--<link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/BackOffice.css") %>" />
+	<link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/Tables.css") %>" />
+	<link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/Forms.css") %>" />--%>
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Resource/Content/CSS/jqModal.css") %>" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.6/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Content/CSS/ui.dropdownchecklist.css") %>" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Resource/Content/CSS/jsonSuggest.css") %>" />
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+
+    <script type="text/javascript">
+        if (!window.jQuery) {
+            document.write(unescape('%3Cscript src="<%= ResolveUrl("~/Scripts/jquery-1.7.2.min.js") %>" type="text/javascript"%3E%3C/script%3E'));
+        }
+    </script>
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.6/jquery-ui.min.js"></script>
+
+    <script type="text/javascript">
+        if (!window.jQuery.ui) {
+            document.write(unescape('%3Cscript src="<%= ResolveUrl("~/Scripts/jquery-ui.1.8.2.min.js") %>" type="text/javascript"%3E%3C/script%3E'));
+        }
+    </script>
+
+    <script type="text/javascript" src="<%= ResolveUrl("~/Resource/Scripts/utilities.js") %>"></script>
+
+    <script type="text/javascript" src="<%= ResolveUrl("~/Resource/Scripts/jqModal.js") %>"></script>
+
+    <script type="text/javascript" src="<%= ResolveUrl("~/Resource/Scripts/jsonSuggest.js") %>"></script>
+
+    <script type="text/javascript" src="<%= ResolveUrl("~/Resource/Scripts/numeric.js") %>"></script>
+
+    <script type="text/javascript" src="<%= Url.Content("~/Resource/Scripts/jquery.lazyload.js") %>"></script> 
+
+    <script type="text/javascript">
+        $(function () {
+            // setup async exception handling
+            $(document).ajaxComplete(function (e, request, settings) {
+                var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+                if (isErrorPage) {
+                    window.location = '/Error/';
+                }
+            });
+           
+            //Set up jqModal defaults
+            $.extend($.jqm.params, {
+                modal: true,
+                target: '.mContent',
+                ajaxText: '<img src="<%= ResolveUrl("~/Resource/Content/Images/loader_36x36.gif") %>" alt="loading..." />',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut('slow');
+                    if (h.o)
+                        h.o.remove();
+                }
+            });
+
+            // Put some classes on the navs for better style customization options
+            $("#SiteNav li.current").prev().addClass("onPrev");
+            $("#SiteNav li.current").next().addClass("onNext");
+            $("#SiteNav li:first").addClass("first");
+            $("#SiteNav li:last, #SiteNav li a.current:last").addClass("last");
+
+            $('#UserInfo').hover(function () {
+                $('div.dropDown', this).css('width', $(this).outerWidth()).toggle();
+            });
+
+            // hidden advanced options & searching
+            $('#globalSearchToggle').click(function () {
+                $(this).next().slideToggle('fast');
+                $('span.icon-navbarSearch', this).toggleClass('selected');
+                return false;
+            });
+
+            $('input.datepicker').datepicker();
+
+          
+            // Tabber
+            $('div.Tabber').each(function () {
+                $('li:first', this).addClass('first');
+                $('li:last', this).addClass('last');
+            }).delegate('li', 'click', function () {
+                var tabber = $(this).parent();
+
+                $('.current', tabber).removeClass('current');
+                $(this).addClass('current');
+
+                var id = tabber.attr('id');
+                if (id) {
+                    var t = $('.' + id);
+                    if (t.length)
+                        t.hide();
+                }
+                var target = $('#' + $(this).attr('rel'));
+                if (target.length)
+                    target.css('display', 'block');
+                return false;
+            });
+
+            var globalSearch = $('#globalSearch');
+            if (globalSearch != null) {
+                globalSearch.watermark('@Html.JavascriptTerm("EnterYourSearchText", "Enter your search text")').jsonSuggest('@Url.Content("~/Home/GlobalSearch")',
+                    { minCharacters: 3, border: 0, ajaxResults: true, startCollapsed: false, onSelect: function (item, group) {
+                        var url = '<%= ResolveUrl("~/") %>';
+                        switch (group) {
+                            case 'News':
+                            case 'Documents':
+                                url += group + '/Details/' + item.id;
+                                break;
+                            case 'RetailCustomers':
+                            case 'PreferredCustomers':
+                            case 'Prospects':
+                                url += 'Contacts/Edit/' + item.id;
+                                break;
+                            case 'TeamMembers':
+                                url += 'Performance/View/' + item.id;
+                                break;
+                        }
+                        window.location = url;
+                    }
+                    });
+            }
+
+            if ($.browser.msie) {
+                $('body').addClass('IE' + parseInt($.browser.version));
+            }
+        });
+
+		function setLanguage(languageId) {
+			if (languageId != '<%= CoreContext.CurrentLanguageID %>') {
+				$.post('<%= ResolveUrl("~/Security/SetLanguage") %>', { languageId: languageId }, function (response) {
+					if (response.result) {
+					window.location.reload();
+				} else {
+					showMessage(response.message, true);
+				}
+				});
+			}
+		}
+
+		function showLoading(element) {
+			if (!element.jquery)
+				element = $(element);
+			element.after($('<img src="<%= ResolveUrl("~/Resource/Content/Images/loader_36x36.gif") %>" alt="loading..." />').attr('height', element.css('height'))).hide();
+		}
+
+		function hideLoading(element) {
+			if (!element.jquery)
+				element = $(element);
+			element.show().next().remove();
+		}
+    </script>
+
+    <%if (DistributorBackOffice.Controllers.BaseController.GetPageMode() == NetSteps.Common.Constants.ViewingMode.Edit)
+      {%>
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Resource/Content/CSS/EditMode.css") %>" />
+    <%} %>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+    <%= StackExchange.Profiling.MiniProfiler.RenderIncludes()%>
+    
+</head>
+<body>
+    <div id="PageContain">
+        <div id="TopPane">
+            <%	var page = DistributorBackOffice.Controllers.BaseController.GetCurrentPage();
+                var modelIsPage = page != null; %>
+            <div class="inner">
+                <div id="LogoContain">
+                    <%= (ViewData["Logo"] as HtmlSection).ToDisplayLogo(modelIsPage ? page.PageID : (int?)null, ResolveUrl("~/"))%></div>
+                <!-- site navigation -->
+                <div id="SiteNav" class="UI-siteNav">
+                    <div class="inner UI-siteNav">
+                        <ul class="FL inlineNav mainNav">
+                            <%= Html.Tab("~/", Html.Term("Home"), false) %>
+                           <%-- <li><a href="/" class="UI-icon-container"><span class="UI-icon icon-navbarHome"></span><span class="iconText">Home</span></a></li>--%>
+                            <%= Html.Tab("~/Contacts", Html.Term("Contacts"), false) %>
+                            <%= Html.Tab("~/Performance", Html.Term("Performance"), false) %>
+                            <%= Html.Tab("~/News", Html.Term("News"), false) %>
+                            <%= Html.Tab("~/Documents", Html.Term("Documents"), false) %>
+                            <%= Html.Tab("~/Orders", Html.Term("Orders"), true) %>
+                            <%= Html.Tab("~/Account", Html.Term("MyAccount", "My Account"), true) %>
+                            <%= Html.Tab("~/Communication", Html.Term("Communication"), true)%>
+                        </ul>
+                        <div class="FR">
+                            <!-- site search -->
+                            <div id="globalSearchToggle" class="MoreSearchOptions globalSearch FL">
+                                <a href="javascript:void(0);" class="UI-icon-container" title="Search this site"><span class="UI-icon icon-navbarSearch"></span><span class="iconText">
+                                    <%= Html.Term("SiteSearch", "Site Search")%></span></a>
+                            </div>
+                            <div class="dropDown MoreSearch fancyInput globalSearchBar">
+                                <div id="SearchContainer" class="Search pad10 UI-mainBg brdrYYNN">
+                                    <input type="text" class="TextInput globalsearch brdrAll" id="globalSearch" />
+                                </div>
+                            </div>
+                            <!--/end site search -->
+                            <!-- user pull down -->
+                            <div id="UserInfo" class="FL userInfo  UI-siteNav">
+                                <p class="name UI-siteNav">
+                                    <span class="UserID">
+                                        <%= CoreContext.CurrentAccount != null ? CoreContext.CurrentAccount.FullName : string.Empty %></span>
+                                </p>
+                                <div class="UI-mainBg dropDown">
+                                    <div class="UserLinks">
+                                        <!-- language -->
+                                        <div class="Language">
+                                            <%--<a href="javascript:void(0);" class="IconText Speech"><span>
+                                            <%= CoreContext.CurrentLanguage.GetTerm() %></span> </a>--%>
+                                            <% foreach (var language in SmallCollectionCache.Instance.Languages)
+                                               { %>
+                                            <a href="javascript:void(0);" onclick="javascript:setLanguage(<%= language.LanguageID %>);" <%= (language.LanguageID == CoreContext.CurrentLanguageID) ? "selected" : "" %>>
+                                                <%= language.GetTerm(language.LanguageID) %></a>
+                                            <% } %>
+                                        </div>
+                                        <!--/ end language -->
+                                        <%
+                                            var autoships = ViewData["Autoships"] as List<AutoshipOrder>;
+                                            bool hasSiteSubscription = false;
+                                            if (autoships != null)
+                                                hasSiteSubscription = autoships.Any(a => a.IsSiteSubscriptionTemplate());
+                                            if (hasSiteSubscription)
+                                            {	// TODO: Add SSO link to 'Edit My PWS' - JHE
+                                        %><a href="#">
+                                            <%= Html.Term("EditMyPWS", "Edit My PWS")%></a>
+                                        <% } %><a href="<%= ResolveUrl("~/Logout") %>">
+                                            <%= Html.Term("LogOut", "Log Out")%></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/ end user pulldown -->
+                        </div>
+                    </div>
+                    <!-- end inner -->
+                </div>
+                <!--/ end site navigation -->
+                <span class="clr"></span>
+            </div>
+            <!--/ end inner -->
+        </div>
+        <!--/ end top pane -->
+        <div id="Container">
+            <div id="ContentContainer">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="FooterPane">
+            <div class="center">
+                <%= Html.Term("Copyright", "Copyright")%>
+                2010 NetSteps<br />
+                <%= Html.Term("Terms&Conditions", "Terms & Conditions")%>
+                |
+                <%= Html.Term("PrivacyPolicy", "Privacy Policy")%>
+                |
+                <%= Html.Term("Disclaimer")%>
+                |
+                <%= Html.Term("ContactUs", "Contact Us")%>
+            </div>
+            <span class="ClearAll"></span>
+        </div>
+    </div>
+    <% Html.RenderPartial("MessageCenter"); %>
+    <% if (DistributorBackOffice.Controllers.BaseController.GetPageMode() == NetSteps.Common.Constants.ViewingMode.Edit)
+       {
+           Html.RenderPartial("~/Views/Edit/CorporateEditNotification.cshtml");
+       } %>
+    <!--Pre process the loading gifs so that they don't take forever to load - DES-->
+    <div style="position:absolute; visibility:hidden; top:-1000px;left:-1000px;">
+        <img src="<%= ResolveUrl("~/Resource/Content/Images/loader_20x20.gif") %>" alt="" />
+        <img src="<%= ResolveUrl("~/Resource/Content/Images/loader_36x36.gif") %>" alt="" />
+        <img src="<%= ResolveUrl("~/Resource/Content/Images/loader_bar.gif") %>" alt="" />
+        <img src="<%= ResolveUrl("~/Resource/Content/Images/processing.gif") %>" alt="" />
+    </div>
+    <%this.Html.RenderPartial("_GoogleAnalytics", new AnalyticsModel(new HttpRequestWrapper(this.Request)));%>
+</body>
+</html>

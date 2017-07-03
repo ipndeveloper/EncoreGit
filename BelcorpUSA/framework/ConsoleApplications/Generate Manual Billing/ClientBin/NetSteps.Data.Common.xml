@@ -1,0 +1,642 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Data.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Data.Common.BaseRepository`1">
+      <summary />
+      <typeparam name="T" />
+    </member>
+    <member name="F:NetSteps.Data.Common.BaseRepository`1._context">
+      <summary>
+            The context object for the database
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.SetDataContext(NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Sets the data context.
+            </summary>
+      <param name="unitOfWork">The unit of work.</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Fetch">
+      <summary>
+            Gets all records as an IQueryable
+            </summary>
+      <returns>An IQueryable object containing the results of the query</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.GetAll">
+      <summary>
+            Gets all records as an IEnumberable
+            </summary>
+      <returns>An IEnumberable object containing the results of the query</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Find(System.Func{`0,System.Boolean})">
+      <summary>
+            Finds a record with the specified criteria
+            </summary>
+      <param name="predicate">Criteria to match on</param>
+      <returns>A collection containing the results of the query</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Single(System.Func{`0,System.Boolean})">
+      <summary>
+            Gets a single record by the specified criteria (usually the unique identifier)
+            </summary>
+      <param name="predicate">Criteria to match on</param>
+      <returns>A single record that matches the specified criteria</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.SingleOrDefault(System.Func{`0,System.Boolean})">
+      <summary>
+            Gets a single record by the specified criteria (usually the unique identifier) or default(T) 
+            </summary>
+      <param name="predicate">Criteria to match on</param>
+      <returns>A single record that matches the specified criteria</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.First(System.Func{`0,System.Boolean})">
+      <summary>
+            The first record matching the specified criteria
+            </summary>
+      <param name="predicate">Criteria to match on</param>
+      <returns>A single record containing the first record matching the specified criteria</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Delete(`0)">
+      <summary>
+            Deletes the specified entitiy
+            </summary>
+      <param name="entity">Entity to delete</param>
+      <exception cref="T:System.ArgumentNullException"> if <paramref name="entity" /> is null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Delete(System.Func{`0,System.Boolean})">
+      <summary>
+            Deletes records matching the specified criteria
+            </summary>
+      <param name="predicate">Criteria to match on</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Add(`0)">
+      <summary>
+            Adds the specified entity
+            </summary>
+      <param name="entity">Entity to add</param>
+      <exception cref="T:System.ArgumentNullException"> if <paramref name="entity" /> is null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Attach(`0)">
+      <summary>
+            Attaches the specified entity
+            </summary>
+      <param name="entity">Entity to attach</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Dispose">
+      <summary>
+            Releases all resources used by the WarrantManagement.DataExtract.Dal.ReportDataBase
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.BaseRepository`1.Dispose(System.Boolean)">
+      <summary>
+            Releases all resources used by the WarrantManagement.DataExtract.Dal.ReportDataBase
+            </summary>
+      <param name="disposing">A boolean value indicating whether or not to dispose managed resources</param>
+    </member>
+    <member name="T:NetSteps.Data.Common.Context.IOrderContext">
+      <summary>
+            The OrderContext interface.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Context.IOrderContext.Clear">
+      <summary>
+            Clears the order context.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Context.IOrderContext.Order">
+      <summary>
+            Gets or sets the order.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Context.IOrderContext.CouponCodes">
+      <summary>
+            Gets the coupon codes.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Context.IOrderContext.InjectedOrderSteps">
+      <summary>
+            Gets the injected order steps.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Context.IOrderContext.ValidOrderStatusIdsForOrderAdjustment">
+      <summary>
+            Gets the valid order status ids for order adjustment.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Context.IOrderContext.SortedDynamicKitProducts">
+      <summary>
+            Gets the list of all sorted dynamic kit products
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.IAccountStatus">
+      <summary>
+            The AccountStatus interface.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Locale.ITermName">
+      <summary>
+            Author: John Egbert
+            Description: Interface for Entities with a TermName property.
+            Used to more easily translate entity names.
+            Created: 06-17-2010
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Locale.ITermName.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Locale.ITermName.TermName">
+      <summary>
+            Gets or sets the term name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IAccountStatus.AccountStatusID">
+      <summary>
+            Gets or sets the account status id.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.IAccountStatusChangeReason">
+      <summary>
+            The AccountStatusChangeReason interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IAccountStatusChangeReason.AccountStatusChangeReasonID">
+      <summary>
+            Gets or sets the account status change reason id.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IAccountStatusChangeReason.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.IAutoshipScheduleDay">
+      <summary>
+            The AutoshipScheduleDay interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IAutoshipScheduleDay.Day">
+      <summary>
+            Gets or sets the day.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.ICategory">
+      <summary>
+            The Category interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.ICategory.AbstractedTranslations">
+      <summary>
+            Gets or sets the translations.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.ICategory.CategoryID">
+      <summary>
+            Gets or sets the category id.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.ICategoryTranslation">
+      <summary>
+            The CategoryTranslation interface.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Locale.ILanguageID">
+      <summary>
+            Author: John Egbert
+            Description: Interface for Entities with a LanguageID property.
+            Created: 07-08-2010
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Locale.ILanguageID.LanguageID">
+      <summary>
+            Gets or sets the language id.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.ICategoryTranslation.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.IStateProvince">
+      <summary>
+            The StateProvince interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IStateProvince.CountryID">
+      <summary>
+            Gets or sets the country id.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IStateProvince.StateAbbreviation">
+      <summary>
+            Gets or sets the state abbreviation.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IStateProvince.Name">
+      <summary>
+            Gets or sets the name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IStateProvince.StateProvinceID">
+      <summary>
+            Gets or sets the state province id.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Entities.IUserStatus">
+      <summary>
+            The UserStatus interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Entities.IUserStatus.UserStatusID">
+      <summary>
+            Gets or sets the user status id.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.ISitePrincipal">
+      <summary>
+            TODO: Update summary.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Locale.ILanguageIDExtensions">
+      <summary>
+            The i language id extensions.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Locale.ILanguageIDExtensions.GetByLanguageIdOrDefaultForDisplay``1(System.Collections.Generic.ICollection{``0},System.Int32)">
+      <summary>
+            The get by language id or default for display.
+            </summary>
+      <param name="descriptionTranslations">
+            The description translations.
+            </param>
+      <param name="languageID">
+            The language id.
+            </param>
+      <typeparam name="T" />
+      <returns>
+            The type that implements ILanguageID.
+            </returns>
+    </member>
+    <member name="T:NetSteps.Data.Common.Locale.ILocaleService">
+      <summary>
+            The LocaleService interface.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Locale.ILocaleService.TranslateTerm(NetSteps.Data.Common.Locale.ITermName)">
+      <summary>
+            The translate term.
+            </summary>
+      <param name="obj">
+            The object implementing ITermName.
+            </param>
+      <returns>
+            The <see cref="T:System.String" />.
+            </returns>
+    </member>
+    <member name="P:NetSteps.Data.Common.Locale.ILocaleService.StatesProvinces">
+      <summary>
+            Gets the states provinces.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Orders.OrderPackageInfoModel">
+      <summary>
+            The order package info model.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Orders.OrderPackageInfoModel.ShipMethodName">
+      <summary>
+            Gets or sets the ship method name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Orders.OrderPackageInfoModel.ShipDate">
+      <summary>
+            Gets or sets the ship date.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Orders.OrderPackageInfoModel.BaseTrackUrl">
+      <summary>
+            Gets or sets the base track url.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Orders.OrderPackageInfoModel.TrackingNumber">
+      <summary>
+            Gets or sets the tracking number.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Data.Common.Orders.OrderPackageInfoModel.TrackingUrl">
+      <summary>
+            Gets or sets the tracking url.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Providers.IAuthenticatedPrincipalProvider">
+      <summary>
+            Provides access to current account information
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Providers.IAuthenticatedPrincipalProvider.GetCurrent">
+      <summary>
+            Get ISitePrincipal based on current authenticated account
+            </summary>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Data.Common.Providers.IOrderContextProvider">
+      <summary>
+            Provides the information for your current order context.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Providers.IOrderContextProvider.GetOrderContext">
+      <summary>
+            Gets your IOrderContext.
+            </summary>
+      <returns />
+    </member>
+    <member name="F:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry._orderStepHandlerConstructors">
+      <summary>
+            The dictionary of order step handlers registered with a string representation of their types as a key.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.RegistrationRecord">
+      <summary>
+            A provider registration record.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.RegistrationRecord.UntypedConstruct">
+      <summary>
+            An untyped provider.
+            </summary>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.RegistrationRecord`1">
+      <summary>
+            Provides an abstraction for getting an untyped Order Step Handler.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.Load(System.Int32)">
+      <summary>
+            Loads the specified order by its OrderID.
+            </summary>
+      <param name="orderID">The order ID.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.AddOrderItemsToOrderBundle(NetSteps.Data.Common.Context.IOrderContext,NetSteps.Data.Common.Entities.IOrderItem,System.Collections.Generic.IEnumerable{NetSteps.Data.Common.Context.IOrderItemQuantityModification},System.Int32)">
+      <summary>
+            Adds child order items to bundle item already in the cart.
+            </summary>
+      <param name="orderContext">The order context.</param>
+      <param name="bundleItem">The bundle item.</param>
+      <param name="itemsToAdd">The items to add.</param>
+      <param name="bundleGroupID">The bundle group Id that receives the item.</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.UpdateOrderItemQuantities(NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.Data.Common.Context.IOrderItemQuantityModification})">
+      <summary>
+            Updates quantities of order items within the order.
+            </summary>
+      <param name="orderContext">The order context.</param>
+      <param name="itemsToUpdate">The items to update.</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.UpdateOrderItemProperties(NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.Data.Common.Context.IOrderItemPropertyModification})">
+      <summary>
+            Updates properties of order items within the order.
+            </summary>
+      <param name="orderContext">The order context.</param>
+      <param name="itemsToUpdate">The items to update.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="orderContext != null" vb="orderContext &lt;&gt; Nothing">orderContext != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderContext == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.SplitOrderItem(NetSteps.Data.Common.Context.IOrderContext,NetSteps.Data.Common.Entities.IOrderItem,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Splits order items within the order into multiple line items.
+            </summary>
+      <param name="orderContext">The order context.</param>
+      <param name="targetOrderItem">The target order item.</param>
+      <param name="newOrderItemQuantities">The new order item quantities.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.UpdateOrder(NetSteps.Data.Common.Context.IOrderContext)">
+      <summary>
+            Updates the order, applies order adjustments and autobundling, totals the order.
+            </summary>
+      <param name="orderContext">The order context.</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.SubmitOrder(NetSteps.Data.Common.Context.IOrderContext)">
+      <summary>
+            Submits the order and commits order adjustments.
+            </summary>
+      <param name="orderContext">The order context.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.GetAccountOrderCount(System.Int32)">
+      <summary>
+            Gets the total count of orders for the specified account
+            </summary>
+      <param name="accountID">The accountID.</param>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.AttachToParty(NetSteps.Data.Common.Entities.IOrder,System.Int32)">
+      <summary>
+            Adds the current order to a party
+            </summary>
+      <param name="order">The order</param>
+      <param name="partyID">ID of the party you'd like to use</param>
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="partyID &gt; 0" vb="partyID &gt; 0">partyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">partyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.DetachFromParty(NetSteps.Data.Common.Entities.IOrder)">
+      <summary>
+            Removes the order from the party it's currently attached to. If not attached to a party, it does nothing
+            </summary>
+      <param name="order">The order</param>
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.GetActivePromotionCodes(System.Int32)">
+      <summary>
+            Retrieves promotion codes that can be applied for a particular account. 
+            </summary>
+      <param name="accountID">The accountID to check.</param>
+      <returns>List of valid promotion codes</returns>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.AddItem(NetSteps.Data.Common.Entities.IOrder,NetSteps.Data.Common.Entities.IOrderCustomer,NetSteps.Data.Common.Entities.IProduct,System.Int32,System.Int16,System.Nullable{System.Int32},System.String,System.Nullable{System.Int32})">
+      <summary>
+            Adds an item to an order
+            </summary>
+      <param name="order" />
+      <param name="orderCustomer" />
+      <param name="product" />
+      <param name="quantity" />
+      <param name="orderItemTypeID">Specifies whether this is a normal item, a booking item, host reward, etc</param>
+      <param name="hostRewardRuleId">Only applicable when adding an item as a host reward</param>
+      <param name="parentGuid">Used for bundles to specify what item on the order is supposed to be the parent item</param>
+      <param name="dynamicKitGroupId" />
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="orderCustomer != null" vb="orderCustomer &lt;&gt; Nothing">orderCustomer != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderCustomer == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="product != null" vb="product &lt;&gt; Nothing">product != null</requires>
+      <exception cref="T:System.ArgumentNullException">product == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.AddOrUpdateOrderItem(NetSteps.Data.Common.Entities.IOrder,NetSteps.Data.Common.Entities.IOrderCustomer,System.Collections.Generic.IEnumerable{NetSteps.Data.Common.Models.OrderItemUpdateInfo},System.Boolean,System.String,System.Nullable{System.Int32})">
+      <summary>
+            Adds or updates an order item
+            </summary>
+      <param name="order" />
+      <param name="orderCustomer" />
+      <param name="productUpdates">List of changes to apply to the order</param>
+      <param name="overrideQuantity" />
+      <param name="parentGuid" />
+      <param name="dynamicKitGroupID" />
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="orderCustomer != null" vb="orderCustomer &lt;&gt; Nothing">orderCustomer != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderCustomer == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="productUpdates != null" vb="productUpdates &lt;&gt; Nothing">productUpdates != null</requires>
+      <exception cref="T:System.ArgumentNullException">productUpdates == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.RemoveOrderItem(NetSteps.Data.Common.Entities.IOrderCustomer,NetSteps.Data.Common.Entities.IOrderItem)">
+      <summary>
+            Removes the given item from the given customer
+            </summary>
+      <param name="orderCustomer" />
+      <param name="orderItem" />
+      <requires exception="T:System.ArgumentNullException" csharp="orderCustomer != null" vb="orderCustomer &lt;&gt; Nothing">orderCustomer != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderCustomer == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="orderItem != null" vb="orderItem &lt;&gt; Nothing">orderItem != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderItem == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.ITitleService.GetTitles">
+      <summary>
+            Gets all available titles.
+            </summary>
+      <returns />
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.ITitleService.GetAccountTitle(System.Int32,System.Int32,System.Nullable{System.Int32})">
+      <summary>
+            Gets an account's title.
+            </summary>
+      <param name="accountID">The account ID.</param>
+      <param name="titleTypeID">The title type ID.</param>
+      <param name="periodID">The period ID.  Defaults to the current period if none is provided</param>
+      <returns />
+      <requires exception="T:System.ArgumentException" csharp="(() =&gt; {&#xD;&#xA;    {&#xD;&#xA;        int? local_0;&#xD;&#xA;    }&#xD;&#xA;    return titleTypeID &gt; 0; })()" vb="(() =&gt; {&#xD;&#xA;    int? local_0;&#xD;&#xA;    return titleTypeID &gt; 0; })()">(() =&gt; {
+    {
+        int? local_0;
+    }
+    return titleTypeID &gt; 0; })()</requires>
+      <exception cref="T:System.ArgumentException">!(() =&gt; {
+    {
+        int? local_0;
+    }
+    return (titleTypeID &gt; 0); })()</exception>
+      <requires exception="T:System.ArgumentException" csharp="(() =&gt; {&#xD;&#xA;    {&#xD;&#xA;        if (periodID.HasValue)&#xD;&#xA;        {&#xD;&#xA;            local_0 = periodID;&#xD;&#xA;            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;&#xD;&#xA;        }&#xD;&#xA;        else&#xD;&#xA;        {&#xD;&#xA;            push 1;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;    return pop != 0; })()" vb="(() =&gt; {&#xD;&#xA;    If periodID.HasValue Then&#xD;&#xA;    local_0 = periodID&#xD;&#xA;    push local_0.GetValueOrDefault() &gt; 0 AndAlso local_0.HasValue;&#xD;&#xA;    else    push 1;&#xD;&#xA;    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (periodID.HasValue)
+        {
+            local_0 = periodID;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentException">!(() =&gt; {
+    {
+        if (periodID.HasValue)
+        {
+            (local_0 = periodID);
+            push (local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue);
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return (pop != 0); })()</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.ITitleService.GetAccountTitles(System.Int32,System.Nullable{System.Int32})">
+      <summary>
+            Gets the account titles.
+            </summary>
+      <param name="accountID">The account ID.</param>
+      <param name="periodID">The period ID.</param>
+      <returns />
+      <requires exception="T:System.ArgumentException" csharp="(() =&gt; {&#xD;&#xA;    {&#xD;&#xA;        int? local_0;&#xD;&#xA;        if (periodID.HasValue)&#xD;&#xA;        {&#xD;&#xA;            local_0 = periodID;&#xD;&#xA;            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;&#xD;&#xA;        }&#xD;&#xA;        else&#xD;&#xA;        {&#xD;&#xA;            push 1;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;    return pop != 0; })()" vb="(() =&gt; {&#xD;&#xA;    int? local_0;&#xD;&#xA;    If periodID.HasValue Then&#xD;&#xA;    local_0 = periodID&#xD;&#xA;    push local_0.GetValueOrDefault() &gt; 0 AndAlso local_0.HasValue;&#xD;&#xA;    else    push 1;&#xD;&#xA;    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        int? local_0;
+        if (periodID.HasValue)
+        {
+            local_0 = periodID;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentException">!(() =&gt; {
+    {
+        int? local_0;
+        if (periodID.HasValue)
+        {
+            (local_0 = periodID);
+            push (local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue);
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return (pop != 0); })()</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.IOrderStepHandler.VerifyStepCompletion(NetSteps.Data.Common.Context.IOrderStep)">
+      <requires exception="T:System.ArgumentNullException" csharp="step != null" vb="step &lt;&gt; Nothing">step != null</requires>
+      <exception cref="T:System.ArgumentNullException">step == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.IOrderStepHandler.ValidateStepResponse(NetSteps.Data.Common.Context.IOrderStep)">
+      <requires exception="T:System.ArgumentNullException" csharp="step != null" vb="step &lt;&gt; Nothing">step != null</requires>
+      <exception cref="T:System.ArgumentNullException">step == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.GetOrderStepHandler(System.String)">
+      <requires exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.GetOrderStepHandler``1(System.String)">
+      <requires exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.RegisterHandler``1(System.String)">
+      <requires exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.GetOrderStepHandler(System.String)">
+      <requires inheritedFrom="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.GetOrderStepHandler(System.String)" inheritedFromTypeName="IOrderStepHandlerRegistry" exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.GetOrderStepHandler``1(System.String)">
+      <requires inheritedFrom="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.GetOrderStepHandler``1(System.String)" inheritedFromTypeName="IOrderStepHandlerRegistry" exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Registries.Concrete.OrderStepHandlerRegistry.RegisterHandler``1(System.String)">
+      <requires inheritedFrom="M:NetSteps.Data.Common.Registries.IOrderStepHandlerRegistry.RegisterHandler``1(System.String)" inheritedFromTypeName="IOrderStepHandlerRegistry" exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.TryCancel(NetSteps.Data.Common.Entities.IOrder,System.String@)">
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+    </member>
+    <member name="M:NetSteps.Data.Common.Services.IOrderService.CanChangeToPaidStatus(NetSteps.Data.Common.Entities.IOrder)">
+      <requires exception="T:System.ArgumentNullException" csharp="order != null" vb="order &lt;&gt; Nothing">order != null</requires>
+      <exception cref="T:System.ArgumentNullException">order == null</exception>
+    </member>
+  </members>
+</doc>

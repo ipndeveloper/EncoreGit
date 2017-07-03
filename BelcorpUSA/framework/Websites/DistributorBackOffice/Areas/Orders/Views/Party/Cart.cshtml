@@ -1,0 +1,55 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Party.ICartModel
+@{
+    ViewBag.Title = Html.Term("Cart");
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Party")">@Html.Term("Party", "Party")</a> &gt; @Html.Term("Workstation_PartyEntry_GuestCarts", "Guest Shopping Bags")
+}
+@section ActionItems {
+    @Html.ActionItem("javascript:void(0);", Html.Term("AddGuests", "Add Guests"), "icon-actionParty addGuests")
+    @Html.ActionItem("javascript:void(0);", Html.Term("AddMyselfAsAGuest", "Add Myself As A Guest"), "icon-actionContactAdd AddMyself")
+	@Html.Partial("_PartyLinks")
+}
+@section SavePendingChanges {
+    @Html.Partial("SavePendingChanges")
+}
+
+@section rail{
+    <div id="Follow">
+        @Html.Partial("PartySummary", Model.Party)
+        <div class="center pad10">
+            <a href="javascript:void(0);" id="btnContinue" class="Button Primary waitOnPendingSave"><span>@Html.Term("DWSPartySaveAndContinueButton","Save and Continue")</span></a>
+        </div>
+    </div>
+}
+@section title{
+    @Html.Term("Workstation_PartyEntry_GuestCarts", "Guest Shopping Bags")
+}
+<div id="cartModelContainer">
+	@foreach(var cartElement in Model.CartElements)
+	{
+		<div id='@string.Format("div{0}", cartElement.PartialViewName)'>
+			@Html.Partial(cartElement.PartialViewName, cartElement.Model)
+		</div>
+	}
+</div>
+<div id="unsavedChangesModal" class="jqmWindow LModal">
+	<div class="mContent">
+		<h2>@Html.Term("DWS_Party_Cart_LeavingInProgressOrder", "The party has unsaved changes.  What would you like to do?")</h2>
+       
+		<a href="javascript:void(0);" id="btnStayOnParty" class="FL LinkCancel jqmClose" >
+			<span>@Html.Term("DWS_Party_Cart_StayOption", "Stay")</span>
+		</a>
+		<a href="javascript:void(0);" id="btnSaveParty" class="Button BigBlue">
+			<span>@Html.Term("DWS_Party_Cart_SaveOption", "Save")</span>
+		</a>
+		<a href="javascript:void(0);" id="btnLeaveParty" class="FR LinkCancel jqmClose" >
+			<span>@Html.Term("DWS_Party_Cart_LeaveOption", "Leave")</span>
+		</a>
+		<span class="clr"></span>
+	</div>
+</div>
+@section bodyFooter
+{
+	@Html.Partial("_CartScripts")
+}

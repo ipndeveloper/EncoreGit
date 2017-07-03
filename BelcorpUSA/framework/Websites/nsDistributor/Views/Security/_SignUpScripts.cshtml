@@ -1,0 +1,25 @@
+﻿<script type="text/javascript">
+    //Host setup options (sliding panel thingy)
+    //function openPanel(index) {
+    //    $('.target').slideUp('fast').parents('li').removeClass('selected');
+    //    $('div.target:eq(' + index + ')').slideDown(600).parents('li').addClass('selected');
+    //};
+    $(function () {
+        $('#SignUpActionList li').each(function () {
+            var targIndex = $(this).index(),
+				targDiv = $('div.target:eq(' + targIndex + ')'),
+				colWidth = $('li.actionItems').width(),
+				targContentDiv = $(this).find('.signUpActionContent'),
+				col = '';
+            if (targIndex % 2 === 0) {
+                col = 'rightCol';
+            }
+            else {
+                col = 'leftCol';
+                targContentDiv.css({ 'margin-left': '-' + colWidth - 10 + 'px' });
+            }
+            targDiv.parents().next('li').addClass(col);
+            targContentDiv.width(2 * colWidth - 10);
+        });
+    });
+</script>

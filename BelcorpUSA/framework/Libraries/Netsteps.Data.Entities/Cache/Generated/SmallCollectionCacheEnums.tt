@@ -1,0 +1,113 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="../../CommonTemplate.tt" #>
+<#@ include file="EF.Utility.CS.ttinclude" #>
+<#@ output extension=".cs" #>
+<# 
+
+List<EntityModelInfo> allPaths = new List<EntityModelInfo>();
+allPaths.Add(new EntityModelInfo() { Path = @"../../EntityModels/Main/NetStepsDB.edmx", NameSpace = "NetSteps.Data.Entities" });
+
+CodeGenerationTools code = new CodeGenerationTools(this); 
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this, 1);
+MetadataTools ef = new MetadataTools(this);
+
+List<string> smallCollectionClasses = GetSmallCollectionClasses("../../");
+
+#>
+using System;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Linq;
+using NetSteps.Core.Cache;
+using NetSteps.Encore.Core.IoC;
+
+
+namespace NetSteps.Data.Entities.Cache
+{
+	public partial class SmallCollectionCache
+	{ 
+<#
+	foreach (EntityModelInfo path in allPaths)
+	{
+		string inputFile = path.Path;
+		MetadataWorkspace metadataWorkspace = null;
+		bool allMetadataLoaded =loader.TryLoadAllMetadata(inputFile, out metadataWorkspace);
+		EdmItemCollection ItemCollection = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+		//OriginalValueMembers originalValueMembers = new OriginalValueMembers(allMetadataLoaded, metadataWorkspace, ef);
+		//string namespaceName = code.VsNamespaceSuggestion();
+		string namespaceName = path.NameSpace; 
+		
+		
+		foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e => e.Name)) 
+		{
+			//string primaryKeyTypeName = string.Empty;
+			string primaryKeyTypeName = "int";
+			var primaryKeyType = GetEntityKey(metadataWorkspace, entity.Name);
+			if(primaryKeyType != null)
+				primaryKeyTypeName = primaryKeyType.TypeUsage.EdmType.Name;
+	
+			string entitySetName = GetEntitySetName(metadataWorkspace, entity.Name);
+			if(smallCollectionClasses.Contains(entity.Name))
+			{
+#>
+		public <#=code.Escape(entity)#>Cache <#=entitySetName#> = new <#=code.Escape(entity)#>Cache();
+		public sealed class <#=code.Escape(entity)#>Cache : SmallCollectionBase<<#=code.Escape(entity)#>, <#=primaryKeyTypeName#>>
+		{
+			public <#=code.Escape(entity)#>Cache()
+				: base("<#=code.Escape(entity)#>ListCache")
+			{ }
+
+			protected override <#=primaryKeyTypeName#> PerformGetKey(<#=code.Escape(entity)#> item)
+			{
+				return item.<#=primaryKeyType#>;
+			}
+			
+			protected override List<<#=code.Escape(entity)#>> PerformInitializeList()
+			{
+				var result = <#=code.Escape(entity)#>.LoadAllFull();
+				return result.ToList();
+			}
+		}
+
+<#
+			}
+		}
+	}
+#>
+	}
+}
+
+<#+
+string GetEntitySetName(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	string entitySetName = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.Name).FirstOrDefault();
+
+	return entitySetName;
+}
+
+EdmMember GetEntityKey(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var context = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	//var container = metadataWorkspace.GetEntityContainer(context.DefaultContainerName, DataSpace.CSpace);
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+
+	var keyMembers = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.ElementType.KeyMembers).FirstOrDefault();
+
+	if(keyMembers != null)
+		return keyMembers.FirstOrDefault();
+	else
+		return null;
+}
+
+public class EntityModelInfo
+{
+	public string Path { get; set; }
+	public string NameSpace { get; set; }
+}
+#>

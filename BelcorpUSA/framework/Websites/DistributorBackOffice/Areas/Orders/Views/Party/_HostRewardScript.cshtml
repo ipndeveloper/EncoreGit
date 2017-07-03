@@ -1,0 +1,450 @@
+﻿@model Party
+           <!-- HOST REWARDS SCRIPT -->
+<script type="text/javascript">
+	$(function () {
+	    function postFailure(response) {
+	        hideLoading(t);
+			showMessage(response.message, true);
+	    }
+
+		function updateCartAndTotals(response) {
+			if (response.orderItems) {
+				$('#hostOrderItems tr.EmptyCart').hide();
+				$('#hostOrderItems').html(response.orderItems);
+				$('#hostOrderItems').show();
+			}
+			else {
+				$('#hostOrderItems tr.EmptyCart').show();
+			}
+
+			updateRemainingProductDiscounts(response.remainingProductDiscounts);
+			updateRemainingExclusiveProducts(response.remainingExclusiveProducts);
+			updateRemainingFreeItems(response.remainingFreeItems);
+			updateRemainingItemDiscounts(response.remainingItemDiscounts);
+
+			var totalRemainingDiscounts = 0;
+			for (i in response.remainingProductDiscounts) {
+				totalRemainingDiscounts += response.remainingProductDiscounts[i];
+			}
+			for (i in response.remainingExclusiveProducts) {
+				totalRemainingDiscounts += response.remainingExclusiveProducts[i];
+			}
+			if (totalRemainingDiscounts == 0) {
+				$('#RewardsAlert').hide();
+				warned = false;
+			}
+
+			if (response.showOutOfStockMessage) {
+				$('#outOfStockMessage').show();
+				$('#outOfStockProducts').append('<li>' + lastProduct + '</li>');
+			}
+			
+			var promoHeader = $('#promotionHeader').hide();
+			if (response.promotions && response.promotions.length) {
+    			var promoHtml = '';
+    			$.each(response.promotions, function () {
+    				var row = '';
+    				if (this.PromotionOutOfStock) {
+    					row += '<div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification"><span class="UI-icon FL icon-star"></span><span class="FL promoItem">';
+    					row += this.Description;
+    					row += '</span><span title=\"';
+    					row += '@Html.Term("The free item(s) for this promotion are currently Out of Stock")';
+    					row += '\" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span></div>';
+    				}
+    				else {
+    					row += '<div class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification"><span class="UI-icon FL icon-star"></span><span class="FL promoItem">' + this.Description;
+    					if (this.StepID) {
+    						row += '<a class="bold selectGift" href="javascript:void(0);" stepId="' + this.StepID + '"> @Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>';
+    					}
+    					row += '</span></div>';
+    				}
+    				promoHtml += row;
+    			});
+    			$('#promotionList', promoHeader).empty().html(promoHtml);
+    			promoHeader.show();
+			}
+
+			// refresh the totals
+			updateTotals(response);
+			$('input.quantity').numeric();
+		    
+            partyHasChanges(true);
+		}
+
+		function updateTotals(response) {
+			$.each(['hostOverage', 'subtotal', 'commissionableTotal', 'taxTotal', 'shippingAndHandlingTotal', 'grandTotal', 'exclusiveProductsSubtotal'], function(i, item) {
+				$('#hostTotals .' + item).text(response.totals[item]);
+			});
+
+			$('#hostCreditRemaining').text(response.totals.hostCreditRemaining);
+			$('#bookingCreditRemaining').text(response.remainingBookingCredits);
+
+			$.each(['partyHostCredit', 'partySubtotal', 'partyShipping', 'partyHandling', 'partyTax', 'partyCommissionableTotal', 'partyGrandTotal', 'partyShippingAndHandling', 'directShippingAndHandling'], function(i, item) {
+				$('#' + item).text(response.totals[item]);
+			});
+		}
+
+		$('input.quantity').numeric();
+
+		$('#hostCreditProductLookup').jsonSuggest('@Href("~/Orders/Party/SearchRewardProducts?hostessRewardTypeID=" + Constants.HostessRewardType.HostCredit.ToInt())', {
+			minCharacters: 3,
+			ajaxResults: true,
+			onSelect: function(item) {
+				var p = $(this).parent();
+				p.find('input.productId').val(item.id);
+				p.find('input.quantity').val('1');
+				p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+		});
+
+		$('#hostCreditProductLookup, #hostCreditQuantity').keyup(function(e) {
+			if (e.keyCode == 13)
+				$('#hostCreditAddToCart').click();
+		});
+
+		$('#exclusiveItemProductLookup').jsonSuggest('@Href("~/Orders/Party/SearchRewardProducts?hostessRewardTypeID=" + Constants.HostessRewardType.ExclusiveProduct.ToInt())', {
+			minCharacters: 3,
+			ajaxResults: true,
+			onSelect: function(item) {
+				var p = $(this).parent();
+				p.find('input.productId').val(item.id);
+				p.find('input.quantity').val('1');
+				p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+		});
+
+		$('#exclusiveItemProductLookup, #exclusiveItemQuantity').keyup(function(e) {
+			if (e.keyCode == 13)
+				$('#exclusiveItemAddToCart').click();
+		});
+
+		$('#percentOffProductLookup').jsonSuggest('@Href("~/Orders/Party/SearchRewardProducts?hostessRewardTypeID=" + ((int)Constants.HostessRewardType.PercentOff))', {
+			minCharacters: 3,
+			ajaxResults: true,
+			onSelect: function(item) {
+				var p = $(this).parent();
+				p.find('input.productId').val(item.id);
+				p.find('input.quantity').val('1');
+				p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+		});
+
+		$('#percentOffProductLookup, #percentOffQuantity').keyup(function(e) {
+			if (e.keyCode == 13)
+				$('#percentOffAddToCart').click();
+		});
+
+		$('#itemDiscountProductLookup').jsonSuggest('@Href("~/Orders/Party/SearchRewardProducts?hostessRewardTypeID=" + ((int)Constants.HostessRewardType.ItemDiscount))', {
+			minCharacters: 3,
+			ajaxResults: true,
+			onSelect: function(item) {
+				var p = $(this).parent();
+				p.find('input.productId').val(item.id);
+				p.find('input.quantity').val('1');
+				p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+		});
+
+		$('#itemDiscountProductLookup, #itemDiscountQuantity').keyup(function(e) {
+			if (e.keyCode == 13)
+				$('#itemDiscountAddToCart').click();
+		});
+
+		$('#bookingCreditProductLookup').jsonSuggest('@Href("~/Orders/Party/SearchRewardProducts?hostessRewardTypeID=" + ((int)Constants.HostessRewardType.BookingCredit))', {
+			minCharacters: 3,
+			ajaxResults: true,
+			onSelect: function(item) {
+				var p = $(this).parent();
+				p.find('input.productId').val(item.id);
+				p.find('input.quantity').val('1');
+				p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+		});
+
+		$('#bookingCreditProductLookup, #bookingCreditQuantity').keyup(function(e) {
+			if (e.keyCode == 13)
+				$('#bookingCreditAddToCart').click();
+		});
+
+		function addToCart(url) {
+			var p = $(this).parent(), t = $(this);
+
+			var productId = p.find('input.productId').val();
+
+			//Don't let a call go through without a product being added.
+			//Too many exceptions are getting logged in the database for this
+			if (productId == null || productId == "") {
+				return;
+			}
+
+			if (p.find('input.needsBackOrderConfirmation').val() == "true") {
+				if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+					return false;
+				}
+			}
+
+			showLoading(t);
+
+			var hostRewardRuleId = undefined;
+
+			if (t.is('#percentOffAddToCart')) {
+				hostRewardRuleId = $('.hostRewardRuleId').val();
+			}
+
+			if (t.is('#itemDiscountAddToCart')) {
+				hostRewardRuleId = $('.itemDiscountHostRewardRuleId').val();
+			}
+
+			if (t.is('#hostCreditAddToCart')) {
+				hostRewardRuleId = $('.hostCreditRewardRuleId').val();
+			}
+
+			if (t.is('#exclusiveItemAddToCart')) {
+				hostRewardRuleId = $('.exclusiveItemRewardRuleId').val();
+			}
+
+			if (t.is('#freeItemAddToCart')) {
+				hostRewardRuleId = $('.freeItemRewardRuleId').val();
+			}
+
+			if (t.is('#bookingCreditAddToCart')) {
+				hostRewardRuleId = $('.bookingCreditRewardRuleId').val();
+			}
+
+
+			var jqXHR = $.post(url, {
+				productId: productId,
+				quantity: p.find('input.quantity').val(),
+				hostRewardRuleId: hostRewardRuleId
+			});
+
+			jqXHR.done(function(response) {
+				hideLoading(t);
+				if (response.result) {
+					if (response.isBundle) {
+						var queryString = "?productId=" + productId + "&bundleGuid=" + response.bundleGuid + "&orderCustomerId=" + response.orderCustomerId;
+						window.location.href = '@Url.Content("~/Orders/Party/BundlePackItems")' + queryString;
+					} else {
+						if (response.reloadPage) {
+							window.location.reload();
+						} else {
+							lastProduct = p.find('productLookUp').val();
+							updateCartAndTotals(response);
+							p.find('input.productLookUp,input.productId').val('');
+							p.find('input.quantity').val('1');
+						}
+					}
+				
+                    partyHasChanges(true);
+                } else {
+					showMessage(response.message, true);
+				}
+
+				@Html.Partial("_partyCartUpdateItemsCustomJS");
+				$('input.productLookUp').watermark('@Html.Term("ProductLookUpInputWatermark", "Enter SKU or product name")');
+			});
+		}
+
+		$('#hostCreditAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemHostCredit")']);
+		});
+
+		$('#exclusiveItemAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemExclusiveItem")']);
+		});
+
+		$('#freeItemAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemFreeItem")']);
+		});
+
+		$('#percentOffAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemPercentOff")']);
+		});
+
+		$('#itemDiscountAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemItemDiscount")']);
+		});
+
+		$('#bookingCreditAddToCart').click(function() {
+			addToCart.apply(this, ['@Href("~/Orders/Party/RedeemBookingCredit")']);
+		});
+
+		$('a.RemoveOrderItem').live('click', function() {
+			var p = $(this).parent(), t = $(this), btns = $('a.RemoveOrderItem');
+			showLoading(btns);
+			$.post('@Href("~/Orders/Party/RemoveFromCart")', {
+				orderCustomerId: p.find('input.orderCustomerId').val(),
+				orderItemGuid: $('.orderItemGuid', t).val()
+			}, function(response) {
+				hideLoading(btns);
+				if (response.result) {
+					if (response.reloadPage)
+					{
+							window.location.reload();
+					}
+					else
+					{
+							var oi = $('#hostessOrderItems');
+							t.closest('tr').remove();
+							if (oi.find('tr').length == 1)
+								oi.find('tr').show();
+							updateCartAndTotals(response);
+					}
+				} else {
+					showMessage(response.message, true);
+				}
+			});
+		});
+
+		$('#update').click(function() {
+			var data = { }, t = $(this);
+
+			$('#hostOrderItems tr:has(input.quantity)').each(function(i) {
+				data['orderItems[' + i + '].Key'] = $('.orderItemGuid', this).val();
+				data['orderItems[' + i + '].Value'] = $('.quantity', this).val();
+			});
+
+			showLoading(t);
+			$.post('@Href("~/Orders/Party/UpdateRewardQuantities")', data, function(response) {
+				if (response.result) {
+				    hideLoading(t);
+					updateCartAndTotals(response);
+				} else {
+				    postFailure(response);
+				}
+			});
+		});
+
+		$('input.productLookUp').watermark('@Html.Term("ProductLookUpInputWatermark", "Enter SKU or product name")');
+
+		var warned = false;
+	    
+        $('a#savePartyButton').click(function() {
+	        save(undefined, successfulSaveCallback, failureSaveCallback);
+	    });
+	    
+		$('#btnNext').click(function() {
+			if ((parseFloat($('#hostCreditRemaining').text().replace( /[^\d\.]/g , '')) > 0 || /:\s[1-9]$/ .test($('#productDiscountChoice').text().replace( /^\s+|\s+$/g , "")) || parseFloat($('#bookingCreditRemaining').text().replace( /[^\d\.]/g , '')) > 0) && !warned) {
+				warned = true;
+				$('#RewardsAlert').html('<div class="UI-Alert pad10">@Html.Term("YouHaveUnclaimedHostRewards", "You have unclaimed host rewards.  Are you sure you would like to continue?")</div>');
+				$('#RewardsAlert').fadeIn('fast');
+			} else {
+				var t = $(this);
+				showLoading(t);
+			    
+				$.post('@Href("~/Orders/Party/ValidateHostRewards")', function(response) {
+					if (response.result) {
+					    save('@Href("~/Orders/Party/ShippingMethod")', successfulSaveCallback, postFailure);
+					}
+					else
+					{
+					    postFailure(response);
+					}
+				});
+			}
+		});
+		
+		var lastProduct,
+			static = true,
+			originalTop = $('#Follow').position().top,
+			width = $('#Follow').width();
+
+		$(window).scroll(function() {
+			if (static && originalTop < $(window).scrollTop()) {
+				static = false;
+				$('#Follow').css({ position: 'fixed', top: '0px', width: width + 'px' });
+			} else if (!static && originalTop > $(window).scrollTop()) {
+				static = true;
+				$('#Follow').css({ position: 'static', top: '' });
+			}
+		});
+
+
+		function updateRemainingProductDiscounts(remainingProductDiscounts) {
+			if (remainingProductDiscounts) {
+				var i, productDiscount;
+				var re = new RegExp(":\\s\\d+$");
+
+				for (i in remainingProductDiscounts) {
+					productDiscount = $('#productDiscountChoice *[value="' + i + '"]');
+					if (productDiscount.is('input')) {
+						var temp = productDiscount.clone();
+						var $parentOf = productDiscount.parent();
+						$parentOf.html($parentOf.text().replace( /\s+$/ , '').replace(re, ': ' + remainingProductDiscounts[$(".hostRewardRuleId").val()]));
+						$parentOf.append(temp);
+					} else {
+						productDiscount.text(productDiscount.text().replace(re, ': ' + remainingProductDiscounts[$(".hostRewardRuleId").val()]));
+					}
+				}
+			}
+		};
+
+		function updateRemainingItemDiscounts(remainingItemDiscounts) {
+			if (remainingItemDiscounts) {
+				var i, itemDiscount;
+				var re = new RegExp(":\\s\\d+$");
+
+				for (i in remainingItemDiscounts) {
+					itemDiscount = $('#itemDiscountChoice *[value="' + i + '"]');
+					if (itemDiscount.is('input')) {
+						var temp = itemDiscount.clone();
+						var $parentOf = itemDiscount.parent();
+						$parentOf.html($parentOf.text().replace( /\s+$/ , '').replace(re, ': ' + remainingItemDiscounts[$(".hostRewardRuleId").val()]));
+						$parentOf.append(temp);
+					} else {
+							itemDiscount.text(itemDiscount.text().replace(re, ': ' + remainingItemDiscounts[$(".hostRewardRuleId").val()]));
+					}
+				}
+			}
+		};
+
+		function updateRemainingExclusiveProducts(remainingExclusiveProducts) {
+			if (remainingExclusiveProducts) {
+				var i;
+
+				if (Object.keys && Object.keys(remainingExclusiveProducts).length <= 1) {
+
+					for (i in remainingExclusiveProducts) {
+						$('#exclusiveProductsRemaining').html(remainingExclusiveProducts[i.toString()]);
+					}
+				}
+				else {
+					for (i in remainingExclusiveProducts) {
+						$('.exclusiveItemRewardRuleId .' + i.toString()).html(remainingExclusiveProducts[i.toString()]);
+					}
+				}
+			}
+		};
+
+		function updateRemainingFreeItems(remainingFreeItems) {
+			if (remainingFreeItems) {
+				var i;
+
+				if (Object.keys && Object.keys(remainingFreeItems).length <= 1) {
+					for (i in remainingFreeItems) {
+						$('#freeItemsRemaining').html(remainingFreeItems[i.toString()]);
+					}
+				}
+				else {
+					for (i in remainingFreeItems) {
+						$('.freeItemRewardRuleId .' + i.toString()).html(remainingFreeItems[i.toString()]);
+					}
+				}
+			}
+		};
+
+		var remainProducts = @Html.Raw(ViewData["RemainingProductDiscounts"].ToJSON()) ;
+		var remainExclusiveProducts = @Html.Raw(ViewData["RemainingExclusiveProducts"].ToJSON()) ;
+		var remainFreeItems = @Html.Raw(ViewData["RemainingFreeItems"].ToJSON()) ;
+		var remainItems = @Html.Raw(ViewData["RemainingItemDiscounts"].ToJSON()) ;
+
+		updateRemainingProductDiscounts(remainProducts);
+		updateRemainingExclusiveProducts(remainExclusiveProducts);
+		updateRemainingFreeItems(remainFreeItems);
+		updateRemainingItemDiscounts(remainItems);
+
+		$('#bookingCreditRemaining').text( @(Html.Raw(ViewData["RemainingBookingCredits"].ToString())));
+
+	});
+
+</script>

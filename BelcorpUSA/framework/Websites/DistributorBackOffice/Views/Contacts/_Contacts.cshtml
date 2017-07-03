@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@using DistributorBackOffice.Models.Contacts
+@section breadcrumb {
+    @RenderSection("breadcrumb", false)
+}
+@section title {
+    @RenderSection("title", false)
+}
+@section head {
+    @RenderSection("head", false)
+}
+@section ActionItems {
+    @Html.ActionItem("~/Contacts/New", Html.Term("AddNewProspect", "Add a New Prospect"), "icon-actionContactAdd")
+    @Html.ActionItem("~/Contacts/ImportOutlookContacts", Html.Term("ImportProspects", "Import Prospects"), "icon-actionImport")
+    @Html.ActionItem("~/Contacts/NewReport", Html.Term("StartaNewReport", "Start a new report"), "icon-actionReport")
+}
+@section SideBarExtras {
+    <div class="SavedReports">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title  UI-btn">
+                @Html.Term("Saved Reports")</span></div>
+        <div class="listBody">
+            <ul class="listNav">
+                @foreach (var reports in ViewData["DefaultAccountReports"] as List<StaticAccountReport>)
+                {
+                    <li class="@reports.AccountType"><a href="@Href("~/Contacts?accountType=" + reports.AccountType)">
+                        @Html.Term(reports.Term, reports.TermDefault)</a></li>
+                }
+                @{
+                    AccountReport currentAccountReport = ViewData["CurrentAccountReport"] as AccountReport;
+                    List<AccountReport> currentAccountReports = ViewData["CurrentAccountReports"] as List<AccountReport>;
+                }
+                @foreach (var accountReport in currentAccountReports)
+                {
+                    <li class="@accountReport.AccountReportID"><a href="@Href("~/Contacts")?accountReportID=@accountReport.AccountReportID">
+                        <span>
+                            @accountReport.Name</span></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+@RenderBody()

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="InventoryCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="WarehouseProduct" minOccurs="0" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="WarehouseProduct">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="WarehouseID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="SKU" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="QuantityAllocated" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="QuantityOnHand" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="QuantityBuffer" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="IsAvailable" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

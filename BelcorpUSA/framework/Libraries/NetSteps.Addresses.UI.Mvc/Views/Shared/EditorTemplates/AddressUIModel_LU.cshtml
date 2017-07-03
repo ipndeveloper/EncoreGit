@@ -1,0 +1,150 @@
+﻿@model NetSteps.Addresses.UI.Models.AddressUIModel_LU
+<!-- LU EDITOR TEMPLATE -->
+<div class="FormContainer">
+@using (Html.BeginForm())
+{
+<!-- ko if: showField('CountryCode', false) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.CountryCode)
+			</div>
+			<div class="FInput">
+				@Html.DropDownListFor(m => m.CountryCode, new List<SelectListItem>(), new { data_bind = "options: lists.countries, optionsText: country, optionsValue: countryCode, value: address.CountryCode" })
+				@Html.ValidationMessageFor(m => m.CountryCode)
+			</div>
+		</div>
+<!-- /ko -->    
+<!-- ko if: showField('FirstName', false) -->		
+        <div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.FirstName)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.FirstName, new { data_bind = "value: address.FirstName" })
+				@Html.ValidationMessageFor(m => m.FirstName)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('LastName', false) -->		
+        <div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.LastName)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.LastName, new { data_bind = "value: address.LastName" })
+				@Html.ValidationMessageFor(m => m.LastName)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('PhoneNumber', false) -->		
+        <div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.PhoneNumber)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.PhoneNumber, new { data_bind = "value: address.PhoneNumber" })
+				@Html.ValidationMessageFor(m => m.PhoneNumber)
+			</div>
+		</div>
+<!-- /ko -->    
+<!-- ko if: showField('PhoneTypeID', false) -->		
+        <div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.PhoneTypeID)
+			</div>
+			<div class="FInput">
+				@Html.DropDownListFor(m => m.PhoneTypeID, new List<SelectListItem>(), new { data_bind = "options: lists.phoneTypes, optionsText: name, optionsValue: phoneTypeID, value: address.PhoneTypeID" })
+				@Html.ValidationMessageFor(m => m.PhoneTypeID)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('Attention', true) -->		
+        <div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.Attention)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.Attention, new { data_bind = "value: address.Attention" })
+				@Html.ValidationMessageFor(m => m.Attention)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('Address1', true) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.Address1)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.Address1, new { data_bind = "value: address.Address1" })
+				@Html.ValidationMessageFor(m => m.Address1)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('Address2', true) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.Address2)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.Address2, new { data_bind = "value: address.Address2" })
+				@Html.ValidationMessageFor(m => m.Address2)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('Address3', false) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.Address3)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.Address3, new { data_bind = "value: address.Address3" })
+				@Html.ValidationMessageFor(m => m.Address3)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('PostalCode', true) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.PostalCode)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.PostalCode, new { data_bind = "value: address.PostalCode" })
+				@Html.ValidationMessageFor(m => m.PostalCode)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('City', true) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.City)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.City, new { data_bind = "value: address.City" })
+				@Html.ValidationMessageFor(m => m.City)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('County', false) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.County)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.County, new { data_bind = "value: address.County" })
+				@Html.ValidationMessageFor(m => m.County)
+			</div>
+		</div>
+<!-- /ko -->
+<!-- ko if: showField('StateProvince', false) -->
+		<div class="FRow">
+			<div class="FLabel">
+				@Html.LabelFor(m => m.StateProvince)
+			</div>
+			<div class="FInput">
+				@Html.TextBoxFor(m => m.StateProvince, new { data_bind = "value: address.StateProvince" })
+				@Html.ValidationMessageFor(m => m.StateProvince)
+			</div>
+		</div>
+<!-- /ko --> 
+ }
+</div>

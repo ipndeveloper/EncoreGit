@@ -1,0 +1,197 @@
+﻿@model NetSteps.Data.Entities.HtmlSection
+@section head
+{
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <!--[if lt IE 9]><script src="@Url.Content("/Scripts/DesignCenter/excanvas.js")" type="text/javascript"></script><![endif]-->
+    <script src="@Url.Content("/Scripts/DesignCenter/draw.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/DesignCenter/modals.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/DesignCenter/functions.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/DesignCenter/loads.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <script src="@Href("~/Resource/Scripts/fileuploader.js")" type="text/javascript"></script>
+    <!-- create with combination of pixastic js files -->
+    <script type="text/javascript">
+        $(function () {
+            hookModals();
+            onDesignInit();
+            onLoggedIn();
+        });
+    </script>
+}
+<div id="controls" class="UI-secBg pad5 mb5 brdrAll brdrAll GridUtility designCenter">
+    <ul class="inlineNav" id="ul_LoggedIn">
+        <li><a href="javascript:void(0);" id="btnSaveProgress" class="UI-icon-container"><span
+            class="UI-icon icon-save"></span><span>@Html.Term("Save_My_Progress", "Save My Progress")</span></a>
+        </li>
+        <li><a href="javascript:void(0);" id="btnCancel" class="UI-icon-container NS_ButtonCancel">
+            <span class="UI-icon icon-x"></span><span>@Html.Term("Cancel")</span></a> </li>
+    </ul>
+    <ul class="inlineNav" id="ul_LoggedOut">
+        <li><span id="span_PleaseRegister">@Html.Term("Only_Registered_Users_Can_Save_Content", "Only registered users can save.")</span></li>
+    </ul>
+</div>
+<div id="recentImagesPlaceHolder">
+</div>
+<div class="brdr mb5 overflow brdrAll designWindow">
+    <div class="FL designPreview">
+        <div class="brdr brdrAll overflow">
+            <div class="designPreviewItem">
+                <img src="" alt="" id="PreviewFrame" class="frame" />
+                <div id="PreviewWrapper" class="overflow">
+                </div>
+            </div>
+            <div class="previewItemActions mt10">
+                <span class="FL shareImage">
+                    <input type="checkbox" onclick="javascript:void(0);" id="ShareThis" disabled="disabled" />
+                    <label for="ShareThis">@Html.Term("Share_this", "Share this")</label>
+                </span><a id="DesignApproval" class="FR Button ButtonInactive">@Html.Term("Design_Approved", "Design Approved")</a>
+            </div>
+        </div>
+    </div>
+    <div class="FL imageEditor">
+        <div id="DesignToolbar">
+            <div class="mainBtns noImage" id="MainBtns">
+                <a href="javascript:void(0);" class="btnToolBar" id="OpenImage" rel="open" title="Select a New Image">
+                    <span class="FL UI-icon icon-new-image"></span><span class="FL icon-label">Select Image</span></a>
+                <a href="javascript:void(0);" class="btnToolBar move btnSelected" id="Move" title="Move Image">
+                    <span class="FL UI-icon icon-move-deactive"></span><span class="FL icon-label">Move</span></a>
+                <div class="FL sizeControl">
+                    <a href="javascript:void(0);" id="SizeImage" class="btnToolBar size" rel="size" title="Size Image">
+                        <span class="FL UI-icon icon-crop-size-deactive"></span><span class="FL icon-label">
+                            Size</span></a>
+                    <div id="Size">
+                        <input type="hidden" id="sizeVal" size="2" />
+                    </div>
+                </div>
+                <a href="javascript:void(0);" class="btnToolBar rotator" id="RotateCCW" rel="ccw"
+                    title="Rotate Counter Clockwise 45 Degrees"><span class="FL UI-icon icon-rotate-ccw-deactive">
+                    </span><span class="FL icon-label">Rotate CCW</span></a> <a href="javascript:void(0);"
+                        class="btnToolBar rotator" id="RotateCW" rel="cw" title="Rotate Clockwise 45 Degrees">
+                        <span class="FL UI-icon icon-rotate-cw-deactive"></span><span class="FL icon-label">
+                            Rotate CW</span></a> <a href="javascript:void(0);" class="btnToolBar flip horizontal"
+                                id="FlipHorizontal" title="Flip Horizontal"><span class="FL UI-icon icon-flip-horizontal-deactive">
+                                </span><span class="FL icon-label">Flip Horizontal</span></a> <a href="javascript:void(0);"
+                                    class="btnToolBar flip vertical" id="FlipVertical" title="Flip Vertical"><span class="FL UI-icon icon-flip-vertical-deactive">
+                                    </span><span class="FL icon-label">Flip Vertical</span></a>
+                <a href="javascript:void(0);" class="btnToolBar basicAction desat" id="Desaturate"
+                    rel="desaturate" title="Desaturate"><span class="FL UI-icon icon-desaturate-deactive">
+                    </span><span class="FL icon-label">Desaturate</span></a>
+                <!-- Lighten -->
+                <div class="FL lightenControl">
+                    <a href="javascript:void(0);" id="Light" class="btnToolBar lighten" rel="light" title="Change the Brightness of your image">
+                        <span class="FL UI-icon icon-brightness-deactive"></span><span class="FL icon-label">
+                            Lighten</span></a>
+                    <div id="Lighten">
+                        <input type="hidden" id="lightenVal" size="2" />
+                    </div>
+                </div>
+                <!-- End lighten -->
+                <a href="javascript:void(0);" class="btnToolBar" id="ResetPic" title="Reset ALL"><span
+                    class="FL UI-icon icon-reset-deactive"></span><span class="FL icon-label" id="resetPic">
+                        Reset</span> </a>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div id="DesignCanvas" class="designCanvas">
+            <div class="selectImageText">
+                <h2>
+                    Product Name</h2>
+                @if (BaseController.IsLoggedIn)
+                {
+                    <h3>@Html.Term("Choose_an_Image_from_your_Library", "Choose an Image from your Library")</h3>
+                }
+                else
+                {
+                    <h3>@Html.Term("Upload_an_Image_from_your_Computer", "Upload an Image from your Computer")</h3>
+                    <a href="javascript:void(0);" class="Button selectImage" id="BrowseComputer">
+                        @Html.Term("UploadANewFile")</a>
+                }
+            </div>
+            <div class="allDesignsApproved hide">
+                <h3>@Html.Term("Design_Complete", "Design Complete!")</h3>
+                <h2>@Html.Term("Not_quite_satisfied_Click_on_an_Item_to_Edit", "Not quite satisfied? Click on an Item to Edit")</h2>
+            </div>
+            <div id="SelectedImage" class="selectedImage">
+            </div>
+        </div>
+    </div>
+    <div class="FL imageEditorHelp">
+        <div class="UI-cmsWrap">
+            @(((HtmlSection)ViewBag.DesignCenter).ToDisplay())
+        </div>
+    </div>
+</div>
+<div class="UI-lightBg pad5 brdrAll overflow designActions">
+    <a href="@Url.Resolve("~/Shop")" class="FL Button MinorButton btnReturn"><span>@Html.Term("Start_from_scratch", "Start from scratch")</span></a>
+    <a href="javascript:void(0);" id="DesignComplete" class="FR Button ButtonInactive design">
+        <span>@Html.Term("All_finished_review_it", "All finished, review it")</span></a>
+</div>
+<div id="mediaLibrary" style="width: 775px; z-index: 3000; position: absolute; top: 50%;
+    left: 50%;" class="jqmWindow LModal">
+</div>
+<div style="width: 775px; z-index: 3000;" id="PreviewDesign" class="jqmWindow LModal">
+    <div class="mContent modalContent">
+        <h3 class="UI-mainBg brdrAll pad5">@Html.Term("Review_your_Design", "Review your Design")</h3>
+        <div class="m10 designComplete preview">
+            <div class="mb5 overflow designPreviewHeading">
+                <span class="FL productName">Product Name</span> <span class="FL productPrice">(Price:
+                    $69.99)</span>
+                <div class="FR dragAndDropInfo">
+                    <p class="FL">@Html.Term("Drag_and_Drop", "Drag and Drop")<br />
+                        <span>@Html.Term("to_change_the_order_of_your_items", "to change the order of your items")</span></p>
+                    <img class="FR" src="@Url.Content("~/Resource/Content/Images/Base/dragNdrop_icon.png")" alt="Drag and Drop to change item order" />
+                </div>
+            </div>
+            <div class="brdr mb10 pad10 previewWindow">
+                <div class="FL UI-lightBg brdrAll baseThumb">
+                    <div class="baseThumbInner">
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="230" />
+                    </div>
+                </div>
+                <span class="clr"></span>
+                <div class="designItems overflow">
+                    <div class="FL overflow item">
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="190" width="153" class="frame" />
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/test2.jpg")" alt="" height="190" width="153" class="itemImagePreview" />
+                    </div>
+                    <div class="FL overflow item">
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/test3.jpg")" alt="" height="113" width="90" class="itemImagePreview" />
+                    </div>
+                    <div class="FL overflow item">
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="190" width="153" class="frame" />
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/test2.jpg")" alt="" height="190" width="153" class="itemImagePreview" />
+                    </div>
+                    <div class="FL overflow item">
+                        <img src="@Url.Content("~/Content/Images/Base/test3.jpg")" alt="" height="113" width="90" class="itemImagePreview" />
+                    </div>
+                    <div class="FL overflow item">
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="190" width="153" class="frame" />
+                        <img src="@Url.Content("~/Resource/Content/Images/Base/test2.jpg")" alt="" height="190" width="153" class="itemImagePreview" />
+                    </div>
+                </div>
+            </div>
+            <a href="javascript:void(0);" class="FL Button MinorButton jqmClose"><span>@Html.Term("I_need_to_make_changes", "I need to make changes")</span></a>
+            <a href="javascript:void(0);" id="btnSave" class="FR Button saveDesign"><span>@Html.Term("I_love_it!_Proceed_to_Checkout", "I love it! Proceed to Checkout")</span></a>
+            <span class="clr"></span>
+        </div>
+        <div class="CategoryGroup upsaleListing pad10">
+            <div class="UI-mainBg brdrAll pad5 upsaleHeader">
+                @Html.Term("YouMightAlsoBeInterestedIn")
+            </div>
+            <div class="ProductThumbRows">
+                <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="60" />
+                <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="60" />
+                <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="60" />
+                <img src="@Url.Content("~/Resource/Content/Images/Base/previewWindow.png")" alt="" height="60" />
+            </div>
+        </div>
+    </div>
+</div>
+<div style="width: 400px; z-index: 3000;" id="ChangesLost" class="jqmWindow LModal">
+    <div class="mContent modalContent">
+        <p>
+            Changes will be lost to the current item, would you like to continue anyway?</p>
+        <a href="javascript:void(0);" id="loseAllChangesRestart" class="Button yes">Yes</a>
+        <a href="javascript:void(0);" id="changesLostLink" class="Button no">No</a>
+    </div>
+</div>

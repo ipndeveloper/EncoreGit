@@ -1,0 +1,972 @@
+﻿
+
+$LeftColWidth: 230px;
+$MainColWidth: 710px;
+$gutter: 20px;
+$ProductThumbBox_W: (floor($MainColWidth / $ProductsPerRow)) - (2 * $ProductThumbBoxSpacing) - (2 * $ProductThumbBoxBrdrSize) - (2 * $ProductThumbBoxPadding);
+$sampleCMScolor: #efefef;
+/******************************************************************************************************************************************
+* QUICK REFERENCE GUIDE
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* Standard Tags             * Re-used Structure Rules       * Containers, Columns, etc  * Image Sprites         
+* Logo                      * Site User Utilities           * SiteNav                   * Footer Navigation     * Distributor Widgets
+* Home Page                 * News Widget                   * Secondary Navigation      * CMS Blocks            * Forms
+* Form Validation           * Tables                        * Steps                     * Shopping Main         * Shop by Collections
+* Shopping Search           * Product Details Page          * Tabber                    * Bundles               * Product Variants
+* Cart                      * Shopping Checkout             * My Account Page           * News Views            * Enrollment
+* Login/SignUp Page         * Public Media Library      * Site Response Messages        * Grid Pagination       * Other Misc Styles			
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* END QUICK REFERENCE GUIDE
+*******************************************************************************************************************************************/
+
+/*******************************************************************************
+* Setting up some user starting points for the content blocks
+*******************************************************************************/
+.cmsBlockDefault {
+	display:block;
+	height:98%;
+	padding:1% 2em;
+	
+	
+	h1, h2, h3, h4 {
+		border-bottom:4px double #ccc;
+		padding-bottom:.5em;
+		margin-bottom:.5em;
+	}
+}
+#HomeInner {
+	.EditableContent, .body {
+		height:100%;
+	}
+	}
+
+.sampleCMS, .cmsBlockDefault {
+	background:$sampleCMScolor;
+}
+
+
+/*******************************************************************************
+* Structural Bootstraps
+*******************************************************************************/
+.inlineNav {
+	@include inline-nav;
+}
+.listNav {
+	@include list-nav;
+}
+
+/*******************************************************************************
+* Standard Tags
+*******************************************************************************/
+
+#ContentWrap p {margin-bottom:8px;}
+
+/*******************************************************************************
+* Re-used Structure Rules
+*******************************************************************************/
+.UI-secBg {padding:5px;}
+
+/*******************************************************************************
+* Containers, Columns, etc...
+*******************************************************************************/
+#PageContain {
+	position:relative;
+	margin:auto;
+	width:$SiteWidth;
+}
+#ContentWrap {
+	position:relative;
+	clear:both;
+	padding:$gutter 0 $gutter 0;
+}
+#TopPane  {
+	position:relative;
+	#DistributorInfo {
+		float:right;
+		position:absolute;
+		top:20px;
+		right:0;
+		.Bio {
+
+			float:left;
+			text-align:right;
+			.myAddress {
+				display:none;
+			}
+		}
+		.MyPhoto {
+			float:right;
+			margin-left:10px;
+		}
+	}
+	p {
+		margin:0;
+	}
+}
+
+
+#LeftColumn, .SideColumn {width:$LeftColWidth;float:$SideColumnLocation;}
+#MainColumn {width:$MainColWidth;float:left;}
+.ContentColumn {width:$MainColWidth;float:left;margin-left:$gutter;}
+.layoutColumn, #EncoreCorpEditMode {padding:$layoutPad;}
+
+.splitCol {width:48%;}
+.splitCol10 {width:9%;}
+.splitCol15 {width:14%;}
+.splitCol20 {width:19%;}
+.splitCol25 {width:24%}
+.splitCol30 {width:29%}
+.splitCol33 {width:32%;}
+.splitCol35 {width:34%;}
+.splitCol40 {width:39%}
+.splitCol50 {width:49%}
+.splitCol60 {width:59%;}
+.splitCol65 {width:64%;}
+.splitCol70 {width:69%;}
+.splitCol80 {width:79%;}
+.splitCol90 {width:89%;}
+
+/*******************************************************************************
+* Site User Utilities
+*******************************************************************************/
+#SiteUserUtilities {
+	clear:both;
+	overflow:hidden;
+}
+
+
+
+#loginContainer {
+	position:absolute;
+	z-index:999;
+	top:1.5em;
+	right:5px;
+	width:400px;
+}
+
+
+/*******************************************************************************
+* Image Sprites
+*******************************************************************************/
+.UI-icon {display:inline-block;padding:0 4px;}
+.UI-icon-container {display:inline-block;}
+.UI-icon-container span {padding-left:3px;}
+.GridUtility {line-height:28px;height:28px;}
+.GridUtility .UI-icon-container span {float:left;padding-left:0;margin-right:3px;padding-right:3px;}
+.GridUtility .UI-icon-container .UI-icon {margin-right:0;padding-right:0;}
+.btnToolBar {display:block;float:left;line-height:30px;}
+.btnToolBar .UI-icon {display:block;width:35px;height:28px;}
+.btnToolBar .icon-label, #NudgeTools .icon-label {clear:both;line-height:normal;display:none;}
+.Bio .UI-icon-container span {padding-left:0;}
+.UI-icon-container span {display:inline-block;overflow:hidden;}
+.actionItems {margin-bottom:20px;}
+.actionItems li a.UI-icon-container {display:block;line-height:36px;}
+.actionItems .UI-icon, .welcomeFlag .UI-icon  {height:36px;width:36px;float:left;}
+.welcomeFlag .iconText {display:block;clear:both;line-height:normal;}
+.notext {width:16px;}
+.notext {display:block;text-indent:-9999px;}
+
+
+/*********************************************************************
+* Language Picker
+*********************************************************************/
+
+
+/****************************************************
+* Login/Logout 
+****************************************************/
+#loggedIn {
+	.userLinks {
+		ul {
+			@include inline-nav;
+		}
+	}
+}
+
+#loginContainer p {margin:0 3% 5px;float:left;width:44%;}
+#txtUsername, #txtPassword {width:95%;}
+#loginContainer .SubmitForm {margin:5px 0 0;padding:4px 8px;}
+#loginContainer img {float:right !important;} //Loading Image
+
+/*******************************************************************************
+* Main Site Nav and Dropdown Menus
+*******************************************************************************/
+#SiteNav {
+	ul.navigation {
+		li {
+			position:relative;
+			cursor:pointer;
+			ul.navigation {
+				display:none;
+			}
+			&:hover {
+				ul.navigation {
+					position:absolute;
+					display:block;
+					clear:both;
+					z-index:999;
+					li {
+						display:block;
+						a {
+							display:block;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+/****************** 
+* Drop Down Menus 
+*******************/
+
+
+
+
+/*******************************************************************************
+* Footer Navigation
+*******************************************************************************/
+
+
+/*******************************************************************************
+* Distributor Widgets (TopPane/homeCol_a)
+*******************************************************************************/
+/*** General ***/
+.Bio {margin-right:5px;word-wrap:break-word;}
+.Bio > div {margin-left:2px;}
+.Bio > div.myAddress {margin:5px 0;}
+
+
+
+.partiesList li {overflow:hidden;}
+.partiesList .partyDetails {line-height:1.3em;padding:.5em 2%;}
+.partiesList .partyDate {display:block;}
+
+#ContentWrap .myAddress p {margin:0;}
+#Module_Bio {
+	.partyRadio {
+		display:none;
+	}
+}
+
+#Module_Bio .myStoryHeader {text-align:center;font-weight:normal;}
+#Module_MyParties .openPartiesHeader {text-align:center;font-weight:normal;}
+#Module_MyParties .openParties {height:7.6em;overflow:auto;margin:3px 0 0;}
+#Module_MyParties .noParties {height:7.6em;overflow:auto;padding:5px;}
+#Module_MyParties .partiesList .partyDetails {width:94%;}
+
+
+/******************************************************************************
+* Secondary Navigation 
+*******************************************************************************/
+#SecondaryNav {
+	.secondaryNavHeader {
+		display:none;
+	}
+	ul {
+		@include flat-list;
+	}
+}
+
+/******************************************************************************
+* One Column Template Layout
+*******************************************************************************/
+
+.OneColumnNav {
+	text-align:center;
+	#SecondaryNav {
+		overflow:hidden;
+		ul {
+			@include inline-nav;
+			li {
+				@include horizontal-nav-li-rules;
+			}
+		}
+	}
+}
+	 
+
+
+
+/******************************************************************************
+* Two Column Template Layout
+*******************************************************************************/
+
+.TwoColumnContent {
+	#SecondaryNav {
+		a {
+			display:block;
+		}
+	}
+}
+
+
+/*******************************************************************************
+* Forms
+*******************************************************************************/
+.FormContainer {margin:10px 0 10px 0;}
+.FormContainer .FLabel {float:left;width:9.2em;}
+.FormContainer .FInput {float:left;}
+.FormContainer .FRow {padding:3px 0 4px 0;overflow:hidden;}
+
+.FRow br {display:block;clear:both;}
+input.quantity {width:1.5em;}
+.FormSubmit {padding:10px 0;}
+input.fullWidth {width:95%;}
+textarea.fullWidth {width:100%;}
+input#address1, input#address2, input#address3 {width:310px;}
+#addressForm input#address1, #addressForm input#address2, #addressForm input#address3, input.AddressLine {width:260px;}
+#ContentInnerWrap .MainProfile p.FormSubmit {margin-bottom:0px;padding:0;}
+
+
+
+/*******************************************************************************
+* Tables
+*******************************************************************************/
+table {display:table;border-collapse:separate;border-spacing:1px;width:100%;}
+.FauxTable {display:table;width:100%;margin-bottom:20px;}
+.FauxTable .FRow {display:table-row;}
+.FauxTable .FRow .FLabel, .FauxTable .FRow .FInput {display:table-cell;padding:2px 0px 2px 0px;vertical-align:top;text-align:left;}
+.FauxTable .FRow .FLabel {width:8.5em;font-weight:bold;}
+.DataGrid {display:table;border-collapse:collapse;border-spacing:1px;}
+.DataGrid th, .DataGrid, td {padding:5px;}
+/*.cartQty {width:75px;}
+.CartThumb {width:75px;}
+.deleteCol {width:32px;}*/
+.finalOrderTotals .Label {width:14em;}
+
+/*******************************************************************************
+* Steps
+*******************************************************************************/
+.steps, .checkOutSteps {margin:10px 0 20px;}
+.steps ul, .checkOutSteps ul {height:30px;line-height:30px;display:block;}
+.steps li, .checkOutSteps li {position:relative;z-index:1;padding-right:7.65em;margin-left:.3em;}
+.steps li {padding-right:3.5em;}
+.steps li.UI-whiteBg, .checkOutSteps li.UI-whiteBg {position:relative;z-index:0;margin-left:-2em;padding-left:2.3em;}
+.steps li.first.UI-whiteBg, .checkOutSteps li.first.UI-whiteBg {margin-left:0px;padding-left:.3em;}
+
+/*******************************************************************************
+* Shopping Main
+*******************************************************************************/
+.shoppingMainContent {
+	width:$MainColWidth;
+	margin-left:$gutter;
+	float:left;
+}
+.shoppingContentPane {
+	padding:$gutter 0 $gutter 0;
+	clear:both;
+}
+
+.noStockTxt {line-height:24px;}
+/*******************************************************************************
+* Shopping Category Navigation
+********************************************************************************/
+.ShopNav {
+	margin-bottom: $gutter;
+}
+.shopNavListContain {
+	ul {
+		@include flat-list;
+		a {
+			display:block;
+		}
+		ul {
+			li {
+				margin-left:1em;
+			}
+		}
+	} 	
+}
+/*** Product Listing ***/
+.CategoryGroup {clear:both;width:inherit;overflow:hidden;margin-bottom:20px;}
+.ProductThumbRows {margin-left:-($ProductThumbBoxSpacing - ($ProductThumbBoxShadowSize / 2));}
+.ProductThumbBox {position:relative;float:left;width:$ProductThumbBox_W;margin:$ProductThumbBoxSpacing;padding:$ProductThumbBoxPadding;}
+.ProductThumbBox .ProductInfo span {display:block;}
+.ProductThumbBox .ProductInfo .imagewrapper {width:$ProductThumbBox_W;height:($ProductThumbImg_MaxH);display:table-cell;vertical-align:middle;text-align:center;overflow:hidden;}
+.ProductThumbBox .ProductInfo .imagewrapper img {max-width:($ProductThumbBox_W - 10);max-height:($ProductThumbImg_MaxH - 20);height:auto;}
+.ProductThumbBox .ProductInfo .productName {height:1.5em;overflow:hidden;margin-bottom:5px;}
+.ProductThumbBox .listingAddToCart {padding:5px 10px 4px;}
+.ProductThumbBox .listingAddToCart .UI-icon-container {float:right;}
+.ProductThumbBox .listingAddToCart .UI-icon-container .icon-label {line-height:24px;}
+.ProductThumbBox .AddToCart {height:30px;}
+.ProductDetails .AddToCart {line-height:25px;}
+.ProductDetails .AddToCart .qtyInputWrap input {padding:5px 4px 4px;text-align:center;}
+.AddToCart .TextLink {float:left;margin-left:10px;}
+
+/*******************************************************************************
+* Shop by Collections
+*******************************************************************************/
+
+/*******************************************************************************
+* Shopping Search and Shopping Cart
+*******************************************************************************/
+#ShopSearch {
+	float:left;
+	width:$LeftColWidth;
+}
+#ShoppingCart {
+	float:right;
+	a {
+		cursor:pointer;
+		display:block;
+	}
+}
+
+/*******************************************************************************
+* Product Details Page
+*******************************************************************************/
+.productLongDescription {margin:5px 0 40px 0;}
+.yourPrice {margin:10px 0;}
+.ProductPhotos {overflow:hidden;}
+.BigPhoto img {max-width:250px;}
+body.IE6 .BigPhoto img {width:250px;}
+.ProductDetails {margin-bottom:50px;position: relative;}
+
+/*******************************************************************************
+* Tabber
+*******************************************************************************/
+.Tabber {height:2em;}
+.Tabber li {line-height:2em;margin-right:2px;}
+.Tabber li a {display:block;padding:0 20px;line-height:2em;}
+.Tabber li label {padding:0px 8px 1px 8px;cursor:pointer;}
+.Tabber li.current a .UI-icon {display:none;}
+.TabberBody {width:658px;margin:-1px 0 0;padding:30px 20px;position:relative;top:-1px;}
+
+/*******************************************************************************
+* Bundles
+*******************************************************************************/
+#BundleTabber {
+	padding-right:22px;
+}
+/*** Filters ***/
+.AlphaFilters {
+	margin:10px 0;overflow:hidden;
+
+	.btnFilter {
+		margin:0 .45em 0 0;
+	
+		&:last-child {
+			margin:0;
+		}
+	}
+}
+/*** Products ***/
+.BundleBrowser .ProductThumbRows {
+	margin-left:-2px;
+}
+.ProductThumbRows .ProductThumbBox.AddToBundle {
+	width:140px;
+	padding:2px;
+	margin:2px;
+
+	.imagewrapper {
+		width:140px;
+		height:122px;
+	
+		img {
+			max-height:100px;
+			max-width:130px;
+		}
+	}
+	.listingAddToCart {
+		padding:5px 5px 2px;
+	}
+}
+/*** Bundle's Contents ***/
+.ThumbWrapper {
+	width:45px;
+	height:45px;
+	margin:0 5px 5px 0;
+	float:left;
+	overflow:hidden;
+
+	a.RemoveItem {
+		position:absolute;
+	}
+}
+.SavePack {
+	margin:20px 0 10px;
+
+	.continueShoppingWrap {
+		margin-top:20px;
+	}
+}
+.BundleProducts .Pagination {
+	display:block;
+
+	p {
+		margin-bottom:0 !important;
+		margin-top:10px;
+	}
+}
+.Update {
+	display:block;
+	margin:0 0 10px;
+}
+#GoalTracker {
+	margin-top:8px;
+
+	.ProgressBar {
+		overflow:hidden;
+	}
+	#ProgressStar {
+		width:100%;
+		height:19px;
+	}
+}
+.BundleSelections {
+	width:32%;
+}
+.IE7 {
+	.BundleBrowser.splitCol65 {
+		width:65%;
+	}
+	.BundleSelections {
+		width:31%;
+	}
+}
+
+/*******************************************************************************
+* Product Variants
+*******************************************************************************/
+.productVariants .inlineNav li {margin:0 10px 10px 0;}
+.productVariants li .frame {position:relative;z-index:1;cursor:pointer;}
+.productVariants li .frame a {padding:0 10px;margin:5px 0;cursor:pointer;}
+.productVariants span.thumbnail img {margin:-4px 0 -6px 2px;}
+/*** Add to cart button ***/
+/*** Type: Text ***/
+.productVariants .variantText span.thumbnail {margin:0 5px 0 -5px;}
+/*** Type: Thumbnail ***/
+.productVariants .variantThumbnail li .frame a {padding:0;margin:0;}
+.productVariants .variantThumbnail li .frame img {margin:0 auto;}
+/*** Type: Checkbox ***/
+/*** Type: Radio ***/
+/*** Type: Dropdown ***/
+
+/*******************************************************************************
+* Cart Page
+*******************************************************************************/
+.GuestOrderSummaryTable, .cartPageSubTotal, .finalOrderTotals {
+	margin-top:5px;
+}
+
+/*** Cart Messages ***/
+.cartMessages {
+	position:absolute;
+	text-align:left;
+	width:290px;
+	z-index:9999999;
+}
+.cartMessagesFixed {
+	position:fixed;
+	top:0px;
+	margin-top:0px;
+}
+.cartMessageThumb {
+	width:40px;
+	overflow:hidden;
+	display:block;
+	img {
+		width:40px;
+	}
+}
+
+.cartMessageLabel {
+	width:200px;
+}
+#CartMessageContent div {
+	clear:both;
+	margin-bottom:5px;
+}
+
+#CartPreview {
+	display:none;
+	right:0;
+	padding:5px;
+	position:absolute;
+	width:690px;
+	z-index:88888;
+}
+#CartPreview .buyFromPartyBtn, .cartPage.attachPartyWindow .buyFromPartyBtn {
+	display:none;
+}
+
+/*** Cart ***/
+.MyCartPage {
+	margin-top:30px;
+}
+#SelectPromotionProducts {
+    position:fixed;
+    left:10%;
+    right:10%;
+    max-height:70%;
+    overflow:auto;
+}
+.promoProductsWrap {
+    height:350px;
+    overflow:auto;
+}
+/*** Upgrade Account ***/
+.upgradeAcctItem {
+	width:40%;
+	cursor:pointer;
+	span {
+		display:block;
+		padding:0 0 .2em;
+	}
+}
+
+/*******************************************************************************
+* Shopping Checkout
+*******************************************************************************/
+/*** General ***/
+.addressDisplay {width:300px;}
+/*** Shipping Methods ***/
+.shipMethodInstruction {margin-bottom:5px;}
+.shipMethodList li span {display:block;} 
+.shipMethodList label, .paymentsTabber li label {cursor:pointer;}
+.shipMethodList .inlineNav li {width:31%;}
+/*** Billing ***/
+.Tabber.paymentsTabber, .customerPaymentsColumn .appliedPaymentsTable, .customerPaymentsColumn p  {margin:1px 0 0 0;}
+.FormContainer.applyPaymentBox, .BalanceDueContainer {margin-top:0;}
+.PaymentEntry {margin-top:-1px;padding:10px 15px;}
+.Tabber.paymentsTabber li.current {margin-left:-1px;}
+#creditCardEntry .ccvInput {width:5em;}
+#applyPaymentColumn .PaymentEntry .FLabel {float:none;width:auto;}
+#eFTEntry .splitCol70 label {display:block;}
+#ContentWrap .customerPaymentsColumn p.lawyer {margin-bottom:0;}
+#btnLookupGC {margin-left:5px;}
+.Button.FR.btnPrintReceipt {padding-left:38px;}
+
+.applyPmtFrmWrap, .creditBalanceList li.overflow {
+	background:#fff;
+	border:1px solid #ccc;
+	padding:.5em;
+	overflow:hidden;
+	input#txtAmount, input#txtGiftCertNumber {
+		border:none;
+		background:none;
+		font-weight:bold;
+	}
+}
+
+/*******************************************************************************
+* My Account Page
+*******************************************************************************/
+.acctBox {width:150px;padding:0 5px 0 5px;}
+.acctBox h4 {padding-bottom:5px;margin-bottom:5px;}
+.generalAcctBox {width:345px;margin-right:10px;}
+.myRecentOrders {clear:both;margin-top:10px;}
+
+/*******************************************************************************
+* My Account Page - Shipping/Billing Profiles
+*******************************************************************************/
+.accountColumn .Profiles .FRow {position:relative;display:block;margin:2px 0;}
+.accountColumn .Profiles .FRow .FLabel {padding-left:30px !important;width:100% !important;}
+.accountColumn .Profiles .FRow .FLabel .UI-icon-container {float:none;position:absolute;left:0;top:.7em;}
+.accountColumn #shippingAddressCountryContainer, .accountColumn #shippingAddressControl {margin:0 10px;}
+.accountColumn #creditCard, .accountColumn #EFT {width:45%;padding-left:15px;}
+.accountColumn #newAddress .FormContainer {margin:0;}
+.accountColumn #paymentMethodEntry .FL.Label {width:10.5em;}
+
+/*******************************************************************************
+* PartyPlan - Hostess Portal (My Hosted Parties)
+*******************************************************************************/
+.partyDetails .decoratedList li {padding:2px 5px;}
+
+
+
+/*******************************************************************************
+* Enrollment
+*******************************************************************************/
+.enrollCTA .FLabel {float:none;width:auto;}
+.enrollmentContentPane #CartTotals {position:absolute;top:auto;margin-top:-100px;right:2px;width:210px;}
+
+.enrollmentCol_a .UI-lightBg.brdrAll {padding:10px;}
+.enrollmentContentPane {padding-left:48px;position:relative;}
+.enrollmentContentPane h2.step {position:absolute;margin-left:-48px;}
+.enrollmentPane h1 {margin: 10px 0 20px;}
+/*******************************************************************************
+* Enrollment - Select Sponsor
+*******************************************************************************/
+#sponsor {margin:auto;width:60%;}
+#sponsor .imagewrapper {float:left;margin:0 20px 5px 0;}
+#sponsor p {margin-top:35px;}
+.distributorLocatorWrap .inner {padding:10px;}
+.SelectSponsor .sponsorPhoto {max-width:60px;}
+/*******************************************************************************
+* Enrollment - Policy
+*******************************************************************************/
+.policy {width:31%;margin:1%;}
+.policy .terms {height:240px;overflow:auto;}
+.policy .UI-lightBg {padding:5px 8px 5px 0;}
+.policy input[type="checkbox"] {float:left;margin:0 8px 8px 8px;}
+.policy div {border:1px solid #dfd9c9;margin-bottom:1px;line-height:normal;}
+.policy div.brdr {margin-bottom:-1px;}
+.pdf {line-height:26px;}
+.pdf img {float:left;margin:3px 3px 0;}
+/*******************************************************************************
+* Enrollment - Personal Info
+*******************************************************************************/
+.personalInfoForm h4 {padding:3px 8px;position:relative;}
+.personalInfoForm h4 a {position:absolute;right:2px;top:.2em;}
+.personalInfoForm h4 a span {text-indent:-9999px;overflow:hidden;}
+.personalInfoForm .UI-darkBg {margin-bottom:0;}
+.personalInfoForm .UI-lightBg.active {margin-top:0;}
+.personalInfoForm .completed > div {margin:3px 2em 8px;}
+.personalInfoForm .splitCol div div.mb10 {margin-left:30px;}
+.personalInfoForm .FormSubmit {margin-bottom:0;padding:0;overflow:hidden;}
+/*******************************************************************************
+* Enrollment - Kits
+*******************************************************************************/
+.kits {position:relative;}
+.kits .pad10 {overflow:hidden;}
+.kits input {float:left;margin:2px 5px 0 0;}
+.kits h3 {float:left;margin-left:18px;line-height:1em;margin-bottom:10px;}
+.kits .check {width:21px;height:21px;position:absolute;right:0;bottom:0;margin:0 3px 3px 0;}
+.kits .check img {display:none;}
+.kits.selected .check img{display:block;margin:-6px -3px;}
+/*******************************************************************************
+* Enrollment - Autoship
+*******************************************************************************/
+.autoship {height:560px;}
+.autoship .ShopNav {margin:1px;width:160px;height:496px;overflow:auto;}
+.autoship .ProductThumbRows {height:560px;overflow-y:scroll;}
+.enrollmentContentPane .ProductThumbBox {float:none;width:345px;margin:7px 10px 7px 7px;height:auto;}
+.enrollmentContentPane .ProductInfo .productName  {height:auto;float:left;}
+.enrollmentContentPane .ProductInfo .imagewrapper {width:85px;height:60px;margin-top:0;clear:both;}
+.enrollmentContentPane .ProductInfo img {width:83px;}
+label[for="AutoshipKits"] .ProductInfo .imagewrapper, label[for="AutoshipKits"] .ProductInfo img {width:65px;max-height:45px;}
+.enrollmentContentPane .productLongDescription {width:275px;margin:0;}
+label[for="AutoshipKits"] .productLongDescription {width:173px;}
+label[for="AutoshipKits"] .pad1 {margin: 7px 0;}
+.enrollmentContentPane .AutoshipDetails .Button, .AutoshipDetails .ButtonInactive, .AutoshipDetails .Button span {width:91%;margin-top:5px;height:30px;}
+.AutoshipDetails ul {margin:5px 5px 10px 15px;padding-left:7px;}
+.ProductThumbBox .AddToAutoship {overflow:hidden;}
+/*******************************************************************************
+* Enrollment - Review and Receipt
+*******************************************************************************/
+.EnrollmentReview {overflow:hidden;}
+
+/*******************************************************************************
+* Login/SignUp Page
+*******************************************************************************/
+#SignUpActionList {
+	.actionItems {
+    	float:left;
+		width:48%;
+		margin:1%;
+		cursor:pointer;
+		.signUpActionTitle {
+    		padding:0 10px;
+		}
+		.signUpActionContent {
+			margin:25px 0 0;
+			padding:10px;
+		}
+		.UI-icon {
+			float:none;
+			height:auto;
+			width:auto;
+			vertical-align:-.5em;
+		}
+	}
+	input {
+		padding:5px;
+	}
+	.leftCol {
+		clear:left;
+	}
+	.FRow {
+		&.splitCol {
+			width:47%;
+			float:left;
+			margin-right:3%;
+		}
+		&.fullWidth .FInput, &.fullWidth input, &.splitCol .FInput, &.splitCol input {
+			width:97%;
+		}
+		&.password, &.fullWidth {
+			clear:both;
+		}
+		&.username, &.options {
+			margin-top:1em;
+		}
+	}
+}
+
+/*******************************************************************************
+
+/*******************************************************************************
+* Site Response Messages
+*******************************************************************************/
+
+/*******************************************************************************
+* Grid Pagination
+*******************************************************************************/
+.Pagination {padding:5px;}
+.Bar {float:left;width:48%;padding:2px;margin-top:4px;}
+.Bar a.previousPage, .Bar a.nextPage {margin-right:5px;float:left;display:block;}
+.Bar a.nextPage  {margin:0 0 0 5px;}
+.Bar .pages {display:block;float:left;}
+.PageSize {float:right;text-align:right;width:48%;}
+
+/*******************************************************************************
+* Other Misc Styles
+*******************************************************************************/
+.GridFilters {padding:10px 10px 2px;}
+/*** Enrollment Sponsor Profiles and Checkout Shipping Profiles ***/
+.profilesListWrap .Profile {padding:5px;margin:3px;}
+.profilesListWrap img {max-width:4em;}
+
+/*******************************************************************************
+* Contact Me Form
+*******************************************************************************/
+
+#consultantForm {
+	width:64%;
+	p {
+		overflow:hidden;
+		input[type="text"] {
+			width:96%;
+			padding:.5em;
+		}
+		textarea {
+			width:96%;
+			padding:.5em;
+		}
+	}
+}
+
+
+/*******************************************************************************
+* Response Messaging
+*******************************************************************************/
+#messageCenterModal {
+	display:none;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	padding:3em;
+	text-align:center;
+	@include opacity(.95);
+	@include box-shadow(rgba(0,0,0,.25)0 0 3em);
+	font-weight:bold;
+	z-index:99999;
+}
+
+/************************************************************************************
+* Tooltip plugin
+************************************************************************************/
+.has-tooltip {
+	.tooltip {
+		position: absolute;
+		display: none;
+	}
+	&:hover .tooltip {
+		display: block;
+	}
+}
+
+a.qmark_trigger {
+position:relative;
+right: -10px
+}
+
+.actionItems .icon-help:before {
+	font-size: 21px;
+}
+
+.qmark_close{
+position: absolute;
+right: -8px;
+top: -6px;
+pointer-events: auto;
+font-size: 22px
+}
+
+.qmark {
+display: none;
+padding: 20px;
+width: 170px;
+margin-left: -95px;
+left: 50%;
+text-align: center;
+text-indent: 0px;
+position: absolute;
+pointer-events: none;
+opacity: 0;
+box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+border: 3px solid #bbb;
+font-weight: normal;
+font-size: 11px; 
+}
+
+.qmark::after {
+content: '';
+position: absolute;
+left: 50%;
+margin-left: -10px;
+bottom: -9px;
+width: 0;
+height: 0;
+border-left: 0px solid transparent;
+border-right: 10px solid transparent;
+border-top: 8px solid #bbb;
+}
+
+
+/************************************************************************************
+* Promos
+************************************************************************************/
+
+﻿#SaleItemImg {
+	background: url("/FileUploads/CMS/Images/saleSpritsheet.png") repeat scroll 0px -255px transparent;
+	height: 75px;
+	margin: 0px -5px;
+	position: absolute;
+	left: 0;text-indent: -9999px;
+	top: 0px;
+	width: 75px;
+	z-index: 200;
+	}
+
+.OriginalPrice.strikethrough {
+	color: #999999;
+	}
+
+.discountPrice {
+	color: #D90000;
+	}
+
+#searchResults .strikethrough {
+	float: left !important;
+	margin-left: 4em;
+	}
+	
+#searchResults .discountPrice {
+	float: right !important;
+	margin-right: 4em;
+	}
+
+#SelectPromotionProducts .brdr1 {
+	border: 1px dotted #DDDDDD;
+	}
+	
+.promoProductChoices .promoProduct {
+	cursor: pointer;
+	}
+
+#SelectPromotionProducts h2 {
+	background: none !important;
+	padding: 0em 0em .5em 0em;
+	}
+
+.promoProductsWrap {
+	min-height: 100px;
+	}

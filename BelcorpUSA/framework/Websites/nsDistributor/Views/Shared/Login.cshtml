@@ -1,0 +1,165 @@
+﻿@using NetSteps.Web.Mvc.Models
+@model ILoginModel
+@{
+	ViewBag.Title = "Login";
+}
+@section head{
+	<script type="text/javascript">
+		//<![CDATA[
+		$(function () {
+			$('input[type=text],input[type=password]', '#login').keyup(function (e) { if (e.keyCode == 13) { $('#btnExistingLogin').click(); } });
+			$('#btnExistingLogin').click(function () {
+				if (!$('#login').checkRequiredFields()) {
+					return false;
+				}
+				var t = $(this);
+				$('#loginError').empty();
+				NS.post({
+					url: '@Model.LoginUrl',
+					showLoading: t,
+					data: {
+						username: $('#txtExistingUsername').val(),
+						password: $('#txtExistingPassword').val()
+					},
+					success: function (response) {
+						if (response.result) {
+							$.cookie('isReload', 'True');
+							window.location = response.returnUrl || '/Home';
+						} else {
+							$('#loginError').html(response.message).fadeIn();
+						}
+					}
+				});
+			});
+
+			$('#txtNewPassword').focus(function () {
+				$('#txtNewPassword').clearError();
+			});
+			$('input[type=text],input[type=password]', '#signUp').keyup(function (e) { if (e.keyCode == 13) { $('#btnSignUp').click(); } });
+			$('#btnSignUp').click(function () {
+				if (!$('#signUp').checkRequiredFields()) {
+					return false;
+				}
+				if ($('#txtNewPassword').val().length < 6) {
+					$('#txtNewPassword').showError('@Html.JavascriptTerm("PasswordMustBeSixCharsOrLonger", "Password must be 6 characters or longer.")');
+					return false;
+				}
+				$('#txtNewPasswordConfirm').clearError();
+				if ($('#txtNewPassword').val() != $('#txtNewPasswordConfirm').val()) {
+					$('#txtNewPasswordConfirm').showError('@Html.JavascriptTerm("PasswordsDoNotMatch", "Passwords do not match.")');
+					return false;
+				}
+
+				var options = {
+					showLoading: $(this),
+					data: {
+						firstName: $('#txtFirstName').val(),
+						lastName: $('#txtLastName').val(),
+						email: $('#txtEmail').val(),
+						username: $('#txtNewUsername').val(),
+						password: $('#txtNewPassword').val()
+					},
+					success: function (response) {
+						if (response.result) {
+							window.location = response.returnUrl;
+						} else {
+							$('#signUpError').html(response.message).fadeIn();
+						}
+					}
+				};
+				$('#signUpError').empty();
+				NS.post(options);
+            });
+
+
+            if ('@Model.UserName' != '' && '@Model.Password' != '') {
+                $('#btnExistingLogin').trigger("click");
+            }
+		});
+		//]]>
+	</script>
+}
+<div class="contentPane">
+	<div id="login" class="FL splitCol UI-lightBg brdrAll logInPane">
+		<div class="pad10">
+			<div id="loginError" class="UI-errorBg mb10 pad10 center clr" style="display: none;">
+			</div>
+			<div class="UI-mainBg brdrAll pad5 logInHeader">
+				<h2>@Html.Term("LoginWithYourExistingAccount", "Please Log In")</h2>
+			</div>
+			<div class="FormContainer loginForm">
+				<div class="FRow">
+					<div class="FLabel">
+						<label for="txtExistingUsername">@Model.UsernameLabelText:</label>
+					</div>
+					<div class="FInput">
+						<input type="text" id="txtExistingUsername" class="required" name="@Model.UsernameErrorText" value="@Model.UserName"  />
+					</div>
+					<span class="clr"></span>
+				</div>
+				<div class="FRow">
+					<div class="FLabel">
+						<label for="txtExistingPassword">@Html.Term("Password"):</label>
+					</div>
+					<div class="FInput">
+						<input type="password" id="txtExistingPassword" class="required" name="@Html.Term("PasswordIsRequired", "Password is required.")" value="@Model.Password" />
+					</div>
+					<span class="clr"></span>
+				</div>
+				<p class="FormSubmit">
+					<a id="btnExistingLogin" href="javascript:void(0);" class="Button"><span>@Html.Term("Login")</span></a>
+				</p>
+			</div>
+		</div>
+		@if (Model.EnableForgotPassword)
+  {
+			<p class="center mt10 lawyer forgotPw">
+				<a href="@Url.Resolve("~/ForgotPassword")" class="forgotPwdLink"><span>@Html.Term("ForgotPassword", "Forgot your password?")</span></a></p>
+                   
+  }
+</div>
+	<div id="signUp" class="FR splitCol signUpPane">
+		@ViewData["PWS_Login_TopContent"]
+        <div class="pad10">
+			<div id="signUpError" class="UI-errorBg mb10 pad10 center clr" style="display: none;">
+			</div>
+			<div class="UI-darkBg brdrAll mb10 pad5 newSignUpHeader">
+				<h2>@Html.Term("Login_NoAccount_Header", "Don't Have an Account?")</h2>
+			</div>
+			@Html.Partial("_SignUpActionList")
+        </div>
+	</div>
+	<span class="clr"></span>
+</div>
+
+@ViewData["PWS_Login_BottomContent"]
+
+@section bodyFooter{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Security/LoginModel.js")"></script>
+	<script type="text/javascript">
+		var loginModel;
+		$(function () {
+			var loginOptions = @Model.OptionsJson();
+			var loginData = @Model.DataJson();
+			loginModel = new LoginModel(loginOptions, loginData);
+			ko.applyBindings(loginModel, document.getElementById('loginModelContainer'));
+			
+			// Do this after the knockout bindings have applied.  Otherwise the tooltips won't work correctly.
+			$("a[content-qmark]").each(function () {
+				var e = $(this).attr("content-qmark");
+				$(this).append('<span class="qmark UI-darkBg pad10 brdr1 brdrAll">' + e + '<a href="javascript(void);" class="icon-xsm qmark_close" data-icon="&#xe02a;"></a></span>')
+			});
+			$("a[content-qmark]").toggle(function () {
+				$(this).find(".qmark").animate({ opacity: .9, marginTop: "-15px" }, 200);
+				var e = $(this).width();
+				var t = $(this).find(".qmark").outerWidth();
+				var n = $(this).find(".qmark").outerHeight();
+				$(this).find(".qmark").css({ "top": -n, "display": "block" });
+			}, function () {
+				$(this).find(".qmark").animate({ opacity: 0, marginTop: "0px" }, 200);
+				$(this).find(".qmark").css({ "display": "none" });
+			});
+		});
+	</script>
+    @Html.Partial("_SignUpScripts")
+}

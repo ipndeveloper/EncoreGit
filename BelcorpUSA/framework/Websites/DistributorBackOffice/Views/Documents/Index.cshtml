@@ -1,0 +1,167 @@
+@model dynamic
+@section head {
+    <script type="text/javascript">
+        $(function () {
+
+            $('body').addClass('noAction');
+
+            $('#createMediaBundleLink').click(function () {
+                var data = {}, t = $(this);
+
+                $('#mediaBundleItems ul li').each(function (i) {
+                    data['archiveIDs[' + i + ']'] = $(this).attr('id').replace(/\D/g, '');
+                });
+                showLoading(t, { float: 'right' });
+                $.post('@Href("~/Documents/BundleEmail")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Communication/Email/BundleEmail")';
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('a.archiveRemoveLink').live('click', function () {
+                oldMediaBundleContainerHeight = $('#mediaBundleList li').length ? $('#mediaBundleContainer').height() : 0;
+                var p = $(this).parent();
+                $('#archiveAddLink' + p.attr('id').replace(/\D/g, '')).text('@Html.Term("AddToMediaBundle", "Add to media bundle")');
+                p.remove();
+
+                $('#fileCount').text(String.format('@Html.Term("XFiles", "{0} file(s)")', $('#mediaBundleList li').length));
+
+                mediaBundleContainerHeight = $('#mediaBundleList li').length ? $('#mediaBundleContainer').show().css({ height: 'auto' }).height() : 0;
+                $('#mediaBundleContainer').height(oldMediaBundleContainerHeight).animate({ height: mediaBundleContainerHeight + 'px' }, 500);
+            });
+
+            var mediaBundleContainerHeight = $('#mediaBundleContainer').show().height();
+            var oldMediaBundleContainerHeight = 0;
+            $('#mediaBundleContainer').hide();
+
+            $('a.archiveAddLink').live('click', function (e) {
+                var archiveId = $(this).attr('id').replace(/\D/g, '');
+                var existing = $('#archiveBundle' + archiveId);
+                var existingAddLinkButton = $('#archiveAddLink' + archiveId);
+                oldMediaBundleContainerHeight = $('#mediaBundleList li').length ? $('#mediaBundleContainer').height() : 0;
+
+                if (!existing.length) {
+                    existingAddLinkButton.text('@Html.Term("RemoveFromMediaBundle", "Remove from media bundle")');
+                    $('#mediaBundleList').append('<li class="pad2" id="archiveBundle' + archiveId + '"><span class="FL pad5">' + $(this).attr('name') + '</span><a href="javascript:void(0)" class="FR archiveRemoveLink UI-icon-container"><span class="UI-icon icon-x icon-removeBundle"></span></a><span class="clr"></span></li>');
+                    $('#archiveBundle' + archiveId).effect('highlight', {}, 2000);
+                }
+                else {
+                    existing.remove();
+
+                    existingAddLinkButton.text('@Html.Term("AddToMediaBundle", "Add to media bundle")');
+                }
+
+                $('#fileCount').text(String.format('@Html.Term("XFiles", "{0} file(s)")', $('#mediaBundleList li').length));
+
+                mediaBundleContainerHeight = $('#mediaBundleList li').length ? $('#mediaBundleContainer').show().css({ height: 'auto' }).height() : 0;
+                $('#mediaBundleContainer').height(oldMediaBundleContainerHeight).animate({ height: mediaBundleContainerHeight + 'px' }, 500);
+            });
+
+            $('#minimizeMediaBundle').click(function () {
+                var height = $(this).parent().height();
+                if ($('#mediaBundleContainer').height() == height) {
+                    $('#minimizeMediaBundle').attr('title', '@Html.Term("MinimizeWindow", "Minimize window")');
+                    $('#mediaBundleContainer').animate({ height: mediaBundleContainerHeight + 'px' }, 500);
+                } else {
+                    $('#minimizeMediaBundle').attr('title', '@Html.Term("ShowWindow", "Show window")');
+                    $('#mediaBundleContainer').animate({ height: height + 'px' }, 500);
+                }
+                //                $('#mediaBundleItems').slideUp();
+            });
+
+            $('body').ajaxSuccess(function (e, xhr, options) {
+                if (options.url.indexOf('/Get') > 0) {
+                    $('#mediaBundleItems li').each(function () {
+                        $('#archiveAddLink' + $(this).attr('id').replace(/\D/g, '')).text('@Html.Term("RemoveFromMediaBundle", "Remove from media bundle")');
+                    });
+                }
+            });
+            $('.documentCategory').click(function () {
+                $('.documentCategory.current').removeClass('current');
+                $(this).addClass('current');
+                $('#categoryData').val($(this).attr('id'));
+                $('a.filterButton').click();
+            });
+		$('#mediaBundleTitle').watermark('@Html.JavascriptTerm("NameYourMediaBundle", "Name your media bundle")');
+
+            $('#queryInputFilter').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('#filterButton').click();
+                }
+            }).jsonSuggest('@Href("~/Documents/Search")', { minCharacters: 3, ajaxResults: true, maxResults: 50, showMore: true });
+
+
+
+            
+
+        });
+    </script>
+}
+@section title{
+    @Html.Term("DocumentLibrary", "Document Library")
+}
+@section SideBarExtras {
+    <!-- document categories -->
+    <div class="SavedReports menu-full DocumentsMenu">
+        <div class="WidgetTitle">
+            <span class="Title">
+                @Html.Term("Document Categories")</span>
+        </div>
+        <div class="listBody">
+            <div class="listNav">
+                @Html.Raw(ViewData["Categories"].ToString())
+            </div>
+        </div>
+    </div>
+    <div class="menu-small menu-hidden docLib">
+        <div class="menu-trig" data-menu="docs">
+            <span class="menu-label">Documents</span>
+        </div>
+        <div class="UI-mainBg menu-panel listNav" id="docs">
+            @Html.Raw(ViewData["Categories"].ToString())
+        </div>
+    </div>
+}
+<div id="CategoryContent">
+    @if (ViewData["CategoryContent"] != null)
+    {
+        @Html.Raw(ViewData["CategoryContent"].ToString())
+    }
+</div>
+@{
+    Html.PaginatedGrid("~/Documents/Get")
+        .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+        .AddColumn("", "", false)
+        .AddColumn(Html.Term("Name"), "Name", true)
+        .AddColumn(Html.Term("FileName", "File Name"), "FileName", true)
+        .AddColumn(Html.Term("DateAdded", "Date Added"), "StartDateUTC", true, true, NetSteps.Common.Constants.SortDirection.Descending)
+        //.AddColumn(Html.Term("DateModified", "Date Modified"), "DateModifiedUTC", true)
+        .AddColumn("", "", false)
+        .AddSelectFilter(Html.Term("FileTypes", "File Types"), "fileTypes", typeof(NetSteps.Common.Constants.FileType).GetValues<NetSteps.Common.Constants.FileType>().ToDictionary(ft => ft, ft => Html.Term(ft.ToString(), ft.ToString().PascalToSpaced())), multiselect: true)
+        .AddInputFilter(Html.Term("Search"), "query")
+        .AddData("category", Request.QueryString["category"])
+        .ClickEntireRow()
+        .Render();
+}
+<!-- Media Bundle Container -->
+<div id="mediaBundleContainer" class="UI-whiteBg brdrYYNN brdr1 infoCardWindow" style="display: none;">
+    <div class="UI-secBg pad2 bold brdrYYNN titleBar">
+        <a id="minimizeMediaBundle" href="javascript:void(0);" class="block" title="@Html.Term("MinimizeWindow", "Minimize window")">@Html.Term("MediaBundleCreator", "Media Bundle Creator")</a>
+    </div>
+    <div class="UI-lightBg m1 pad2">
+        <div class="FL pad5" id="fileCount">
+        </div>
+        <a id="createMediaBundleLink" class="FR Button" href="javascript:void(0);"><span>
+            @Html.Term("EmailThisBundle", "Email This Bundle")</span></a> <span class="clr">
+        </span>
+    </div>
+    <div id="mediaBundleItems" class="pad5">
+        <ul id="mediaBundleList" class="flatList listNav mediaBundleList">
+        </ul>
+        <span class="ClearAll"></span>
+    </div>
+</div>

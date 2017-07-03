@@ -1,0 +1,177 @@
+﻿<script type="text/javascript">
+    $(function ()
+    {
+        var SalesIndicatorLevel = "Warn"; //Default
+        var $salesIndicator = $('#SalesIndicator'),
+			lvPos = 2;
+        var warningColors = {
+            good: rgb2hex($('span.salesVolLevel.Good').css('background-color')),
+            warn: rgb2hex($('span.salesVolLevel.Warn').css('background-color')),
+            alert: rgb2hex($('span.salesVolLevel.Alert').css('background-color'))
+        };
+        $('#statusSelectFilter').change(function ()
+        {
+            $('.salesVolSlider').css({ 'left': '0' });
+            $.get('@Href("~/Performance/GetVolumeWidgetData")', { periodId: $(this).val() }, function (response)
+            {
+                if (response.result)
+                {
+                    var volData = response.model,
+                    //						volText = '$0.00', //EL QV NO DEBE TENER SIGNO $
+                        volText = '0', //SIN DECIMAL
+						reqVolText = '100', //SIN DECIMAL SIN SIGNO
+                    //remainingVolText = '$100.00'; //EL QV NO DEBE TENER SIGNO $
+                        remainingVolText = '100'; //SIN DECIMAL SIN SIGNO
+
+                    if (volData !== undefined)
+                    {
+                        var volume = volData.Volume,
+							requiredVol = volData.RequiredVolume,
+							remainingVol = requiredVol - volume;
+
+                        if (volume != null || volume != '')
+                        {
+                            //                            volText = '$' + volume.toFixed(2); //EL QV NO DEBE TENER SIGNO $
+                            volText = volume; //.toFixed(2) NO REQUIERE DECIMAL;
+                        }
+                        if (requiredVol != null || requiredVol != '')
+                        {
+                            reqVolText = requiredVol; //'$' + requiredVol.toFixed(2); NO REQUIERE DECIMAL  NI SIGNO
+                        }
+                        if (remainingVol != null || remainingVol != '')
+                        {
+                            if (remainingVol >= 0)
+                            {
+                                //remainingVolText = '$' + remainingVol.toFixed(2); //EL QV NO DEBE TENER SIGNO $
+                                remainingVolText = remainingVol; //.toFixed(2); NO REQUIERE DECIMAL
+                            }
+                            else
+                            {
+                                //remainingVolText = '$0.00'; //EL QV NO DEBE TENER SIGNO $
+                                remainingVolText = '0'; //'0.00'; SIN DECIMAL
+                            }
+                        }
+
+                        $('#VolumeDescription').html(volData.VolumeDescription);
+
+                        if (volData.SalesIndicatorLevel)
+                        {
+                            SalesIndicatorLevel = volData.SalesIndicatorLevel;
+                            $salesIndicator.removeClass("Warn Good Alert");
+                            $salesIndicator.addClass(SalesIndicatorLevel);
+                        }
+                        RenderVolumeRadChart(SalesIndicatorLevel, warningColors);
+                        //animateSalesBarChart(SalesIndicatorLevel, lvPos);
+
+                    }
+                    $('#Volume, #VolumeTableData').html(volText);
+                    $('#RequiredTableData').html(reqVolText);
+                    //                    $('#SalesVolRemaining').html(remainingVolText + '<span>@Html.Term("Performance_SalesVolume_Remaining", "Remaining")</span>'); //EL QV NO DEBE TENER SIGNO $
+                    $('#SalesVolRemaining').html(remainingVolText + '<span>@Html.Term("Performance_SalesVolume_Remaining", "Remaining")</span>');
+                    $('#RemainingTableData').html(remainingVolText);
+
+                } else
+                {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+
+        $('#kpiSV .changeViewIcon').click(function ()
+        {
+            var buttonId = $(this).attr('id'),
+				$salesIndicator = $('#SalesIndicator');
+            if (buttonId === 'SalesVolText_Button')
+            {
+                $salesIndicator.addClass('hide');
+            }
+            else
+            {
+                if (buttonId === 'SalesVolBar_Button')
+                {
+                    $('.salesVolSlider').css({ 'left': '0' });
+                    animateSalesBarChart(SalesIndicatorLevel, lvPos);
+                }
+                $salesIndicator.removeClass('hide');
+            }
+        });
+    });
+
+    function animateSalesBarChart(salesIndLv, lp) {
+        $('div.salesVolumeBar .salesVolLevel').each(function () {
+            var $this = $(this),
+				levelInd = $this.hasClass(salesIndLv);
+            if (levelInd) {
+                lp = $this.index() + 1;
+                $this.nextAll().addClass('inactive');
+            }
+        });
+        var leftPerc = ((lp * 32.5) - .75) + '%';
+        $('.salesVolSlider').animate({
+            left: leftPerc
+        }, 800);
+    }
+</script>
+<div class="FL PerfKPI kpiVolume" id="kpiSV">
+    <div class="UI-secBg brdrAll pad5">
+        <div class="FL">
+            <span>@Html.Term("Sales Volume", "Sales Volume")</span></div>
+        <div class="FR">
+            <a href="javascript:void(0);" id="SalesVolRadial_Button" class="changeViewIcon icon-radialChart active"
+                data-icon="&#xe02c;"></a><a href="javascript:void(0);" id="SalesVolBar_Button" class="changeViewIcon icon-barChart"
+                    data-icon="&#xe02b;"></a><a href="javascript:void(0);" id="SalesVolText_Button" class="changeViewIcon icon-textView"
+                        data-icon="&#xe02d;"></a>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div class="brdr1 body">
+        <div class="pad10 center">
+            <!--Start Radial Chart-->
+            <div id="SalesVolRadial_View" class="circularChartWrap salesVolumeRadial">
+                <div id="SalesVolRadial_Chart" class="chart">
+                </div>
+                <div id="RemainingVolume">
+                    <span id="SalesVolRemaining" class="amountSalesRemaining"></span>
+                </div>
+            </div>
+            <!--Start Bar Chart-->
+            <div id="SalesVolBar_View" class="salesVolumeBar hide">
+                <span class="salesVolLevel Indicator Alert">@Html.Term("Performance_SalesVolumeBar_Alert", "Alert")</span>
+                <span class="salesVolLevel Indicator Warn">@Html.Term("Performance_SalesVolumeBar_Warning", "Warning")</span>
+                <span class="salesVolLevel Indicator Good">@Html.Term("Performance_SalesVolumeBar_Good", "Good")</span>
+                <span class="salesVolSlider trigger Indicator" data-icon="&#x21e6;"></span><span
+                    class="clr"></span>
+            </div>
+            <div id="SalesVolText_View" class="salesVolumeText hide">
+                <table class="DataGrid left performanceTextTable">
+                    <thead>
+                        <tr class="">
+                            <th>@Html.Term("Performance_SalesVolume_SalesVolume", "Sales Volume")
+                            </th>
+                            <th>@Html.Term("Performance_SalesVolume_RequiredVolume", "Required Volume")
+                            </th>
+                            <th>@Html.Term("Performance_SalesVolume_Remaining", "Remaining")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="VolumeTableData">
+                            </td>
+                            <td id="RequiredTableData">
+                            </td>
+                            <td id="RemainingTableData">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="SalesIndicator" class="brdrAll pad10 Indicator UI-darkBg">
+                <span class="Number"><span id="Volume"></span><a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="javascript:void(0);" content-qmark="@Html.Term("Performance_SalesVolume_QuestionMark", "Tooltip regarding the sales volume widget, still need to set as term with default text.")">
+                </a></span>
+            </div>
+            <p class="lawyer pad10">
+                <span id="VolumeDescription">@Html.Term("RequiredVolumeWithAsterik", "* Your total sales volume must be a minimum of {0} in order to maintain your title", 100)</span></p>
+        </div>
+    </div>
+</div>

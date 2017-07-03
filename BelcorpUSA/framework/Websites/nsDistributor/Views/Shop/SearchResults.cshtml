@@ -1,0 +1,21 @@
+@model System.Collections.Generic.IEnumerable<NetSteps.Data.Entities.Product>
+@{
+    int count = Model != null ? Model.Count() : 0;
+}
+<div class="clr UI-lightBg mt10 mb10 pad5 center resultsText">
+    @Html.Term("ProductsFound", "Products found"): @count
+</div>
+<div class="ProductThumbRows">
+ @if (count > 0)
+ {
+    for (int i = 0; i < Math.Ceiling(count / (double)5); i++)
+    {
+        <div class="row">
+            @foreach (var product in Model.Skip(i * 5).Take(5))
+            {
+                Html.RenderPartial("ProductListing", product);
+            }
+        </div>    
+    }
+ }
+</div>

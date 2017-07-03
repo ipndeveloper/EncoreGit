@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:simpleType name="OrderStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Pending"/>
+      <xsd:enumeration value="Pending Error"/>
+      <xsd:enumeration value="Paid"/>
+      <xsd:enumeration value="Cancelled"/>
+      <xsd:enumeration value="Partially Paid"/>
+      <xsd:enumeration value="Printed"/>
+      <xsd:enumeration value="Shipped"/>
+      <xsd:enumeration value="Credit Card Declined"/>
+      <xsd:enumeration value="Credit Card Declined - Retry"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AccountType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Distributor" />
+      <xsd:enumeration value="Preferred Customer" />
+      <xsd:enumeration value="Retail Customer" />
+      <xsd:enumeration value="Employee" />
+      <xsd:enumeration value="Prospect"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PaymentType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Credit Card" />
+      <xsd:enumeration value="Check" />
+      <xsd:enumeration value="Cash" />
+      <xsd:enumeration value="EFT" />
+      <xsd:enumeration value="Gift Card"/>
+      <xsd:enumeration value="Product Credit"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="OrderItemParentType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Static Kit"/>
+      <xsd:enumeration value="Dynamic Kit"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="OrderType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Online Order"/>
+      <xsd:enumeration value="Workstation Order"/>
+      <xsd:enumeration value="Party Order"/>
+      <xsd:enumeration value="Portal Order"/>
+      <xsd:enumeration value="Autoship Template"/>
+      <xsd:enumeration value="Autoship Order"/>
+      <xsd:enumeration value="Override Order"/>
+      <xsd:enumeration value="Return Order"/>
+      <xsd:enumeration value="Comp Order"/>
+      <xsd:enumeration value="Replacement Order"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Currency">
+    <xsd:annotation>
+      <xsd:documentation>The currency types available for use with the money type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USD"/>
+      <xsd:enumeration value="CAD"/>
+      <xsd:enumeration value="YEN"/>
+      <xsd:enumeration value="AUD"/>
+      <xsd:enumeration value="GBP"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType mixed="false" name="Money">
+    <xsd:annotation>
+      <xsd:documentation>Describe a monetary amount in one of the allowed currencies. Also see the currency type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attribute default="USD" name="Currency" type="Currency" use="optional"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:element name="OrderCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Order" minOccurs="0" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Order">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderNumber" type="xsd:string" minOccurs="1"/>
+        <xsd:element name="OrderDate" type="xsd:dateTime" minOccurs="1"/>
+        <xsd:element name="ShippedDate" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="OrderType" type="OrderType" minOccurs="1" />
+        <xsd:element name="OrderStatus" type="OrderStatus" minOccurs="1" />
+        <xsd:element name="OrderSubTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="TaxTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="ShippingTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="GrandTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="OrderCustomer" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element ref="OrderPayment" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderCustomer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderCustomerID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="CustomerID" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="AccountType" type="AccountType" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="OrderSubTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="TaxTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="ShippingTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="GrandTotal" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="OrderItem" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element ref="OrderPayment" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderItem">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderItemID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="SKU" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="Qty" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="ItemPrice" type="Money" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="ParentOrderItemID" type="xsd:int" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="OrderItemParentType" type="OrderItemParentType" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="ShippedDate" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="OrderPayment">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="PaymentType" type="PaymentType" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="PaymentAmount" type="xsd:decimal" minOccurs="1"  maxOccurs="1" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

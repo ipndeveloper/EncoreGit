@@ -1,0 +1,41 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.DirectDepositPaymentMethodsModel
+@{
+    object eftMarketViewData = ViewData["EftMarketID"];
+    int eftMarketID = eftMarketViewData == null ? 1 : (int)eftMarketViewData;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>
+<!-- R2492 - CGI(JICM)- Estilos Actualizados-->
+<style>
+    
+.padAddPay10 {
+padding: 0 0px 0 10px;
+width:1000px
+}
+
+
+</style>
+<div id="eft">
+    <h3 class="UI-mainBgNew pad20 directDepositHeader">
+        @Html.Term("Enrollment_Products_DirectDepositPaymentMethods_DirectDepositProfileTitle", "Direct Deposit Profile:")
+    </h3>
+    <div class="padAddPay10">
+        @{ var i = 1;}
+        @foreach (var profile in Model.EFTProfiles)
+        {
+            <div class="FL mt10 mr10 bodyAccount@(i)">
+             @Html.Partial("_DirectDepositPaymentMethodsAccountModel", new nsDistributor.Areas.Enroll.Models.Shared.DirectDepositPaymentMethodsAccountModel(profile, i, profile.IsEnabled, Model.PostalCodeLookupURL.ResolveUrl(), eftMarketID))
+            </div>
+            i++;
+        }
+        <span class="ClearAll"></span>
+    </div>
+</div>
+<p class="FormSubmit">
+    <span class="FR"><a id="btnSubmitDirect" class="Button" href="javascript:void(0);" data-click-submit="parent">
+        <span>@Html.Term("Next")</span> </a></span>
+</p>

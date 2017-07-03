@@ -1,0 +1,57 @@
+@{ 
+    var page = Model as NetSteps.Data.Entities.Page;
+    var modelIsPage = page != null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    @Html.Partial("MasterPageIncludes")
+    @RenderSection("head", false)
+
+    @if ((HtmlSection)ViewBag.SiteDesignContent != null)
+    {
+        @(((HtmlSection)ViewBag.SiteDesignContent).ToDisplay(modelIsPage ? page.PageID : (int?)null))  
+    }
+    else
+    {
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/EditMode.css")" />
+    }
+    
+
+</head>
+<body id="ErrorPage">
+    <input type="hidden" value="ErrorPage" />
+    <div id="SiteContain">
+        <div id="PageContain">
+            <div id="TopPane">
+                <div class="TopInner">
+                   
+                    <h1 id="ErrorLogo">@Html.Term("Company_Name_Error_Page", "Your Company Name Here")</h1>
+                    
+                    <hr />
+
+                    <div id="SiteNav" style="">
+                    </div>
+                </div>
+            </div>
+            <div id="ContentWrap">
+                <div id="ContentInnerWrap">
+                    <div>
+                        @RenderBody()
+                    </div>
+                    <span class="ClearAll"></span>
+                </div>
+            </div>
+            <div id="Footer" class="UI-linkAlt Footer">
+                <div id="FooterInner">
+                    <div id="FooterLinks">
+                        <span class="ClearAll"></span>
+                    </div>
+                    <span class="ClearAll"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,782 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="OrderCustomers" EntityType="Model.Store.OrderCustomers" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OrderItemPrices" EntityType="Model.Store.OrderItemPrices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OrderItems" EntityType="Model.Store.OrderItems" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Orders" EntityType="Model.Store.Orders" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OrderAdjustmentOrderLineModifications" EntityType="Model.Store.OrderAdjustmentOrderLineModifications" store:Type="Tables" Schema="Order" />
+          <EntitySet Name="OrderAdjustmentOrderModifications" EntityType="Model.Store.OrderAdjustmentOrderModifications" store:Type="Tables" Schema="Order" />
+          <AssociationSet Name="FK__OrderItem__Order__4D6B9954" Association="Model.Store.FK__OrderItem__Order__4D6B9954">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderItemPrices" EntitySet="OrderItemPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderAdjustmentOrderLineModifications_OrderItems" Association="Model.Store.FK_OrderAdjustmentOrderLineModifications_OrderItems">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderAdjustmentOrderLineModifications" EntitySet="OrderAdjustmentOrderLineModifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderAdjustmentOrderModifications_OrderCustomerID" Association="Model.Store.FK_OrderAdjustmentOrderModifications_OrderCustomerID">
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+            <End Role="OrderAdjustmentOrderModifications" EntitySet="OrderAdjustmentOrderModifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderCustomers_Orders" Association="Model.Store.FK_OrderCustomers_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItems_OrderCustomers" Association="Model.Store.FK_OrderItems_OrderCustomers">
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItems_OrderItems" Association="Model.Store.FK_OrderItems_OrderItems">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderItems1" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Orders" Association="Model.Store.FK_Orders_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Orders1" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="OrderCustomers">
+          <Key>
+            <PropertyRef Name="OrderCustomerID" />
+          </Key>
+          <Property Name="OrderCustomerID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderCustomerTypeID" Type="smallint" Nullable="false" />
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="ShippingTotal" Type="money" />
+          <Property Name="HandlingTotal" Type="money" />
+          <Property Name="DiscountAmount" Type="money" />
+          <Property Name="Subtotal" Type="money" />
+          <Property Name="PaymentTotal" Type="money" />
+          <Property Name="CommissionableTotal" Type="money" />
+          <Property Name="Balance" Type="money" />
+          <Property Name="Total" Type="money" />
+          <Property Name="FutureBookingDateUTC" Type="datetime" />
+          <Property Name="IsTaxExempt" Type="bit" />
+          <Property Name="TaxAmountTotal" Type="money" />
+          <Property Name="TaxAmountCity" Type="money" />
+          <Property Name="TaxAmountState" Type="money" />
+          <Property Name="TaxAmountCounty" Type="money" />
+          <Property Name="TaxAmountDistrict" Type="money" />
+          <Property Name="TaxAmountOrderItems" Type="money" />
+          <Property Name="TaxAmountShipping" Type="money" />
+          <Property Name="TaxableTotal" Type="money" />
+          <Property Name="TaxAmount" Type="money" StoreGeneratedPattern="Computed" />
+          <Property Name="DataVersion" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="int" />
+          <Property Name="TaxAmountCountry" Type="money" />
+          <Property Name="IsBookingCredit" Type="bit" Nullable="false" />
+          <Property Name="TaxGeocode" Type="nvarchar" MaxLength="50" />
+          <Property Name="SalesTaxTransactionNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="UseTaxTransactionNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="OrderItemPrices">
+          <Key>
+            <PropertyRef Name="OrderItemPriceID" />
+          </Key>
+          <Property Name="OrderItemPriceID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderItemID" Type="int" Nullable="false" />
+          <Property Name="OriginalUnitPrice" Type="money" />
+          <Property Name="ProductPriceTypeID" Type="int" Nullable="false" />
+          <Property Name="UnitPrice" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderItems">
+          <Key>
+            <PropertyRef Name="OrderItemID" />
+          </Key>
+          <Property Name="OrderItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderCustomerID" Type="int" Nullable="false" />
+          <Property Name="OrderItemTypeID" Type="smallint" Nullable="false" />
+          <Property Name="HostessRewardRuleID" Type="int" />
+          <Property Name="ParentOrderItemID" Type="int" />
+          <Property Name="ProductID" Type="int" />
+          <Property Name="ProductPriceTypeID" Type="int" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="250" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="50" />
+          <Property Name="CatalogID" Type="int" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="ItemPrice" Type="money" Nullable="false" />
+          <Property Name="ShippingTotal" Type="money" />
+          <Property Name="ShippingTotalOverride" Type="money" />
+          <Property Name="HandlingTotal" Type="money" />
+          <Property Name="Discount" Type="money" />
+          <Property Name="DiscountPercent" Type="money" />
+          <Property Name="AdjustedPrice" Type="money" />
+          <Property Name="CommissionableTotal" Type="money" />
+          <Property Name="CommissionableTotalOverride" Type="money" />
+          <Property Name="ChargeTax" Type="bit" Nullable="false" />
+          <Property Name="ChargeShipping" Type="bit" Nullable="false" />
+          <Property Name="Points" Type="int" />
+          <Property Name="MinCustomerSubtotal" Type="money" />
+          <Property Name="MaxCustomerSubtotal" Type="money" />
+          <Property Name="TaxPercent" Type="money" />
+          <Property Name="TaxAmount" Type="money" />
+          <Property Name="TaxPercentCity" Type="money" />
+          <Property Name="TaxAmountCity" Type="money" />
+          <Property Name="TaxAmountCityLocal" Type="money" />
+          <Property Name="TaxPercentState" Type="money" />
+          <Property Name="TaxAmountState" Type="money" />
+          <Property Name="TaxPercentCounty" Type="money" />
+          <Property Name="TaxAmountCounty" Type="money" />
+          <Property Name="TaxAmountCountyLocal" Type="money" />
+          <Property Name="TaxPercentDistrict" Type="money" />
+          <Property Name="TaxAmountDistrict" Type="money" />
+          <Property Name="TaxPercentCountry" Type="money" />
+          <Property Name="TaxAmountCountry" Type="money" />
+          <Property Name="TaxableTotal" Type="money" />
+          <Property Name="DataVersion" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="int" />
+          <Property Name="DynamicKitGroupID" Type="int" />
+          <Property Name="OrderItemParentTypeID" Type="smallint" />
+          <Property Name="ItemPriceActual" Type="money" />
+          <Property Name="TaxNumber" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="OrderStatusID" Type="smallint" Nullable="false" />
+          <Property Name="OrderTypeID" Type="smallint" Nullable="false" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="SiteID" Type="int" />
+          <Property Name="ParentOrderID" Type="int" />
+          <Property Name="CurrencyID" Type="int" Nullable="false" />
+          <Property Name="CompleteDateUTC" Type="datetime" />
+          <Property Name="CommissionDateUTC" Type="datetime" />
+          <Property Name="HostessRewardsEarned" Type="money" />
+          <Property Name="HostessRewardsUsed" Type="money" />
+          <Property Name="IsTaxExempt" Type="bit" />
+          <Property Name="TaxAmountTotal" Type="money" />
+          <Property Name="TaxAmountTotalOverride" Type="money" />
+          <Property Name="TaxableTotal" Type="money" />
+          <Property Name="TaxAmountOrderItems" Type="money" />
+          <Property Name="TaxAmountShipping" Type="money" />
+          <Property Name="TaxAmount" Type="money" StoreGeneratedPattern="Computed" />
+          <Property Name="Subtotal" Type="money" />
+          <Property Name="DiscountTotal" Type="money" />
+          <Property Name="ShippingTotal" Type="money" />
+          <Property Name="ShippingTotalOverride" Type="money" />
+          <Property Name="HandlingTotal" Type="money" />
+          <Property Name="GrandTotal" Type="money" />
+          <Property Name="PaymentTotal" Type="money" />
+          <Property Name="Balance" Type="money" />
+          <Property Name="CommissionableTotal" Type="money" />
+          <Property Name="ReturnTypeID" Type="int" />
+          <Property Name="StepUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="ModifiedByUserID" Type="int" />
+          <Property Name="DateCreatedUTC" Type="datetime" Nullable="false" />
+          <Property Name="CreatedByUserID" Type="int" />
+          <Property Name="DataVersion" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="DiscountPercent" Type="money" />
+          <Property Name="PartyShipmentTotal" Type="money" />
+          <Property Name="PartyHandlingTotal" Type="money" />
+        </EntityType>
+        <EntityType Name="OrderAdjustmentOrderLineModifications">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentOrderLineModificationID" />
+          </Key>
+          <Property Name="OrderAdjustmentOrderLineModificationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderItemID" Type="int" Nullable="false" />
+          <Property Name="OrderAdjustmentID" Type="int" Nullable="false" />
+          <Property Name="PropertyName" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="ModificationOperationID" Type="int" Nullable="false" />
+          <Property Name="ModificationDecimalValue" Type="money" />
+          <Property Name="ModificationDescription" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="OrderAdjustmentOrderModifications">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentOrderModificationID" />
+          </Key>
+          <Property Name="OrderAdjustmentOrderModificationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderAdjustmentID" Type="int" Nullable="false" />
+          <Property Name="PropertyName" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="ModificationOperationID" Type="int" Nullable="false" />
+          <Property Name="ModificationDecimalValue" Type="money" />
+          <Property Name="ModificationDescription" Type="varchar" MaxLength="100" />
+          <Property Name="OrderCustomerID" Type="int" />
+        </EntityType>
+        <Association Name="FK__OrderItem__Order__4D6B9954">
+          <End Role="OrderItems" Type="Model.Store.OrderItems" Multiplicity="1" />
+          <End Role="OrderItemPrices" Type="Model.Store.OrderItemPrices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderItemPrices">
+              <PropertyRef Name="OrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderAdjustmentOrderLineModifications_OrderItems">
+          <End Role="OrderItems" Type="Model.Store.OrderItems" Multiplicity="1" />
+          <End Role="OrderAdjustmentOrderLineModifications" Type="Model.Store.OrderAdjustmentOrderLineModifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderAdjustmentOrderLineModifications">
+              <PropertyRef Name="OrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderAdjustmentOrderModifications_OrderCustomerID">
+          <End Role="OrderCustomers" Type="Model.Store.OrderCustomers" Multiplicity="0..1" />
+          <End Role="OrderAdjustmentOrderModifications" Type="Model.Store.OrderAdjustmentOrderModifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderCustomers">
+              <PropertyRef Name="OrderCustomerID" />
+            </Principal>
+            <Dependent Role="OrderAdjustmentOrderModifications">
+              <PropertyRef Name="OrderCustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderCustomers_Orders">
+          <End Role="Orders" Type="Model.Store.Orders" Multiplicity="1" />
+          <End Role="OrderCustomers" Type="Model.Store.OrderCustomers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderCustomers">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItems_OrderCustomers">
+          <End Role="OrderCustomers" Type="Model.Store.OrderCustomers" Multiplicity="1" />
+          <End Role="OrderItems" Type="Model.Store.OrderItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderCustomers">
+              <PropertyRef Name="OrderCustomerID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="OrderCustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItems_OrderItems">
+          <End Role="OrderItems" Type="Model.Store.OrderItems" Multiplicity="0..1" />
+          <End Role="OrderItems1" Type="Model.Store.OrderItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderItems1">
+              <PropertyRef Name="ParentOrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Orders">
+          <End Role="Orders" Type="Model.Store.Orders" Multiplicity="0..1" />
+          <End Role="Orders1" Type="Model.Store.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="Orders1">
+              <PropertyRef Name="ParentOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="OrderCustomers" EntityType="Model.OrderCustomer" />
+          <EntitySet Name="OrderItemPrices" EntityType="Model.OrderItemPrice" />
+          <EntitySet Name="OrderItems" EntityType="Model.OrderItem" />
+          <EntitySet Name="Orders" EntityType="Model.Order" />
+          <EntitySet Name="OrderAdjustmentOrderLineModifications" EntityType="Model.OrderAdjustmentOrderLineModification" />
+          <EntitySet Name="OrderAdjustmentOrderModifications" EntityType="Model.OrderAdjustmentOrderModification" />
+          <AssociationSet Name="FK_OrderAdjustmentOrderModifications_OrderCustomerID" Association="Model.FK_OrderAdjustmentOrderModifications_OrderCustomerID">
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+            <End Role="OrderAdjustmentOrderModifications" EntitySet="OrderAdjustmentOrderModifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderCustomers_Orders" Association="Model.FK_OrderCustomers_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItems_OrderCustomers" Association="Model.FK_OrderItems_OrderCustomers">
+            <End Role="OrderCustomers" EntitySet="OrderCustomers" />
+            <End Role="OrderItems" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderItem__Order__14FEB9AD" Association="Model.FK__OrderItem__Order__14FEB9AD">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderItemPrices" EntitySet="OrderItemPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderAdjustmentOrderLineModifications_OrderItems" Association="Model.FK_OrderAdjustmentOrderLineModifications_OrderItems">
+            <End Role="OrderItems" EntitySet="OrderItems" />
+            <End Role="OrderAdjustmentOrderLineModifications" EntitySet="OrderAdjustmentOrderLineModifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderItems_OrderItems" Association="Model.FK_OrderItems_OrderItems">
+            <End Role="OrderItem" EntitySet="OrderItems" />
+            <End Role="OrderItem1" EntitySet="OrderItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Orders" Association="Model.FK_Orders_Orders">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Order1" EntitySet="Orders" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="OrderCustomer">
+          <Key>
+            <PropertyRef Name="OrderCustomerID" />
+          </Key>
+          <Property Name="OrderCustomerID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderCustomerTypeID" Type="Int16" Nullable="false" />
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="AccountID" Type="Int32" Nullable="false" />
+          <Property Name="ShippingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="HandlingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DiscountAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Subtotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PaymentTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CommissionableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Balance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Total" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="FutureBookingDateUTC" Type="DateTime" Precision="3" />
+          <Property Name="IsTaxExempt" Type="Boolean" />
+          <Property Name="TaxAmountTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCity" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountState" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCounty" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountDistrict" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountOrderItems" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountShipping" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="19" Scale="4" p1:StoreGeneratedPattern="Computed" />
+          <Property Name="DataVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" p1:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="Int32" />
+          <Property Name="TaxAmountCountry" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsBookingCredit" Type="Boolean" Nullable="false" />
+          <Property Name="TaxGeocode" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="SalesTaxTransactionNumber" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="UseTaxTransactionNumber" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="OrderAdjustmentOrderModifications" Relationship="Model.FK_OrderAdjustmentOrderModifications_OrderCustomerID" FromRole="OrderCustomers" ToRole="OrderAdjustmentOrderModifications" />
+          <NavigationProperty Name="Order" Relationship="Model.FK_OrderCustomers_Orders" FromRole="OrderCustomers" ToRole="Orders" />
+          <NavigationProperty Name="OrderItems" Relationship="Model.FK_OrderItems_OrderCustomers" FromRole="OrderCustomers" ToRole="OrderItems" />
+        </EntityType>
+        <EntityType Name="OrderItemPrice">
+          <Key>
+            <PropertyRef Name="OrderItemPriceID" />
+          </Key>
+          <Property Name="OrderItemPriceID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderItemID" Type="Int32" Nullable="false" />
+          <Property Name="OriginalUnitPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ProductPriceTypeID" Type="Int32" Nullable="false" />
+          <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="OrderItem" Relationship="Model.FK__OrderItem__Order__14FEB9AD" FromRole="OrderItemPrices" ToRole="OrderItems" />
+        </EntityType>
+        <EntityType Name="OrderItem">
+          <Key>
+            <PropertyRef Name="OrderItemID" />
+          </Key>
+          <Property Name="OrderItemID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderCustomerID" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemTypeID" Type="Int16" Nullable="false" />
+          <Property Name="HostessRewardRuleID" Type="Int32" />
+          <Property Name="ParentOrderItemID" Type="Int32" />
+          <Property Name="ProductID" Type="Int32" />
+          <Property Name="ProductPriceTypeID" Type="Int32" />
+          <Property Name="ProductName" Type="String" MaxLength="250" Unicode="true" FixedLength="false" />
+          <Property Name="SKU" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CatalogID" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="ItemPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="ShippingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ShippingTotalOverride" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="HandlingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Discount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DiscountPercent" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="AdjustedPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CommissionableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CommissionableTotalOverride" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ChargeTax" Type="Boolean" Nullable="false" />
+          <Property Name="ChargeShipping" Type="Boolean" Nullable="false" />
+          <Property Name="Points" Type="Int32" />
+          <Property Name="MinCustomerSubtotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="MaxCustomerSubtotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercent" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercentCity" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCity" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCityLocal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercentState" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountState" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercentCounty" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCounty" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCountyLocal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercentDistrict" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountDistrict" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxPercentCountry" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountCountry" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DataVersion" Type="Binary" MaxLength="8" FixedLength="true" p1:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="Int32" />
+          <Property Name="DynamicKitGroupID" Type="Int32" />
+          <Property Name="OrderItemParentTypeID" Type="Int16" />
+          <Property Name="ItemPriceActual" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxNumber" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="OrderCustomer" Relationship="Model.FK_OrderItems_OrderCustomers" FromRole="OrderItems" ToRole="OrderCustomers" />
+          <NavigationProperty Name="OrderItemPrices" Relationship="Model.FK__OrderItem__Order__14FEB9AD" FromRole="OrderItems" ToRole="OrderItemPrices" />
+          <NavigationProperty Name="OrderAdjustmentOrderLineModifications" Relationship="Model.FK_OrderAdjustmentOrderLineModifications_OrderItems" FromRole="OrderItems" ToRole="OrderAdjustmentOrderLineModifications" />
+          </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderNumber" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="OrderStatusID" Type="Int16" Nullable="false" />
+          <Property Name="OrderTypeID" Type="Int16" Nullable="false" />
+          <Property Name="AccountID" Type="Int32" Nullable="false" />
+          <Property Name="SiteID" Type="Int32" />
+          <Property Name="ParentOrderID" Type="Int32" />
+          <Property Name="CurrencyID" Type="Int32" Nullable="false" />
+          <Property Name="CompleteDateUTC" Type="DateTime" Precision="3" />
+          <Property Name="CommissionDateUTC" Type="DateTime" Precision="3" />
+          <Property Name="HostessRewardsEarned" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="HostessRewardsUsed" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsTaxExempt" Type="Boolean" />
+          <Property Name="TaxAmountTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountTotalOverride" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountOrderItems" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmountShipping" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="19" Scale="4" p1:StoreGeneratedPattern="Computed" />
+          <Property Name="Subtotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DiscountTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ShippingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ShippingTotalOverride" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="HandlingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="GrandTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PaymentTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Balance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CommissionableTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ReturnTypeID" Type="Int32" />
+          <Property Name="StepUrl" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="ModifiedByUserID" Type="Int32" />
+          <Property Name="DateCreatedUTC" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedByUserID" Type="Int32" />
+          <Property Name="DataVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" p1:StoreGeneratedPattern="Computed" />
+          <Property Name="DiscountPercent" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PartyShipmentTotal" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PartyHandlingTotal" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="OrderCustomers" Relationship="Model.FK_OrderCustomers_Orders" FromRole="Orders" ToRole="OrderCustomers" />
+          </EntityType>
+        <EntityType Name="OrderAdjustmentOrderLineModification">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentOrderLineModificationID" />
+          </Key>
+          <Property Name="OrderAdjustmentOrderLineModificationID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderItemID" Type="Int32" Nullable="false" />
+          <Property Name="OrderAdjustmentID" Type="Int32" Nullable="false" />
+          <Property Name="PropertyName" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="ModificationOperationID" Type="Int32" Nullable="false" />
+          <Property Name="ModificationDecimalValue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ModificationDescription" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="OrderItem" Relationship="Model.FK_OrderAdjustmentOrderLineModifications_OrderItems" FromRole="OrderAdjustmentOrderLineModifications" ToRole="OrderItems" />
+        </EntityType>
+        <EntityType Name="OrderAdjustmentOrderModification">
+          <Key>
+            <PropertyRef Name="OrderAdjustmentOrderModificationID" />
+          </Key>
+          <Property Name="OrderAdjustmentOrderModificationID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderAdjustmentID" Type="Int32" Nullable="false" />
+          <Property Name="PropertyName" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="ModificationOperationID" Type="Int32" Nullable="false" />
+          <Property Name="ModificationDecimalValue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ModificationDescription" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="OrderCustomerID" Type="Int32" />
+          <NavigationProperty Name="OrderCustomer" Relationship="Model.FK_OrderAdjustmentOrderModifications_OrderCustomerID" FromRole="OrderAdjustmentOrderModifications" ToRole="OrderCustomers" />
+        </EntityType>
+        <Association Name="FK_OrderAdjustmentOrderModifications_OrderCustomerID">
+          <End Role="OrderCustomers" Type="Model.OrderCustomer" Multiplicity="0..1" />
+          <End Role="OrderAdjustmentOrderModifications" Type="Model.OrderAdjustmentOrderModification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderCustomers">
+              <PropertyRef Name="OrderCustomerID" />
+            </Principal>
+            <Dependent Role="OrderAdjustmentOrderModifications">
+              <PropertyRef Name="OrderCustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderCustomers_Orders">
+          <End Role="Orders" Type="Model.Order" Multiplicity="1" />
+          <End Role="OrderCustomers" Type="Model.OrderCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderCustomers">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItems_OrderCustomers">
+          <End Role="OrderCustomers" Type="Model.OrderCustomer" Multiplicity="1" />
+          <End Role="OrderItems" Type="Model.OrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderCustomers">
+              <PropertyRef Name="OrderCustomerID" />
+            </Principal>
+            <Dependent Role="OrderItems">
+              <PropertyRef Name="OrderCustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderItem__Order__14FEB9AD">
+          <End Role="OrderItems" Type="Model.OrderItem" Multiplicity="1" />
+          <End Role="OrderItemPrices" Type="Model.OrderItemPrice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderItemPrices">
+              <PropertyRef Name="OrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderAdjustmentOrderLineModifications_OrderItems">
+          <End Role="OrderItems" Type="Model.OrderItem" Multiplicity="1" />
+          <End Role="OrderAdjustmentOrderLineModifications" Type="Model.OrderAdjustmentOrderLineModification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItems">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderAdjustmentOrderLineModifications">
+              <PropertyRef Name="OrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderItems_OrderItems">
+          <End Type="Model.OrderItem" Role="OrderItem" Multiplicity="0..1" />
+          <End Type="Model.OrderItem" Role="OrderItem1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderItem">
+              <PropertyRef Name="OrderItemID" />
+            </Principal>
+            <Dependent Role="OrderItem1">
+              <PropertyRef Name="ParentOrderItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Orders">
+          <End Type="Model.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="Model.Order" Role="Order1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="Order1">
+              <PropertyRef Name="ParentOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="OrderCustomers">
+            <EntityTypeMapping TypeName="Model.OrderCustomer">
+              <MappingFragment StoreEntitySet="OrderCustomers">
+                <ScalarProperty Name="OrderCustomerID" ColumnName="OrderCustomerID" />
+                <ScalarProperty Name="OrderCustomerTypeID" ColumnName="OrderCustomerTypeID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="ShippingTotal" ColumnName="ShippingTotal" />
+                <ScalarProperty Name="HandlingTotal" ColumnName="HandlingTotal" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+                <ScalarProperty Name="PaymentTotal" ColumnName="PaymentTotal" />
+                <ScalarProperty Name="CommissionableTotal" ColumnName="CommissionableTotal" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="FutureBookingDateUTC" ColumnName="FutureBookingDateUTC" />
+                <ScalarProperty Name="IsTaxExempt" ColumnName="IsTaxExempt" />
+                <ScalarProperty Name="TaxAmountTotal" ColumnName="TaxAmountTotal" />
+                <ScalarProperty Name="TaxAmountCity" ColumnName="TaxAmountCity" />
+                <ScalarProperty Name="TaxAmountState" ColumnName="TaxAmountState" />
+                <ScalarProperty Name="TaxAmountCounty" ColumnName="TaxAmountCounty" />
+                <ScalarProperty Name="TaxAmountDistrict" ColumnName="TaxAmountDistrict" />
+                <ScalarProperty Name="TaxAmountOrderItems" ColumnName="TaxAmountOrderItems" />
+                <ScalarProperty Name="TaxAmountShipping" ColumnName="TaxAmountShipping" />
+                <ScalarProperty Name="TaxableTotal" ColumnName="TaxableTotal" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="DataVersion" ColumnName="DataVersion" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+                <ScalarProperty Name="TaxAmountCountry" ColumnName="TaxAmountCountry" />
+                <ScalarProperty Name="IsBookingCredit" ColumnName="IsBookingCredit" />
+                <ScalarProperty Name="TaxGeocode" ColumnName="TaxGeocode" />
+                <ScalarProperty Name="SalesTaxTransactionNumber" ColumnName="SalesTaxTransactionNumber" />
+                <ScalarProperty Name="UseTaxTransactionNumber" ColumnName="UseTaxTransactionNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderItemPrices">
+            <EntityTypeMapping TypeName="Model.OrderItemPrice">
+              <MappingFragment StoreEntitySet="OrderItemPrices">
+                <ScalarProperty Name="OrderItemPriceID" ColumnName="OrderItemPriceID" />
+                <ScalarProperty Name="OrderItemID" ColumnName="OrderItemID" />
+                <ScalarProperty Name="OriginalUnitPrice" ColumnName="OriginalUnitPrice" />
+                <ScalarProperty Name="ProductPriceTypeID" ColumnName="ProductPriceTypeID" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderItems">
+            <EntityTypeMapping TypeName="Model.OrderItem">
+              <MappingFragment StoreEntitySet="OrderItems">
+                <ScalarProperty Name="OrderItemID" ColumnName="OrderItemID" />
+                <ScalarProperty Name="OrderCustomerID" ColumnName="OrderCustomerID" />
+                <ScalarProperty Name="OrderItemTypeID" ColumnName="OrderItemTypeID" />
+                <ScalarProperty Name="HostessRewardRuleID" ColumnName="HostessRewardRuleID" />
+                <ScalarProperty Name="ParentOrderItemID" ColumnName="ParentOrderItemID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductPriceTypeID" ColumnName="ProductPriceTypeID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="CatalogID" ColumnName="CatalogID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ItemPrice" ColumnName="ItemPrice" />
+                <ScalarProperty Name="ShippingTotal" ColumnName="ShippingTotal" />
+                <ScalarProperty Name="ShippingTotalOverride" ColumnName="ShippingTotalOverride" />
+                <ScalarProperty Name="HandlingTotal" ColumnName="HandlingTotal" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="DiscountPercent" ColumnName="DiscountPercent" />
+                <ScalarProperty Name="AdjustedPrice" ColumnName="AdjustedPrice" />
+                <ScalarProperty Name="CommissionableTotal" ColumnName="CommissionableTotal" />
+                <ScalarProperty Name="CommissionableTotalOverride" ColumnName="CommissionableTotalOverride" />
+                <ScalarProperty Name="ChargeTax" ColumnName="ChargeTax" />
+                <ScalarProperty Name="ChargeShipping" ColumnName="ChargeShipping" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+                <ScalarProperty Name="MinCustomerSubtotal" ColumnName="MinCustomerSubtotal" />
+                <ScalarProperty Name="MaxCustomerSubtotal" ColumnName="MaxCustomerSubtotal" />
+                <ScalarProperty Name="TaxPercent" ColumnName="TaxPercent" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="TaxPercentCity" ColumnName="TaxPercentCity" />
+                <ScalarProperty Name="TaxAmountCity" ColumnName="TaxAmountCity" />
+                <ScalarProperty Name="TaxAmountCityLocal" ColumnName="TaxAmountCityLocal" />
+                <ScalarProperty Name="TaxPercentState" ColumnName="TaxPercentState" />
+                <ScalarProperty Name="TaxAmountState" ColumnName="TaxAmountState" />
+                <ScalarProperty Name="TaxPercentCounty" ColumnName="TaxPercentCounty" />
+                <ScalarProperty Name="TaxAmountCounty" ColumnName="TaxAmountCounty" />
+                <ScalarProperty Name="TaxAmountCountyLocal" ColumnName="TaxAmountCountyLocal" />
+                <ScalarProperty Name="TaxPercentDistrict" ColumnName="TaxPercentDistrict" />
+                <ScalarProperty Name="TaxAmountDistrict" ColumnName="TaxAmountDistrict" />
+                <ScalarProperty Name="TaxPercentCountry" ColumnName="TaxPercentCountry" />
+                <ScalarProperty Name="TaxAmountCountry" ColumnName="TaxAmountCountry" />
+                <ScalarProperty Name="TaxableTotal" ColumnName="TaxableTotal" />
+                <ScalarProperty Name="DataVersion" ColumnName="DataVersion" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+                <ScalarProperty Name="DynamicKitGroupID" ColumnName="DynamicKitGroupID" />
+                <ScalarProperty Name="OrderItemParentTypeID" ColumnName="OrderItemParentTypeID" />
+                <ScalarProperty Name="ItemPriceActual" ColumnName="ItemPriceActual" />
+                <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="Model.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="OrderStatusID" ColumnName="OrderStatusID" />
+                <ScalarProperty Name="OrderTypeID" ColumnName="OrderTypeID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+                <ScalarProperty Name="ParentOrderID" ColumnName="ParentOrderID" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+                <ScalarProperty Name="CompleteDateUTC" ColumnName="CompleteDateUTC" />
+                <ScalarProperty Name="CommissionDateUTC" ColumnName="CommissionDateUTC" />
+                <ScalarProperty Name="HostessRewardsEarned" ColumnName="HostessRewardsEarned" />
+                <ScalarProperty Name="HostessRewardsUsed" ColumnName="HostessRewardsUsed" />
+                <ScalarProperty Name="IsTaxExempt" ColumnName="IsTaxExempt" />
+                <ScalarProperty Name="TaxAmountTotal" ColumnName="TaxAmountTotal" />
+                <ScalarProperty Name="TaxAmountTotalOverride" ColumnName="TaxAmountTotalOverride" />
+                <ScalarProperty Name="TaxableTotal" ColumnName="TaxableTotal" />
+                <ScalarProperty Name="TaxAmountOrderItems" ColumnName="TaxAmountOrderItems" />
+                <ScalarProperty Name="TaxAmountShipping" ColumnName="TaxAmountShipping" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+                <ScalarProperty Name="DiscountTotal" ColumnName="DiscountTotal" />
+                <ScalarProperty Name="ShippingTotal" ColumnName="ShippingTotal" />
+                <ScalarProperty Name="ShippingTotalOverride" ColumnName="ShippingTotalOverride" />
+                <ScalarProperty Name="HandlingTotal" ColumnName="HandlingTotal" />
+                <ScalarProperty Name="GrandTotal" ColumnName="GrandTotal" />
+                <ScalarProperty Name="PaymentTotal" ColumnName="PaymentTotal" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CommissionableTotal" ColumnName="CommissionableTotal" />
+                <ScalarProperty Name="ReturnTypeID" ColumnName="ReturnTypeID" />
+                <ScalarProperty Name="StepUrl" ColumnName="StepUrl" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+                <ScalarProperty Name="DateCreatedUTC" ColumnName="DateCreatedUTC" />
+                <ScalarProperty Name="CreatedByUserID" ColumnName="CreatedByUserID" />
+                <ScalarProperty Name="DataVersion" ColumnName="DataVersion" />
+                <ScalarProperty Name="DiscountPercent" ColumnName="DiscountPercent" />
+                <ScalarProperty Name="PartyShipmentTotal" ColumnName="PartyShipmentTotal" />
+                <ScalarProperty Name="PartyHandlingTotal" ColumnName="PartyHandlingTotal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderAdjustmentOrderLineModifications">
+            <EntityTypeMapping TypeName="Model.OrderAdjustmentOrderLineModification">
+              <MappingFragment StoreEntitySet="OrderAdjustmentOrderLineModifications">
+                <ScalarProperty Name="OrderAdjustmentOrderLineModificationID" ColumnName="OrderAdjustmentOrderLineModificationID" />
+                <ScalarProperty Name="OrderItemID" ColumnName="OrderItemID" />
+                <ScalarProperty Name="OrderAdjustmentID" ColumnName="OrderAdjustmentID" />
+                <ScalarProperty Name="PropertyName" ColumnName="PropertyName" />
+                <ScalarProperty Name="ModificationOperationID" ColumnName="ModificationOperationID" />
+                <ScalarProperty Name="ModificationDecimalValue" ColumnName="ModificationDecimalValue" />
+                <ScalarProperty Name="ModificationDescription" ColumnName="ModificationDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderAdjustmentOrderModifications">
+            <EntityTypeMapping TypeName="Model.OrderAdjustmentOrderModification">
+              <MappingFragment StoreEntitySet="OrderAdjustmentOrderModifications">
+                <ScalarProperty Name="OrderAdjustmentOrderModificationID" ColumnName="OrderAdjustmentOrderModificationID" />
+                <ScalarProperty Name="OrderAdjustmentID" ColumnName="OrderAdjustmentID" />
+                <ScalarProperty Name="PropertyName" ColumnName="PropertyName" />
+                <ScalarProperty Name="ModificationOperationID" ColumnName="ModificationOperationID" />
+                <ScalarProperty Name="ModificationDecimalValue" ColumnName="ModificationDecimalValue" />
+                <ScalarProperty Name="ModificationDescription" ColumnName="ModificationDescription" />
+                <ScalarProperty Name="OrderCustomerID" ColumnName="OrderCustomerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

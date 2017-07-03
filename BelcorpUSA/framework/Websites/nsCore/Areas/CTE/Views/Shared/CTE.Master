@@ -1,0 +1,88 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<%--Modifications: --%>
+<%--@01 20150626 BR-CC-002 CSTI BAL : Add Navigation items to Collection Entities Configuration--%>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="SubNavigation">
+	<%--
+    <%= Html.DropDownNavigation(Html.Term("FineandInterestRules", "Fine and Interest Rules"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("GenerateRules", "GenerateRules"), Url = "~/CTE/InterestRules/GenerateRule/" },
+            new NavigationItem() { LinkText = Html.Term("BrowseRules", "Browse Rules"), Url = "~/CTE/InterestRules/BrowseRules" }
+        })
+    %>--%>
+
+    <%= Html.SubTab("~/CTE/InterestRules/BrowseRules", Html.Term("FineandInterestRules", "Fine and Interest Rules"))%>
+    
+    <%--@01 A06--%>
+  <%--  <%= Html.DropDownNavigation(Html.Term("CollectionEntitiesConfiguration", "Collection Entities Configuration"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowseMeansOfCollection", "Browse Means of Collection"), 
+                                    Url = "~/CTE/CollectionEntitiesConfiguration/BrowseCollections" },
+			new NavigationItem() { LinkText = Html.Term("BrowsePeriods", "Browse Periods"), Url = "~/Products/Periods", MappedUrls = new List<string>(){ "~/Products/Periods/*" } }
+        })
+    %>--%>
+
+    <%= Html.SubTab("~/CTE/CollectionEntitiesConfiguration/BrowseCollections", Html.Term("BrowseMeansOfCollection", "Browse Means of Collection"))%>
+
+    <%--<%%>--%>
+     
+  <%--  <%= Html.DropDownNavigation(Html.Term("Payment Methods Configurations", "Payment Methods Configuration"), "", new List<NavigationItem>()
+        {
+            new NavigationItem() { LinkText = Html.Term("BrowsePaymentRulesConfiguration", "Browse Payment Rules Configuration"), 
+                                    Url = "~/CTE/PaymentsMethodsConfiguration/BrowsePayments" },
+            new NavigationItem() { LinkText = Html.Term("PaymentRulesandConfiguration", "Payment Rules and Configurations"), 
+                                    Url = "~/CTE/PaymentsMethodsConfiguration/PaymentsRules" }
+        })
+    %>--%>
+
+    <%= Html.SubTab("~/CTE/PaymentsMethodsConfiguration/BrowsePayments", Html.Term("BrowsePaymentRulesConfiguration", "Browse Payment Rules Configuration"))%>
+
+
+     <%= Html.SubTab("~/CTE/RenegotiationMethods/BrowseRenegotiation", Html.Term("RenegotiationMethods", "RenegotiationMethods"))%>
+
+     <%= Html.SubTab("~/CTE/PaymentTicketsReport/BrowseTickets", Html.Term("BrowseTickets", "Browse Tickets"))%>
+
+     <%= Html.SubTab("~/CTE/ReportProductCreditBalance/ProductCreditBalanceReportGate", Html.Term("ProductCreditBalanceReport", "Product Credit Balance"))%>
+  
+
+
+
+
+     <%= Html.SubTab("~/CTE/CreditManagements/Index", Html.Term("CreditManagements", "CreditManagements"))%>
+
+     <%= Html.SubTab("~/CTE/BankConsolidateApplication/Index", Html.Term("BankConsolidateApplication", "Applicación Pago Bancarios"))%>
+
+     <%= Html.SubTab("~/CTE/PaymentApplication/Index", Html.Term("PaymentApplication ", "Pagos por aplicar"))%>
+
+     
+</asp:Content>
+
+
+<asp:Content ID="Content3" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<div class="TagInfo">
+					<asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+</asp:Content>
+
+            

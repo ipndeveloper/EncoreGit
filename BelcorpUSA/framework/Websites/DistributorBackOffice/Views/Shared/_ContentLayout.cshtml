@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "_ContentLayout";
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+@section head {
+    @RenderSection("head", false)
+}
+<div class="PageTitle">
+    <div class="Crumbs">
+        @RenderSection("breadcrumb", false)
+    </div>
+    <h1>
+        @RenderSection("title", false)
+    </h1>
+</div>
+<div class="DashColumns">
+    <div class="contents">
+        <div id="SecondaryRail">
+            <div class="UI-mainBg actionItems">
+                <div class="pad10">
+                    <ul class="flatList">
+                        @RenderSection("ActionItems", false)
+                    </ul>
+                </div>
+            </div>
+            <div class="savePanel">
+                @RenderSection("SavePendingChanges", false)
+            </div>
+            @RenderSection("SideBarExtras", false)
+        </div>
+        
+        <div id="ContentColumn">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+@section bodyFooter {
+    @RenderSection("bodyFooter", false)
+}

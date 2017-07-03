@@ -1,0 +1,141 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>FlitBit.Dto</name>
+  </assembly>
+  <members>
+    <member name="T:FlitBit.Dto.DataTransferObjects">
+      <summary>
+              Utility class for fulfilling the data-transfer-object stereotype by emitting DTOs.
+            </summary>
+    </member>
+    <member name="T:FlitBit.Dto.DTOAttribute">
+      <summary>
+              Marks an interface or class as a stereotypical DTO and implements the stereotypical DTO behavior for interfaces.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.DTOAttribute.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.DTOAttribute.PerformTask(FlitBit.Wireup.IWireupCoordinator)">
+      <summary>
+            Placeholder for wireup logic.
+            </summary>
+    </member>
+    <member name="P:FlitBit.Dto.DTOWireupObserver.DtoObserver.ObserverKey">
+      <summary>
+            Gets the observer's key.
+            </summary>
+    </member>
+    <member name="T:FlitBit.Dto.Properties.Resources">
+      <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+    </member>
+    <member name="P:FlitBit.Dto.Properties.Resources.ResourceManager">
+      <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+    </member>
+    <member name="P:FlitBit.Dto.Properties.Resources.Culture">
+      <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+    </member>
+    <member name="P:FlitBit.Dto.Properties.Resources.Chk_DataTransferObjectsAreImmutable">
+      <summary>
+              Looks up a localized string similar to DTOs are immutable, use a mutator or create a new instance with the changed values.
+            </summary>
+    </member>
+    <member name="T:FlitBit.Dto.SPI.IDataTransferObject">
+      <summary>
+              DTO service provider interface.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.SPI.IDataTransferObject.GetDirtyFlags">
+      <summary>
+              Gets the object's dirty flags.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:FlitBit.Dto.SPI.IDataTransferObject.IsDirty(System.String)">
+      <summary>
+              Indicates whether the identified member has been updated.
+            </summary>
+      <param name="member">the member's name</param>
+      <returns>
+        <em>true</em> if the member has been updated; otherwise <em>false</em>.
+            </returns>
+    </member>
+    <member name="M:FlitBit.Dto.SPI.IDataTransferObject.ResetDirtyFlags">
+      <summary>
+              Resets all dirty flags, effectively marking the instance as clean.
+            </summary>
+    </member>
+    <member name="T:FlitBit.Dto.AssemblyWireup">
+      <summary>
+              Wires up this assembly.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.AssemblyWireup.Execute(FlitBit.Wireup.IWireupCoordinator)">
+      <summary>
+              Wires up this assembly.
+            </summary>
+      <param name="coordinator" />
+    </member>
+    <member name="T:FlitBit.Dto.HookWirupCoordinatorTask">
+      <summary>
+              Wires this module.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.HookWirupCoordinatorTask.#ctor">
+      <summary>
+              Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:FlitBit.Dto.HookWirupCoordinatorTask.PerformTask(FlitBit.Wireup.IWireupCoordinator)">
+      <summary>
+              Performs wireup.
+            </summary>
+      <param name="coordinator" />
+    </member>
+    <member name="M:FlitBit.Dto.DataTransferObjects.ConcreteType``1">
+      <ensures csharp="result != (System.Type)null" vb="result &lt;&gt; ((System.Type)Nothing) ">result != (System.Type)null</ensures>
+    </member>
+    <member name="M:FlitBit.Dto.DataTransferObjects.EmitDTO`1.BuildDTO(FlitBit.Emit.EmittedModule,System.String)">
+      <requires csharp="module != null" vb="module &lt;&gt; Nothing">module != null</requires>
+      <requires csharp="typeName != null" vb="typeName &lt;&gt; Nothing">typeName != null</requires>
+      <requires csharp="typeName.Length &gt; 0" vb="typeName.Length &gt; 0">typeName.Length &gt; 0</requires>
+      <ensures csharp="result != (System.Type)null" vb="result &lt;&gt; ((System.Type)Nothing) ">result != (System.Type)null</ensures>
+    </member>
+    <member name="M:FlitBit.Dto.DataTransferObjects.EmitDTO`1.ImplementSpecializedGetHashCode(FlitBit.Emit.EmittedClass,FlitBit.Emit.EmittedField)">
+      <requires exception="T:System.ArgumentNullException" csharp="new FlitBit.Dto.DataTransferObjects.EmitDTO&lt;T&gt;.&lt;&gt;c__DisplayClass33(){
+    builder = builder, 
+    chashCodeSeed = chashCodeSeed, 
+}.builder != null" vb="(() =&gt; {
+    FlitBit.Dto.DataTransferObjects.EmitDTO&lt;T&gt;.&lt;&gt;c__DisplayClass33 local_1_prime = New FlitBit.Dto.DataTransferObjects.EmitDTO(Of T).&lt;&gt;c__DisplayClass33();
+    (local_1_prime.builder = builder)
+    (local_1_prime.chashCodeSeed = chashCodeSeed)
+    return local_1_prime; })().builder &lt;&gt; Nothing">new FlitBit.Dto.DataTransferObjects.EmitDTO&lt;T&gt;.&lt;&gt;c__DisplayClass33(){
+    builder = builder, 
+    chashCodeSeed = chashCodeSeed, 
+}.builder != null</requires>
+      <exception cref="T:System.ArgumentNullException">builder == null</exception>
+    </member>
+    <member name="M:FlitBit.Dto.DataTransferObjects.EmitDTO`1.LoadFieldFromThisAndValue(System.Reflection.Emit.ILGenerator,FlitBit.Emit.EmittedField)">
+      <requires exception="T:System.ArgumentNullException" csharp="il != null" vb="il &lt;&gt; Nothing">il != null</requires>
+      <exception cref="T:System.ArgumentNullException">il == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="field != null" vb="field &lt;&gt; Nothing">field != null</requires>
+      <exception cref="T:System.ArgumentNullException">field == null</exception>
+    </member>
+    <member name="M:FlitBit.Dto.DataTransferObjects.EmitDTO`1.LoadFieldsFromThisAndParam(System.Reflection.Emit.ILGenerator,FlitBit.Emit.EmittedField,FlitBit.Emit.EmittedParameter)">
+      <requires exception="T:System.ArgumentNullException" csharp="il != null" vb="il &lt;&gt; Nothing">il != null</requires>
+      <exception cref="T:System.ArgumentNullException">il == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="field != null" vb="field &lt;&gt; Nothing">field != null</requires>
+      <exception cref="T:System.ArgumentNullException">field == null</exception>
+    </member>
+  </members>
+</doc>

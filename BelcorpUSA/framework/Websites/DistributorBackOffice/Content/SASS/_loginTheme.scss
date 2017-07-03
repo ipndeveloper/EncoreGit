@@ -1,0 +1,87 @@
+﻿/************************************************************************************
+*
+* Last Updated 12/19/2012 11:40AM by Netsteps
+*
+************************************************************************************/
+body {
+	font: normal em($base_font_size, 16) $FontFamily;
+	background:$LoginBgColor;
+}
+a {
+	color:$BodyLink;
+	font-size:em($MedFont);
+	@include transition(color, $transition_time);
+	&:hover {
+		color:$copy;
+	}
+}
+#Content {
+	background:$LoginBg no-repeat center top;
+	.Inner {
+		border:em($LoginBrdrSize) solid $LoginBrdrColor;
+		background:$LoginContentBgColor;
+		.Info {
+			font-size:em($MedFont);
+			border-left:em(1) solid lighten($LoginBrdrColor, 10%);
+			li {
+				background: url("../Images/bullet.png") no-repeat 0 5px;
+			}
+		}
+	}
+}
+@media only screen and (max-width: 600px) {
+    body {
+	    font-size:100%;
+	}
+	#Content {
+		.Inner {
+			border-width:em(2);
+			.Info {
+				border-left:0;
+			}
+			#btnLogin, #btnForgotPassword {
+				text-align:center;
+			}
+		}
+	}
+}
+.TextInput {
+	font-size: em(18);
+	padding: em(5, 18);
+	width: 96%;
+}
+.Button {
+	@include main-button-style;
+	font-size:em(16);
+	line-height:em(30, 16);
+	padding:em(3 15, 16);
+	&:hover {
+		@include main-button-hover;
+	}
+}
+h1, h2 {margin:0;}
+h1 {
+	font-size: em($LgFont);
+}
+h2 {
+	font-size: em($XlFont * 2);
+	padding-bottom: em(20, $XlFont * 2);
+}
+.error_message_block {
+	background: tint($WarningMessage, 90%);
+	border-bottom: em(1) solid $WarningMessage;
+	.error_message {
+		padding: em(10);
+		color: $WarningMessage;
+		img {
+		  float: left;
+		  margin: em(-3 10 0 0);
+		}
+	}
+}
+.errorMessageBubble {
+	background: tint($WarningMessage, 90%);
+	color: $WhiteBg;
+	font-weight: bold;
+	padding: em(14);
+}

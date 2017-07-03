@@ -1,0 +1,16 @@
+﻿@model nsDistributor.Models.Locate.IndexModel
+
+@{
+    ViewBag.Title = Html.Term("LocateTitle", "Locate a Distributor");
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+
+@Html.Partial("MessageCenter")
+
+@Html.EditorFor(m => m.AccountLocator)
+
+@section bodyFooter
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Shared/EditorTemplates/AccountLocatorModel.js")"></script>
+    @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz7WLquI2F2K7f-feFn-6VzJDp0wBWB-M"></script>*@
+}

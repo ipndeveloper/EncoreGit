@@ -1,0 +1,9 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.CPFModel
+
+@{
+    ModelState modelState = null;
+    bool addErrorClass = ViewData.ModelState.TryGetValue(ViewData.TemplateInfo.HtmlFieldPrefix, out modelState) && modelState.Errors.Any();
+}
+
+@Html.HiddenFor(m => m.CountryID)
+@Html.EditorFor(m => m.Substrings, new { AddErrorClass = addErrorClass, DisplayName = ViewData.ModelMetadata.DisplayName, PropertyName = ViewData.ModelMetadata.PropertyName })

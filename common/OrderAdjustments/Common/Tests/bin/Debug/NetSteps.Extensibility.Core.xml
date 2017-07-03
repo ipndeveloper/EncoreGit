@@ -1,0 +1,193 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Extensibility.Core</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry">
+      <summary>
+            Provides base functionality for registering providers of extensions to extensible data objects.  Wired up to the IOC automatically as part of the module wireup.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry">
+      <summary>
+            Interface describing the Extension Provider registry.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RegisterProvidedTypeForRegisteredProvider(System.String,System.String)">
+      <summary>
+            Registers the provided type for registered provider.
+            </summary>
+      <param name="ExtensionTypeName">Name of the extension type.</param>
+      <param name="providerKey">The provider key.</param>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RegisterExtensionProvider``1(System.String)">
+      <summary>
+            Registers the extension provider.
+            </summary>
+      <typeparam name="T" />
+      <param name="providerKey">The provider key.</param>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RetrieveExtensionProvider(System.String)">
+      <summary>
+            Retrieves the extension provider.
+            </summary>
+      <param name="providerKey">The provider key.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RetrieveExtensionProvider``1(System.String)">
+      <summary>
+            Retrieves the extension provider.
+            </summary>
+      <typeparam name="TProvider">The type of the provider.</typeparam>
+      <param name="providerKey">The provider key.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RetrieveExtensionProviderForRegisteredProvidedType(System.String)">
+      <summary>
+            Retrieves the type of the extension provider for registered provided.
+            </summary>
+      <param name="ExtensionTypeName">Name of the extension type.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProviderRegistry.RetrieveExtensionProviderForRegisteredProvidedType``1(System.String)">
+      <summary>
+            Retrieves the type of the extension provider for registered provided.
+            </summary>
+      <typeparam name="TProvider">The type of the provider.</typeparam>
+      <param name="ExtensionTypeName">Name of the extension type.</param>
+      <returns />
+    </member>
+    <member name="F:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry._providerConstructors">
+      <summary>
+            The dictionary of providers registered with a string representation of their types as a key.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RetrieveExtensionProvider(System.String)">
+      <summary>
+            Retrieves the extension provider.
+            </summary>
+      <param name="key">The key.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegisterExtensionProvider``1(System.String)">
+      <summary>
+            Registers the extension provider.
+            </summary>
+      <typeparam name="T" />
+      <param name="providerKey">The provider key.</param>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegisterProvidedTypeForRegisteredProvider(System.String,System.String)">
+      <summary>
+            Registers the provided type for registered provider.
+            </summary>
+      <param name="ExtensionTypeName">Name of the extension type.</param>
+      <param name="providerKey">The provider key.</param>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RetrieveExtensionProviderForRegisteredProvidedType(System.String)">
+      <summary>
+            Retrieves the extension provider for string representation of the registered provided type.
+            </summary>
+      <param name="extensionTypeName">Name of the extension type.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RetrieveExtensionProviderForRegisteredProvidedType``1(System.String)">
+      <summary>
+            Retrieves the extension provider for string representation of the registered provided type.
+            </summary>
+      <param name="extensionTypeName">Name of the extension type.</param>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegistrationRecord">
+      <summary>
+            A provider registration record.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegistrationRecord.keys">
+      <summary>
+            Contains a list of keys for the type.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegistrationRecord.UntypedConstruct">
+      <summary>
+            An untyped provider.
+            </summary>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Extensibility.Core.DataObjectExtensionProviderRegistry.RegistrationRecord`1">
+      <summary>
+            Provides an abstraction for getting an untyped provider.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="T:NetSteps.Extensibility.Core.IDataObjectExtension">
+      <summary>
+            Describes an extension to an extensible data object.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProvider.GetProviderKey">
+      <summary>
+            Gets the provider key for the provider.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProvider.SaveDataObjectExtension(NetSteps.Extensibility.Core.IExtensibleDataObject)">
+      <summary>
+            Saves the data object extension to the persistence layer.
+            </summary>
+      <param name="dataObject">The data object.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProvider.GetDataObjectExtension(NetSteps.Extensibility.Core.IExtensibleDataObject)">
+      <summary>
+            Retrieves or creates and then attaches the entity extension to the extensible data object.
+            </summary>
+      <param name="dataObject">The data object.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProvider.UpdateDataObjectExtension(NetSteps.Extensibility.Core.IExtensibleDataObject)">
+      <summary>
+            Updates the entity extension with values from the extensible data object (i.e. primary key ID, etc.).
+            </summary>
+      <param name="dataObject">The data object.</param>
+    </member>
+    <member name="M:NetSteps.Extensibility.Core.IDataObjectExtensionProvider.DeleteDataObjectExtension(NetSteps.Extensibility.Core.IExtensibleDataObject)">
+      <summary>
+            Deletes the data object extension.
+            </summary>
+      <param name="x">The x.</param>
+    </member>
+    <member name="T:NetSteps.Extensibility.Core.IExtensibleDataObject">
+      <summary>
+            An interface describing an Extensible Object.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Extensibility.Core.IExtensibleDataObject.ExtensionProviderKey">
+      <summary>
+            Gets or sets the extension provider key.
+            </summary>
+      <value>
+            The extension provider key.
+            </value>
+    </member>
+    <member name="P:NetSteps.Extensibility.Core.IExtensibleDataObject.Extension">
+      <summary>
+            Gets or sets the extension.
+            </summary>
+      <value>
+            The extension.
+            </value>
+    </member>
+    <member name="T:NetSteps.Extensibility.ModuleWireup">
+      <summary>
+            Wireup command called at bootstrap time by the wireup coordinator.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Extensibility.ModuleWireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+      <summary>
+            Wires this module.
+            </summary>
+      <param name="coordinator">the coordinator</param>
+      <seealso cref="T:NetSteps.Encore.Core.Wireup.IWireupCoordinator" />
+    </member>
+  </members>
+</doc>

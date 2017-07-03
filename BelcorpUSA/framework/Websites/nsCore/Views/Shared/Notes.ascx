@@ -1,0 +1,196 @@
+﻿<%@ Control Language="C#" AutoEventWireup="True" Inherits="System.Web.Mvc.ViewUserControl" %>
+<div id="accountNotes" class="AccountNotes">
+	<script type="text/javascript">
+	    $(function () {
+	        $('#txtSearchNotes').watermark('<%= Html.JavascriptTerm("SearchbySubject", "Search by Subject")%>');
+	        var today = new Date(),
+				lastMonth = new Date(),
+				m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	       
+	        lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+	        //  Codigo original para asignar una fecha en el formato americano
+
+	        //	        $("#noteStartDate").val(lastMonth.getMonth() + 1 + "/" + lastMonth.getDate() + "/" + lastMonth.getFullYear());
+	        //	        $("#noteEndDate").val(today.getMonth() + 1 + "/" + today.getDate() + "/" + today.getFullYear());
+
+
+	        //  Agregado por Ivan Pinedo Nava para resolver el seteo en un formato fijo.
+	        $("#noteStartDate").datepicker("setDate", lastMonth.getMonth() + 1 + "/" + lastMonth.getDate() + "/" + lastMonth.getFullYear());
+	        $("#noteEndDate").datepicker("setDate", today.getMonth() + 1 + "/" + today.getDate() + "/" + today.getFullYear());
+
+	        $("#noteStartDate,#noteEndDate").datepicker('destroy').datepicker({
+	            changeMonth: true, changeYear: true, yearRange: '-100:+100',
+	            onSelect: function (dateText, inst) { getNotes(); }
+	        });
+
+	        $("#noteStartDate,#noteEndDate").keyup(function (e) {
+	            if (e.keyCode == 13) {
+	                getNotes();
+	            }
+	        });
+
+	        $('#noteModal').jqm({
+	            modal: false,
+	            trigger: '#btnAddNewNote'
+	        });
+
+	        /* Clear the notes modal window */
+	        $('#btnAddNewNote').click(function () { $('#parentNoteID,#newNoteSubject,#newNoteText').val('').clearError() });
+
+	        $("#btnSaveNote").click(function () {
+	            if ($('#noteModal').checkRequiredFields()) {
+	                var data = {
+	                    parentEntityID: $('#noteParentIdentity').val(),
+	                    parentId: $('#parentNoteID').val(),
+	                    subject: $('#newNoteSubject').val(),
+	                    noteText: $('#newNoteText').val(),
+	                    isNotInternal: $('#noteModal #isNotInternal').prop('checked')
+	                };
+	                var t = $(this);
+	                showLoading(t, { float: "right" });
+
+	                $.post('<%= ResolveUrl("~/") + ViewContext.RouteData.DataTokens["area"] %>/Notes/Add', data, function (response) {
+	                    if (response.result) {
+	                        $('#noteModal').jqmHide();
+	                        hideLoading(t);
+	                        $('#parentNoteID,#newNoteSubject,#newNoteText').val('');
+	                        getNotes();
+	                    }
+	                    else {
+	                        showMessage(response.message, true);
+	                    }
+	                });
+	            }
+	        });
+
+	        /* Clear the notes modal window */
+	        $('#btnCancelNote').click(function () {
+	            $('#parentNoteID,#newNoteSubject,#newNoteText').val('').clearError();
+	        });
+
+
+	        $('#txtSearchNotes').keyup(function (e) {
+	            if (e.keyCode == 13)
+	                $('#btnSearchNotes').click();
+	        });
+
+	        $('#notesPanel .toggleChildNotes').live('click', function () {
+	            $(this).text($(this).text() == 'Collapse' ? 'Expand' : 'Collapse').parent().parent().find('.ChildNotes').slideToggle();
+	        });
+
+	        getNotes();
+	    });
+
+	    var noNotesPosted = '<div style="margin-left:10px;"><%= Html.Term("NoNotesPosted", "No notes posted.")%></div>'
+		function getNotes() {
+			var data = {
+				id: $('#noteParentIdentity').val(),
+				startDate: $('#noteStartDate').val(),
+				endDate: $('#noteEndDate').val(),
+				searchCriteria: $('#txtSearchNotes').val()
+			};
+			if (data.searchCriteria == '<%= Html.Term("SearchbySubject", "Search by Subject")%>')
+				data.searchCriteria = '';
+
+			$('#notesPanel').html(noNotesPosted);
+
+			$.get('<%= ResolveUrl("~/") + ViewContext.RouteData.DataTokens["area"] %>/Notes/Get', data, function (response) {
+				if (response.result) {
+					$('#notesPanel').html(response.notes);
+				}
+				else {
+					showMessage(response.message, true);
+				}
+			});
+		}
+
+		function createNewFollowup(parentID) {
+		    $('#parentNoteID,#newNoteSubject,#newNoteText').val('').clearError();
+		    $('#parentNoteID').val(parentID);
+			$('#noteModal').jqmShow();
+		}                 
+    </script>
+	<div class="demo">
+		<div class=" ClearAll NoteFilters" style="padding: .455em;">
+			<div class="Loading FR" id="NotesLoading">
+			</div>
+			<div>
+				<a href="javascript:void(0)" id="btnAddNewNote" class="NewNotePost Button">
+					<%= Html.Term("PostNewNote", "Post New Note")%>
+				</a>
+				<div id="noteModal" class="jqmWindow LModal">
+					<div class="mContent">
+						<h2>
+							<%= Html.Term("AddaNote", "Add a Note")%></h2>
+						<div id="noteErrors">
+						</div>
+						<div class="FormStyle2">
+							<%= Html.Term("Title")%>:
+							<br />
+							<input id="newNoteSubject" type="text" style="width: 20.833em;" maxlength="100" value=""
+								class="required" /><br />
+							<%= Html.Term("Note")%>:
+							<br />
+							<textarea id="newNoteText" style="width: 20.833em; height: 8.333em;"></textarea>
+							<% if (ViewData["ShowPublishNoteToOwner"] != null && Convert.ToBoolean(ViewData["ShowPublishNoteToOwner"]))
+								{ %>
+							<p>
+                                <input id="isNotInternal" type="checkbox" />
+								<%= Html.Term("PublishNoteToOwner", "Publish to owner (consultant)")%>
+                            </p>
+							<% } %>
+						</div>
+						<br />
+						<input type="hidden" id="parentNoteID" style="width: 20.833em;" value="" /><br />
+						<p>
+                            <a href="javascript:void(0);" id="btnSaveNote" class="Button BigBlue">
+								<%= Html.Term("Save")%></a>
+							<a href="javascript:void(0);" class="Button LinkCancel jqmClose" id="btnCancelNote">
+								<%= Html.Term("Cancel")%></a>
+						</p>
+						<span class="ClearAll"></span>
+					</div>
+				</div>
+			</div>
+			<br />
+			<div class="ClearAll">
+				<span class="FL">
+					<%= Html.Term("FilterDateRange", "Filter Date Range")%>:<br />
+					<input id="noteStartDate" type="text" class="TextInput DatePicker" value="" />
+					to
+					<input id="noteEndDate" type="text" class="TextInput DatePicker" value="" />
+				</span>
+				<div class="FR NoteSearch FancySearch">
+					<br />
+					<input id="txtSearchNotes" type="text" class="TextInput MSearchText"" />
+					<a id="btnSearchNotes" class="ModSearch SearchIcon" onclick="getNotes();"><span>Go</span></a>
+				</div>
+				<span class="ClearAll"></span>
+			</div>
+		</div>
+		<span class="ClearAll"></span>
+		<input type="hidden" id="noteParentIdentity" value="<%= ViewData["ParentIdentity"] %>" />
+		<div class="ModTitle" id="uxNotesDiv">
+			<%= Html.Term(Regex.Replace(ViewContext.RouteData.DataTokens["area"].ToString(), "s$", ""))%>
+			#<%= ViewContext.RouteData.DataTokens["area"].ToString() == "Orders" ? ViewData["ParentIdentity"] : ViewData["ParentIdentity"] %>
+			<%= Html.Term("Notes")%>: <span class="ClearAll"></span>
+		</div>
+		<div id="notesPanel">
+		</div>
+	</div>
+
+    <%
+    List<SupportTicketGestionBE> lstSupportTicketGestionBE=ViewData["lstSupportTicketGestionBE"] as  List<SupportTicketGestionBE>;
+    
+     %>
+     <%if (lstSupportTicketGestionBE != null)
+       { %>
+    <%Html.RenderPartial("_SupportTicketGestion", lstSupportTicketGestionBE); %>
+    
+    <%} %>
+
+ 
+</div>
+
+

@@ -1,0 +1,183 @@
+﻿@model NetSteps.Data.Entities.Order
+@{
+    var autoshipSchedule = (ViewData["AutoshipSchedule"] as NetSteps.Data.Entities.AutoshipSchedule);
+    string baseUrl = "~/".ResolveUrl() + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";
+}
+@section head {
+    @{Html.RenderPartial("_sharedjs");}
+    <script type="text/javascript">
+        $(function () {
+            onpageLoadHooks();
+
+            $('#urlSubDomain').one("keydown", function () {
+                if ($('#newautoship') !== null) {
+                    orderChanged();
+                }
+            });
+
+            $('#btnSaveAutoship').click(function () {
+
+                if (!$('#sPaymentMethod').val()) {
+                    showMessage('Please select a payment method.', true);
+                    return false;
+                }
+                $('#autoshipWait').jqmShow();
+
+                var $cloneUrl = $('#fullUrl').clone();
+                $cloneUrl.children().remove();
+
+                var data = {
+                    scheduleId: '@autoshipSchedule.AutoshipScheduleID',
+                    paymentMethodId: getPaymentMethodId(),
+                    autoshipScheduleDay: $('#autoshipDayValue').val(),
+                    siteUrlId: $('#siteUrlId').val(),
+                    url: $cloneUrl.text().trim(),
+                    siteId: $('#siteId').val()
+                };
+
+                $.post('@Href("~/Account/Autoships/Save")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@NetSteps.Web.WebContext.PageUrlWithQueryString';
+                    }
+                    else {
+                        showMessage('The order could not be submitted: ' + response.message, true);
+                        $('#autoshipWait').jqmHide();
+                        return false;
+                    }
+                });
+            });
+
+            $('#SavePage').hide();
+
+            if (eval('@autoshipSchedule.AutoshipScheduleDays.Count > 1')) {
+                $('#editAutoshipDayModal').jqm({ modal: false,
+                    trigger: '#autoshipDayDisplay',
+                    onShow: function (h) {
+                        h.w.css({
+                            top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                            left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                        }).fadeIn();
+                    }
+                });
+
+                $('#editEditProcessingDayLink').click(function () {
+                    $('#editAutoshipDayModal').jqmShow();
+                });
+            } else {
+                $('#editEditProcessingDayLink').hide();
+            }
+
+            $('#btnSetProcessingDay').click(function () {
+                var newValue = $('#autoshipScheduleDaySelect').val();
+                $.post('@(baseUrl)SetAutoshipDay',
+                    { Day: newValue },
+                    function (result) {
+                        if (result.result) {
+                            $('#autoshipDayValue').val(newValue);
+                            $('#autoshipDayDisplay').html($('#autoshipScheduleDaySelect option[value="' + newValue + '"]').text());
+                            $('#editAutoshipDayModal').jqmHide();
+                            orderChanged();
+                        }
+                    });
+            });
+
+        });
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+    @Html.Term("Subscription")
+}
+@{
+    bool fixedAutoship = autoshipSchedule != null && autoshipSchedule.AutoshipScheduleProducts.Count > 0;
+    bool virtualAutoship = autoshipSchedule != null && autoshipSchedule.IsVirtualSubscription;
+
+    AutoshipScheduleDay autoshipScheduleDay = null;
+    if (ViewData["AutoshipDay"] != null) 
+    {
+        autoshipScheduleDay = autoshipSchedule.AutoshipScheduleDays.FirstOrDefault(a => a.Day == (int)ViewData["AutoshipDay"]);      
+    }
+    
+}
+<div id="autoshipWait" class="PModal WaitWin">
+    @Html.Term("SavingAutoship", "Please wait while we save your autoship...")
+    <br />
+    <img src="@Href("~/Resource/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+</div>
+@if ((bool)ViewData["NewAutoship"])
+{
+    <div id="ReturnSuccessMessage" class="autoshipMessage">
+        <div id="newautoship" class="SuccessMessage">
+            @Html.Term("NewAutoship", "You are creating a new subscription.")</div>
+    </div>
+}
+@{
+    Site site = ViewData["Site"] as Site;
+    Html.RenderPartial("SiteSubscriptions", site);
+}
+
+@{
+    var schedule = autoshipScheduleDay != null ? autoshipScheduleDay.AutoshipScheduleDayID.ToString() : string.Empty;
+    var day = autoshipScheduleDay != null ? autoshipScheduleDay.Day.ToString() : string.Empty;
+}
+<input id="autoshipDayValue" type="hidden" value="@schedule" />
+<b>
+    @Html.Term("ProcessingDay", "Processing Day")</b> <a href="javascript:void(0);"><span id="autoshipDayDisplay" class="mnum">
+       @day</span></a>
+<div class="UI-mainBg icon-24 brdrAll GridUtility">
+    <a href="@Href("~/Account/Autoships/View", CoreContext.CurrentAccount.AccountID, new { autoshipScheduleId = autoshipSchedule.AutoshipScheduleID })"
+                    class="UI-icon-container Edit EditMyAccount overlay" id="A1" rel="#EditAccountInfo">
+        <span class="UI-icon icon-search"></span><span>
+            @Html.Term("ViewOrders", "View Orders")</span></a> <span class="clr" />
+</div>
+<br />
+<!-- Autoship Cart -->
+<div class="FL mr10 splitCol AutoshipCart">
+    <table id="products" width="100%" class="DataGrid">
+        <tbody>
+            <tr>
+                <td colspan="6" class="right bold">
+                    @Html.Term("OrderTotal", "Grand Total"):
+                </td>
+                <td>
+                    <b><span class="grandTotal">
+                        @Model.GrandTotal.ToString(Model.CurrencyID)</span></b>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="FR splitCol">
+    <!-- Billing Panel -->
+    @{Html.RenderPartial("_billingPanel", Model);}
+    <span class="clr"></span>
+</div>
+<span class="clr"></span><span class="clr"></span>
+<div id="SavePage" class="center PageSaveButtons">
+    <a href="javascript:void(0);" id="btnSaveAutoship" class="Button"><span>
+        @((bool)ViewData["NewAutoship"] ? Html.Term("Save") : Html.Term("SaveMyChanges", "Save My Changes"))</span></a>
+</div>
+<!-- Edit subscription day modal -->
+<div id="editAutoshipDayModal" class="LModal jqmWindow">
+	<div class="mContent">
+		<div>
+			@Html.Term("ProcessingDay", "Processing Day"):
+			@if (autoshipSchedule.AutoshipScheduleDays.Count > 1)
+   {
+				<select id="autoshipScheduleDaySelect">
+					@foreach (var scheduleDay in autoshipSchedule.AutoshipScheduleDays)
+	 {
+                        <option value="@scheduleDay.Day" @Html.Raw(scheduleDay.Day == autoshipScheduleDay.Day ? "selected=\"selected\"" : "")>
+							@scheduleDay.Day</option>
+	 }
+				</select><br />
+   }
+			<a id="btnSetProcessingDay" href="javascript:void(0);" class="DTL Add">
+				@Html.Term("Select")</a>
+		</div>
+	</div>
+</div>
+

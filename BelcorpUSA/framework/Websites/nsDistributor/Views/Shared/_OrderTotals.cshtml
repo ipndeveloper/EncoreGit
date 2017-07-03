@@ -1,0 +1,35 @@
+﻿<div class="UI-mainBg pad5 brdrAll finalOrderTotals">
+	<div class="FR">
+		<p>
+			<span class="bold FL Label">@Html.Term("SubTotal", "Sub Total")</span>
+			<!-- ko if: !isSubtotalAdjusted() -->
+			<span class="FR" data-bind="currency: Subtotal"></span>
+			<!-- /ko -->
+			<!-- ko if: isSubtotalAdjusted() -->
+			<span class="FL price strikethrough originalPrice" data-bind="currency: Subtotal"></span>
+			<span class="FR price discountPrice" data-bind="currency: AdjustedSubtotal"></span>
+			<!-- /ko -->
+			<span class="clr"></span>
+		</p>
+		<p>
+			<span class="bold FL Label">@Html.Term("Tax")</span> <span class="FR" data-bind="currency: Tax">
+			</span><span class="clr"></span>
+		</p>
+		<p>
+			<span class="bold FL Label">@Html.Raw(Html.Term("ShippingAndHandling", "Shipping &amp; Handling"))</span>
+			<!-- ko if: !isShippingAdjusted() -->
+			<span class="FR" data-bind="currency: ShippingHandling"></span>
+			<!-- /ko -->
+			<!-- ko if: isShippingAdjusted() -->
+			<span class="FL strikethrough" data-bind="currency: ShippingHandling"></span>
+			<span class="FR" data-bind="currency: AdjustedShippingHandling"></span>
+			<!-- /ko -->
+			<span class="clr"></span>
+		</p>
+		<p>
+			<span class="bold FL Label">@Html.Term("Total")</span> <span class="FR" data-bind="currency: GrandTotal">
+			</span><span class="clr"></span>
+		</p>
+	</div>
+	<span class="clr"></span>
+</div>

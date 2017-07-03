@@ -1,0 +1,171 @@
+@model NetSteps.Data.Entities.HtmlSection
+@{
+    var site = SiteCache.GetSiteByID(NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite.SiteID);
+    var baseSite = site.IsBase ? site : SiteCache.GetSiteByID(site.BaseSiteID.ToInt());
+    var productionContent = Model.ProductionContentForDisplay(site);
+    var baseChoices = baseSite.GetActiveChoices(Model.HtmlSectionID);
+    var choicesPage = @Html.Term(Model.SectionName, Model.SectionName.PascalToSpaced()).Replace(" ", string.Empty);
+}
+@section head {
+    <link type="text/css" rel="Stylesheet" href="@Url.Content("~/Content/CSS/Edit.css")" />
+
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('pwsAdmin');
+            function previewContent() {
+                if ($('#contentId').val()) {
+                    $.get('@Url.Resolve("~/Admin/PreviewContent")', { contentId: $('#contentId').val() }, function (response) {
+                        if (response.redirect) {
+                            window.location = response.redirectUrl;
+                        }
+                        else if (response.result) {
+                            $('#preview').html(response.preview);
+                            $('.SiteDesignContent #preview').removeClass().addClass('NS-clr ' + $('#preview link.stylesheet').attr('id'));
+                        }
+                        else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            }
+
+            $('#library .item').live('click', function () {
+                $('#library .item.selected').removeClass('selected');
+                $(this).addClass('selected');
+
+                var contentId = $(this).attr('id').replace(/\D/g, '');
+                $('#contentId').val(contentId);
+
+                previewContent();
+
+                $('#btnSave')[contentId != $('#productionContentId').val() ? 'show' : 'hide']();
+
+                $('#btnEdit,#btnDelete')[$(this).hasClass('corporate') ? 'hide' : 'show']();
+                if (contentId == $('#productionContentId').val()) {
+                    $('#btnDelete').hide();
+                }
+            });
+
+            $('#btnEdit').click(function () {
+                window.location = '@Url.Resolve("~/Admin/EditContent")?sectionId=@Model.HtmlSectionID&contentId=' + $('#library .item.selected').attr('id').replace(/\D/g, '');
+            });
+
+            $('#btnDelete').click(function () {
+                if (confirm('@Html.Term("DeleteChoiceConfirmation", "Are you sure you want to delete this choice?")')) {
+                    $.post('@Url.Resolve("~/Admin/DeleteContent")', { contentId: $('#contentId').val() }, function (response) {
+                        if (response.redirect) {
+                            window.location = response.redirectUrl;
+                        } else if (response.result) {
+                            $('#content' + $('#contentId').val()).remove();
+                            $('#preview').empty();
+                            $('#content' + $('#productionContentId')).click();
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('#btnSave').click(function () {
+                $.post('@Url.Resolve("~/Admin/SaveSelection")', { sectionId: '@Model.HtmlSectionID', contentId: $('#contentId').val() }, function (response) {
+                    if (response.redirect) {
+                        window.location = response.redirectUrl;
+                    } else if (response.result) {
+                        window.location = '@Url.Resolve("~/Admin")';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            if ($.browser.msie && $.browser.version < 8) {
+                $('#browserMessage').show();
+            }
+        });
+    </script>
+
+}
+<div class="WelcomeBlock SectionHeader">
+    <h1>
+        @Html.Term(Model.SectionName, Model.SectionName.PascalToSpaced())</h1>
+    <a href="@Url.Resolve("~/Admin")">
+        @Html.Term("BackToDashboard", "Back to the dashboard")</a> <span id="browserMessage" style="color: Red; font-weight: bold; display: none;">
+            @Html.Term("OldIE", "We have detected that you are using an older version of Internet Explorer.  We recommend that you upgrade your browser to the newest version.")</span>
+</div>
+<div id="previewContainer" class="NS-FR splitCol60 @choicesPage">
+    <div id="controls" class="UI-secBg NS-pad5 NS-brdrAll brdrAll GridUtility">
+
+        @{
+            ViewBag.ShowEditLink = baseChoices.Any(c => c.HtmlContentID == productionContent.HtmlContentID);
+        }
+        @Html.Partial("ChoicesSectionLinks")
+    </div>
+    <div class="contentPreviewTitle">
+        <h4>
+            <span>@Html.Term("ContentPreview", "Content Preview")</span></h4>
+    </div>
+    <div id="preview" class="NS-clr">
+        @Html.Raw(Model.ToDisplay(site, NetSteps.Common.Constants.ViewingMode.Production))
+    </div>
+    <span id="statusMessage"></span>
+    <input type="hidden" id="contentId" />
+    <input type="hidden" id="productionContentId" value="@productionContent.HtmlContentID" />
+    <input type="hidden" id="contentEditorType" value="@((Constants.HtmlContentEditorType)Model.HtmlContentEditorTypeID)" />
+</div>
+<div id="library" class="NS-FL splitCol40">
+    @if (Model.HtmlSectionEditTypeID != (int)Constants.HtmlSectionEditType.ConsultantList)
+    {
+        <div id="corporateLibrary">
+            <h3 class="UI-mainBg brdrAll pad10 libraryTitle">
+                <span>@Html.Term("CorporateLibrary", "Corporate Library")</span></h3>
+            <div id="corpChoices" class="pad10">
+                @foreach (var corporateChoice in baseChoices)
+                {
+                    <div id="corporateContent@(corporateChoice.HtmlContentID)" class="item brdr brdrAll corporate@(corporateChoice.HtmlContentID == productionContent.HtmlContentID ? " selected" : "")">
+                        @if (Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.Photo || Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PhotoCropper)
+                        {
+                            @Html.Raw(corporateChoice.GetImage().SetHtmlAttributeValue("width", "75"))
+                        }
+                        else
+                        {
+                            <span class="titlecontent">
+                                @corporateChoice.Name</span>
+                        }</div>
+                }
+                <span class="NS-clr"></span>
+            </div>
+        </div>
+        
+    }
+    @if (Model.HtmlSectionEditTypeID != (int)Constants.HtmlSectionEditType.Choices)
+    {
+        <div id="myLibrary">
+            <div class="UI-mainBg brdrAll pad5 libraryTitle">
+                <h3 class="FL NS-pad5">@Html.Term("MyLibrary", "My Library")</h3>
+                <a href="@Url.Resolve("~/Admin/EditContent", new { sectionId = Model.HtmlSectionID })" id="btnAdd" class="FR Button MinorButton addNewContentItemn"><span>@Html.Term("AddANewItem", "Add a new item")</span></a> <span class="NS-clr"></span>
+            </div>
+            <div id="myChoices" class="pad10">
+                @foreach (var distributorChoice in site.GetActiveChoices(Model.HtmlSectionID))
+                {
+                    <div id="content@(distributorChoice.HtmlContentID)" class="item brdr brdrAll item@(distributorChoice.HtmlContentID == productionContent.HtmlContentID ? " selected" : "")">
+                        @if (Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.Photo || Model.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PhotoCropper)
+                        {
+                            @Html.Raw(distributorChoice.GetImage().SetHtmlAttributeValue("width", "75"))
+                        }
+                        else
+                        {
+                            <span class="titlecontent">
+                                @distributorChoice.Name</span>
+                        }
+                    </div>
+                }
+                <span class="NS-clr"></span>
+            </div>
+        </div>
+    }
+</div>
+<div id="modal" class="LModal jqmWindow">
+    <div class="mContent">
+    </div>
+</div>
+@Html.Partial("MessageCenter")

@@ -1,0 +1,69 @@
+﻿	<script type="text/javascript">
+	    $(function () {
+	        var data = {};
+	        $('#btnSave').click(function () {
+
+	            if ($('#acctRestrictY').prop('checked')) {
+	                var cantAcc = $('.accountStatus:checked').length;
+	                if (cantAcc != "") {
+	                    $('.accountStatus:checked').each(function (i) {
+	                        data['AccountStatus[' + i + '].AccountStatusID'] = parseInt($(this).val());
+	                    });
+	                } else {
+	                    showMessage("Please, Select at least one field Restrict Accounts.", true);
+	                    return false;
+	                }
+	            }
+
+	            if ($('#validDocY').prop('checked')) {
+	                var cantValDoc = $(".validDoc:checked").length;
+	                if (cantValDoc == 0) {
+	                    showMessage('Please, Select at least one field for Valid Documents', true);
+	                    return false;
+	                } else {
+	                    $('#tbDoc .validDoc:checked').each(function (i) {
+	                        data['RulesPerDocuments[' + i + '].RequirementTypeID'] = $(this).val();
+	                    });
+//	                    $('#tbDoc .pad2').each(function (i) {
+//	                        data['RulesPerDocuments[' + i + '].LogicalOperator'] = $(this).attr('value');
+//	                    });
+//	                    $('#tbDoc .ord').each(function (i) {
+//	                        data['RulesPerDocuments[' + i + '].Order'] = $(this).val();
+//	                    });
+	                }
+	            }
+
+	            if ($('#titleRestrictY').prop('checked')) {
+	                var cantitles = $('.titles:checked').length;
+	                //var cantrecognized = $('.recognized:checked').length;
+
+	                //var cantitles = cantpaidAs + cantrecognized;             
+
+	                if (cantitles.toString() != 0) {
+	                    $('.titles:checked').each(function (i) {
+	                        data['Titles[' + i + '].TitleID'] = parseInt($(this).val());
+	                        data['Titles[' + i + '].TitleTypeID'] = parseInt($(this).attr("id"));
+	                    });
+	                   /* $('.recognized:checked').each(function (j) {
+	                        data['Titles[' + j + '].TitleID'] = parseInt($(this).val());
+	                        data['Titles[' + j + '].TitleTypeID'] = parseInt(2);
+	                    });*/
+	                }
+	                else {
+	                    showMessage("Please select at least one field for restricting Titles.", true);
+	                    return false;
+	                }
+
+	            }
+	            $.post('/Commissions/Sponsor/Save', data, function (response) {
+	                if (response.result) {
+	                    showMessage("Sponsorship Rules Save.", false);
+	                    window.location = '@Url.Content("~/Commissions/Sponsor")';
+	                } else {
+	                    showMessage(response.message, true);
+	                }
+	            });
+	        });
+
+	    });
+</script>

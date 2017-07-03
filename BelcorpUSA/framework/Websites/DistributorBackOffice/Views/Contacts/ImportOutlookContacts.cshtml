@@ -1,0 +1,40 @@
+@model List<NetSteps.Data.Entities.Account>
+@section head {
+}
+@section breadcrumb{
+    <a href="@Href("~/Contacts")">
+        @Html.Term("Contacts")</a>
+}
+@section title {
+    @Html.Term("ImportProspects", "Import Prospects")
+}
+@if (TempData["Error"] != null)
+{
+    <div style="-moz-background-clip: border; -moz-background-inline-policy: continuous;
+        -moz-background-origin: padding; background: #FEE9E9 none repeat scroll 0 0;
+        border: 1px solid #FF0000; display: block; font-size: 14px; font-weight: bold;
+        margin-bottom: 10px; padding: 7px;">
+        <div style="color: #FF0000; display: block;">
+            <img alt="" src="@Href("~/Resource/Content/Images/exclamation.png")" />&nbsp;@TempData["Error"].ToString()</div>
+    </div>
+}
+<div>
+    @if (Model == null)
+    {
+        <form action="@Href("~/Contacts/ImportOutlookContacts")" method="post" enctype="multipart/form-data">
+        @Html.Term("PleaseSelectAnOutlookExportedCSVFileOfContactsToImport", "Please select an Outlook Exported CSV file of Contacts to import"):<br />
+        <input type="file" id="contactsImport" name="fileUpload" size="23" />
+        <br />
+        <input type="submit" value="Upload file" id="importContactsSubmit" />
+        </form>
+    }
+    else
+    {
+        @Html.Term("XProspectsWereSuccessfullyImported", "{0} prospects were successfully imported.", Model.Count)
+        <br />
+        foreach (var item in Model)
+        {
+
+        }
+    }
+</div>

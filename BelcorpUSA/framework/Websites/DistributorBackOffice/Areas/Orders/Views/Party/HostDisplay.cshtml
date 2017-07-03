@@ -1,0 +1,30 @@
+﻿@model DistributorBackOffice.Models.HostInformation
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSelect').click(function() {
+            $.post('@Url.Action("HostEntry","Party")', { AccountID: '@Model.AccountID' }, function(response) {
+                if (response.result) {
+                    window.location = '@Url.Action("PartyEntry","Party")' + '?' 
+                                        + $.param({ hostAccountId: response.hostAccountId, 
+                                            partyId: @(ViewBag.PartyId ?? 0)});
+                }
+            });
+        });
+    });    
+</script>
+
+<table id="hostDisplayInfo">
+    <tr>
+        <th>@Html.Term("HostDisplay_Name_LabelText","Name")</th>
+        <th>@Html.Term("HostDisplay_Email_LabelText","Email")</th>
+        <th>@Html.Term("HostDisplay_Phone_LabelText","Phone")</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>@Model.FirstName @Model.LastName</td>
+        <td>@Model.Email</td>
+        <td>@Model.PhoneNumber</td>
+        <td><input type="button" id="btnSelect" value="@Html.Term("HostDisplay_SelectButtonText", "Select")"/></td>
+    </tr>
+</table>

@@ -1,0 +1,59 @@
+@model News
+@section head {
+}
+@{ 
+    string title = string.Empty;
+    string caption = string.Empty;
+    string body = string.Empty;
+    if (Model == null)
+    {
+        title = Html.Term("NewArticleNotFound", "New Article Not Found");
+    }
+    else
+    {
+        var content = Model.HtmlSection.ProductionContentForDisplay(BaseController.CurrentSite);
+        title = content.Title();
+        caption = content.Caption();
+        body = content.Body();
+    }
+}
+<div id="NewsArticle">
+    <div class="hide">
+        <div class="Crumbs">
+        </div>
+        <h1>
+            <a href="@Href("~/News")">@Html.Term("News")</a>
+        </h1>
+    </div>
+    <div class="LeftColumn">
+        <div id="SecondaryRail">
+            <div class="SavedReports">
+                <h3>@Html.Term("News Categories")</h3>
+                <div class="listBody">
+                    <ul class="listNav">
+                        <li><a href="@Url.Resolve("~/News")" class="newsCategory"><span>
+                            @Html.Term("AllCategories", "All Categories")
+                        </span></a></li>
+                        @{IEnumerable<short> categories = ViewData["Categories"] as IEnumerable<short>;}
+                        @foreach (NewsType type in SmallCollectionCache.Instance.NewsTypes.Where(nt => categories.Contains(nt.NewsTypeID)))
+                        {
+                            <li><a href="@Url.Resolve("~/News", new { category = type.NewsTypeID })" class="newsCategory">
+                                <span>@type.GetTerm()</span> </a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="CenterColumn">
+        <div class="ContentColumn">
+            <h1>@title</h1>
+            <div class="caption">
+                @Html.Raw(caption)
+            </div>
+            <div class="body">
+                @Html.Raw(body)
+            </div>
+        </div>
+    </div>
+</div>

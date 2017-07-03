@@ -1,0 +1,134 @@
+﻿@model DistributorBackOffice.Models.IBulkAddModel
+<script type="text/javascript" src="@Url.Content("~/Scripts/Shared/BulkAddModel.js")"></script>
+<script type="text/javascript">
+	var bulkAddModel;
+	$(function () {
+		var options = { 
+			AddProductsUrl: '@Model.AddProductsUrl', 
+			GetProductsUrl: '@Model.GetProductsUrl' 
+		};
+		bulkAddModel = new BulkAddModel(@Html.Raw(Json.Encode(Model.Data)), options);
+		ko.applyBindings(bulkAddModel, document.getElementById('bulkAddModal'));
+
+		bulkAddModel.handleAddResponse = function(response) {
+			if (response.result) {
+				updateCartAndTotals(response);
+				if (response.message !== undefined && response.message.length > 0) {
+					showMessage(response.message, true);
+				}
+			} 
+			else {
+				showMessage('@Html.Term("ErrorAddingProducts", "There was a problem adding products"): ' + response.message, true);
+			}
+		}
+	});
+</script>
+
+<div id="bulkAddModal" class="jqmWindow LModal ProductWin" style="margin-left: 0px;">
+	<div class="mContent" style="width: 400px; height: 440px;">
+		<h2>
+			@Html.Term("BulkProductAdd", "Bulk Product Add")</h2>
+        
+       
+@*<p>*@
+<table>
+    <tr>
+        <td>
+			<select data-bind="options: Categories, optionsText: 'Name', value: selectedCategory">
+			</select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+			        <a href="javascript:void(0);" class="FR" data-bind="click: function() { updateProducts(0) }">@Html.Term("BulkAdd_DisplayAll", "Display All")</a>
+        </td>
+        <td>
+			        <a href="javascript:void(0);" class="FR" data-bind="click: resetQuantities">@Html.Term("ResetQuantities", "Reset quantities")</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+			        <img id="catalogLoading" class="FR" src="@NetSteps.Common.Extensions.StringExtensions.ResolveUrl("~/Content/Images/Icons/loading-blue.gif")"
+                        alt="@Html.Term("Loading", "loading...")" style="position: relative;
+                        top: -10px; right: 35px;" data-bind="visible: changingCategories" />
+        </td>
+    </tr>
+</table>
+		@*</p>*@
+       @*  @if (Model.LoadCategories != null)
+        {
+        if (Model.LoadCategories)
+        { *@
+		<table cellspacing="0" cellpadding="0" width="100%;" class="DataGrid">
+			<tr class="GridColHead">
+				<th style="width: 80px;">
+					@Html.Term("SKU", "SKU")
+				</th>
+				<th style="width: 120px;">
+					@Html.Term("Product", "Product")
+				</th>
+				<th style="width: 50px;">
+					@Html.Term("UnitPrice", "Unit Price")
+				</th>
+				<th style="width: 50px;">
+					@Html.Term("Quantity", "Quantity")
+				</th>
+			</tr>
+		</table>
+
+		<div style="height: 250px; overflow: auto; border-bottom: 1px solid #efefef; overflow-x: hidden;">
+			<table id="bulkProductCatalog" cellspacing="0" cellpadding="0" width="100%" class="DataGrid">
+				<tbody data-bind="foreach: Products">
+					<tr data-bind="css: { Alt: $index() % 2 == 0 }">
+						<td style="width: 80px;" data-bind="text: SKU">
+						</td>
+						<td style="width: 120px;" data-bind="text: Name">
+						</td>
+						<td style="width: 50px;" data-bind="text: Price">
+						</td>
+						<td style="width: 50px;">
+							<input type="text" style="width: 20px;" data-bind="value: Quantity" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+             
+        @*     }
+        }*@
+        
+		<br />
+		<p>
+			<a id="btnBulkAdd" href="javascript:void(0)" class="Button BigBlue FR" data-bind="click: addProducts">
+				@Html.Term("AddToOrder", "Add to Order")</a> <a href="javascript:void(0)" class="jqmClose FL">
+					@Html.Term("Close", "Close")</a>
+			<img class="FR" alt="@Html.Term("Loading", "loading...")" src="@NetSteps.Common.Extensions.StringExtensions.ResolveUrl("~/Content/Images/Icons/loading-blue.gif")" data-bind="visible: addingProducts" />
+		</p>
+		
+        
+	</div>
+</div>
+
+<script type="text/javascript">
+
+    //var bulkAddModel;
+//////////    function MostrarLista() {
+//////////    
+//////////                $.ajax({
+//////////                    type: "GET",
+//////////                    // url: '@Href("~/Orders/OrderEntry/CargarOpenLista")',
+//////////                    url: "/Orders/OrderEntry/CargarOpenLista",
+//////////                    //data: JSON.stringify(data),
+//////////                    //dataType: 'json',
+//////////                    ContentType: 'application/json',
+//////////                    success: function () {
+
+//////////                    },
+//////////                    error: function () {
+//////////                        alert('eror');
+//////////                    }
+//////////                });
+//////////    }
+</script>
+
+

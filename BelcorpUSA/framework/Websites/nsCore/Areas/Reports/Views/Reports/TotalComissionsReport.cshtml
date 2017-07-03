@@ -1,0 +1,24 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/ProductCreditBalanceExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetTotalComissionsReport")
+
+        .AddSelectFilter(Html.Term("Period", "Period"), "periodId", ViewBag.Periods as Dictionary<int, string>, Convert.ToInt32(DateTime.Now.ToString("yyyyMM")))
+        .AddSelectFilter(Html.Term("CommisionType", "Commission Type"), "commissionType", ViewBag.CommTypes as Dictionary<string, string>)
+        .AddInputFilter(Html.Term("AccountNumber", "Account Number"), "accountNumber")
+
+        .AddColumn(Html.Term("Period", "Period"), "Period")
+        .AddColumn(Html.Term("AccountNumber", "Account Number"), "AccountNumber")
+        .AddColumn(Html.Term("AccountName", "Account Name"), "AccountName")
+        .AddColumn(Html.Term("CommissionType", "Commission Type"), "CommissionType")
+        .AddColumn(Html.Term("CommissionName", "Commission Name"), "CommissionName")
+        .AddColumn(Html.Term("CommissionAmmount", "Commission Ammount"), "CommissionAmmount");
+        //.AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        //.ClickEntireRow();
+    grid.Render(); 
+}

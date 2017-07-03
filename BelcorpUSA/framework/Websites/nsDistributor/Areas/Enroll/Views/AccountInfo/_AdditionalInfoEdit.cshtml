@@ -1,0 +1,123 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.AdditionalInformationModel
+<script src="@Url.Content("~/Scripts/address-validation.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function AdditionalInfoEditFormSubmit(e) {
+
+//        if ($('#SchoolineLevel').val() == 0) {
+//            $('#SchoolineLevel').showError('Schooline Level is required.');
+//            return;
+//        }
+
+        e.submit();
+    }
+
+    $(document).ready(function () {
+        $('#Name, #MainPhone_Substrings_0__Text, #MainPhone_Substrings_1__Text, #MainPhone_Substrings_2__Text').val('');
+        $('#SchoolineLevel').val(0);
+        $('#AuthNetworkData, #AuthEmailSend, #AuthShareData').prop('checked', true);
+    });
+</script>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_function = "AdditionalInfoEditFormSubmit" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m => m.CountryID)
+   
+    
+    <div id="MainAddress" class="FormContainer splitCol pad5 FL basicInfo" style="width: 100%;
+        float: left;">
+        @*<h2>@Html.Term("Enrollment_AccountInfo_AdditionalInfo_AdditionalInfoTitle", "References")</h2>
+        <div class="FRow">
+            <div class="FLabel">
+                @Html.LabelFor(m => m.Name):
+            </div>
+            <div class="FInput">
+                @Html.TextBoxFor(m => m.Name)@Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+        <div class="FRow">
+            <div class="FLabel">
+                <span class="requiredMarker">*</span>
+                @Html.LabelFor(m => m.Relationship):
+            </div>
+            <div class="FInput">
+                @{var selectRelationships = NetSteps.Data.Entities.Business.Logic.AccountPropertiesBusinessLogic.GetRelationShip();}
+                @Html.DropDownListFor(
+                    m => m.Relationship,
+                    new SelectList(selectRelationships, "Key", "Value")
+                )
+                @Html.ValidationMessageFor(m => m.Relationship)
+            </div>
+        </div>
+        <div class="FRow">
+            <div class="FLabel">
+                <span class="requiredMarker">*</span>
+                @Html.LabelFor(m => m.MainPhone):
+            </div>
+            <div class="FInput">
+                @Html.EditorFor(m => m.MainPhone)
+                @Html.ValidationMessageFor(m => m.MainPhone)
+            </div>
+        </div>*@
+        <h2>@Html.Term("Enrollment_AccountInfo_AdditionalInfo_AdditionalInfoTitleComplement", "Complement")</h2>
+        <div class="FRow">
+            <div class="FLabel">
+               @* <span class="requiredMarker">*</span>*@
+                @Html.LabelFor(m => m.SchoolineLevel):
+            </div>
+            <div class="FInput">
+                @{var selectSchoolineLevels = NetSteps.Data.Entities.Business.Logic.AccountPropertiesBusinessLogic.GetAccountPropertiesValuesByTermName("SchoolingLevel");}
+                @Html.DropDownListFor(
+                    m => m.SchoolineLevel,
+                    new SelectList(selectSchoolineLevels, "Key", "Value")
+                )@Html.ValidationMessageFor(m => m.SchoolineLevel)
+            </div>
+        </div>
+        <br />
+        <table width="100%" cellspacing="0" class="FormTable">
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x.AuthNetworkData, new { @checked = "checked" })
+                    <label for="AuthNetworkData">
+                        @Html.Term("AuthNetworkData", "Autorizo compartilhar meus dados de contato (e-mail, telefone) con minha rede.")</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x.AuthEmailSend, new { @checked = "checked" })
+                    <label for="AuthEmailSend">
+                        @Html.Term("AuthEmailSend", "Aceito receber e-mails da Belcorp.")</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x.AuthShareData, new { @checked = "checked" })
+                    <label for="AuthShareData">
+                        @Html.Term("AuthShareData", "Autorizo a divulgaçao dos meus dados (nome, telefone e e-mail) no localizador de consultores Belcorp.")</label>
+                </td>
+            </tr>
+        </table>
+        </div>
+        
+        <table>
+        <tr>
+            <td style="float:left">
+                <p class="FormSubmit">
+                    @*<span class="FR"><a class="Button" href="javascript:history.back(1)"><span>@Html.Term("Previous")</span> </a></span>*@
+                    <span class="FR"><a class="Button" href="javascript:history.go(-1)"><span>@Html.Term("Previous")</span> </a></span>
+	            </p>
+            </td>
+            <td>
+            <p class="FormSubmit">
+                <span class="FR"><a class="Button" id="btnBasicInfoSubmit" href="javascript:void(0);"data-click-submit="parent"><span>@Html.Term("Next")</span> </a></span>
+            </p>
+            </td>
+        </tr>
+        </table>
+
+    
+    
+   
+    
+    @Html.AntiForgeryToken()
+}
+@Html.Partial("_AddressValidation")

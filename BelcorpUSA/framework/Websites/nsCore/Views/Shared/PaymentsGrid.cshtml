@@ -1,0 +1,69 @@
+﻿@model NetSteps.Data.Entities.Order
+@{
+    bool isOrderEntry = ViewContext.RouteData.Values["controller"].ToString() == "OrderEntry" || ViewContext.RouteData.Values["controller"].ToString() == "Autoships" || ViewContext.RouteData.Values["controller"].ToString() == "TestOrderEntry" || ViewContext.RouteData.Values["controller"].ToString() == "EntryPayPal";
+    if (isOrderEntry)
+    {
+<tr class="GridColHead">
+    <th class="GridCheckBox">
+    </th>
+    <th>
+        @Html.Term("Payment", "Payment")
+    </th>
+    <th>
+        @Html.Term("Amount", "Amount")
+    </th>
+</tr>
+        if (Model.OrderCustomers[0].OrderPayments.Count == 0)
+        {
+<tr id="noPaymentsRow">
+    <td id="noPayments" colspan="3">
+        @Html.Term("No payments applied yet", "No payments applied yet")
+    </td>
+</tr>
+        }
+        else
+        {
+            var orderPayments = Model.OrderCustomers[0].OrderPayments.Where(p => p.OrderPaymentStatusID != Constants.OrderPaymentStatus.Cancelled.ToShort()).ToList();
+             var indice = 0;
+            foreach (var payment in orderPayments)
+            {
+                indice--;
+                int i = orderPayments.IndexOf(payment);
+<tr id="pmt@(payment.Guid.ToString("N"))" class="paymentItem @(i.IsEven() ? string.Empty : "Alt")">
+    <td>
+                @if ((payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Pending || payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Declined)
+                    && payment.BankName != "PREVIOS BALANCE"
+                    )
+                {
+        <a href="javascript:void(0);" id="btnRemovePayment@(payment.Guid.ToString("N"))" class="DTL Remove"
+            onclick="removePayment('@(payment.Guid.ToString("N"))',@(indice))" title="Remove Payment">
+            <input type="hidden" id="hdid" value="@(payment.Guid.ToString("N"))" />
+            <input type="hidden" id="hdindice" value="@(indice)" />
+            
+            <span></span>
+        </a>
+                }
+                else
+                {
+        @:&nbsp;
+                }
+    </td>
+    <td>
+        <a href="javascript:void(0);" onclick="showPaymentModal('@(payment.Guid.ToString("N"))')">
+           @* @{var actNum = payment.DecryptedAccountNumber.MaskString(4);}
+            @(actNum.IsNullOrWhiteSpace() ? SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm() : actNum)*@
+            @payment.BankName
+        </a>
+                @if (payment.OrderPaymentStatusID == Constants.OrderPaymentStatus.Declined.ToShort())
+                {
+        <i style="color:red">(@(Html.Term("Declined")))</i>
+                }
+    </td>
+    <td   style="color: @(payment.BankName == "PREVIOS BALANCE" &&   payment.Amount.ToString().Substring(0,1)  == "-" ? "Red" : "")">
+        @payment.Amount.ToString(Model.CurrencyID)
+    </td>
+</tr>
+            }
+        }
+    }
+}

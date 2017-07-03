@@ -1,0 +1,188 @@
+﻿@model Party
+@{
+    ViewBag.Title = "SendThankYou";
+}
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            var inviteTxt = $.trim($('#thankYouMessage').text());
+            $('#swapCustomText').click(function () {
+                $('#thankYouMessage').html('<textarea class="UI-lightBg customMessage">' + inviteTxt + '</textarea>');
+                $('#write').fadeOut(50, function () { $('#saveMessage').fadeIn(); });
+                return false;
+            });
+
+            $('#cancelWrite').click(function () {
+                $('#thankYouMessage').html(inviteTxt);
+                $('#saveMessage').fadeOut(50, function () { $('#write').fadeIn(); });
+                return false;
+            });
+
+            $('#saveContent').click(function () {
+                var t = $(this);
+                showLoading(t);
+                var message = $('#thankYouMessage textarea').val();
+                $.post('@Url.Resolve("~/HostedParties/SaveMessage")', { partyId: '@Model.PartyID', emailTemplateTypeId: '@((short)Constants.EmailTemplateType.EvitesThankYou)', message: message }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        inviteTxt = message;
+                        $('#thankYouMessage').html(inviteTxt);
+                        $('#saveMessage').fadeOut(50, function () { $('#write').fadeIn(); });
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#previewThankYou').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Url.Resolve("~/HostedParties/SetupPreview")', {
+                    content: $.trim($('#thankYouMessage textarea').length ? $('#thankYouMessage textarea').val() : $('#thankYouMessage').text())
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        var w = window.open('@Url.Resolve("~/HostedParties/PreviewEmail", new { emailTemplateTypeId = (short)Constants.EmailTemplateType.EvitesThankYou })');
+                        if (!w) {
+                            showMessage('@Html.Term("GuestInvitePopupBlocked", "We have detected that your guest invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                        } else {
+                            //test for Chrome, since it still gives us a handle - DES
+                            w.onload = function () {
+                                setTimeout(function () {
+                                    if (w.screenX === 0)
+                                        showMessage('@Html.Term("GuestInvitePopupBlocked", "We have detected that your guest invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                                }, 0);
+                            };
+                        }
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#send').click(function () {
+                var data = { partyId: '@Model.PartyID' }, t = $(this);
+                showLoading(t);
+                $('#guests input.checkSend:checked').each(function (i) {
+                    data['guests[' + i + ']'] = $(this).parent().find('input.guestId').val();
+                });
+                $.post('@Url.Resolve("~/HostedParties/SendOutThankYous")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@Url.Resolve("~/HostedParties/GuestList", new { partyId = Model.PartyID })';
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        });
+    </script>
+}
+<div class="SideColumn">
+    <!-- @* Customizing messages is not wired up yet
+    <div class="partyActions customizeMessage">
+        <h3>@Html.Term("CustomizeYourThankYouMessage", "Customize your thank-you message?")</h3>
+        <div class="UI-bg messageWrapper">
+            <div class="inviteMessage" id="thankYouMessage">
+                @if (string.IsNullOrEmpty(ViewBag.PersonalizedContent))
+                {
+                    @:Default overridable corporate content. Lorem ipsum dolor sit amet, consecteturadipiscingelit.Crasvitaesapiendiam.Inconguealiquameleifend.Morbinecmetusatarcudictumgravida.Integerbibendummivelodiodictumeuconsequatrisusluctus.
+                }
+                else
+                {
+                    @ViewBag.PersonalizedContent  
+                }
+            </div>
+            <div class="pad5 messageControls">
+                <div id="write">
+                    <a href="javascript:void(0);" class="" id="swapCustomText">@Html.Term("WriteYourOwn", "Click here to write your own")</a>
+                </div>
+                <div id="saveMessage" style="display: none;">
+                    <a id="saveContent" href="javascript:void(0);" class="FL Button MinorButton saveMessage">
+                        <span>@Html.Term("SaveMessage", "Save Message")</span></a> <a href="javascript:void(0);"
+                            class="FR cancelMessage" id="cancelWrite">@Html.Term("Cancel")</a> <span class="clr">
+                            </span>
+                </div>
+            </div>
+        </div>
+        @*end message wrapper*@
+    </div>
+     <hr />
+    end customize message -->
+   
+    <div class="mt10 messagePreview">
+        <h3>@Html.Term("PreviewThankYouText", "Want to see what your thank-you email will look like?")</h3>
+        <div class="imagewrapper">
+            @if (string.IsNullOrEmpty(ViewBag.ThankYouThumbnail))
+            {
+                <a id="previewThankYou" href="javascript:void(0);" class="Button previewThankYou"><span>@Html.Term("Preview")</span></a>
+            }
+            else
+            {
+                <a id="previewThankYou" href="javascript:void(0);">
+                    <img src="@ViewBag.ThankYouThumbnail" alt="Preview" /></a>
+            }
+        </div>
+    </div>
+</div>
+<div class="ContentColumn thankYouPage">
+    <div class="pageTitle">
+        <div class="breadCrumb">
+            <a href="@Url.Resolve("~/HostedParties")">@Html.Term("MyPartiesDashboard", "My Parties Dashboard")</a>
+        </div>
+        <h1>@Model.Name</h1>
+    </div>
+    <!-- instruction notice -->
+    <div class="UI-lightBg pad10 thankYouInstruction">
+        <p>
+            @Html.Term("HostPortal_ThankYou_Instructions","Everyone on your Confirmed Guest List will receive your thank-you email. You can uncheck the people in this list that didn't actually come to your party so that they do not receive a thank-you email.")
+        </p>
+    </div>
+    <!-- confirmed section -->
+    @{
+        var confirmed = Model.PartyRsvps.GroupBy(pr => pr.PartyGuestID).Where(pr => pr.OrderByDescending(rsvps => rsvps.ResponseDate).First().IsComing);
+    }
+    <div id="guests" class="guestListSection mt10 confirmedList">
+        <div class="header">
+            <h2 class="FL">@Html.Term("ConfirmedGuestList", "Confirmed Guest List")</h2>
+            <div class="FR">
+                <span>@Html.Term("XPeopleConfirmed", "{0} people confirmed")</span>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table class="DataGrid guestList">
+            <thead>
+                <tr>
+                    <th class="deleteCol">
+                    </th>
+                    <th>@Html.Term("Guest")
+                    </th>
+                    <th>@Html.Term("Email")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var confirmation in confirmed)
+                {
+                    var guest = Model.PartyGuests.FirstOrDefault(pg => pg.PartyGuestID == confirmation.Key);
+                    <tr>
+                        <td class="center">
+                            <input type="checkbox" checked="checked" class="checkSend" />
+                            <input type="hidden" class="guestId" value="@guest.PartyGuestID" />
+                        </td>
+                        <td>
+                            @Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, BaseController.CurrentCulture.Name)
+                        </td>
+                        <td>
+                            @guest.EmailAddress
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="clr pad10 mt10 submitThankYou">
+        <a id="send" href="javascript:void(0);" class="Button sendThankYou"><span>@Html.Term("SendYourThankYouNow", "Send your thank-you email now")</span></a>
+    </div>
+</div>
+<!--/ end content column -->

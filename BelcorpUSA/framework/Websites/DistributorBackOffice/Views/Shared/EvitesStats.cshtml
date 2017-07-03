@@ -1,0 +1,63 @@
+﻿@model NetSteps.Data.Entities.Party
+<a href="javascript:void(0);" class="FR ml10 jqmClose UI-icon-container" title="@Html.Term("Close")"><span class="UI-icon icon-x"></span></a>
+<h1>
+@Model.Name
+  
+  <span class="clr"></span></h1>
+    
+<span class="clr"></span>
+<div class="UI-lightBg mContent">
+    <ul class="lr flatList partyStatsList">
+        <li class="pad5">
+            <label class="FL bold">
+                @Html.Term("NumberOfPeopleInvited", "Number of People Invited"):</label>
+            <span class="FR">@Model.PartyGuests.Count</span><span class="clr"></span> </li>
+        @{var latestResponses = Model.PartyRsvps.GroupBy(r => r.PartyGuestID).Select(g => g.OrderByDescending(r => r.ResponseDate).FirstOrDefault());}
+        <li class="pad5">
+            <label class="FL bold">
+                @Html.Term("GuestsAttending", "Guests Attending"):</label>
+            <span class="FR">@latestResponses.Count(r => r.IsComing)</span> <span class="clr">
+            </span></li>
+        <li class="pad5">
+            <label class="FL bold">
+                @Html.Term("NumberOfDeclines", "Number of Declines"):</label>
+            <span class="FR">@latestResponses.Count(r => !r.IsComing)</span> <span class="clr">
+            </span></li>
+        <li class="pad5 UI-lightBg brdrAll onlineOrders">
+            <label class="FL bold">
+                @Html.Term("OnlineOrders", "Online Orders"):</label>
+            @{var childOrders = Order.LoadChildOrdersFull(Model.OrderID, (int)Constants.OrderType.OnlineOrder, (int)Constants.OrderType.PortalOrder);}
+            <div class="FR UI-secBg brdrAll pad5  bold center onlineTotal">
+                @childOrders.Sum(o => o.GrandTotal).ToString(Model.Order.CurrencyID)</div>
+            <div class="clr mr10 ml10 onlineOrdersBreakdown pad5">
+                @foreach (var onlineOrder in childOrders)
+                {
+                    <span class="custName">@onlineOrder.OrderCustomers[0].FullName</span> <span class="custOrderSum">@onlineOrder.GrandTotal.ToString(onlineOrder.CurrencyID)</span> <a href="@Href("/Orders/Details/Index", onlineOrder.OrderNumber)" class="custOrderID">Order
+                        #@(onlineOrder.OrderNumber)</a><br />
+                }
+                @*<span class="custName">Susanne Lane</span> <span class="custOrderSum">$25.00</span> <a href="/Orders" class="custOrderID">Order #2343</a><br />
+                <span class="custName">Barbara Henrickson</span> <span class="custOrderSum">$25.00</span> <a href="/Orders" class="custOrderID">Order #2654</a><br />
+                <span class="custName">Gary Robbins</span> <span class="custOrderSum">$25.00</span> <a href="/Orders" class="custOrderID">Order #2658</a><br />
+                <span class="custName">Laura Simms</span> <span class="custOrderSum">$25.00</span> <a href="/Orders" class="custOrderID">Order #2748</a><br />*@
+            </div>
+            <span class="clr"></span></li>
+    </ul>
+    <div class="clr">
+        <div class="pad5">
+           
+            @if (Model.Order.OrderStatusID == (short)NetSteps.Data.Entities.Constants.OrderStatus.Pending)
+            {
+                    <a class="FL Button CancelParty" href="javascript:void(0);"><span>@Html.Term("CancelParty", "Cancel Party")<input type="hidden" class="partyId" value="@Model.PartyID" /></span></a>
+            }
+             
+                <a href="javascript:void(0);"
+                class="FR resendToggle"><span>@Html.Term("ResendTheHostInvitation", "Re-send the host invitation?")</span></a>
+            <span class="clr"></span>
+        </div>
+        <div class="UI-lightBg brdrAll clr pad5" id="resendInvite" style="display: none;">
+            <input type="text" name="" id="resendInviteInput" class="FL mr10" />
+            <a href="javascript:void(0);" class="FL Button ResendHostInvitation"><span>@Html.Term("Send")<input type="hidden" class="partyId" value="@Model.PartyID" /></span></a>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>

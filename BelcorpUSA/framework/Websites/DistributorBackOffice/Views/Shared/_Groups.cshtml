@@ -1,0 +1,22 @@
+﻿<div class="SavedReports" id="groupsSavedReports">
+    <div class="WidgetTitle UI-btn">
+        <span class="Title UI-btn">
+            @Html.Term("MyGroups", "My Groups")
+        </span>
+    </div>
+    <div class="listBody">
+        <div class="center UI-lightBg pad5 brdrAll WidgetUtility">
+            <a class="block" href="@Href("~/Communication/Groups/Edit")" title="@Html.Term("CreateGroup", "Create New Group")">
+                <span class="">@Html.Term("CreateGroup", "Create New Group")</span> </a><span class="clr">
+                </span>
+        </div>
+        <ul class="listNav">
+            @foreach (DistributionList group in ViewBag.Groups)
+            {
+                <li class="actionLink"><a id="groupActionItem@(group.DistributionListID)" href="@Href("~/Communication/Groups/Edit", group.DistributionListID)">
+                    <span>
+                        @group.Name</span></a> </li>
+            }
+        </ul>
+    </div>
+</div>

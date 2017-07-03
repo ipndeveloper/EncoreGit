@@ -1,0 +1,35 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#frmSearch').submit(function () {
+            $('#hostSearchResults').html('');
+            $.get('@Url.Action("HostSearch","Party")', { query: $('#txtSearch').val() },
+                function (response) {
+                    $('#hostSearchResults').html(response);
+                    $('#hostSearchResults').slideDown();
+                });
+            return false;
+            });
+        
+        $('.hostSelectLink').live("click",function () {
+                var id = $(this).attr("id");
+                var accountId = id.substring(id.indexOf('_') + 1, id.length);
+                $.post('@Url.Action("HostEntry","Party")', {'AccountID': accountId}, function (response) {
+                    if (response.result) {
+                        window.location = '@Url.Action("PartyEntry","Party")' + '?' 
+                                                + $.param({ hostAccountId: response.hostAccountId, 
+                                                    partyId: @(ViewBag.PartyId ?? 0) });
+                    }
+                });
+            });
+        
+        $('#txtSearch').watermark('@Html.JavascriptTerm("ScheduleParty_StepOne_SearchText", "Search")');
+
+    });
+</script>
+<div id="searchBox">
+    <form id="frmSearch" action="">
+        <input id="txtSearch" type="text" /><input type="submit" />
+    </form>
+</div>
+<div id="hostSearchResults" style="display: none">
+</div>

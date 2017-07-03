@@ -1,0 +1,66 @@
+﻿@*@{
+	ViewBag.Title = "OptOut";
+}
+<h2>
+	@Html.Term("OptedOut", "Opted Out")
+</h2>
+@Html.Term("OptedOutText", "Your email ({0}) has been opted out of our mailing list.", (string)ViewBag.Email)*@
+
+@model string
+           
+@{
+    Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>@Html.Term("WorkstationEmailOptOutPageTitle", "ENCORE Distributor Workstation - Email Opt-Out")
+    </title>
+    <link rel="icon" href="@Href("~/favicon.ico")" type="image/x-icon" />
+    <link type="text/css" rel="stylesheet" href="@Href("~/Content/CSS/Optout.css")" />
+    @*<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+        if (!window.jQuery) {
+            document.write(unescape('%3Cscript src="@Href("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"%3E%3C/script%3E'));
+        }
+    </script>*@
+    <script type="text/javascript" src="@Href("~/Resource/Scripts/utilities.js")"></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+
+   <div id="Content">
+    
+    @using (Html.BeginForm())
+    { 
+        <fieldset>
+            <legend>@Html.Term("EmailOptOut", "Email Optout")</legend>
+
+          <br />
+            <div>
+                @Html.Term("EmailAddress", "Email Address"):
+
+            
+                @Html.TextBox("EmailAddress", Model, new { @class = "required" })
+            </div>
+
+            @*
+            <p>
+                <a id="btnSave" href="javascript:void(0);" style="color:#333333; padding:0 10px; line-height: 30px;" class="FR Button MoreOptions">
+                            @Html.Term("Submit")
+                </a>
+            </p>*@
+
+            <p>
+                <input type="submit" value="Submit" />
+            </p>
+        </fieldset>
+    }
+        
+    </div>
+
+</body>
+</html>
+

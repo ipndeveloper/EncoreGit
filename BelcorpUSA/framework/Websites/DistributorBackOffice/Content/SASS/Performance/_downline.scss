@@ -1,0 +1,141 @@
+﻿
+
+/*********************
+* Color Keys
+*********************/
+
+.downlineColorKeys {
+	.accountList li {
+		background: url(../Images/Encore/downlineKey_acctType.png) no-repeat 0 0;
+	}
+	.qualificationList {
+		li {
+			background: url(../Images/Encore/downlineKey_acctAlerts.png) no-repeat 0 0;
+		}
+		.qual1 {
+			background-position: 0 0;
+		}
+		.qual2 {
+			background-position: 0 -34px;
+		}
+		.qual3 {
+			background-position: 0 -67px;
+		}
+	}
+	.accountList {
+		.acct1 { background-position: 0 0; }
+		.acct2 { background-position: 0 -34px; }
+		.acct3 { background-position: 0 -67px; }
+		.acct4 { background-position: 0 -101px; }
+
+		.acct5 { background-position: 0 -138px; }
+		.acct6 { background-position: 0 -172px; }
+		.acct7 { background-position: 0 -205px; }
+		.acct8 { background-position: 0 -239px; }
+		.acct9 { background-position: 0 -273px; }
+		.acct10 { background-position: 0 -307px; }
+		.acct11 { background-position: 0 -340px; }
+		.acct12 { background-position: 0 -374px; }
+		.acct13 { background-position: 0 -409px; }
+	}
+}
+
+.downlineColorKeys {
+	.TabColorKey li {
+		height: 15px;
+		line-height: 15px;
+		margin-bottom: 5px;
+		padding-left: 20px;
+		overflow: hidden;
+	}
+}
+
+
+/*********************
+* Downline Tree
+*********************/
+.TreeNodeDetails {
+	width: 50%;
+	.GridUtility {
+		margin-bottom: 10px;
+	}
+}
+.FlatTree {
+	margin: 0 10px 10px 10px;
+	padding: 10px 10px 0 10px;
+}
+#treeViewNodeDetails li {
+	padding: .5em;
+}
+
+.jstree-default {
+	ul {
+		margin:0;
+		padding:0;
+		li {
+			display:block;
+			padding:.5em;
+			position: relative;
+			ins {
+				text-decoration:none;
+				display:inline-block;
+			}
+			li {
+				padding-left: 1em;
+			}
+			&:nth-child(even) {
+				background-color: tint(#efefef,50%);
+			}
+			.jstree-icon {
+				display: inline-block;
+				width:16px;
+				height:16px;
+				margin-right: .1em;
+				font-size: em(20);
+				color: #000;
+				cursor: pointer;
+				&.PreferredCustomer, &.Distributor {
+					@include border-radius(25px);
+				}
+				&.PreferredCustomer {
+					background: #CEB998;
+				}
+				&.Distributor {
+					background: #7F7FB5;
+				}
+				&:hover {
+					color: tint(#000,50%);
+				}
+			}
+			&.jstree-closed {
+				ul {
+					display:none;
+				}
+			}			
+			&.jstree-leaf {
+				.jstree-icon {
+					cursor: default;
+					&:before, .ie7Icon {
+						content: "";
+					}
+				}
+			}
+			a {
+				display: inline-block;
+				&.jstree-hovered, &.jstree-clicked {
+					font-weight:bold;
+				}
+				.jstree-icon {
+					&:before, .ie7Icon {
+						content: "" !important;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+.jstree-default .jstree-no-icons a .jstree-icon { display:none; }
+
+.jstree-default .jstree-search {}

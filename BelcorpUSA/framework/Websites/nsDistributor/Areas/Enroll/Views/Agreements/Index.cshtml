@@ -1,0 +1,16 @@
+﻿@model IEnumerable<nsDistributor.Areas.Enroll.Models.Agreements.AgreementModel>
+@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+}
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.EditorForModel()
+
+    <span class="clr"></span>
+    <p class="FormSubmit enrollSectionBtns">
+        <a href="javascript:void(0);" class="Button btnContinue agreeToTerms" data-click-submit="parent">
+            <span>@Html.Term("Enrollment_Agreements_SubmitButtonLabel", "Continue")</span>
+        </a>
+    </p>
+    @Html.AntiForgeryToken()
+}

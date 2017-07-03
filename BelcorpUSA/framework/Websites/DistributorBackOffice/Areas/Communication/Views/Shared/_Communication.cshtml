@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "_Communication";
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@section head{
+    @RenderSection("head", false)
+}
+@section breadcrumb {
+    @RenderSection("breadcrumb", false)
+}
+@section title {
+    @RenderSection("title", false)
+}
+@section ActionItems {
+    @Html.Partial("_CommunicationLinksPartial")
+}
+@section SideBarExtras {
+    <!-- MAILBOX FOLDERS -->
+    <div class="SavedReports">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title UI-btn">@Html.Term("MailBoxFolders", "Mailbox Folders")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                <li><a href="@Href("~/Communication/Email/Mailbox?folder=Inbox")"><span>@Html.Term("Inbox")</span></a></li>
+                <li><a href="@Href("~/Communication/Email/Mailbox?folder=SentItems")"><span>@Html.Term("Sent")</span></a></li>
+                <li><a href="@Href("~/Communication/Email/Mailbox?folder=Outbox")"><span>@Html.Term("Outbox")</span></a></li>
+                <li><a href="@Href("~/Communication/Email/Mailbox?folder=Drafts")"><span>@Html.Term("SavedDrafts", "Saved Drafts")</span></a></li>
+                <li><a href="@Href("~/Communication/Email/Mailbox?folder=Trash")"><span>@Html.Term("Trash")</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="SavedReports" style="display: none;">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title UI-btn">@Html.Term("DistributionLists", "Distribution Lists")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                <li><a href="javascript:void(0);"><span>Contacts</span></a></li>
+                <li><a href="javascript:void(0);"><span>Personal Team</span></a></li>
+                <li><a href="javascript:void(0);"><span>PCs</span></a></li>
+            </ul>
+        </div>
+    </div>
+    @*            <div class="SavedReports">
+                <div class="WidgetTitle UI-btn">
+                    <span class="Title UI-btn">@Html.Term("Campaigns")</span>
+                </div>
+                <div class="listBody">
+                    <ul class="listNav">
+                        @foreach (Campaign campaign in ViewBag.Campaigns)
+                        {
+                            <li><a href="@Href("~/Communication/Campaigns/Edit", campaign.CampaignID)">@campaign.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>*@
+    @if (ViewBag.External && ViewBag.Groups != null)
+    {
+        @Html.Partial("_Groups")
+    }
+}
+@RenderBody()

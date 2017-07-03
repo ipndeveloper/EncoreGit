@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file is used only on build machine for copying and transforming App projects. Using Release build as a pattern, it creates all other
+	configs. TransformXml is called to create .config files for all other applicable configs.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+  <Target Name="CMTransform" AfterTargets="Build" Condition="$(CMBuild) != '' and '$(Configuration)' == 'Release' and Exists('$(MSBuildProjectDirectory)\CMTransform.marker')">
+    <ItemGroup>
+      <ReleaseFolder Include="$(MSBuildProjectDirectory)\bin\Release\**\*.*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(ReleaseFolder)"
+      DestinationFiles="@(ReleaseFolder->'$(MSBuildProjectDirectory)\bin\Staging\%(RecursiveDir)%(Filename)%(Extension)')"
+    />
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\bin\Staging\$(TargetFileName).config"
+	/>
+    <Copy
+      SourceFiles="@(ReleaseFolder)"
+      DestinationFiles="@(ReleaseFolder->'$(MSBuildProjectDirectory)\bin\Testing\%(RecursiveDir)%(Filename)%(Extension)')"
+    />
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\bin\Staging\$(TargetFileName).config"
+	/>
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\app.config')" Source="app.config" Destination="$(MSBuildProjectDirectory)\bin\Staging\$(TargetFileName).config" Transform="app.Staging.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\app.config')" Source="app.config" Destination="$(MSBuildProjectDirectory)\bin\Testing\$(TargetFileName).config" Transform="app.Testing.config" />
+  </Target>
+  <Target Name="TransformOnly" Condition="$(CMBuild) != '' and '$(TransformOnlyBuild)' != '' and '$(Configuration)' == 'Release' and ((Exists('$(MSBuildProjectDirectory)\CMTransformWeb.marker') and Exists('web.$(Configuration).config')) or (Exists('$(MSBuildProjectDirectory)\CMTransform.marker') and Exists('app.$(Configuration).config')))">
+    <!-- Generate transformed app config in the bin/config directories. -->
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\bin\Release\$(TargetFileName).config"
+	/>
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\bin\Staging\$(TargetFileName).config"
+	/>
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\bin\Testing\$(TargetFileName).config"
+	/>
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\app.config')" Source="app.config" Destination="$(MSBuildProjectDirectory)\bin\Release\$(TargetFileName).config" Transform="app.Release.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\app.config')" Source="app.config" Destination="$(MSBuildProjectDirectory)\bin\Staging\$(TargetFileName).config" Transform="app.Staging.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\app.config')" Source="app.config" Destination="$(MSBuildProjectDirectory)\bin\Testing\$(TargetFileName).config" Transform="app.Testing.config" />
+    <!-- Generate transformed web.config in the target directories. -->
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\obj\Release\Package\PackageTmp\Web.config"
+	/>
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\obj\Staging\Package\PackageTmp\Web.config"
+	/>
+	<Delete
+	  Files="$(MSBuildProjectDirectory)\obj\Testing\Package\PackageTmp\Web.config"
+	/>
+    <ItemGroup>
+      <OtherPrebuildFiles Include="$(MSBuildProjectDirectory)\Enrollment.xml" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\Release\Package\PackageTmp"
+	  ContinueOnError="true"
+    />
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\Staging\Package\PackageTmp"
+	  ContinueOnError="true"
+    />
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\Testing\Package\PackageTmp"
+	  ContinueOnError="true"
+    />
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\CWSRelease\Package\PackageTmp"
+	  Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Release.config')"
+	  ContinueOnError="true"
+    />
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\CWSStaging\Package\PackageTmp"
+	  Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Staging.config')"
+	  ContinueOnError="true"
+    />
+    <Copy
+      SourceFiles="@(OtherPrebuildFiles)"
+      DestinationFolder="$(MSBuildProjectDirectory)\obj\CWSTesting\Package\PackageTmp"
+	  Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Testing.config')"
+	  ContinueOnError="true"
+    />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\Release\Package\PackageTmp\Web.config" Transform="Web.Release.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\Staging\Package\PackageTmp\Web.config" Transform="Web.Staging.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\Testing\Package\PackageTmp\Web.config" Transform="Web.Testing.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Release.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\CWSRelease\Package\PackageTmp\Web.config" Transform="Web.CWS.Release.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Staging.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\CWSStaging\Package\PackageTmp\Web.config" Transform="Web.CWS.Staging.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Testing.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\obj\CWSTesting\Package\PackageTmp\Web.config" Transform="Web.CWS.Testing.config" />
+  </Target>
+</Project>

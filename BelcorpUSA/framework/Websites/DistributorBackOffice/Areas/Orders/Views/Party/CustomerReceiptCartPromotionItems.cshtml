@@ -1,0 +1,59 @@
+﻿@model System.Collections.Generic.IEnumerable<IGrouping<IOrderAdjustment, IOrderItem>>
+       
+@using NetSteps.Data.Common.Entities
+@using NetSteps.Encore.Core.IoC
+
+@{
+    var inventory = Create.New<InventoryBaseRepository>();
+}
+@foreach (var grouping in Model)
+{
+    <tr class="UI-lightBg specialPromotionItem bold autoGift">
+        <td class="center noText">
+            <span class="UI-icon icon-star"></span>
+        </td>
+        <td>
+            <span class="promoHeader">@Html.Term(grouping.Key.Description, grouping.Key.Description)</span>
+            @foreach (var step in grouping.Key.InjectedOrderSteps)
+            { 
+                <a href="javascript:void(0);" class="selectGift" stepId="@step.OrderStepReferenceID">@Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>
+            }
+        </td>
+        <td>
+            @((0M).ToString(((OrderAdjustment)grouping.Key).Order.CurrencyID))
+        </td>
+        <td class="center cartQty">
+            1
+        </td>
+        <td>
+        </td>
+        <td>
+            @((0M).ToString(((OrderAdjustment)grouping.Key).Order.CurrencyID))
+        </td>
+    </tr>
+    
+    foreach (var item in grouping)
+    {
+        var product = inventory.GetProduct(item.ProductID.ToInt());
+        
+        <tr>
+            <td>
+                @item.ProductID
+            </td>
+            <td class="promoItemName">
+                @product.Translations.Name()<br />
+                <span class="promoName">@Html.Term(grouping.Key.Description, grouping.Key.Description)</span>
+            </td>
+            <td>
+                <span class="FL freeItemPrice">@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+            </td>
+            <td class="center cartQty">
+                @item.Quantity
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+        </tr>
+    }
+}

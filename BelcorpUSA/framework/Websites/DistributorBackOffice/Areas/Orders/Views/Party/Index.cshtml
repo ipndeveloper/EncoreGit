@@ -1,0 +1,663 @@
+@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = Html.Term("PartySetup", "Party Setup");
+    var hostAccount = ViewBag.HostAccount;
+}
+@section head {
+    <link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/timepickr.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jcrop.css")" />
+    <script type="text/javascript" src="@Href("~/Resource/Scripts/timepickr.js")"></script>
+    <script src="@Href("~/Resource/Scripts/fileuploader.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $('#txtEmail, #txtFirstName, #txtLastName').change(function () {
+                $('#accountId').val('');
+            });
+
+            $('#txtEvitesEmail').watermark('@Html.JavascriptTerm("EmailHint", "Enter email address")');
+            $("#chkUseEvites").click(function () {
+                $(this).is(':checked') && $("#evites").slideDown() || $("#evites").slideUp();
+            });
+            $('#txtFirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")').jsonSuggest('@Href("~/Orders/Party/SearchAccounts")', { onSelect: function (item) {
+                $('#accountId').val(item.id);
+                $.get('@Href("~/Orders/Party/GetAccount")', { accountId: item.id }, function (response) {
+                    if (response.result) {
+
+                        $('#txtFirstName').val(response.firstName);
+                        $('#txtLastName').val(response.lastName);
+                        if (!$('#txtPartyName').val()) {
+                            $('#txtPartyName').val(response.firstName + ' ' + response.lastName);
+                        }
+                        $('#phone').phone('setPhone', response.phone);
+                        $('#txtEmail').val(response.email);
+
+                        $('#HostAddress_Country').val(response.country);
+
+                        var changeCountryUrl = '/Account/BillingShippingProfiles/GetAddressControl', excludeFields = eval('["ProfileName","Name"]');
+
+                        var data = { countryId: $('#HostAddress_Country').val(), addressId: '0', prefix: 'HostAddress_', showCountrySelect: 'False' };
+                        if (excludeFields && excludeFields.length) {
+                            for (var i = 0; i < excludeFields.length; i++) {
+                                data['excludeFields[' + i + ']'] = excludeFields[i];
+                            }
+                        }
+                        $.get(changeCountryUrl, data, function (responseAddressHtml) {
+                            if (responseAddressHtml.result === undefined || responseAddressHtml.result) {
+                                $('#HostAddress_AddressControl').html(responseAddressHtml);
+                                var phone = $('#HostAddress_AddressControl .PhoneNumber');
+                                if (phone.length && phone.is('td,span,div,p') && phone.phone) {
+                                    phone.phone();
+                                }
+                                changeCallBack(response);
+                            } else {
+                                showMessage(responseAddressHtml.message, true);
+                            }
+                        });
+
+
+                        window['hostAddressPostalCodeLookupComplete'] = function () {
+                            $('#HostAddress_City').val(response.city);
+                            $('#HostAddress_County').val(response.county);
+                            $('#HostAddress_State').val(response.state);
+                            window['hostAddressPostalCodeLookupComplete'] = undefined;
+
+                        };
+
+
+
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }, minCharacters: 3, ajaxResults: true, maxResults: 50, showMore: true, width: $('#txtFirstName').outerWidth(true) + $('#txtLastName').outerWidth()
+            });
+            $('#txtLastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+
+            function changeCallBack(response) {
+                $('#HostAddress_AddressControl .City').val(response.city);
+                $('#HostAddress_AddressControl .County').val(response.county);
+                $('#HostAddress_AddressControl .State').val(response.state);
+                $('#HostAddress_AddressControl .Address1').val(response.address1);
+                $('#HostAddress_AddressControl .Address2').val(response.address2);
+                $('#HostAddress_AddressControl .Address3').val(response.address3);
+
+                var postalCodeControls = $('#HostAddress_AddressControl .PostalCode');
+                if (postalCodeControls.length == 1) {
+                    postalCodeControls.val(response.postalCode).triggerHandler('keyup');
+                }
+                else {
+                    var zip = (response.postalCode) ? response.postalCode : '';
+                    var position = 0;
+                    postalCodeControls.each(function () {
+                        var length = $(this).attr('maxlength');
+                        $(this).val(zip.substr(position, length));
+                        position += length;
+                    }).filter(':last').triggerHandler('keyup');
+                }
+            }
+            var monthAgo = new Date();
+            monthAgo.setDate(monthAgo.getDate() - 30);
+            $('#txtPartyDate').watermark('@Html.JavascriptTerm("DateFormat", "mm/dd/yyyy")').datepicker({ changeMonth: true, changeYear: true, minDate: monthAgo, yearRange: '-5:+5' });
+            $('#txtPartyTime').timepickr({ convention: 12 });
+
+            $('#phone').phone().phone('setPhone', '@(hostAccount == null ? "" : hostAccount.MainPhone)');
+
+            $('input[name="partyLocation"]').click(function () {
+                var target = $('#' + $(this).attr('id').replace(/^rb/, ''));
+                if (target.is(':hidden')) {
+                    $('#PartyLocationContainer .PartyLocation').slideUp();
+                    target.slideDown();
+                }
+            });
+
+            $('input[name="partyShip"]').click(function () {
+                var target = $('#' + $(this).attr('id').replace(/^rb/, ''));
+                if (target.is(':hidden')) {
+                    $('#PartyShipContainer .PartyShip').slideUp();
+                    target.slideDown();
+                }
+            });
+
+            $('#consultantProfiles .address').click(function () {
+                $('#consultantProfiles .address.defaultProfile').removeClass('defaultProfile');
+                $(this).addClass('defaultProfile');
+                $('#addressPreview').html($(this).next().html());
+            });
+
+            var formatHostAddress = function () {
+
+                var $container = $('#HostAddress_AddressControl');
+                $.post('@Href("~/Orders/Party/FormatAddress")', {
+
+                    firstName: $('#txtFirstName').val() == $('#txtFirstName').data('watermark') ? '' : $('#txtFirstName').val(),
+                    lastName: $('#txtLastName').val() == $('#txtLastName').data('watermark') ? '' : $('#txtLastName').val(),
+                    attention: $('#hostAddressAttention').val(),
+                    address1: $container.find('.Address1').val(),
+                    address2: $container.find('.Address2').val(),
+                    address3: $container.find('.Address3').val(),
+                    zip: $('#HostAddress_AddressControl .PostalCode').val(),
+                    city: $container.find('.City').val(),
+                    county: $container.find('.County').val(),
+                    state: $container.find('.State :selected').val(),
+                    country: $('#HostAddress_Country').val()
+                }, function (response) {
+                    if (response.result) {
+                        $('.hostAddress').html(response.address);
+                    }
+                });
+            }, formatHostAddressTimeout,
+			formatHostAddressHandler = function () {
+			    if (formatHostAddressTimeout)
+			        window.clearTimeout(formatHostAddressTimeout);
+			    formatHostAddressTimeout = window.setTimeout(formatHostAddress, 500);
+			};
+
+            if ('@ViewBag.IsPartyAtHosts' === 'True') {
+                $('#rbPartyAddressHost').click();
+            } else {
+                $('#rbPartyAddressSeparate').click();
+            }
+            $('#rbPartyShip' + '@ViewBag.ShipTo').click();
+
+            $('#hostAddressContainer input,#txtLastName').live('keyup', formatHostAddressHandler);
+            $('#hostAddressContainer select').live('change', formatHostAddressHandler);
+            $('body').ajaxComplete(function (e, xhr, settings) {
+                if (settings.url.indexOf('FormatAddress') < 0)
+                    formatHostAddressHandler();
+            });
+
+            $('#btnPreview').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Href("~/Orders/Party/SetupHostInvitePreview")', {
+                    content: $('#txtPersonalizedContent').val()
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        var w = window.open('@Href("~/Orders/Party/PreviewHostInvite")');
+                        if (!w) {
+                            showMessage('@Html.Term("HostInvitePopupBlocked", "We have detected that your host invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                        } else {
+                            //test for Chrome, since it still gives us a handle - DES
+                            w.onload = function () {
+                                setTimeout(function () {
+                                    if (w.screenX === 0)
+                                        showMessage('@Html.Term("HostInvitePopupBlocked", "We have detected that your host invite preview was blocked.  Please turn off your popup blocker to see this.")', true);
+                                }, 0);
+                            };
+                        }
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#btnNext').click(function () {
+                if (!$('#ContentColumn').checkRequiredFields()) {
+                    return false;
+                }
+                $('#ContentColumn input').filter(function () { return !!$(this).data('watermark'); }).each(function () {
+                    if ($(this).val() == $(this).data('watermark')) {
+                        $(this).val('');
+                    }
+                });
+                var t = $(this).parent();
+                ValidateAddress(t);
+            });
+
+            $('#btnEvitesHelp').live('click', function () {
+                $('#UseEvitesHelp').jqm({
+                    modal: false,
+                    overlay: 0.01
+                }).jqmShow();
+            });
+        });
+
+                 function getAddress(selector) {
+                 	var countryID = $(selector + 'Country');
+                 	var address1 = $(selector + 'Address1').val();
+                 	var address2 = $(selector + 'Address2').val();
+                 	var address3 = $(selector + 'Address3').val();
+                 	var city = $(selector + 'City').val();
+                 	var state = $(selector + 'State :selected').text();
+                 	var county = $(selector + 'AddressControl .County').val() || '';
+                 	var postalCode = $(selector + 'AddressControl .PostalCode').val();
+                 	var country = $(selector + 'Country :selected').data("countrycode");
+                 	var countryID = $(selector + 'Country :selected').val();
+
+            return abstractAddressValidation({
+                address1: $(selector + 'Address1').val(),
+                address2: $(selector + 'Address2').val(),
+                address3: $(selector + 'Address3').val(),
+                city: $(selector + 'City').val(),
+                state: $(selector + 'State :selected').text(),
+                county: $(selector + 'AddressControl .County').val() || '',
+                postalCode: $(selector + 'AddressControl .PostalCode').val(),
+                country:  $(selector + 'Country :selected').data("countrycode"),
+                countryID: $(selector + 'Country :selected').val()
+
+            });
+        }
+
+        function syncAddress(data, identifier, address) {
+            data[identifier + '.Address1'] = address.address1;
+            data[identifier + '.Address2'] = address.address2;
+            data[identifier + '.Address3'] = address.address3;
+            data[identifier + '.PostalCode'] = address.postalCode;
+            data[identifier + '.City'] = address.city;
+            data[identifier + '.County'] = address.county;
+        	data[identifier + '.StateProvince'] = address.state;
+            data[identifier + '.State'] = address.state;
+            data[identifier + '.CountryCode'] = address.country;
+            data[identifier + '.CountryID'] = address.countryID;
+        }
+
+        function ValidateAddress(sender) {
+            var validation;
+            if ($('input[name="partyShip"]:checked').val() == 'Host') {
+                validation = getAddress('#HostAddress_');
+            }
+
+            else if ($('input[name="partyShip"]:checked').val() == 'Other') {
+                validation = getAddress('#partyShip');
+            }
+            else if ($('input[name="partyShip"]:checked').val() == 'Consultant') {
+                validation = getAddress('#HostAddress_');
+            }
+
+            if (validation) {
+                validation.init();
+            }
+
+
+            $(document).bind("validAddressFound", function (event, address) {
+                var p = sender;
+                showLoading(p);
+                var data = {
+                    PartyID: '@(Model.PartyID == 0 ? "" : Model.PartyID.ToString())',
+                    PartyName: $('#txtPartyName').val(),
+                    PartyDate: $('#txtPartyDate').val(),
+                    PartyTime: $('#txtPartyTime').val(),
+                    ListOnPWS: $('#chkListOnPWS').is(':checked'),
+                    UseEvites: $('#chkUseEvites').is(':checked'),
+                    PartyIsAtHosts: $('#rbPartyAddressHost').is(':checked'),
+                    ShipTo: $('input[name="partyShip"]:checked').val()
+                };
+
+
+                $.extend(data, {
+                    'Host.AccountID': $('#accountId').val(),
+                    'Host.FirstName': $('#txtFirstName').val(),
+                    'Host.LastName': $('#txtLastName').val(),
+                    'Host.Email': $('#txtEmail').val(),
+                    'Host.PhoneNumber': $('#phone').phone('getPhone'),
+                    
+                    'Host.AddressNew.Attention': $('#HostAddress_Attention').val(),                
+                    'Host.AddressNew.Address1': $('#HostAddress_Address1').val(),
+                    'Host.AddressNew.Address2': $('#HostAddress_Address2').val(),
+                    'Host.AddressNew.Address3': $('#HostAddress_Address3').val(),
+                    'Host.AddressNew.PostalCode': $('#hostAddressContainer .PostalCode').val(),
+                    'Host.AddressNew.City': $('#HostAddress_City').val(),
+                    'Host.AddressNew.County': $('#HostAddress_County :selected').text(),
+                    'Host.AddressNew.StateProvince': $('#HostAddress_State :selected').text(),
+                    'Host.AddressNew.CountryID': $('#HostAddress_Country :selected').val(),
+                    'Host.AddressNew.CountryCode': $('#HostAddress_Country :selected').data('countrycode')
+
+                });
+
+                syncAddress(data, 'Host.AddressNew', address);
+
+                var hasValue = '@(Model.ParentPartyID.HasValue)';
+                if (hasValue == 'True') {
+                    data.ParentPartyID = '@(Model.ParentPartyID)';
+                    if ('@(Model.PartyID == 0)' == 'True') {
+                        data.IsBooking = 'true';
+                    }
+                }
+
+                if (data.UseEvites) {
+                    data.EvitesEmail = $('#txtEvitesEmail').val();
+                    data.PersonalizedContent = $('#txtPersonalizedContent').val();
+                }
+                if (data.PartyIsAtHosts) {
+                    syncAddress(data, 'PartyAddress', address);
+                }
+                else {
+                    data['PartyAddress.Address1'] = $('#partyLocationAddress1').val();
+                    data['PartyAddress.Address2'] = $('#partyLocationAddress2').val();
+                    data['PartyAddress.Address3'] = $('#partyLocationAddress3').val();
+                    data['PartyAddress.PostalCode'] = $('#partyLocationZip').val();
+                    data['PartyAddress.City'] = $('#partyLocationCity').val();
+                    data['PartyAddress.County'] = $('#partyLocationCounty').val() || '';
+                    data['PartyAddress.State'] = $('#partyLocationState').val();
+                    data['PartyAddress.StateProvinceID'] = $('#partyLocationState').val();
+                    data['PartyAddress.CountryID'] = $('#partyLocationCountry').val();
+                }
+
+                if (data.ShipTo == 'Consultant') {
+                    data.ShipToAddressID = $('#consultantProfiles .address.defaultProfile').attr('id').replace(/\D/g, '');
+                }
+                if (data.ShipTo == 'Other') {
+                    syncAddress(data, 'ShippingAddress', address);
+                }
+
+                $.post('@Href("~/Orders/Party/SavePartySetup")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Orders/Party/Cart")';
+                    } else {
+                        hideLoading(p);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        }
+    </script>
+}
+@section breadcrumb {
+    @Html.Term("Party", "Party")
+}
+@section title {
+    @Html.Term("PartySetup", "Party Setup")
+}
+<div class="brdr1 brdrAll mb10 partySection-Host">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">
+            @Html.Term("WhoIsHostingYourParty?", "Who is hosting your party?")</div>
+    </div>
+    <div class="pad10">
+        <div class="FL splitCol40">
+            <div class="FormTable">
+                <div class="FormRow">
+                    <label for="txtFirstName">
+                        <span class="req">*</span>@Html.Term("HostName", "Host Name"):</label>
+                    <div class="data">
+                        <input id="txtFirstName" type="text" class="required firstNameField" name="@Html.Term("FirstNameReqiured", "First Name is required.")" value="@(hostAccount == null ? "" : hostAccount.FirstName)" />
+                        <input id="txtLastName" type="text" class="required lastNameField" name="@Html.Term("LastNameRequired", "Last Name is required.")" value="@(hostAccount == null ? "" : hostAccount.LastName)" />
+                        <input type="hidden" id="accountId" value="@(hostAccount == null ? "" : hostAccount.AccountID.ToString())" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FormRow">
+                    <label for="txtEmail">
+                        <span class="req">*</span>@Html.Term("Email"):</label>
+                    <div class="data">
+                        <input id="txtEmail" type="text" value="@(hostAccount == null ? "" : hostAccount.EmailAddress)" class="required" name="@Html.Term("EmailRequired", "Email is required.")" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FormRow">
+                    <label for="txtAreaCode">
+                        @Html.Term("PhoneNumber", "Phone Number"):</label>
+                    <div class="data" id="phone">
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="FL splitCol60">
+            <div id="hostAddressContainer">
+                @Html.Partial("Address", new AddressModel()
+                    {
+                        Address = ViewBag.HostAddress,
+                        LanguageID = CoreContext.CurrentLanguageID,
+                        ShowCountrySelect = ViewBag.ShowCountrySelect ?? true,
+                        Country = ViewBag.Country,
+                        ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                        ExcludeFields = new List<string>() { "ProfileName", "Name" },
+                        Prefix = "HostAddress_"
+                    })
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="brdr1 brdrAll mb10 partySection-Specifics">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">
+            @Html.Term("PartySpecifics", "Party Specifics")</div>
+    </div>
+    <div class="pad10">
+        <div class="FL FormTable splitCol40">
+            <div class="FormRow">
+                <label for="txtPartyName">
+                    @Html.Term("PartyName", "Party Name"):</label>
+                <div class="data">
+                    <input id="txtPartyName" type="text" class="partyName" value="@Model.Name" />
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="FL FormTable splitCol60">
+            <div class="FormRow">
+                <label for="txtPartyDate">
+                    @Html.Term("PartyDateAndTime", "Party Date and Time"):</label>
+                <div class="data">
+                    <input id="txtPartyDate" type="text" class="DatePicker" value="@Model.StartDate.ToShortDateString()" />
+                    <input id="txtPartyTime" type="text" class="TimePicker" value="@Model.StartDate.ToShortTimeString()" />
+                </div>
+                <br />
+            </div>
+        </div>
+        <span class="clr"></span>
+        <hr class="mb10" />
+        <div class="UI-lightBg pad5 brdrAll partyOptions">
+            <p class="FL mr10">
+                <input type="checkbox" id="chkListOnPWS" @Html.Raw(Model.ShowOnPWS || Model.PartyID == 0 ? "checked=\"checked\"" : "") /><label
+                    for="chkListOnPWS">@Html.Term("ListThisPartyOnMyPWS", "List this party on my PWS")</label>
+            </p>
+            <p class="FL ml10">
+                <span class="FL mr10">
+                    <input type="checkbox" id="chkUseEvites" @Html.Raw(Model.UseEvites || Model.PartyID == 0 ? "checked=\"checked\"" : "") /><label
+                        for="chkUseEvites">@Html.Term("UseEVites", "Use e-Vites")</label>
+                </span><a href="javascript:void(0);" id="btnEvitesHelp" class="FL UI-icon-container" title="@Html.Term("WhatAreEvites", "What are e-Vites?")">
+                    <span class=" UI-icon icon-help"></span></a><span class="clr"></span>
+            </p>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>
+<div id="evites" class="brdr1 brdrAll mb10 partySection-eVites" @Html.Raw(Model.UseEvites || Model.PartyID == 0 ? "" : "style=\"display:none;\"")>
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">
+            @Html.Term("e-Vites")</div>
+    </div>
+    <div class="pad10">
+        <div class="FL FormTable splitCol mr10">
+            <div class="FormRow">
+                <label for="txtPartyName">
+                    @Html.Term("OrganizersEmail", "Organizer's Email"):</label>
+                <div class="data">
+                    <input type="text" id="txtEvitesEmail" value="@Model.EviteOrganizerEmail" class="fullWidth" />
+                </div>
+                <br />
+            </div>
+        </div>
+        @if (ViewBag.HasHostInviteContent)
+        {
+            <div class="FL FormTable splitCol">
+                <div class="FormRow">
+                    <label for="txtPersonalizedContent">
+                        @Html.Term("PersonalizedContent", "Personalized Content"):</label>
+                    <div class="data">
+                        <textarea id="txtPersonalizedContent" rows="" cols="" style="width: 95%; height: 100px;"></textarea>
+                        <span class="clr"></span><a href="javascript:void(0);" id="btnPreview" class="Button MoreOptions">
+                            <span>@Html.Term("PreviewHostInvite", "Preview Host Invite")</span></a>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        }
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="brdr1 brdrAll mb10 partySection-Location">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">@Html.Term("WhereIsThePartyTakingPlace", "Where is the party taking place?")</div>
+    </div>
+    <div class="pad10">
+        <div class="FormTable FL splitCol40 mr10">
+            <div class="FormRow mb10">
+                <div class="data">
+                    <input id="rbPartyAddressHost" type="radio" name="partyLocation" class="FL mb10 mr10" />
+                    <label for="rbPartyAddressHost" class="FL splitCol70">
+                        @Html.Term("ThisPartyIsAtTheHostsAddress", "This party is at the host's address")</label>
+                    <span class="clr"></span>
+                </div>
+                <br />
+            </div>
+            <div class="FormRow">
+                <div class="data">
+                    <input id="rbPartyAddressSeparate" type="radio" name="partyLocation" class="FL mb10 mr10" />
+                    <label for="rbPartyAddressSeparate" class="FL splitCol70">
+                        @Html.Term("INeedToEnterASeparateLocationForTheParty", "I need to enter a separate location for the party")</label>
+                    <span class="clr"></span>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="FormBlock FL splitCol60 ml10" id="PartyLocationContainer">
+            <div id="PartyAddressHost" class="hostAddress PartyLocation pad5 UI-lightBg brdrAll bold" style="@(Model.PartyID > 0 ? "display:none;" : "")">
+            </div>
+            <div id="PartyAddressSeparate" class="PartyLocation" style="@(Model.PartyID > 0 ? "" : "display:none;")">
+                @Html.Partial("Address", new AddressModel()
+                        {
+                            Address = Model.Address,
+                            LanguageID = CoreContext.CurrentLanguageID,
+                            ShowCountrySelect = ViewBag.ShowCountrySelect ?? true,
+                            Country = ViewBag.Country,
+                            ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                            ExcludeFields = new List<string>() { "ProfileName", "Name" },
+                            Prefix = "partyLocation"
+                        })
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="brdr1 brdrAll mb10 partySection-Shipping">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">
+            @Html.Term("ShipThisPartysOrderTo", "Ship this party's order to...")</div>
+    </div>
+    <div class="pad10">
+        @{bool hasAddresses = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == ConstantsGenerated.AddressType.Shipping.ToInt()).Count() > 0;}
+        <div class="FormTable FL splitCol40 mr10">
+            <div class="FormRow">
+                <div class="data">
+                    <input id="rbPartyShipHost" type="radio" name="partyShip" value="Host" checked="checked" />
+                    <label for="rbPartyShipHost" style="float: none;">
+                        @Html.Term("Host")</label>
+                </div>
+                <br />
+            </div>
+            @if (hasAddresses)
+            {
+                <div class="FormRow">
+                    <div class="data">
+                        <input id="rbPartyShipConsultant" type="radio" name="partyShip" value="Consultant" />
+                        <label for="rbPartyShipConsultant" style="float: none;">
+                            @Html.Term("Me")</label>
+                    </div>
+                    <br />
+                </div>
+            }
+            <div class="FormRow">
+                <div class="data">
+                    <input id="rbPartyShipOther" type="radio" name="partyShip" value="Other" />
+                    <label for="rbPartyShipOther" style="float: none;">
+                        @Html.Term("Other")</label>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="FormBlock FL splitCol60 ml10" id="PartyShipContainer">
+            <div id="PartyShipHost" class="hostAddress PartyShip pad5 UI-lightBg brdrAll bold" style="@(Model.PartyID > 0 ? "display:none;" : "")">
+            </div>
+            <span class="clr"></span>
+            @if (hasAddresses)
+            {
+@*@{var shippingAddress = CoreContext.CurrentAccount.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);}*@
+                Address shippingAddress = ViewBag.ConsultantShippingAddress;
+                if (shippingAddress == null)
+                {
+                    shippingAddress = CoreContext.CurrentAccount.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Shipping);
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = CoreContext.CurrentAccount.Addresses[0];
+                    }
+                }
+
+                var shippingAddressList = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == Constants.AddressType.Shipping.ToInt()).OrderByDescending(a => a.IsDefault).ThenBy(a => a.AddressID);
+								
+                <div id="PartyShipConsultant" class="PartyShip" style="display: none;">
+                    <div class="splitpanel" style="width: auto;">
+                        @* <h5>
+                            @Html.Term("MyProfiles", "My Profiles")</h5>*@
+                        <div class="FL DefaultProfile pad5 UI-lightBg brdrAll bold mr10">
+                            @*  @Html.Term("Address"):*@
+                            <p id="addressPreview">
+                                @Html.Raw(shippingAddress.ToDisplay(false, true, true))
+                            </p>
+                        </div>
+                        <div class="FL ProfilesList ml10">
+                            <div class="">
+                                @Html.Term("MyProfiles", "My profiles"):
+                                <div id="consultantProfiles" class="">
+                                    @foreach (var address in shippingAddressList)
+                                    {
+                                        string profileName = address.ProfileName + (address.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                                        if (string.IsNullOrEmpty(profileName))
+                                        {
+                                            profileName = SmallCollectionCache.Instance.AddressTypes.GetById(address.AddressTypeID).GetTerm();
+                                        }
+                                        <a href="javascript:void(0);" id="address@(address.AddressID)" class="address overlay@(address.AddressID == shippingAddress.AddressID ? " defaultProfile" : "")" title="@address.Address1">
+                                            @profileName</a> <span class="address" style="display: none;">
+                                                @Html.Raw(address.ToDisplay(false, true, true))
+                                            </span>
+                                        <br />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="clr"></span>
+            }
+            <div id="PartyShipOther" class="PartyShip" style="@(Model.PartyID > 0 ? "" : "display:none;")">
+                <div id="partyShipAddressContainer">
+                    @Html.Partial("Address", new AddressModel()
+               {
+                   Address = ViewBag.ShippingAddress,
+                   LanguageID = CoreContext.CurrentLanguageID,
+                   ShowCountrySelect = ViewBag.ShowCountrySelect ?? true,
+                   Country = ViewBag.Country,
+                   ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                   ExcludeFields = new List<string>() { "ProfileName", "Name" },
+                   Prefix = "partyShip"
+               })
+                </div>
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="clr center PageSaveButtons" style="text-align: center;">
+    <a href="javascript:void(0);" id="btnNext" class="Button FormSubmit" style="float: none;
+        margin: auto;"><span>@Html.Term("Party_HostSetup_ContinueButton","Continue")</span></a> <span class="ClearAll">
+    </span>
+</div>
+<!-- help modal -->
+<div id="UseEvitesHelp" class="LModal jqmWindow helpWindow" style="width: 300px;
+    top: 10%; position: fixed;">
+    <div id="UseEvitesHelpContent" class="mContent">
+        <h2>@Html.Term("WhatAreEvites", "What are e-Vites?")</h2>
+        <p>
+            @Html.Term("Party_HostSetup_EvitesHelpText_1","e-Vites is a small section on your PWS that allows your party host to send out email invitations to potential party guests.")</p>
+        <p>
+            @Html.Term("Party_HostSetup_EvitesHelpText_2","Your party host will recieve an email with instructions on how to get to her e-Vites area. She'll then be able to send out invitations, track RSVPs, as well as track her Hostess Rewards.")</p>
+    </div>
+</div>
+@Html.Partial("AddressValidation")

@@ -1,0 +1,57 @@
+﻿@model DistributorBackOffice.Areas.Communication.Models.Newsletters.NewsletterInfoModel
+
+<script type="text/javascript">
+    $(function () {
+        $('#SelectedLanguageID').change(function () {
+            var selectedLanguageID = $(this).val();
+
+            $('#newsletterContentContainer').html('<img src="@Href("~/Content/Images/loader_36x36.gif")" alt="loading..." />');
+            $.post('/Communication/Newsletters/NewsletterContent', {
+                campaignActionID: $('#NewsletterInfoCampaignActionID').val(),
+                languageID: selectedLanguageID
+            }, function (response) {
+                $('#newsletterContentContainer').html(response);
+            });
+        });
+    });
+</script>
+@Html.HiddenFor(m => m.CampaignActionID, new { id = "NewsletterInfoCampaignActionID" })
+
+<div id="countdown" class="MonthlyNewsletter newsLetterCountDown">
+    @if (Model.TimeRemaining.HasValue)
+    {
+        @Html.Term("NewsletterCountdown", "The {0} will be sent out in {1} days, {2} hours", @Model.Name, @Model.TimeRemaining.Value.Days, @Model.TimeRemaining.Value.Hours)
+    }
+</div>
+
+@if (Model.ShowContent)
+{
+    <div>
+        <label>@Html.Term("Language"):</label>
+        @Html.DropDownListFor(m => m.SelectedLanguageID, Model.LanguageSelectList)
+    </div>
+
+    <div id="newsletterContentContainer">
+        @Html.Partial("NewsletterContent", Model.NewsletterContentModel)
+    </div>
+}
+
+@if (Model.ShowStats)
+{
+    <div class="clr newsLetterStats brdr1 brdrAll">
+        <div class="UI-bg UI-header pad5 brdrAll">
+            @Html.Term("NewsletterStatistics", "Newsletter Statistics")
+        </div>
+        <div class="newsletterStats pad5">
+            <div id="newsletterStatsContainer">
+                @{Html.RenderAction("Index", "MailStats", new
+                    {
+                        searchType = Constants.MailMessageGroupAddressSearchType.Sent,
+                        campaignActionID = Model.CampaignActionID,
+                        CampaignSubscriptionAddedByAccountID = CoreContext.CurrentAccount.AccountID,
+                        mailingDate = Model.MailingDate
+                    });}
+            </div>
+        </div>
+    </div>
+}

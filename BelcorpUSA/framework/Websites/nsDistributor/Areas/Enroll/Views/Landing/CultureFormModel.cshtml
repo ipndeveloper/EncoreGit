@@ -1,0 +1,30 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.CultureFormModel
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#CountryID option:selected').removeAttr("selected");
+        $("#CountryID option[value=73]'").attr("selected", true);
+        $('#LanguageID option:selected').removeAttr("selected");
+        $('#LanguageID option[value=5]').attr("selected", true);
+    });
+</script>
+<div class="pad5 FormContainer enrollment">
+    <div class="FRow">
+        <div class="FLabel">
+            @Html.LabelFor(m => m.CountryID, Html.Term("EnrollmentLocationLabel", "Select where you are located"))
+        </div>
+        <div class="FInput">
+           @Html.DropDownListFor(m => m.CountryID, Model.Countries.SetSelectedValue(Model.CountryID))
+           @Html.ValidationMessageFor(m => m.CountryID)
+        </div>
+    </div>
+                
+    <div class="FRow">
+        <div class="FLabel">
+            @Html.LabelFor(m => m.LanguageID, Html.Term("EnrollmentLanguageLabel", "Select your language preference"))
+        </div>
+        <div class="FInput">
+            @Html.DropDownListFor(m => m.LanguageID, Model.Languages.SetSelectedValue(Model.LanguageID))
+            @Html.ValidationMessageFor(m => m.LanguageID)
+        </div>
+    </div>
+</div>

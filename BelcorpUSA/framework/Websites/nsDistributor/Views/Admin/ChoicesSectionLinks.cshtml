@@ -1,0 +1,16 @@
+﻿<div>
+    @*<span class="NS-FL">@Html.Term("ContentControls","Content Controls")</span>*@
+    <ul class="NS-inlineNav">
+        <li><a href="javascript:void(0);" id="btnSave" style="display: none;" class="UI-icon-container"><span class="UI-icon icon-save"></span><span>@Html.Term("PublishContent", "Publish Content")</span></a></li>
+        @if (Model.HtmlSectionEditTypeID == (int)Constants.HtmlSectionEditType.ChoicesPlus || Model.HtmlSectionEditTypeID == (int)Constants.HtmlSectionEditType.ConsultantList)
+        {
+            <li><a href="javascript:void(0);" id="btnEdit" class="UI-icon-container" @Html.Raw(ViewBag.ShowEditLink ? "style=\"display:none;\"" : "")><span class="UI-icon icon-edit"></span><span>
+                @Html.Term("EditSelection", "Edit Selection")</span></a></li> 
+            <li><a href="javascript:void(0);" id="btnDelete" class="UI-icon-container NS_ButtonDelete" style="display: none;"><span class="UI-icon icon-trash"></span><span>
+                @Html.Term("DeleteSelection", "Delete Selection")</span></a></li>
+                
+            <li><a href="@Url.Resolve("~/Admin")" id="btnCancel" class="UI-icon-container NS_ButtonCancel"><span class="UI-icon icon-x"></span><span>@Html.Term("Cancel")</span></a></li>
+        }
+    </ul>
+    <span class="NS-clr"></span>
+</div>

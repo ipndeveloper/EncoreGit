@@ -1,0 +1,40 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Landing.IndexModel
+
+@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollLayout.cshtml";
+    ViewBag.Title = Html.Term("Enrollment_Landing_Title", "Join our Team");
+}
+
+<script>
+    $.ajax({
+
+        method: "get",
+        url: "/Logout"
+    })
+  .done(function (msg) {
+
+  });
+</script>
+
+<h1>@ViewBag.Title</h1>
+
+<div class="enrollmentCol_a">
+    <div class="UI-cmsWrap block enrollmentLandingCmsBlock1">
+        @ViewData["Enrollment_Landing_TopLeftContent"]
+    </div>
+
+    @Html.Messages()
+    @foreach (var enrollmentType in Model.EnrollmentTypes)
+    {
+        @Html.Partial("EnrollmentTypeModel", enrollmentType)
+    }
+  
+    <div class="UI-cmsWrap block enrollmentLandingCmsBlock2">
+        @ViewData["Enrollment_Landing_BottomLeftContent"]
+    </div>
+</div>
+<div class="enrollmentCol_b">
+    <div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Landing_CenterContent"]
+    </div>
+</div>

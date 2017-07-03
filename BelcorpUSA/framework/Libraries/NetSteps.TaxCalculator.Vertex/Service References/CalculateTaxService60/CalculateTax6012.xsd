@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2008-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="ReversalRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Reversal Request message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationRequestType">
+        <xsd:attributeGroup ref="ReversalTransactionGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReversalResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Reversal Response message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationResponseType">
+        <xsd:attributeGroup ref="ReversalTransactionGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:attributeGroup name="ReversalTransactionGroup">
+    <xsd:attribute name="originalTransactionId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The Transaction ID of the transaction to be reversed.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="transactionId" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An identifier that further defines the document and corresponds to the transaction stored in the host system. The Transaction ID is used for synchronization services, but is not used for reporting purposes.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="postingDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date when the transaction is posted for auditing and reporting purposes. If no date is provided, the Calculation Engine uses the date when the transaction was processed.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="documentNumber" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The document number in the host application that references the event.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+</xsd:schema>

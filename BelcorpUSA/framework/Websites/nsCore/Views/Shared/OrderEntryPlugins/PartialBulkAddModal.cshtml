@@ -1,0 +1,169 @@
+﻿@model OrderEntryModel
+@{
+    InventoryBaseRepository inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+    
+}
+
+
+
+<div id="bulkAddModal" class="jqmWindow LModal ProductWin" style="margin-left: 0px;">
+    <div class="mContent" style="width: 36.364em; height: 38em;">
+        <h2>
+            @Html.Term("BulkProductAdd", "Bulk Product Add")</h2>
+        <p>
+            @Html.Term("FilterBy", "Filter by"):
+            <select id="catalogFilter">
+                @{
+                    bool first = true;
+                }
+                @foreach (Catalog catalog in ViewData["Catalogs"] as IEnumerable<Catalog>)
+                {
+                    if (first)
+                    {
+                        <option value="0" "selected=\"selected\""> @Html.Term("SelectaSupportTicketCategory","Select a Category...")</option> 
+                    }
+                    <option value="@catalog.CatalogID">
+                        @catalog.Description</option>
+                    
+                    first = false;
+                }
+            </select>
+            <a href="javascript:void(0);" class="FR" onclick="$('#bulkAddModal .quantity').val(0);">
+                @Html.Term("ResetQuantities", "Reset quantities")</a>
+            <img id="catalogLoading" class="FR" src="@Href("~/Content/Images/Icons/loading-blue.gif")"
+                alt="@Html.Term("Loading", "loading...")" style="display: none; position: relative;
+                top: -10px; right: 3.182em;" />
+        </p>
+        <table cellspacing="0" cellpadding="0" width="100%;" class="DataGrid">
+            <tr class="GridColHead">
+                <th style="width: 7.273em;">
+                    @Html.Term("SKU", "SKU")
+                </th>
+                <th style="width: 10.909em;">
+                    @Html.Term("Product", "Product")
+                </th>
+                <th style="width: 4.545em;">
+                    @Html.Term("UnitPrice", "Unit Price")
+                </th>
+                <th style="width: 4.545em;">
+                    @Html.Term("Quantity", "Quantity")
+                </th>
+            </tr>
+        </table>
+        <div style="height: 22em; overflow: auto; border-bottom: .091em solid #efefef;">
+            <table id="bulkProductCatalog" cellspacing="0" cellpadding="0" width="100%" class="DataGrid">
+                @{
+                    int count = 0;
+                }
+                @if ((ViewData["Catalogs"] != null))
+                {
+                    if ((ViewData["Catalogs"] as IEnumerable<Catalog>).Count() > 0 && Model.LoadBulkAddModal)
+                    {
+                        var products = inventory.GetActiveProductsForCatalog(NetSteps.Data.Entities.ApplicationContext.Instance.StoreFrontID, (ViewData["Catalogs"] as IEnumerable<Catalog>).First().CatalogID).OrderBy(x => x.SKU).Where(p => p.ContainsPrice(CoreContext.CurrentAccount.AccountTypeID, SmallCollectionCache.Instance.Countries.First(c => c.MarketID == CoreContext.CurrentMarketId).CurrencyID));
+                        foreach (Product product in products)
+                        {
+                            
+                    <tr @(count % 2 == 0 ? "" : "class=\"Alt\"") >
+                        <td style="width: 7.273em;">
+                            @product.SKU
+                        </td>
+                        <td style="width: 10.909em;">
+                            @product.Name
+                        </td>
+                        <td style="width: 4.545em;">
+                            @product.GetPrice(CoreContext.CurrentAccount.AccountTypeID, Model.Order.CurrencyID).ToString(Model.Order.CurrencyID)
+                        </td>
+                        <td style="width: 4.545em;">
+                            <input type="hidden" class="productId" value="@product.ProductID" />
+                            @{
+                            bool needsBOConfirmation = product.ProductBackOrderBehaviorID == (short)Constants.ProductBackOrderBehavior.AllowBackorderInformCustomer && inventory.IsOutOfStock(product);
+                            }
+                            <input type="hidden" class="needsBackOrderConfirmation" value="@needsBOConfirmation.ToJavascriptBool()" />
+                            @*<input type="text" class="quantity" style="width: 1.667em;" value="0" @product.IsOutOfStock ? "" : disabled="disabled" />*@
+                            <input type="text" class="quantity" style="width: 1.667em;" value="0" />
+                        </td>
+                    </tr>
+                    
+                            count++;
+
+                        }
+                    }
+
+
+                }
+            </table>
+        </div>
+        <br />
+        <p>
+            <a id="btnBulkAdd" href="javascript:void(0)" class="Button BigBlue">
+                @Html.Term("AddToOrder", "Add to Order")</a> <a href="javascript:void(0)" onclick="$('#bulkAddModal .quantity').val(0);"
+                    class="Button jqmClose">
+                    @Html.Term("Close", "Close")</a>
+        </p>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#bulkAddModal').jqm({ modal: false, trigger: '#btnOpenBulkAdd',
+            onShow: function (h) {
+                h.w.css({
+                    top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                    left: '0px'
+                }).fadeIn();
+            },
+            onHide: function (h) {
+                h.w.fadeOut('slow');
+            }, overlay: 0
+        });
+
+
+        $('#catalogFilter').change(function () {
+            $('#catalogLoading').show();
+            $.get('@Href("~/" + Model.GetCatalogLocation)', { catalogId: $('#catalogFilter').val() }, function (catalog) {
+                $('#catalogLoading').hide();
+                $('#bulkProductCatalog').html(catalog);
+            });
+        });
+
+        if ($('#catalogFilter').val() != '@((ViewData["Catalogs"] as IEnumerable<Catalog>).Count() > 0 ? (ViewData["Catalogs"] as IEnumerable<Catalog>).First().CatalogID : 0)') {
+            $('#catalogFilter').change();
+        }
+
+
+        $('#btnBulkAdd').click(function () {
+            var productsToAdd = $('#bulkProductCatalog tr:has(.quantity[value!=0])'),
+				needsConfirmation = productsToAdd.find('.needsBackOrderConfirmation[value="true"]').length > 0;
+            if (needsConfirmation && !confirm('@Html.Term("BulkAdd_ItemsOnBackOrder", "One or more of the items you have selected are on backorder. Are you sure you wish to continue?")')) {
+                return;
+            }
+            if (productsToAdd.length) {
+                var data = JSON.stringify({
+                    products: productsToAdd.map(function (i, item) {
+                        var row = $(item);
+                        return { ProductID: row.find('.productId').val(), Quantity: row.find('.quantity').val() };
+                    }).get()
+                }),
+				options = {
+				    data: data,
+				    url: '@Href("~/" + Model.BulkAddToCartLocation)',
+				    showLoading: $('#btnBulkAdd'),
+				    success: function (response) {
+				        if (!response.result) { 
+				            if (response.message !== undefined && response.message.length > 0) {
+				                showMessage(response.message, true);
+				                updateCartAndTotals(response);
+				            }
+				        }
+				        else { 
+				            updateCartAndTotals(response);
+				           // showMessage('@Html.Term("ErrorAddingProducts", "There was a problem adding products"): ' + response.message, true);
+				        }
+				    }
+				};
+                NS.postJSON(options);
+            }
+        });
+    });
+</script>

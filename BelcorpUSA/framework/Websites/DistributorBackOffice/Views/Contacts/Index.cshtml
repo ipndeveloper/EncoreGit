@@ -1,0 +1,159 @@
+@model dynamic
+
+
+@{
+	AccountReport currentAccountReport = ViewBag.CurrentAccountReport;
+	AccountSearchParameters currentReportParameters = ViewBag.CurrentReportParameters;
+}
+@section head {
+	<script type="text/javascript">
+		$(function () {
+			$('.SavedReports .@ViewBag.SelectedReport a').addClass("current");
+			$('.PageTitle h1').html($('.SavedReports .@ViewBag.SelectedReport a').text() || '@Html.Term("MyContacts", "My Contacts")');
+
+			$('#exportToExcel').click(function () {
+				window.location = '@Href("~/Contacts/ExportExcel")';
+			});
+
+			$('#saveReportLink').click(function () {
+				var lastReportName = $('#txtReportName').val();
+				var currentReportName = $('#hiddenCurrentReportName').val();
+				if ((lastReportName.length > 0) && (currentReportName.length > 0 && currentReportName != lastReportName)) {
+					$.post('@Href("~/Contacts/SaveReport")', { reportName: lastReportName }, function (response) {
+						showMessage(response.message || '@Html.Term("ReportSaved", "Report saved!")', !response.result);
+					});
+				}
+			});
+
+			$('#saveReportModal').jqm({ modal: false,
+				trigger: '#saveReportLink',
+				onShow: function (h) {
+					h.w.css({
+						top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+						left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+					}).fadeIn();
+				}
+			});
+
+			$('#btnSaveReport').click(function () {
+				if (!$('#saveReportModal').checkRequiredFields()) {
+					return false;
+				}
+
+				$.post('@Href("~/Contacts/SaveReport")', { reportName: $('#txtReportName').val() }, function (response) {
+					if (response.result) {
+						showMessage('@Html.Term("ReportSaved", "Report saved successfully")', false);
+						$('#saveReportModal').jqmHide();
+						window.location = '@Href("~/Contacts/Index")?accountReportID=' + response.accountReportID;
+					}
+					else
+						showMessage(response.message, true);
+				});
+			});
+
+			$('#deleteReportLink').click(function () {
+				if (confirm('@Html.Term("AreYouSureYouWantToDeleteThisReport", "Are you sure you want to delete this report?")')) {
+					$.post('@Href("~/Contacts/DeleteReport")', { accountReportID: $('#accountReportID').val() }, function (response) {
+						if (response.result) {
+							showMessage('@Html.Term("ReportDeleted", "Report deleted successfully")', false);
+							$('#saveReportModal').jqmHide();
+							window.location = '@Href("~/Contacts/Index")?accountReportID=0';
+						}
+						else
+							showMessage(response.message, true);
+					});
+				}
+			});
+
+			$('#txtReportName').keyup(function (e) {
+				if (e.keyCode == 13)
+					$('#btnSaveReport').click();
+			});
+
+			$('#deleteReportLink').hide();
+			if (parseBool('@(currentAccountReport != null && currentAccountReport.AccountID == CoreContext.CurrentAccount.AccountID)')) {
+				$('#deleteReportLink').show();
+			}
+
+			$('#emailLink').click(function () {
+				var data = {}, i = 0;
+				$('input[name="contactAccount"]').each(function () {
+					if ($(this).is(':checked')) {
+						data['accountIDs[' + i + ']'] = $(this).attr("id");
+						++i;
+					}
+				});
+
+				$.post('@Href("~/Contacts/ContactsEmail")', data, function (response) {
+					if (response.result) {
+						window.location = '@Href("~/Communication/Email/ContactsEmail")';
+					} else {
+						showMessage(response.message, true);
+					}
+				});
+			});
+
+			$('#selectedHeader').click(function () {
+				$('#paginatedGrid input[name="contactAccount"]').attr('checked', $('#selectedHeader').is(':checked'));
+			});
+			$('#paginatedGrid th:first').css({ width: '20px' });
+		});
+	</script>
+}
+@section breadcrumb{
+}
+@section title {
+	@Html.Term("MyContacts", "My Contacts")
+}
+<input type="hidden" id="accountReportID" value="@(currentAccountReport != null ? currentAccountReport.AccountReportID : 0)" />
+@{
+	Html.PaginatedGrid("~/Contacts/Get")
+		.AddData("accountId", CoreContext.CurrentAccount.AccountID)
+		.AddColumn("<input type=\"checkbox\" id=\"selectedHeader\"/>", string.Empty, false)
+		.AddColumn(Html.Term("Type", "Type"), "AccountType", true)
+		.AddColumn(Html.Term("ID", "ID"), "ID", true)
+		.AddColumn(Html.Term("FirstName", "First Name"), "FirstName", true)
+		.AddColumn(Html.Term("LastName", "Last Name"), "LastName", true, true, Constants.SortDirection.Ascending)
+        //.AddColumn(Html.Term("Status", "Status"), "AccountStatus", true) //CGI(CMR)-23/10/2014
+		.AddColumn(Html.Term("Email", "Email"), "EmailAddress", true)
+		.AddColumn(Html.Term("CityState", "City, State"), "Location", true)
+        //.AddColumn(Html.Term("PhoneNumber","Phone Number"),"PhoneNumber",true) //CGI(CMR)-15/10/2014
+		.AddColumn(Html.Term("JoinDate","Join Date"),"JoinDate",true)
+		.AddInputFilter(Html.Term("SearchForName", "Search for Name"), "name", currentReportParameters.Name.ToCleanString())
+		.AddInputFilter(Html.Term("SearchForEmail", "Search for Email"), "email", currentReportParameters.Email.ToCleanString())
+		.AddAdvancedSelectFilter(Html.Term("Type"), "accountType", new Dictionary<string, string>() { { "", Html.Term("AllTypes", "All Types") } }.AddRange(SmallCollectionCache.Instance.AccountTypes.Where(a => a.Active && a.AccountTypeID != (int)Constants.AccountType.Employee).ToDictionary(at => at.AccountTypeID.ToString(), at => at.GetTerm())), currentReportParameters.AccountTypes != null && currentReportParameters.AccountTypes.Count() == 1 ? currentReportParameters.AccountTypes.First().ToString() : string.Empty)
+		.AddAdvancedSelectFilter(Html.Term("Category"), "category", new Dictionary<string, string>() { { "", Html.Term("AllCategories", "All Categories") } }.AddRange(AccountListValue.LoadListValuesByTypeAndAccountID(CoreContext.CurrentAccount.AccountID, Constants.ListValueType.ContactCategory.ToInt()).ToDictionary(x => x.AccountListValueID.ToString(), x => x.Value)), currentReportParameters.ContactCategoryID.ToString())
+		.AddAdvancedSelectFilter(Html.Term("Status"), "status", new Dictionary<string, string>() { { "", Html.Term("AllStatuses", "All Statuses") } }.AddRange(SmallCollectionCache.Instance.AccountStatuses.Where(a => a.Active).ToDictionary(ast => ast.AccountStatusID.ToString(), ast => ast.GetTerm()).OrderBy(x => x.Value).ToDictionary(x => x.Key, y => y.Value)), currentReportParameters.ContactStatusID.ToString())
+		.AddAdvancedSelectFilter(Html.Term("Source"), "source", new Dictionary<string, string>() { { "", Html.Term("AllSources", "All Sources") } }.AddRange(SmallCollectionCache.Instance.AccountSources.Where(a => a.Active).ToDictionary(a => a.AccountSourceID.ToString(), a => a.GetTerm())), currentReportParameters.AccountSourceID.ToString())
+		.AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+		.AddOption("saveReportLink", Html.Term("SaveReport", "Save Report"))
+		.AddOption("deleteReportLink", Html.Term("DeleteReport", "Delete Report"))
+		.AddOption("emailLink", Html.Term("EmailChecked", "Email Checked"))
+		.ClearPageSizeOptions()
+		.AddPageSizeOption(15, "15")
+		.AddPageSizeOption(25, "25")
+		.AddPageSizeOption(50, "50")
+		.AddPageSizeOption(100, "100")
+		.AddPageSizeOption(200, "200")
+		.SetDefaultSort(currentReportParameters.OrderBy, currentReportParameters.OrderByDirection)
+		.ClickEntireRow()
+		.Render();   
+}
+<div id="saveReportModal" class="LModal jqmWindow">
+	<div class="mContent">
+		<div>
+			<input type="hidden" id="hiddenCurrentReportName" value="@(currentAccountReport != null ? currentAccountReport.Name : "")" />
+			@Html.Term("ReportName", "Report Name"):
+			<input type="text" id="txtReportName" value="@(currentAccountReport != null ? currentAccountReport.Name : "")" class="required" name="@Html.Term("ReportNameRequired", "Report Name is required")" style="width: 250px;" />
+			<a id="btnSaveReport" href="javascript:void(0);" class="DTL Add">
+				@Html.Term("Save")</a>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function () {
+		$('.clearFiltersButton').unbind('click').click(function () {
+			window.location = '@Href("~/Contacts/NewReport")';
+		});
+	});	
+</script>

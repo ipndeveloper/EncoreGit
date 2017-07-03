@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D06C52F2-C029-4CE2-943D-A7BC71160D4A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetSteps.Events.Service.Tests</RootNamespace>
+    <AssemblyName>NetSteps.Events.Service.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="NetSteps.Accounts.Common, Version=1.1.66.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Accounts.Common.1.1.66\lib\net40\NetSteps.Accounts.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Addresses.Common">
+      <HintPath>..\..\packages\NetSteps.Addresses.Common.1.0.10\lib\net40\NetSteps.Addresses.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Common, Version=1.1.60.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Common.1.1.60\lib\net40\NetSteps.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Encore.Core, Version=2.4.133.0, Culture=neutral, PublicKeyToken=d116fce376e37d09, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Encore.Core_r2_3.2.4.133\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.EventProcessing.Common, Version=1.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.EventProcessing.Common.1.1.31\lib\net40\NetSteps.EventProcessing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Events.AccountArguments.Common">
+      <HintPath>..\..\packages\NetSteps.Events.AccountArguments.Common.0.1.7\lib\net40\NetSteps.Events.AccountArguments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Events.Common, Version=1.1.61.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Events.Common.1.1.61\lib\net40\NetSteps.Events.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Events.PartyArguments.Common">
+      <HintPath>..\..\packages\NetSteps.Events.PartyArguments.Common.0.1.12\lib\net40\NetSteps.Events.PartyArguments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Extensibility.Core">
+      <HintPath>..\..\packages\Extensibility.Core.1.0.16115\lib\net40\NetSteps.Extensibility.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Orders.Common">
+      <HintPath>..\..\packages\NetSteps.Orders.Common.1.0.6\lib\net40\NetSteps.Orders.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mocks\FakeEmailRepository.cs" />
+    <Compile Include="Mocks\FakeEventRepository.cs" />
+    <Compile Include="Mocks\FakeEventTypeRepository.cs" />
+    <Compile Include="Mocks\FakeOrder.cs" />
+    <Compile Include="Mocks\FakeParty.cs" />
+    <Compile Include="Mocks\FakePartyEventArgumentRepository.cs" />
+    <Compile Include="Mocks\FakePartyRepository.cs" />
+    <Compile Include="Mocks\FakeTokenValueProvider.cs" />
+    <Compile Include="ModuleWireup.cs" />
+    <Compile Include="PartyEvents\BasePartyEmailEventTests.cs" />
+    <Compile Include="PartyEvents\BasePartyEventTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchedulerBaseTests.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Events.Service.csproj">
+      <Project>{B8C4456F-73E5-4B4A-8266-387870782A5E}</Project>
+      <Name>Events.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

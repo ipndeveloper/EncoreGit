@@ -1,0 +1,82 @@
+﻿/************************************************************************************
+* Login Structure
+************************************************************************************/
+html, body {
+	min-height:100%;
+}
+body {
+	margin: 0;
+	padding: 0;
+}
+#Content {
+	padding-top:$LoginLogoHeight;
+	.Inner {
+		margin: 0 auto;
+		.Login {
+			float: left;
+		}
+		.Info {
+			float: left;
+			ul {
+				margin: 0;
+				padding: 0;
+			}
+			li {
+				list-style-type: none;
+			}
+		}
+	}
+}
+#Content {
+	.Inner {
+		padding: em(40 30);
+		width: em($LoginContentWidth);
+		.Login {
+			width: $LoginLeftW;
+			padding-right:4%;
+			p.overflow {
+				line-height:em(40);
+			}
+		}
+		#forgotPasswordDiv input {
+			width: 96%;
+			padding:em(6);
+		}
+		.Info {
+			width: 100 - ($LoginLeftW + (4 * 3) + 2);
+			margin: 0 0 0 4%;
+			padding:5% 0 5% 4%;
+			li {
+				padding-left:em(18);
+				margin-bottom: em(15, $MedFont);
+			}
+		}
+	}
+}
+@media only screen and (max-width: 600px) {
+    body {
+	    font-size:100%;
+	}
+	#Content {
+		.Inner {
+			width:80%;
+			border-width:em(2);
+			.Login, .Info {
+				width:100%;
+			}
+			.Info {
+				border-left:0;
+				margin-left:0;
+				padding-left:0;
+			}
+			#btnLogin, #btnForgotPassword {
+				float:none;
+				display:block;
+				text-align:center;
+			}
+		}
+	}
+	.TextInput {
+		width: 96%;
+	}
+}

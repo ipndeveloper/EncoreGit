@@ -1,0 +1,34 @@
+@model dynamic
+<link href="@Href("~/Resource/Content/CSS/jsonSuggest.css")" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="@Href("~/Scripts/jquery.easing.1.3.js")"></script>
+<script type="text/javascript" src="@Href("~/Scripts/jsonSuggest.js")"></script>
+<script type="text/javascript" src="@Href("~/Scripts/jquery.scrollTo.js")"></script>
+<script type="text/javascript" src="@Href("~/Scripts/jquery.scrollfollow.js")"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#txtSearch').jsonSuggest('@Href("~/Performance/AutoComplete")', { minCharacters: 3, ajaxResults: true, source: $('#txtSearch'), onSelect: function (item) {
+            rootNodeId = item.id; //$('#searchAccountId').val(item.id);
+            $('#txtSearch').focus();
+        }
+        });
+    });
+    function searchAccounts () {
+        if (rootNodeId != null) {
+            showDetails = true;
+            showPage();
+            rootNodeId = defaultRootNodeId;
+            $('#searchAccountId').val('');
+        	$('#txtSearch').val('');
+            //$("#treeContainer").jstree("search", $('#searchAccountId').val());
+        }
+        //$('#searchText').showError('@Html.JavascriptTerm("PleaseSelectAnAccount", "Please select an account.")');
+    }
+</script>
+<div class="FL  SearchForm">
+@Html.Hidden("SearchAccountId", new { id="searchAccountId"})
+<label>@Html.Term("Search"):</label>
+<input id="txtSearch" type="text" class="FL searchInput searchDownline" />  
+</div>
+<div class="FL RunFilter">
+<a href="javascript:searchAccounts();" id="btnGo"  class="FL Button"><span>@Html.Term("Search")</span></a>
+</div>

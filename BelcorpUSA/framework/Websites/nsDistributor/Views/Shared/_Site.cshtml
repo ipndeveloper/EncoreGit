@@ -1,0 +1,210 @@
+﻿@using NetSteps.Addresses.Common.Models
+@using NetSteps.Web.Mvc.Controls.Analytics
+@{ 
+	var page = Model as NetSteps.Data.Entities.Page;
+	var modelIsPage = page != null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	@Html.Partial("ServerInfo")
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>
+		@ViewBag.Title
+	</title>
+	<link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/usa/images/favicon.ico")" />
+    <link href="@Url.Content("~/content/CSS/login-soft.css")" rel="stylesheet" type="text/css"/>
+    @Styles.Render("~/Content/stylebundles/jqueryui")
+	@Scripts.Render("~/scriptbundles/jquery")
+	@Scripts.Render("~/scriptbundles/jqueryui")
+	@Scripts.Render("~/scriptbundles/jqueryval")
+	@Scripts.Render("~/scriptbundles/knockout")
+    @Scripts.Render("~/scriptbundles/site")
+    @Html.Partial("MasterPageIncludes")
+    <script type="text/javascript">
+		//<![CDATA[
+		$(function () {
+			$.fn.showLoading.defaults.imageUrl = '@Url.Content("~/Resource/Content/Images/loading.gif")';
+
+			// setup async exception handling
+			$(document).ajaxComplete(function (e, request, settings) {
+				var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+				if (isErrorPage) {
+					window.location = '/Error/';
+				}
+			});
+
+			var myClose = function (hash) {
+				hash.w.fadeOut('2000', function () {
+					if ($('#DoNotReloadPrevious').length > 0) {
+						$.post('@Url.Resolve("~/Cart/SetOrderGiven")', { action: "get" });
+					}
+					hash.o.remove();
+				});
+			};
+			$('#GetLastPendingOrderByAccountDiv').jqm({ onHide: myClose });
+			showLastCart();
+
+
+
+
+			$('#languagePicker .languageSelector').click(function () {
+				var languageId = $(this).attr('id').replace(/\D/g, '');
+				if (languageId != '@CoreContext.CurrentLanguageID') {
+					$.post('@Url.Resolve("~/SetLanguage")', { languageId: languageId }, function () {
+						window.location.reload();
+					});
+				}
+			});
+
+
+
+		});
+
+		function showLastCart() {
+			var isReload = !!$.cookie('isReload');
+			if (isReload) {
+				$.post('@Url.Resolve("~/Cart/GetLastPendingOrderByAccount")', { action: "get" }, function (data) {
+					$('#GetLastPendingOrderByAccountDiv').html(data);
+					if ($('#previousOrderDiv').children().length > 0) {
+						$('#GetLastPendingOrderByAccountDiv').jqmShow();
+					}
+					$.cookie('isReload', null);
+				});
+			}
+		}
+
+		function loggedIn(name) {
+			$('#loginContainer').hide(300);
+
+			NS.get({
+				url: '@Url.Resolve("~/Static/LoggedIn")',
+				success: function (response) {
+					if (response != '') {
+						$('#loggedIn').html(response);
+					}
+				},
+				complete: function () {
+					$('#loggedIn').show();
+					$('#loggedOut').hide();
+					$('#loggedInName').text(name);
+					showLastCart();
+				}
+			});
+		}
+
+		function openLink(response) {
+			if (parseBool(response.openNewWindow) == true) {
+				loggedIn(response.name);
+				window.open(response.returnUrl);
+			} else {
+				loggedIn(response.name);
+				window.location = response.returnUrl;
+			}
+		}
+
+		function showLoading(element, css) {
+			if (!element.jquery)
+				element = $(element);
+			var loading = $('<img src="@Url.Content("~/Resource/Content/Images/Icons/loading-blue.gif")" alt="@Html.Term("loading...")" />');
+			if (css) {
+				loading.css(css);
+			}
+			else if (element.height()) {
+				loading.css('height', element.height() + 'px');
+			}
+			element.after(loading).hide();
+		}
+
+		function hideLoading(element) {
+			if (!element.jquery)
+				element = $(element);
+			element.show().next().remove();
+		}
+		
+		//]]>
+	</script>
+	@Html.Partial("CustomSiteMasterJs")
+	@RenderSection("head", false)
+	@StackExchange.Profiling.MiniProfiler.RenderIncludes()
+	@if ((HtmlSection)ViewBag.SiteDesignContent != null)
+	{
+		@(((HtmlSection)ViewBag.SiteDesignContent).ToDisplay(modelIsPage ? page.PageID : (int?)null))
+	}
+	@if (BaseController.PageMode == NetSteps.Common.Constants.ViewingMode.Edit)
+	{
+		<link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/EditMode.css")" />
+		<script type="text/javascript">
+			$(function () {
+				$('#Logo a.Edit').append(' @Html.Term("Logo")');
+				$('.btCorp a.Edit').each(function () {
+					$(this).append(' @Html.Term("Corp")');
+				});
+				$('.btPhoto a.Edit').each(function () {
+					$(this).append(' @Html.Term("Photos")');
+				});
+				$('#Footer a.Edit').append('Footer CMS');
+				$('.btChoice a.Edit').each(function () {
+					$(this).append(' @Html.Term("Choices")');
+				});
+				$('a.Edit').each(function () {
+					$(this).draggable();
+				});
+			});
+		</script>
+	}
+</head>
+<body>
+  <div id="header-wrap" class="clear" style="background: #633A89;
+    height: 80px;
+    margin: auto;
+    position: relative;
+    width: 958px;"> 
+    <!-- logo -->
+    <div class="logo">
+		<!-- PUT YOUR LOGO HERE -->
+		<a  href="#" 
+		title="L'Bel"  >L'BEL
+		</a>
+	</div>
+</div>
+
+	<div id="SiteContain">
+		<div id="PageContain">
+			<div id="TopPane">
+				<div class="TopInner"> 
+				</div>
+			</div>
+			<div id="ContentWrap">
+				<div id="ContentInnerWrap">
+					@RenderBody()
+					<span class="ClearAll"></span>
+				</div>
+			</div>
+			@*@if (BaseController.CurrentSite != null)
+			{
+				<div id="Footer" class="Footer">
+					<div id="FooterInner">
+						@(((HtmlSection)ViewBag.Footer).ToDisplay(modelIsPage ? page.PageID : (int?)null))
+						<div id="FooterLinks">
+							@Html.Navigation(BaseController.CurrentSite, Constants.NavigationType.Footer.ToInt() /* Bottom Nav */)
+							<span class="clr"></span>
+						</div>
+						<span class="clr"></span>
+					</div>
+				</div>
+			}*@
+		</div>
+	</div>
+	<img src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" style="visibility:hidden;position:absolute;top:-100px;left:-100px;" />
+	@if (BaseController.PageMode == NetSteps.Common.Constants.ViewingMode.Edit)
+	{
+		Html.RenderPartial("~/Views/Edit/CorporateEditNotification.cshtml");
+	}
+	@RenderSection("bodyFooter", false)
+	@{Html.RenderPartial("_GoogleAnalytics", new AnalyticsModel(this.Request));}
+</body>
+</html>
+<script>
+    fixed_nav
+</script>

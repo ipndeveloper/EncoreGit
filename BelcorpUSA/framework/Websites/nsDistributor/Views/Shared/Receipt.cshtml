@@ -1,0 +1,152 @@
+@using NetSteps.OrderAdjustments.Common.Model;
+@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components;
+@model nsDistributor.Models.Checkout.CheckoutReceiptModel
+@{
+	ViewBag.Title = "Receipt";
+	Order order = Model.Order;
+}
+@section head {
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Shared/CartModel.js")"></script>
+	<script type="text/javascript">
+    	$(function () {
+			var cartModel = new CartModel(@Html.Raw(Json.Encode(Model.CartModel)), { showDeleteColumn: false, showSelectGiftLink: false, allowQuantityEdit: false });
+			ko.applyBindings(cartModel, document.getElementById('receipt'));
+
+            $('#CartItems .ViewKitContents').live('click', function () {
+                var t = $(this);
+                if (t.hasClass('Minimize')) {
+                    t.text('@Html.Term("ViewKitContents", "View Kit Contents")').removeClass('Minimize').next().slideUp('fast');
+                } else {
+                    t.text('@Html.Term("Close")').addClass('Minimize').next().slideDown('fast');
+                }
+            });
+        });
+	</script>
+	<link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/Receipts-Print.css")" media="print" />
+}
+@Html.Partial("_ReceiptLogo")
+<div class="orderReceipt">
+	<div class="pageTitle">
+		<h1>
+			@Html.Term("ThankYouForYourOrder", "Thank you for your order!")
+		</h1>
+	</div>
+	<!-- Order Number and Print Button -->
+	<div class="clr  UI-lightBg pad10 brdrAll receiptOrderNumber">
+		<h3 class="FL">@Html.Term("YourOrderNumberIs", " Your order number is"): @order.OrderNumber,
+			@Html.Term("DateOfPurchase", "Date of Purchase"): @order.CompleteDate.ToShortDateStringDisplay()</h3>
+		@Html.Partial("ReceiptAdditionalInfoPartial")
+
+@*		<a href="javascript:void(0);" onclick="window.print();" class="FR Button btnPrintReceipt">
+			<span>@Html.Term("PrintReceipt", "Print your receipt")</span></a> <span class="clr">
+			</span>*@
+
+            
+        @if (!(Model.Order.OrderStatusID == (short)Constants.OrderStatus.Pending || Model.Order.OrderStatusID == (short)Constants.OrderStatus.PendingError || Model.Order.OrderStatusID == (short)Constants.OrderStatus.Cancelled))
+	    {
+			
+            <a href="@Url.Resolve("~/Enroll/Receipt/PrintInvoicePDF" + "?orderNumber=" + @order.OrderNumber)" class="FR Button btnPrintReceipt"><span>@Html.Term("PrintReceipt", "Continue Print your receipt")</span></a>
+			
+        }
+			
+	</div>
+	<!--Ships to-->
+	<div class="FL splitCol Shipping Confirm">
+		<div class="pad5">
+			<div class="UI-darkBg brdrAll pad5 bold">
+				<span class="label">@Html.Term("ShippingToLabel", "Shipping to")</span>
+			</div>
+			<div class="FL pad5 addressDisplay">
+				@foreach (var shipment in order.OrderShipments)
+    {
+					@Html.Raw(shipment.ToDisplay(false, showName: true, showShipToEmail: true))
+					<span class="clr"></span> @Html.Term("via")
+                                         
+					<span class="clr ShipMethod">@Html.Term(shipment.ShippingMethodName)</span>
+                
+        foreach (var package in shipment.OrderShipmentPackages)
+        {
+            if (!string.IsNullOrEmpty(package.TrackingNumber))
+            {
+                //CGI(CMR)-20/10/2014-Inicio
+                //var baseUrl = SmallCollectionCache.Instance.ShippingMethods.GetById(package.ShippingMethodID.Value).TrackingNumberBaseUrl;
+                var baseUrl = ConfigurationManager.AppSettings["TrackingUrl"];
+                baseUrl = !String.IsNullOrWhiteSpace(baseUrl) ? baseUrl.Replace("{Number}", package.TrackingNumber).Replace("#", "&") : string.Empty;
+                //CGI(CMR)-20/10/2014-Fin
+                if (!string.IsNullOrEmpty(baseUrl))
+                {
+					<br />
+					<span>Tracking#: <a href="@string.Format(baseUrl, package.TrackingNumber)" target="_blank" rel="external">
+						@package.TrackingNumber</a></span>
+                }
+                else
+                {
+					<br />
+					<span>Tracking#: @package.TrackingNumber</span>
+                }
+            }
+        }
+    }
+			</div>
+			<span class="clr"></span>
+		</div>
+	</div>
+	<!--Bills to-->
+	<div class="FR splitCol Billing Confirm">
+		<div class="pad5">
+			<div class="UI-darkBg brdrAll pad5 bold">
+				<span class="label">@Html.Term("BillingToLabel", "Billing to")</span>
+			</div>
+			<div class="FL pad5 addressDisplay">
+				@Html.Partial("PaymentsGrid", order)
+			</div>
+			<span class="clr"></span>
+		</div>
+	</div>
+	<div class="clr TablePane">
+		<div class="Content">
+			<h3>@Html.Term("YourOrderedItems", "Your Ordered Items")</h3>
+			@Html.Partial("PromotionNotifications")
+			<table class="DataGrid" width="100%">
+				<thead>
+					<tr>
+						<th>@Html.Term("SKU")
+						</th>
+						<th>
+						</th>
+						<th>
+							@Html.Term("Product")
+						</th>
+						<th>
+							@Html.Term("Price")
+						</th>
+						<th>
+							@Html.Term("Quantity")
+						</th>
+						<th>
+							@Html.Term("Total")
+						</th>
+					</tr>
+				</thead>
+				<tbody id="CartItems">
+					<!-- ko foreach: OrderItems -->
+					@Html.Partial("CartOrderItem")
+					<!-- /ko -->
+					<!-- ko foreach: PromotionallyAddedItems -->
+					@Html.Partial("CartPromotionallyAddedItem")
+					<!-- /ko -->
+				</tbody>
+			</table>
+			@Html.Partial("_OrderTotals", order)
+		</div>
+	</div>
+	<div class="center pad10 mt10 receiptEnd">
+		@if (Model.ContinueShopping != null && Model.ContinueShopping)
+  {
+       
+			<a href="@Url.Resolve("~/Shop")" class="Button MinorButton btnContinueShopping"><span>@Html.Term("ContinueShopping", "Continue Shopping")</span></a>
+      
+        
+  }
+	</div>
+</div>

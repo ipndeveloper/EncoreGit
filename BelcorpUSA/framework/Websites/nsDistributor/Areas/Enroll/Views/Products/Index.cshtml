@@ -1,0 +1,46 @@
+﻿@model IEnumerable<nsDistributor.Areas.Enroll.Models.Products.SectionModel>
+@{
+    
+    if (BaseController.TieneKitInicio == true)
+    {
+       Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepRestringidoLayout.cshtml";
+    }
+
+}
+
+@foreach (var sectionModel in Model)
+{
+	<div class="personalInfoForm enrollProducts">
+		@if (sectionModel.Active)
+  {
+			<div class="UI-darkBg brdrAll pad2 m5">
+				<h4>@sectionModel.Title</h4>
+			</div>
+			<div class="UI-lightBg brdrAll m5 active">
+				<div class="pad10">
+					@Html.Partial(sectionModel.PartialViewName, sectionModel)
+				</div>
+			</div>
+  }
+  else if (sectionModel.Completed)
+  {
+			<div class="UI-lightBg brdrAll pad2 m5 sectionTitle completed">
+				<h4>@sectionModel.Title <a href="@Url.Action(sectionModel.Action)"><span class="FR UI-icon icon-edit">@Html.Term("Edit")</span></a></h4>
+				<div>
+					@Html.Partial(sectionModel.PartialViewName, sectionModel)
+				</div>
+			</div>
+  }
+  else
+  {
+			<div class="UI-lightBg brdrAll pad2 m5 sectionTitle">
+				<h4>@sectionModel.Title</h4>
+			</div>
+  }
+	</div>
+	<span class="ClearAll"></span>
+}

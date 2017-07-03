@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>translate</Title>
+      <Author>DES</Author>
+      <Description>Translate an object</Description>
+      <Shortcut>translate</Shortcut>
+    </Header>
+    <Snippet>
+		<Declarations>
+			<Literal>
+			  <ID>x</ID>
+			  <ToolTip>The object that needs translating</ToolTip>
+			  <Default>x</Default>
+			</Literal>
+			<Literal>
+			  <ID>languageID</ID>
+			  <ToolTip>The language ID to translate into</ToolTip>
+			  <Default>languageID</Default>
+			</Literal>
+			<Literal>
+			  <ID>PropertyName</ID>
+			  <ToolTip>The name of the property to get from the translation object</ToolTip>
+			  <Default>PropertyName</Default>
+			</Literal>
+		</Declarations>
+      <Code Language="csharp"><![CDATA[$x$ => $x$.Translations.Count(t => t.LanguageID == $languageID$) == 0 ? $x$.Translations.Count() > 0 ? $x$.Translations.FirstOrDefault().$PropertyName$ : "" : $x$.Translations.FirstOrDefault(t => t.LanguageID == $languageID$).$PropertyName$]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

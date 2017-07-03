@@ -1,0 +1,257 @@
+﻿@model NetSteps.Data.Entities.OrderCustomer
+<div class="clr Customer">
+    <div class="FL splitCol30">
+        <h5>
+            @if (Model.IsHostess)
+            {
+                <span class="UI-icon-hostess"></span>
+            }
+            @Model.FullName @(ViewData.ContainsKey("CustomerDescription") ? ViewData["CustomerDescription"] : string.Empty)
+        </h5>
+        @if (Model.IsHostess && (bool)ViewBag.HasEnrollmentCredit)
+        {
+            @Html.Term("HostessHasEarnedEnrollmentCredit", "Hostess has earned enrollment credit")
+            if ((bool)ViewBag.ConsultantHasPWS)
+            {
+            <br />
+            <a href="@((string)ViewBag.EnrollmentSiteUrl)" target="_blank">@Html.Term("EnrollNow", "Enroll Now")</a>
+            }
+        }
+        <div class="UI-secBg brdrAll icon-24 GridUtility">
+            <a href="javascript:void(0);" class="UI-icon-container Print PrintCustomer"><span
+                class="UI-icon icon-print"></span><span>@Html.Term("Print")<input type="hidden" class="orderCustomerId" value="@Model.OrderCustomerID" /></span></a>
+        </div>
+        @if (Model.OrderShipments.Count > 0)
+        {
+            <div class="DirectShip">
+                <div class="pad10">
+                    @Html.Raw(Model.OrderShipments.First().ToDisplay())
+                    @foreach (var shipment in Model.OrderShipments)
+                    {
+                        foreach (var package in shipment.OrderShipmentPackages)
+                        {
+                        <br />
+                        <br />
+                        @package.ShippingMethodName
+                        <br />
+                        <span>@Html.Term("ShippedOn", "Shipped On"): @package.DateShipped.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span>
+                            if (!string.IsNullOrEmpty(package.TrackingNumber))
+                            {
+                                var baseUrl = SmallCollectionCache.Instance.ShippingMethods.GetById(package.ShippingMethodID.Value).TrackingNumberBaseUrl;
+                                if (!string.IsNullOrEmpty(baseUrl))
+                                {
+                        <br />
+                        <span>@Html.Term("TrackingNumber", "Tracking#"): <a href="@string.Format(baseUrl, package.TrackingNumber)" target="_blank" rel="external">
+                            @package.TrackingNumber</a></span>
+                                }
+                                else
+                                {
+                        <br />
+                        <span>@Html.Term("TrackingNumber", "Tracking#"): @package.TrackingNumber</span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="FR splitCol70">
+        <h5>
+            @Html.Term("Cart")</h5>
+        <table width="100%" cellspacing="0" class="DataGrid responsive">
+            <thead class="UI-bg UI-header">
+                <tr>
+                    <th style="width: 80px;">
+                        @Html.Term("SKU")
+                    </th>
+                    <th style="width: 250px;">
+                        @Html.Term("Product")
+                    </th>
+                    <th>
+                        @Html.Term("Price")
+                    </th>
+                    <th>
+                        @Html.Term("Quantity")
+                    </th>
+                    <th>
+                        @Html.Term("CV_QV")
+                    </th>
+                    <th>
+                        @Html.Term("Total")
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="OrderItems">
+                <tr class="EmptyCart" style="@(Model.OrderItems.Count > 0 ? "display:none;" : "")">
+                    <td class="Lawyer" colspan="8">
+                        @Html.Term("CartIsCurrentlyEmpty", "Cart is currently empty")
+                    </td>
+                </tr>
+								@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }
+                @foreach (var orderItem in Model.ParentOrderItems)
+                {
+                    var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+                    <tr>
+                        <td data-label="@Html.Term("SKU")">
+                            @orderItem.SKU
+                        </td>
+                        <td data-label="@Html.Term("Product")">
+                            @product.Translations.Name()
+                            @if (Model.Order.OrderStatusID != (int)Constants.OrderStatus.Pending && Model.Order.OrderStatusID != (int)Constants.OrderStatus.PendingError
+                                                                && orderItem.GiftCards != null && orderItem.GiftCards.Any())
+                            {
+                                foreach (var gc in orderItem.GiftCards)
+                                {
+                        @:<br />&nbsp;&nbsp;&nbsp;@gc.Code
+                                }
+                            }
+                        </td>
+                        <td data-label="@Html.Term("Price")">
+                            @orderItem.GetAdjustedPrice().ToString(Model.Order.CurrencyID)
+                        </td>
+                        <td data-label="@Html.Term("Quantity")">
+                            @orderItem.Quantity
+                        </td>
+
+                        @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                            string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                            if (valorSCV == "S")
+                            {
+                                    <td data-label="@Html.Term("CV_QV")">
+                                        @orderItem.CommissionableTotal.ToString(Model.Order.CurrencyID);
+                                    </td>
+                            }
+                                
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+                        <td data-label="@Html.Term("Total")">
+                            @((orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(Model.Order.CurrencyID))
+                        </td>
+                    </tr>
+                            foreach (var childItem in orderItem.ChildOrderItems)
+                            {
+                                var childProduct = inventory.GetProduct(childItem.ProductID.Value);
+                    <tr class="DynamicKitChild @orderItem.Guid.ToString("N")">
+                        <td data-label="@Html.Term("SKU")" class="icon-24">
+                            <span class="UI-icon icon-bundle-arrow"></span>
+                            @childProduct.SKU
+                        </td>
+                        <td data-label="@Html.Term("Product")">
+                            @childProduct.Translations.Name()
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td data-label="@Html.Term("Quantity")">
+                            @childItem.Quantity
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                            }
+                }
+            </tbody>
+        </table>
+        <div class="FL splitCol">
+            @if (Model.OrderPayments.Count > 0)
+            {
+                <h5>
+                    @Html.Term("Payments")</h5>
+                <table width="100%" cellspacing="0" class="DataGrid responsive">
+                    <thead class="UI-bg UI-header">
+                        <tr>
+                            <th>
+                                @Html.Term("PaymentType", "Payment Type")
+                            </th>
+                            <th>
+                                @Html.Term("AccountNumber", "Account Number")
+                            </th>
+                            <th>
+                                @Html.Term("Amount")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model.OrderPayments)
+                        {
+                            <tr>
+                                <td>
+                                    @SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm()
+                                </td>
+                                <td>
+                                    @Html.Raw(!payment.NameOnCard.IsNullOrEmpty() ? payment.NameOnCard + "<br />" : string.Empty)
+                                    @(payment.PaymentTypeID == (int)Constants.PaymentType.CreditCard ? payment.MaskedAccountNumber : payment.DecryptedAccountNumber)&nbsp;@(SmallCollectionCache.Instance.OrderPaymentStatuses.GetById(payment.OrderPaymentStatusID).GetTerm())
+                                </td>
+                                <td>
+                                    @payment.Amount.ToString(Model.Order.CurrencyID)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="FR splitCol">
+            <h5>
+                @Html.Term("Totals")</h5>
+            <div class="UI-lightBg brdrAll orderTotals">
+                <table width="100%">
+                    <tr class="GridTotalBar">
+                        <td style="text-align: right;">
+                            @Html.Term("Subtotal"):<br />
+
+                            @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                string valorSCV2 = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV2 == "S")
+                                {
+                                @Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+                                
+
+                            @Html.Term("Tax"):<br />
+                            @Html.Raw(Html.Term("S&H", "S&amp;H")):<br />
+                            <b>@Html.Term("Total"):</b>
+                        </td>
+                        <td>
+                            <span class="subtotal">
+                                @Model.Subtotal.ToString(Model.Order.CurrencyID)</span>
+                            <br />
+
+                             @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV3 = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV3 == "S")
+                                {
+                            <span class="commissionableTotal">
+                                @Model.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>
+                            <br />
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                            <span class="taxTotal">
+                                @Model.TaxAmountTotal.ToString(Model.Order.CurrencyID)</span>
+                            <br />
+                            <span class="shippingTotal">
+                                @(Model.OrderShipments.Count > 0 ? Model.ShippingTotal.ToString(Model.Order.CurrencyID) : "(" + Html.Term("ShippingToParty", "Shipping to party") + ")")</span>
+                            <br />
+                            <b><span class="grandTotal">
+                                @Model.Total.ToString(Model.Order.CurrencyID)</span></b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

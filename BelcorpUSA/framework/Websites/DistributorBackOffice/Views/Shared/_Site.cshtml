@@ -1,0 +1,240 @@
+﻿@using NetSteps.Web.Mvc.Controls.Analytics
+@{
+	var site = ViewData["CurrentSite"] as Site;
+	var page = ViewData["CurrentPage"] as NetSteps.Data.Entities.Page;
+	var modelIsPage = page != null;
+	var pageMode = DistributorBackOffice.Controllers.BaseController.GetPageMode();
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @Html.Partial("ServerInfo")
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="googlebot" content="noarchive" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>@Html.Term("WorkstationSiteTitle", "ENCORE Distributor Workstation") - Powered
+        by ENCORE</title>
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/usa/images/favicon.ico")" />
+    
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/ui.dropdownchecklist.css")" />    
+
+    @* Site CSS *@
+    @Html.Partial("MasterPageIncludes") 
+	@Styles.Render("~/Content/stylebundles/jqueryui")
+	@Scripts.Render("~/scriptbundles/jquery")
+	@Scripts.Render("~/scriptbundles/jqueryui")
+	@Scripts.Render("~/scriptbundles/jqueryval")
+	@Scripts.Render("~/scriptbundles/knockout")
+    @Scripts.Render("~/scriptbundles/site")
+
+    <script type="text/javascript">
+        $(function () {
+
+
+
+
+
+
+            $.fn.showLoading.defaults.imageUrl = '@Url.Content("~/Resource/Content/Images/loader_36x36.gif")';
+
+            // setup async exception handling
+            $(document).ajaxComplete(function (e, request, settings) {
+                var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+                if (isErrorPage) {
+                    window.location = '/Error/';
+                }
+            });
+
+            //Set up jqModal defaults
+            $.extend($.jqm.params, {
+                modal: true,
+                target: '.mContent',
+                ajaxText: '<img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="loading..." />',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut('slow');
+                    if (h.o)
+                        h.o.remove();
+                }
+            });
+
+            var globalSearch = $('#globalSearch');
+            if (globalSearch != null) {
+                globalSearch.watermark('@Html.Term("EnterYourSearchText", "Enter your search text")').jsonSuggest('@Url.Content("~/Home/GlobalSearch")', 
+                    { minCharacters: 3, border: 0, ajaxResults: true, startCollapsed: false, onSelect: function (item, group) {
+                    var url = '@Url.Content("~/")';
+                    switch (group) {
+                        case 'News':
+                        case 'Documents':
+                            url += group + '/Details/' + item.id;
+                            break;
+                        case 'RetailCustomers':
+                        case 'PreferredCustomers':
+                        case 'Prospects':
+                            url += 'Contacts/View/' + item.id;
+                            break;
+                        case 'TeamMembers':
+                            url += 'Performance/View/' + item.id;
+                            break;
+                    }
+                    window.location = url;
+                } 
+                });   
+            }
+
+            setTimeout("CheckForErrors()", 200);
+
+			$('a').click(function(event) {
+				if($.isFunction(window.handleGlobalClickEvent)) {
+					handleGlobalClickEvent(event, $(this));
+				}
+        });
+		});
+
+        function CheckForErrors() {
+            @if (@TempData["Error"] != null)
+            {
+                @:showMessage('@TempData["Error"].ToJSON()', true)
+            }
+        }
+
+        function setLanguage(languageId) {
+            if (languageId != '@CoreContext.CurrentLanguageID') {
+                $.post('@Href("~/Security/SetLanguage")', { languageId: languageId }, function (response) {
+                    if (response.result) {
+                        window.location.reload();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }
+        }
+
+        function showLoading(element, css) {
+            if (!element.jquery)
+                element = $(element);
+            var loading = $('<span class="loadingWrap"><img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="loading..." class="loadingIcon" /></span>');
+            if (css) {
+                loading.css(css);
+            }
+            else if (element.height()) {
+                loading.css('height', element.height() + 'px');
+            }
+            element.after(loading).hide();
+        }
+
+        function hideLoading(element) {
+            if (!element.jquery)
+                element = $(element);
+            element.show().next().remove();
+        }
+    </script>
+    @if (DistributorBackOffice.Controllers.BaseController.GetPageMode() == NetSteps.Common.Constants.ViewingMode.Edit)
+    {
+        <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/EditMode.css")" />
+    }
+    @RenderSection("head", false)
+    @(((HtmlSection)ViewBag.SiteDesignContent).ToDisplay(modelIsPage ? page.PageID : (int?)null))
+    @*@((ViewData["SiteDesignContent"] as HtmlSection).ToDisplay(modelIsPage ? page.PageID : (int?)null))*@
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes()
+    <!--[if lte IE 7]><script src="@Url.Content("~/Resource/Content/Fonts/lte-ie7.js")"></script><![endif]-->
+</head>
+<body id="DWS">
+    <div id="PageContain">
+        <div id="TopPane">
+            <div class="inner">
+                <div id="LogoContain">@((ViewData["Logo"] as HtmlSection).ToDisplayLogo(modelIsPage ? page.PageID : (int?)null, Href("~/")))</div>
+                <!-- site navigation -->
+                <div id="SiteNav" class="UI-siteNav">
+                    <div class="inner UI-siteNav">
+                        @*2011-10-25, JWL, Added partial view to allow for custom navigation *@
+                        @{Html.RenderPartial("_SiteNav");}
+                        <div class="FR">
+                            @{ Html.RenderPartial("AccountIdDisplay"); }
+                            <!-- site search -->
+                            <div id="globalSearchToggle" class="MoreSearchOptions globalSearch FL">
+                                <a href="javascript:void(0);" class="UI-icon-container" title="Search this site"><span
+                                    class="UI-icon icon-navbarSearch"></span><span class="iconText">
+                                        @Html.Term("SiteSearch", "Site Search")</span></a>
+                            </div>
+                            <div class="dropDown MoreSearch fancyInput globalSearchBar">
+                                <div id="SearchContainer" class="Search pad10 UI-mainBg">
+                                    <input type="text" class="TextInput globalsearch brdrAll" id="globalSearch" />
+                                </div>
+                            </div>
+                            <!--/end site search -->
+                            <!-- user pull down -->
+                            <div id="UserInfo" class="FL userInfo  UI-siteNav">
+                                <p class="name UI-siteNav">
+                                    <span class="UserID">
+                                        @(CoreContext.CurrentAccount != null ? CoreContext.CurrentAccount.FullName : string.Empty)</span>
+                                </p>
+                                <div class="UI-mainBg dropDown">
+                                    <div class="UserLinks">
+                                        <div class="userAcctAreas">
+                                            <!-- My Account -->
+                                            <a href="@Href("~/Account")" class="myAcctManagement">@Html.Term("MyAccount", "My Account")</a>
+                                            <a href="@Href("~/Communication")" class="myAcctManagement">@Html.Term("DWS_Communication", "Mensagens")</a>
+                                            @if (ViewBag.SiteUrl != null)
+                                            {
+                                                <a href="@ViewBag.SiteUrl" id="EditMyPWSLink" target="_blank" rel="external">@Html.Term("EditMyPWS", "Edit My PWS")</a>
+                                            }
+                                        </div>
+                                        <!-- language -->
+                                      @*  @Html.Partial("_LanguagesDropdown")*@
+                                        <!--/ end language -->
+                                        <a href="@Href("~/Logout")" class="logOutLink">@Html.Term("LogOut", "Log Out")</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/ end user pulldown -->
+                        </div>
+                    </div>
+                    <!-- end inner -->
+                </div>
+                <!--/ end site navigation -->
+                <span class="clr"></span>
+            </div>
+            <!--/ end inner -->
+        </div>
+        <!--/ end top pane -->
+        <div id="Container">
+            <div id="ContentContainer">
+                @RenderBody()
+                <span class="clr"></span>
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="FooterPane">
+            <div class="FooterInner">
+                <div class="siteCopyright">
+                    powered by ENCORE&trade;. Copyright &copy; NetSteps, LLC
+                </div>
+                <span class="clr"></span>
+            </div>
+            <span class="clr"></span>
+        </div>
+    </div>
+    @* Pre process the loading gifs so that they don't take forever to load - DES *@
+    <div style="position: absolute; visibility: hidden; top: -1000px; left: -1000px;">
+        <img src="@Href("~/Resource/Content/Images/loader_20x20.gif")" alt="" />
+        <img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="" />
+        <img src="@Href("~/Resource/Content/Images/loader_bar.gif")" alt="" />
+        <img src="@Href("~/Resource/Content/Images/processing.gif")" alt="" />
+    </div>
+    
+    @* This is the cool place to put JavaScript. - Lundy *@
+    @Html.Partial("MessageCenter")
+    @if (DistributorBackOffice.Controllers.BaseController.GetPageMode() == NetSteps.Common.Constants.ViewingMode.Edit)
+    {
+        @Html.Partial("~/Views/Edit/CorporateEditNotification.cshtml")
+    }
+    @RenderSection("bodyFooter", false)
+    @{Html.RenderPartial("_GoogleAnalytics", new AnalyticsModel(this.Request));}
+</body>
+</html>

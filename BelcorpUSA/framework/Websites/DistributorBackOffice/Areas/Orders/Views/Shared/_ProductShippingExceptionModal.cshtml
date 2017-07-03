@@ -1,0 +1,25 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $("#productShippingExceptionModal").jqm({
+            modal: true
+        }).jqmShow();
+     });
+ </script>
+
+<div id="productShippingExceptionModal" class="jqmWindow LModal">
+    <div class="mContent modalContent">
+        <h2 class="left">@Html.Term("InvalidShippingForProducts_Header", "No available shipping methods")</h2>
+        <div class="mb10 invalidShippingDescription">@Html.Term("InvalidShippingForProducts", "No available shipping methods, try changing your shipping address, updating your order subtotal or call customer service.")</div>
+        <div class="UI-lightBg brdrAll pad5 left">
+            <div class="bold">@Html.Term("InvalidShippingForProductsTitle", "Product's that have shipping exceptions:")</div>
+            <ol class="mt5 ml20 pad2 shippingExceptionItems">
+                @foreach (var product in (IEnumerable<Product>)ViewBag.Products)
+                {
+                    <li>@product.Name</li>
+                }
+            </ol>
+        </div>
+        <div class="mt10 center ClearAll">@Html.ActionLink(Html.Term("InvalidShippingForProducts_CloseModal", "Back to Cart"), "Cart", "Party", new { area = "Orders" }, new { @class = "" })</div>
+    </div>
+</div>
+ 

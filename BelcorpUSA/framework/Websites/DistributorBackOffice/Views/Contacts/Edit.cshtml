@@ -1,0 +1,371 @@
+@model NetSteps.Data.Entities.Account
+@section head {
+    <script type="text/javascript">
+
+        function editAcountListValues(listValueTypeId, selectControlId) {
+            $('#editAcountListValueModal').jqm({
+                modal: false,
+                ajax: '@Href("~/Contacts/EditAccountListValues/")Modal?listValueTypeId=' + listValueTypeId,
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt((h.w.height() + 400) / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }, onHide: function (h) {
+                    h.w.fadeOut('slow', function () {
+                        h.o.remove();
+                        $('#editAcountListValueModal .mContent').empty();
+
+                        var selectVal = $('#' + selectControlId).val();
+                        var data = { type: listValueTypeId };
+                        $.post('@Href("~/Contacts/GetAccountListValues")', data, function (response) {
+                            if (response.result) {
+                                $('#' + selectControlId).html('');
+                                var i;
+                                for (i = 0; i < response.items.length; i++) {
+                                    $('#' + selectControlId).append('<option value="' + response.items[i].value + '">' + response.items[i].name + '</option>');
+                                }
+                                $('#' + selectControlId).val(selectVal);
+                            }
+                            else {
+                                showMessage(response.message, true);
+                                return false;
+                            }
+                        });
+                    });
+                }
+            }).jqmShow();
+        }
+
+        $(function () {
+
+            var phones = {
+                homePhone: '@Model.HomePhone',
+                cellPhone: '@Model.CellPhone',
+                workPhone: '@Model.WorkPhone'
+            };
+            $('#homePhone,#cellPhone,#workPhone').each(function () {
+                var id = $(this).attr('id');
+                $(this).phone({ areaCodeId: id + 'AreaCode', firstThreeId: id + 'FirstThree', lastFourId: id + 'LastFour' }).phone('setPhone', phones[id]);
+            });
+
+            $('#dob').inputsByFormat({
+                format: '{0} / {1} / {2}',
+                validateNumbers: true,
+                attributes: [{
+                    id: 'txtDOBMonth',
+                    length: 2,
+                    size: 2
+                },
+					{
+					    id: 'txtDOBDay',
+					    length: 2,
+					    size: 2
+					},
+					{
+					    id: 'txtDOBYear',
+					    length: 4,
+					    size: 4
+					}]
+            })
+			.inputsByFormat('setValue', '@(Model.Birthday.HasValue ? Model.Birthday.ToDateTime().ToString("MM/dd/yyyy").Replace("/", "") : "")');
+            $('#txtDOBMonth').watermark('mm');
+            $('#txtDOBDay').watermark('dd');
+            $('#txtDOBYear').watermark('yyyy');
+
+            $('#btnSave').click(function () {
+                if (!$('#contactForm').checkRequiredFields()) {
+                    return false;
+                }
+
+                var p = $(this).parent();
+                showLoading(p);
+
+                var data =
+                {
+                    accountID: $('#accountID').val(),
+                    firstName: $('#firstName').val(),
+                    middleName: $('#middleName').val(),
+                    lastName: $('#lastName').val(),
+                    dob: $('#dob').inputsByFormat('getValue', '{0}/{1}/{2}'),
+                    gender: $('#gender').val(),
+
+                    source: $('#source').val(),
+                    category: $('#category').val(),
+                    status: $('#status').val(),
+
+                    communicationPreference: $('#communicationPreference').val(),
+                    email: $('#email').val(),
+                    homePhone: $('#homePhone').phone('getPhone'),
+                    cellPhone: $('#cellPhone').phone('getPhone'),
+                    workPhone: $('#workPhone').phone('getPhone'),
+
+                    country: $('#country').val(),
+                    address1: $('#address1').val(),
+                    address2: $('#address2').val(),
+                    address3: $('#address3').val(),
+                    postalCode: $('#addressControl .PostalCode').fullVal(),
+                    city: $('#city').val(),
+                    county: $('#county').val(),
+                    state: $('#state').val()
+                };
+                $('.groupCheckBox').each(function (i) {
+                    data['newsletterValues[' + i + '].Key'] = $(this).attr('id');
+                    data['newsletterValues[' + i + '].Value'] = $(this).is(':checked');
+
+                });
+
+                $.post('@Href("~/Contacts/Save")', data,
+                 function (response) {
+                     hideLoading(p);
+                     if (response.result) {
+                         showMessage(response.message || '@Html.Term("ProspectSaved", "Prospect saved!")', !response.result);
+                         $('#accountID').val(response.accountNumber);
+                         window.location = '/Contacts/View/' + response.accountNumber;
+                     } else {
+                         showMessage(response.message, true);
+                     }
+                 });
+            });
+
+            $('.FormRow .data input, .FormRow .data textarea, .FormRow .data select, .FRow .FInput input, .FRow .FInput textarea, .FRow .FInput select').focus(function () {
+                $(this).parent().parent().addClass('Focus');
+            });
+            $('.FormRow .data input, .FormRow .data textarea, .FormRow .data select, .FRow .FInput input, .FRow .FInput textarea, .FRow .FInput select').blur(function () {
+                $(this).parent().parent().removeClass('Focus');
+            });
+        });
+    </script>
+}
+@section breadcrumb{
+    <a href="@Href("~/Contacts")">
+        @Html.Term("Contacts")</a> &gt; <a href="@Href("~/Contacts/View/", Model.AccountNumber)">
+            @Model.FullName</a>
+}
+@section title {
+    @(Model.AccountID == 0 ? Html.Term("AddNewProspect", "Add a New Prospect") : Html.Term("EditProspect", "Edit a Prospect"))
+}
+@{
+    var contactTag = Model.AccountContactTag ?? new AccountContactTag();
+}
+<form action="#">
+<input type="hidden" id="accountID" value="@Model.AccountID" />
+<div id="contactForm">
+    <table class="SectionTable" width="100%">
+        <tbody>
+            <tr>
+                <td class="FormBlock splitCol">
+                    <h5 class="UI-secBg pad5 brdrAll SectionTitle PersonalData">
+                        @Html.Term("PersonalInformation", "Personal Information")</h5>
+                    <div class="pad10 FormTable">
+                        <div class="FormRow">
+                            <span class="requiredMarker">*</span>
+                            <label for="firstName">
+                                @Html.Term("FirstName", "First Name"):</label>
+                            <div class="data">
+                                <input id="firstName" type="text" class="required" name="@Html.Term("FirstNameRequired", "First Name is required.")"
+										value="@Model.FirstName" />
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="middleName">
+                                @Html.Term("MiddleName", "Middle Name"):</label>
+                            <div class="data">
+                                <input id="middleName" type="text" value="@Model.MiddleName" />
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <span class="requiredMarker">*</span>
+                            <label for="lastName">
+                                @Html.Term("LastName", "Last Name"):</label>
+                            <div class="data">
+                                <input id="lastName" type="text" class="required" name="@Html.Term("LastNameRequired", "Last Name is required.")"
+										value="@Model.LastName" />
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label>
+                                @Html.Term("DateOfBirth", "Date of Birth"):</label>
+                            <div id="dob" class="data">
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="gender">
+                                @Html.Term("Gender", "Gender"):</label>
+                            <div class="data">
+                                <select id="gender" class="">
+                                    <option value="" @Html.Raw(Model.GenderID == null ? "selected=\"selected\"" : "")>
+                                        @Html.Term("Unknown")</option>
+                                    <option value="@((int)Constants.Gender.Male)" @Html.Raw(Model.GenderID == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Male ? "selected=\"selected\"" : "")>
+                                        @SmallCollectionCache.Instance.Genders.GetById((int)Constants.Gender.Male).GetTerm()</option>
+                                    <option value="@((int)Constants.Gender.Female)" @Html.Raw(Model.GenderID == (int)NetSteps.Data.Entities.Generated.ConstantsGenerated.Gender.Female ? "selected=\"selected\"" : "")>
+                                        @SmallCollectionCache.Instance.Genders.GetById((int)Constants.Gender.Female).GetTerm()</option>
+                                </select>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="source">
+                                @Html.Term("Source", "Source"):</label>
+                            <div class="data">
+                                <input id="source" type="text" value="@contactTag.Source" />
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="category">
+                                @Html.Term("Category", "Category"):</label>
+                            <div class="data">
+                                <select id="category">
+                                    @foreach (AccountListValue category in CoreContext.GetCurrentAccountListValuesByType((int)Constants.ListValueType.ContactCategory))
+                                    {
+                                        <option value="@category.AccountListValueID" @Html.Raw(contactTag.ContactCategoryID == category.AccountListValueID ? "selected=\"selected\"" : "")>
+                                            @(category.IsCorporate ? category.GetTerm() : category.Value)</option>
+                                    }
+                                </select>
+                                <a href="javascript:editAcountListValues(@Constants.ListValueType.ContactCategory.ToInt(), 'category');"
+										id="editAcountListValueModel" class="IconOnlyLink" title="Edit List"><span>
+                                            @Html.Term("Edit", "Edit")</span></a>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="status">
+                                @Html.Term("Status", "Status"):</label>
+                            <div class="data">
+                                <select id="status">
+                                    @foreach (AccountListValue status in CoreContext.GetCurrentAccountListValuesByType((int)Constants.ListValueType.ContactStatus))
+                                    {
+                                        <option value="@status.AccountListValueID" @Html.Raw(contactTag.ContactStatusID == status.AccountListValueID ? "selected=\"selected\"" : "")>
+                                            @(status.IsCorporate ? status.GetTerm() : status.Value)</option>
+                                    }
+                                </select>
+                                <a href="javascript:editAcountListValues(@Constants.ListValueType.ContactStatus.ToInt(), 'status');"
+										class="IconOnlyLink" title="Edit List"><span>
+                                            @Html.Term("Edit", "Edit")</span></a>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </td>
+                <td class="FormBlock splitCol">
+                    <h5 class="UI-secBg pad5 brdrAll SectionTitle LocationData">
+                        @Html.Term("Correspondence", "Correspondence")</h5>
+                    <div class="pad10 FormTable">
+                        <div class="FormRow">
+                            <label for="communicationPreference">
+                                @Html.Term("CommunicationPreference", "Communication Preference"):</label>
+                            <div class="data">
+                                <select id="communicationPreference" class="">
+                                    @foreach (AccountListValue preference in CoreContext.GetCurrentAccountListValuesByType((int)Constants.ListValueType.CommunicationPreference))
+                                    {
+                                        <option value="@preference.AccountListValueID" @Html.Raw(Model.PreferedContactMethodID == preference.AccountListValueID ? "selected=\"selected\"" : "")>
+                                            @(preference.IsCorporate ? preference.GetTerm() : preference.Value)
+                                        </option>
+                                    }
+                                </select>
+                                <a href="javascript:editAcountListValues(@Constants.ListValueType.CommunicationPreference.ToInt(), 'communicationPreference');"
+										class="IconOnlyLink" title="Edit List"><span>
+                                            @Html.Term("Edit", "Edit")</span></a>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="email">
+                                @Html.Term("Email", "Email"):</label>
+                            <div class="data">
+                                <input id="email" type="text" value="@Model.EmailAddress" />
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="homePhoneAreaCode">
+                                @Html.Term("HomePhone", "Home Phone"):</label>
+                            <div id="homePhone" class="data">
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="mobilePhoneAreaCode">
+                                @Html.Term("MobilePhone", "Mobile Phone"):</label>
+                            <div id="cellPhone" class="data">
+                            </div>
+                            <br />
+                        </div>
+                        <div class="FormRow">
+                            <label for="workPhoneAreaCode">
+                                @Html.Term("WorkPhone", "Work Phone"):</label>
+                            <div id="workPhone" class="data">
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="pad10 ">
+                        @{
+                            var mainAddress = Model.Addresses.GetDefaultByTypeID(ConstantsGenerated.AddressType.Main);
+                            Country country = null;
+                            if (mainAddress != default(Address))
+                            {
+                                country = SmallCollectionCache.Instance.Countries.GetById(mainAddress.CountryID);
+                            }
+                            Html.RenderPartial("Address", new AddressModel()
+                            {
+                                Address = mainAddress,
+                                ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                                Country = country,
+                                ExcludeFields = new List<string>() { "ProfileName", "Attention", "Name" },
+                                LanguageID = CoreContext.CurrentLanguageID,
+                                ShowCountrySelect = true,
+                                HonorRequired = false
+                            });
+                            
+                            
+                        }
+                    </div>
+                    @{
+                        var campaigns = ViewBag.Newsletters as List<Campaign>;
+                        if (campaigns != null && campaigns.Any())
+                        {
+                        <!-- Newsletters -->
+                        <div class="pad10 FormTable">
+                            <div class="FormRow">
+                                <label for="newsLetters">
+                                    @Html.Term("NewsLetters", "News Letters"):</label>
+                            </div>
+                        </div>
+                        <div>
+                            @NewsLettersHelper(campaigns, Model.CampaignSubscribers.ToList())
+                        </div>
+                        }
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="center PageSaveButtons">
+        <a href="javascript:void(0);" id="btnSave" class="Button FormSubmit FR"><span>
+            @Html.Term("SaveProspect", "Save Prospect")</span></a> <a href="@(Model.AccountID > 0 ? Href("~/Contacts/View/") + Model.AccountNumber : Href("~/Contacts"))" class="Cancel FL">
+                <span>
+                    @Html.Term("Cancel")</span></a> <span class="ClearAll"></span>
+    </div>
+</div>
+</form>
+<div id="editAcountListValueModal" class="jqmWindow LModal ShipWin">
+    <div class="mContent">
+    </div>
+</div>
+@helper NewsLettersHelper(List<Campaign> allCampaigns, List<CampaignSubscriber> subscribedCampaigns)
+    {    
+        foreach (var newsletters in allCampaigns)
+        {
+            string isChecked = subscribedCampaigns.Any(x => x.CampaignID == newsletters.CampaignID) ? "checked=checked" : string.Empty;
+    <p>
+        <input type="checkbox" class="groupCheckBox" id="@newsletters.CampaignID" value="@newsletters.CampaignID"  @isChecked />
+        <label>@newsletters.Name</label>
+    </p>
+        }
+}

@@ -1,0 +1,81 @@
+﻿@{
+    var order = Session["Order"] as Order;
+    var customer = order.OrderCustomers.FirstOrDefault();
+    List<OrderPayment> orderPayments = customer == null ? new List<OrderPayment>() :
+          customer.OrderPayments.Where(op => op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Pending
+              || op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Completed
+              || op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Declined).ToList();
+    }
+      
+<div>
+    <h5 class="addtext center">@Html.Term("Payments") </h5>
+    <div class="pad5">
+        <table id="payments">
+        <tr> <td></td> <td style="font-size:14px">@Html.Term("OrderTotal", "Order Total"):</td> <td style="font-size:14px">
+        
+      @order.GrandTotal.ToString(order.CurrencyID)</td> <td></td> </tr>
+
+        @foreach (var payment in orderPayments)
+        {
+            string declinedMessage = payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Declined ? string.Format(" <i style=\"color:red\">({0})</i>", Html.Term("Declined")) : string.Empty;
+            var i = orderPayments.IndexOf(payment);
+            <tr id="pmt@(payment.Guid.ToString("N"))" class="paymentItem @(i.IsEven() ? "" : "Alt")">
+                <td>
+                    @if (payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Completed || payment.PaymentTypeID == 6)
+                    {
+                        @:&nbsp;
+                    }
+                    else
+                    {
+                        
+                        <a  href="javascript:void(0);" id="pmtRemove@(payment.Guid.ToString("N"))" title="Remove" class="UI-icon icon-x RemoveOrderItem"  onclick="removePayment('@(payment.Guid.ToString("N"))',@(payment.OrderPaymentID))"  title="Remove Payment">
+                        </a>
+                   
+                    <img id="pmtLoader@(payment.Guid.ToString("N"))" src="@Href("~/Resource/Content/Images/loader_20x20.gif")" style="display: none;" alt="loading" />
+                        
+                        <input type="hidden" id="hdid" value="@(payment.Guid.ToString("N"))" />
+                        <input type="hidden" id="hdindice" value="@(payment.OrderPaymentID)" />
+                        <input type="hidden" id="hdamountPay" value="@(payment.Amount)" />
+                    }
+                </td>
+                <td style="font-size:14px">
+              
+                  @*  @(payment.DecryptedAccountNumber.IsNullOrWhiteSpace() ? SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm() : payment.DecryptedAccountNumber.MaskString(4))*@
+                     @payment.BankName
+                    @Html.Raw(declinedMessage)
+                
+                </td>
+                @{
+                    var amount = payment.Amount;
+                    var amountpoc01 = "";
+                    var amountpoc02 = "";
+                    if (amount < 0 && payment.BankName == "Product Credit")
+                    {
+                        amount = amount * -1;
+                        amountpoc01 = amount.ToString(order.CurrencyID);
+                    }
+                    else
+                    {
+                        amountpoc02 = amount.ToString(order.CurrencyID);
+                    }
+                    }
+                <td style="font-size:14px;color:Red" >                
+                 @amountpoc01
+                </td>
+                <td style="font-size:14px">              
+                 @amountpoc02
+                    @*@payment.Amount.ToString(Model.CurrencyID)*@
+                </td>
+               
+            </tr>
+        }
+            <tr id="noPaymentsRow" style="@(orderPayments.Any() ? "display: none;" : string.Empty)">
+                <td id="noPayments" colspan="3" class="center pad10 noPayApp">
+                    <b>@Html.Term("NoPaymentsAppliedYet", "No payments applied yet")</b>
+                    <p class="lawyer">@Html.Term("Instructions_ApplyPayment","Enter the payment amount you wish to apply, using the field above.")</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+ 

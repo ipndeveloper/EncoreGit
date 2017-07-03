@@ -1,0 +1,17 @@
+﻿@model OrderCustomer
+<div class="UI-lightBg brdrNNYY pad5 icon-24 GridFilters CartTools">
+	<div class="FL">
+		<b>@Html.Term("Item")</b>:
+		<input type="text" value="" class="TextInput productLookUp" id="item" />
+		<input type="hidden" value="" class="productId" />
+		<input type="hidden" class="needsBackOrderConfirmation" value="" />
+		<input type="hidden" value="@Model.Guid.ToString("N")" class="orderCustomerId" />
+	</div>
+	<div class="FL">
+		<b>@Html.Term("Quantity")</b>:
+		<input type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off"
+			id="quantity" />
+	</div>
+	<a class="FL UI-icon-container TextLink Add addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+		<span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+</div>

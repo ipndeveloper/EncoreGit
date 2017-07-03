@@ -1,0 +1,164 @@
+﻿@using NetSteps.Promotions.Service
+@model NetSteps.Data.Entities.OrderCustomer
+<div class="clr Customer">
+    <div class="FL splitCol30">
+        <h5>
+            @if (Model.IsHostess)
+            {
+                <span class="UI-icon-hostess"></span>
+            }
+            @Model.FullName @(ViewData.ContainsKey("CustomerDescription") ? ViewData["CustomerDescription"] : string.Empty)
+        </h5>
+        @if (Model.IsHostess && (bool)ViewBag.HasEnrollmentCredit)
+        {
+            @Html.Term("HostessHasEarnedEnrollmentCredit", "Hostess has earned enrollment credit")
+            if ((bool)ViewBag.ConsultantHasPWS)
+            {
+            <br />
+            <a href="@((string)ViewBag.EnrollmentSiteUrl)" target="_blank">@Html.Term("EnrollNow", "Enroll Now")</a>
+            }
+        }
+        <!--Markup for Promotions Term on Carts/Receipts that still needs to be wired up- Kirstina-->
+        @{
+			var promotionAdjustments = ((Order)Model.Order).OrderAdjustments.Where(adjustment => adjustment.ExtensionProviderKey == PromotionProvider.ProviderKey);
+			var customerAdjustments = promotionAdjustments.Where(adjustment =>
+			adjustment.OrderLineModifications.Any(orderlineMod => ((OrderAdjustmentOrderLineModification)orderlineMod).OrderItem.OrderCustomer == Model) ||
+			adjustment.OrderModifications.Any(orderMod => ((OrderAdjustmentOrderModification)orderMod).OrderCustomer == Model) ||
+			adjustment.InjectedOrderSteps.Any(s => s.CustomerAccountID == Model.AccountID));
+	    }
+		@if (customerAdjustments.Any())
+		{
+        <div class="mt10 mb10 receiptPromoNotification">
+            @Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions"):
+            @foreach (var adjustment in customerAdjustments)
+			{
+			    <div class="UI-lightBg UI-icon-container mr5 brdrAll promoNotification">
+				    <span class="promoItem">@adjustment.Description</span>			   
+			    </div>
+			}
+		</div>
+		}
+        <!--End Term Markup-->
+        <div class="UI-secBg brdrAll icon-24 GridUtility">
+            <a href="javascript:void(0);" class="UI-icon-container Print PrintCustomer"><span
+                class="UI-icon icon-print"></span><span>@Html.Term("Print")<input type="hidden" class="orderCustomerId" value="@Model.OrderCustomerID" /></span></a>
+        </div>
+        @if (Model.OrderShipments.Count > 0)
+        {
+            <div class="DirectShip">
+                <div class="pad10">
+                    @Html.Raw(Model.OrderShipments.First().ToDisplay())
+                    @foreach (var shipment in Model.OrderShipments)
+                    {
+                        foreach (var package in shipment.OrderShipmentPackages)
+                        {
+                        <br />
+                        <br />
+                        @package.ShippingMethodName
+                        <br />
+                        <span>@Html.Term("ShippedOn", "Shipped On"): @package.DateShipped.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span>
+                            if (!string.IsNullOrEmpty(package.TrackingNumber) && package.ShippingMethodID.HasValue)
+                            {
+                                var baseUrl = SmallCollectionCache.Instance.ShippingMethods.GetById(package.ShippingMethodID.Value).TrackingNumberBaseUrl;
+                                if (!string.IsNullOrEmpty(baseUrl))
+                                {
+                        <br />
+                        <span>@Html.Term("TrackingNumber", "Tracking#"): <a href="@string.Format(baseUrl, package.TrackingNumber)" target="_blank" rel="external">
+                            @package.TrackingNumber</a></span>
+                                }
+                                else
+                                {
+                        <br />
+                        <span>@Html.Term("TrackingNumber", "Tracking#"): @package.TrackingNumber</span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="FR splitCol70">
+        <h5>@Html.Term("Cart")</h5>
+        <table width="100%" cellspacing="0" class="DataGrid responsive">
+            <thead class="UI-bg UI-header">
+                <tr>
+                    <th style="width: 80px;">
+                        @Html.Term("SKU")
+                    </th>
+                    <th style="width: 250px;">
+                        @Html.Term("Product")
+                    </th>
+                    <th>
+                        @Html.Term("Price")
+                    </th>
+                    <th>
+                        @Html.Term("Quantity")
+                    </th>
+                    <th>
+                        @Html.Term("CV_QV")
+                    </th>
+                    <th>
+                        @Html.Term("Total")
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="OrderItems">
+					<tr class="EmptyCart" style="@(Model.OrderItems.Count > 0 ? "display:none;" : "")">
+						<td class="Lawyer" colspan="8">
+							@Html.Term("CartIsCurrentlyEmpty", "Cart is currently empty")
+						</td>
+					</tr>
+					@Html.Partial("CustomerReceiptCart", Model)
+            </tbody>
+        </table>
+        <div class="FL splitCol">
+            @if (Model.OrderPayments.Count > 0)
+			{
+                <h5>
+                    @Html.Term("Payments")</h5>
+                <table width="100%" cellspacing="0" class="DataGrid responsive">
+                    <thead class="UI-bg UI-header">
+                        <tr>
+                            <th>
+                                @Html.Term("PaymentType", "Payment Type")
+                            </th>
+                            <th>
+                                @Html.Term("AccountNumber", "Account Number")
+                            </th>
+                            <th>
+                                @Html.Term("Amount")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model.OrderPayments)
+						{
+                            <tr>
+                                <td>
+                                    @SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm()
+                                </td>
+                                <td>
+                                    @Html.Raw(!payment.NameOnCard.IsNullOrEmpty() ? payment.NameOnCard + "<br />" : string.Empty)
+                                    @(payment.PaymentTypeID == (int)Constants.PaymentType.CreditCard ? payment.MaskedAccountNumber : payment.DecryptedAccountNumber)&nbsp;@(SmallCollectionCache.Instance.OrderPaymentStatuses.GetById(payment.OrderPaymentStatusID).GetTerm())
+                                </td>
+                                <td>
+                                    @payment.Amount.ToString(Model.Order.CurrencyID)
+                                </td>
+                            </tr>
+						}
+                    </tbody>
+                </table>
+			}
+        </div>
+        <div class="FR splitCol">
+            <h5>
+                @Html.Term("Totals")</h5>
+            <div class="UI-lightBg brdrAll orderTotals">
+                <table width="100%">
+                    @Html.Partial("CustomerReceiptTotals", Model)
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

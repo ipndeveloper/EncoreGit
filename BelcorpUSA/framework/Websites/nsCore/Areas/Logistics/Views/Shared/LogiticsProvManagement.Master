@@ -1,0 +1,33 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Logistics/Views/Shared/Logistics.Master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks">
+                <%= Html.SelectedLink("~/Logistics/Logistics/BrowseProvider", Html.Term("BrowseLogisticProvider", "Browse Logistic Provider"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Logistics/Logistics/ProviderDetails/", Html.Term("AddNewLogisticProvider", "Add New Logistic Provider"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+            </ul>
+		</div>
+	</asp:ContentPlaceHolder>
+    
+</asp:Content>
+
+<asp:Content ID="Content5" ContentPlaceHolderID="YellowWidget" runat="server">
+    <asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server">
+	</asp:ContentPlaceHolder>
+    
+    
+</asp:Content>
+
+<asp:Content ID="Content4" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>

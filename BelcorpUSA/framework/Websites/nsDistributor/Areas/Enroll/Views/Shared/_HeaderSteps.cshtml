@@ -1,0 +1,48 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.HeaderStepsModel
+
+<ul class="inlineNav">
+@{
+    var itemList = Model.HeaderStepItems.ToList();
+    for(int i = 0; i < itemList.Count; i++)
+    {
+        var item = itemList[i];
+        
+        List<string> classes = new List<string>();
+        if (i == 0)
+        {
+            classes.Add("first");
+        }
+        if (i == (itemList.Count - 1))
+        {
+            classes.Add("last");
+        }
+        if (item.IsCurrentStep)
+        {
+            classes.Add("UI-whiteBg active");
+        }
+        string classString = classes.Any()
+            ? string.Format(" class=\"{0}\"", string.Join(" ", classes))
+            : string.Empty;
+
+        // Start with text
+        string itemHtml = item.Text;
+
+        // Wrap hyperlink
+        if (item.EnableHyperlink)
+        {
+            itemHtml = string.Format("<a href='{1}'>{0}</a>", itemHtml, item.Url);
+        }
+
+        // Wrap span        
+        if (item.IsCurrentStep)
+        {
+            itemHtml = string.Format("<span>{0}</span>", itemHtml);
+        }
+        
+        // Wrap li
+        itemHtml = string.Format("<li{1}>{0}</li>", itemHtml, classString);
+
+        @Html.Raw(itemHtml);
+    }
+}
+</ul>

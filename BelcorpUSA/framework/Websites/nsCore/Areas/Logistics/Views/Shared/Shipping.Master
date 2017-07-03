@@ -1,0 +1,72 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Logistics/Views/Shared/Logistics.Master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+  <script type="text/javascript">
+
+      $(document).ready(function () {
+          $('input[monedaidioma=CultureIPN]').keyup(function (event) {
+
+              var cultureInfo = '<%= CoreContext.CurrentCultureInfo.Name%>';
+              var formatDecimal = '$1.$2'; // valores por defaul 
+              var formatMiles = ",";  // valores por defaul
+
+              if (cultureInfo === 'en-US') {
+                  formatDecimal = '$1.$2';
+                  formatMiles = ",";
+              }
+              else if (cultureInfo === 'es-US') {
+                  formatDecimal = '$1,$2';
+                  formatMiles = ".";
+              }
+              else if (cultureInfo === 'pt-BR') {
+                  formatDecimal = '$1,$2';
+                  formatMiles = ".";
+              }
+
+              if (event.which >= 37 && event.which <= 40) {
+                  event.preventDefault();
+              }
+
+              $(this).val(function (index, value) {
+
+
+                  return value.replace(/\D/g, "")
+                                 .replace(/([0-9])([0-9]{2})$/, formatDecimal)
+                                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, formatMiles);
+              });
+
+
+          });
+      
+    
+       });
+  </script>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks">
+                <%= Html.SelectedLink("~/Logistics/Shipping/Rules", Html.Term("BrowseShippingRules", "Browse Shipping Rules"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Logistics/Shipping/RuleDetail", Html.Term("NewRule", "New Rule"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Logistics/Shipping/Rates", Html.Term("BrowseShippingRates", "Browse Shipping Rates"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+				<%= Html.SelectedLink("~/Logistics/Shipping/RateDetail", Html.Term("RateDetail", "Rate Detail"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content4" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content5" ContentPlaceHolderID="YellowWidget" runat="server">
+    <asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+</asp:Content>

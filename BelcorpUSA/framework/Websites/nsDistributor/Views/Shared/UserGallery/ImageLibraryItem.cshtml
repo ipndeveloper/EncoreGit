@@ -1,0 +1,15 @@
+﻿@model NetSteps.Data.Entities.FileResource
+@{
+    var filePath = Model.FileResourcePath.ReplaceFileUploadPathToken();
+    <div class="FL m5 pad5 emLibraryItem">
+        <div class="imageInfo">
+            <div class="bold fileName">@Path.GetFileName(filePath)</div>
+            <div class="dateTime">@Model.DateCreatedUTC.ToShortDateString()</div>
+        </div>
+        <img width="155" alt="File Not Found" src="@string.Format("{0}?Time={1}", filePath, DateTime.Now)"/>
+        <div class="actionItems center mt5">
+            <a id="@Model.FileResourceID" href="javascript:void(0);" class="Button emSB Delete DeleteFile">
+                <span>@Html.Term("Delete")</span></a>
+        </div>
+    </div>    
+}

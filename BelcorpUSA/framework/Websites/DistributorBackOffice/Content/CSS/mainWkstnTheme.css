@@ -1,0 +1,898 @@
+/* line 1, ../SASS/_messageCenter.scss */
+#messageCenterModal { background: #fffde7; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=98); opacity: 0.98; color: #6eb43f; font-weight: bold; font-size: 1.25em; position: fixed; z-index: 99999; top: 0; left: 0; width: 100%; text-align: center; display: none; }
+/* line 16, ../SASS/_messageCenter.scss */
+#messageCenterModal #messageCenter div { padding: 0.90909em; }
+/* line 20, ../SASS/_messageCenter.scss */
+#messageCenterModal.thisIsNowAnErrorMessage, #messageCenterModal div.thisIsNowAnErrorMessage { background: #fffde7; color: #633a89; }
+/* line 24, ../SASS/_messageCenter.scss */
+#messageCenterModal.thisIsNowANotificationMessage, #messageCenterModal div.thisIsNowANotificationMessage { background: #fffde7; color: #444444; }
+
+/******************************************************************************************************************************************
+* QUICK REFERENCE GUIDE
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* Shared CSS3 Transitions     * Standard Tags          * Re-used Color Rules            * Containers, Columns, etc     * Icons
+* Buttons/Stylized Links      * Logo                   * Site Search/User Info          * SiteNav                      * Tabber
+* Forms                       * Tables                 * Grid Filters, Pagination...    * Resources                    * Docked Info Card...
+* Widgets                     * Downline Tree          * Bundle Pack Creation           * Bookings Calendar Theme      * Tooltip plugin
+* Alerts                      * Modals                 * Page Headers                   * Dashboard                    * Contacts Tab
+* Performance Tab KPIs        * News Tab               * Documents Tab                  * Orders/Parties Tab           * My Account Tab
+* Communication Tab           * Support Tab            * Misc Rules
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* END QUICK REFERENCE GUIDE
+*******************************************************************************************************************************************/
+/************************************************************************************
+* Shared CSS3 Transitions
+************************************************************************************/
+/* line 17, ../SASS/_theme.scss */
+a, .Toggle span { -webkit-transition-property: all; -moz-transition-property: all; -o-transition-property: all; transition-property: all; }
+
+/************************************************************************************
+* Standard Tags
+************************************************************************************/
+/* line 23, ../SASS/_theme.scss */
+body { background: #efefef; font-size: 0.6875em; line-height: 1.25em; font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; color: #444444; }
+
+/* line 27, ../SASS/_theme.scss */
+h1 { font-size: 1.63636em; }
+
+/* line 28, ../SASS/_theme.scss */
+h2 { font-size: 1.45455em; }
+
+/* line 29, ../SASS/_theme.scss */
+h3 { font-size: 1.27273em; }
+
+/* line 30, ../SASS/_theme.scss */
+h4 { font-size: 1.09091em; }
+
+/* line 31, ../SASS/_theme.scss */
+a { text-decoration: none; outline: none; color: #777777; -webkit-transition-duration: 400ms; -moz-transition-duration: 400ms; -o-transition-duration: 400ms; transition-duration: 400ms; }
+/* line 36, ../SASS/_theme.scss */
+a.current { font-weight: bold; }
+/* line 39, ../SASS/_theme.scss */
+a:hover { color: #3b3b3b; }
+/* line 42, ../SASS/_theme.scss */
+a.UI-linkAlt { color: #333; }
+
+/* line 46, ../SASS/_theme.scss */
+p { margin-bottom: 0.54545em; }
+
+/************************************************************************************
+* Re-used Color Rules
+************************************************************************************/
+/* line 53, ../SASS/_theme.scss */
+.UI-darkBg, .tooltip, .UI-header { background-color: #333333; color: white; }
+/* line 295, ../SASS/_base.scss */
+.UI-darkBg a, .tooltip a, .UI-header a { color: #efefef; }
+/* line 297, ../SASS/_base.scss */
+.UI-darkBg a.Button, .tooltip a.Button, .UI-header a.Button { color: #eff6eb; }
+/* line 300, ../SASS/_base.scss */
+.UI-darkBg a:hover, .tooltip a:hover, .UI-header a:hover { color: #a7a7a7; }
+/* line 303, ../SASS/_base.scss */
+.UI-darkBg a.Button:hover, .tooltip a.Button:hover, .UI-header a.Button:hover { color: #fff; }
+
+/* line 54, ../SASS/_theme.scss */
+.UI-mainBg { background-color: black; color: #efefef; }
+/* line 295, ../SASS/_base.scss */
+.UI-mainBg a { color: white; }
+/* line 297, ../SASS/_base.scss */
+.UI-mainBg a.Button { color: #eff6eb; }
+/* line 300, ../SASS/_base.scss */
+.UI-mainBg a:hover { color: #b2b2b2; }
+/* line 303, ../SASS/_base.scss */
+.UI-mainBg a.Button:hover { color: #fff; }
+
+/* line 55, ../SASS/_theme.scss */
+.UI-secBg, .resourceInfoText { background-color: #bebebe; color: black; }
+/* line 295, ../SASS/_base.scss */
+.UI-secBg a, .resourceInfoText a { color: #5e5e5e; }
+/* line 297, ../SASS/_base.scss */
+.UI-secBg a.Button, .resourceInfoText a.Button { color: #eff6eb; }
+/* line 300, ../SASS/_base.scss */
+.UI-secBg a:hover, .resourceInfoText a:hover { color: #414141; }
+/* line 303, ../SASS/_base.scss */
+.UI-secBg a.Button:hover, .resourceInfoText a.Button:hover { color: #fff; }
+
+/* line 56, ../SASS/_theme.scss */
+.UI-lightBg, .DataGrid tr.hover, .collapsedCart { background-color: #efefef; color: #5e5e5e; }
+/* line 295, ../SASS/_base.scss */
+.UI-lightBg a, .DataGrid tr.hover a, .collapsedCart a { color: #333333; }
+/* line 297, ../SASS/_base.scss */
+.UI-lightBg a.Button, .DataGrid tr.hover a.Button, .collapsedCart a.Button { color: #eff6eb; }
+/* line 300, ../SASS/_base.scss */
+.UI-lightBg a:hover, .DataGrid tr.hover a:hover, .collapsedCart a:hover { color: #707070; }
+/* line 303, ../SASS/_base.scss */
+.UI-lightBg a.Button:hover, .DataGrid tr.hover a.Button:hover, .collapsedCart a.Button:hover { color: #fff; }
+
+/* line 57, ../SASS/_theme.scss */
+.UI-whiteBg { background-color: white; }
+
+/* line 58, ../SASS/_theme.scss */
+.Alt { background: #f6f6f6; }
+
+/* line 59, ../SASS/_theme.scss */
+.Block { background-color: #fff; }
+
+/* line 60, ../SASS/_theme.scss */
+.NotActive { background-color: #efefef; }
+
+/* line 61, ../SASS/_theme.scss */
+.active, .available { border-color: #6eb43f !important; }
+
+/* line 62, ../SASS/_theme.scss */
+.requiredMarker, .unavailable { color: #633a89; }
+
+/* line 63, ../SASS/_theme.scss */
+.brdr, .brdr1 { border-color: #e3e3e3; }
+
+/************************************************************************************
+* Containers, Columns, etc
+************************************************************************************/
+/* line 68, ../SASS/_theme.scss */
+#Container { background-color: white; padding: 0.45455em; }
+
+/* line 72, ../SASS/_theme.scss */
+#TopPane { background: white; }
+
+/* line 75, ../SASS/_theme.scss */
+body.DashboardHome #PageContain { width: 87.27273em; }
+
+/* line 78, ../SASS/_theme.scss */
+#FooterPane .FooterInner { font-size: 0.81818em; padding: 0.55556em 0em; color: #a1a1a1; }
+
+/************************************************************************************
+* Icons
+************************************************************************************/
+/************************************************************************************
+* Buttons/Stylized Links
+************************************************************************************/
+/* line 91, ../SASS/_theme.scss */
+.Button { -webkit-border-radius: 0.45455em; -moz-border-radius: 0.45455em; -ms-border-radius: 0.45455em; -o-border-radius: 0.45455em; border-radius: 0.45455em; padding: 0em 0.90909em; font-weight: bold; text-decoration: none; white-space: nowrap; line-height: 2.72727em; background-color: #8abc6b; background-image: -moz-linear-gradient(top, rgba(138, 188, 107, 0.5) 0%, #64a63a 100%); /* FF3.6+ */ background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8abc6b), color-stop(100%, #64a63a)); /* Chrome,Safari4+ */ background-image: -webkit-linear-gradient(top, #8abc6b 0%, #64a63a 100%); /* Chrome10+,Safari5.1+ */ background-image: -o-linear-gradient(top, #8abc6b 0%, #64a63a 100%); /* Opera 11.10+ */ background-image: -ms-linear-gradient(top, #8abc6b 0%, #64a63a 100%); /* IE10+ */ background-image: linear-gradient(to bottom, rgba(138, 188, 107, 0.5) 0%, #64a63a 100%); /* W3C */ color: #eff6eb; text-shadow: rgba(0, 0, 0, 0.25) 0em 0em 0.27273em; -moz-transition-property: background-color, color; -moz-transition-duration: 0.4s, 0.4s; -webkit-transition-property: background-color, color; -webkit-transition-duration: 0.4s, 0.4s; -o-transition-property: background-color, color; -o-transition-duration: 0.4s, 0.4s; transition-property: background-color, color; transition-duration: 0.4s, 0.4s; }
+/* line 93, ../SASS/_theme.scss */
+.Button:hover { background-color: #3c6322; text-shadow: none; color: #fff; }
+/* line 96, ../SASS/_theme.scss */
+.Button.MoreOptions { background-color: #7f7f7f; background-image: -moz-linear-gradient(top, rgba(127, 127, 127, 0.5) 0%, #555555 100%); /* FF3.6+ */ background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #7f7f7f), color-stop(100%, #555555)); /* Chrome,Safari4+ */ background-image: -webkit-linear-gradient(top, #7f7f7f 0%, #555555 100%); /* Chrome10+,Safari5.1+ */ background-image: -o-linear-gradient(top, #7f7f7f 0%, #555555 100%); /* Opera 11.10+ */ background-image: -ms-linear-gradient(top, #7f7f7f 0%, #555555 100%); /* IE10+ */ background-image: linear-gradient(to bottom, rgba(127, 127, 127, 0.5) 0%, #555555 100%); /* W3C */ color: #eeeeee; }
+/* line 98, ../SASS/_theme.scss */
+.Button.MoreOptions:hover { background-color: #333333; color: #fff; }
+
+/* line 103, ../SASS/_theme.scss */
+.Cancel { -webkit-border-radius: 0.45455em; -moz-border-radius: 0.45455em; -ms-border-radius: 0.45455em; -o-border-radius: 0.45455em; border-radius: 0.45455em; padding: 0em 0.90909em; font-weight: bold; text-decoration: none; white-space: nowrap; line-height: 2.72727em; }
+
+/* line 107, ../SASS/_theme.scss */
+.UI-linkAlt a, a.UI-linkAlt a, .DataGrid a { color: #474747; }
+/* line 109, ../SASS/_theme.scss */
+.UI-linkAlt a:hover, a.UI-linkAlt a:hover, .DataGrid a:hover { color: #777777; }
+
+/* line 115, ../SASS/_theme.scss */
+.listNav a:hover, .listNav a.current { background-color: #f2f2f2; }
+
+/* line 120, ../SASS/_theme.scss */
+.UI-secBg .changeViewIcon:before { background-color: #aeaeae; border: 1px solid #a3a3a3; }
+/* line 124, ../SASS/_theme.scss */
+.UI-secBg .changeViewIcon:hover:before, .UI-secBg .changeViewIcon.active:before { background-color: #efefef; color: #414141; }
+
+/************************************************************************************
+* Logo
+************************************************************************************/
+/* line 133, ../SASS/_theme.scss */
+#LogoContain { padding: 1.36364em 1.81818em; }
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+/* line 140, ../SASS/_theme.scss */
+.userInfo { cursor: pointer; margin: 0em 1.81818em 0em 0em; }
+/* line 143, ../SASS/_theme.scss */
+.userInfo .name { line-height: 2em; color: #fff; }
+/* line 147, ../SASS/_theme.scss */
+.userInfo .UserID { padding-right: 0.27273em; }
+/* line 150, ../SASS/_theme.scss */
+.userInfo li { list-style-type: none; float: none; clear: both; margin: 0.1em; }
+/* line 156, ../SASS/_theme.scss */
+.userInfo .dropDown { clear: both; z-index: 88788; padding: 0.1em; min-width: 7.72727em; }
+/* line 162, ../SASS/_theme.scss */
+.userInfo a { display: block; padding: 0.18182em 0.90909em; }
+/* line 165, ../SASS/_theme.scss */
+.userInfo a:hover { background-color: #4c4c4c; color: #e5e5e5; }
+
+/************************************************************************************
+* SiteNav
+************************************************************************************/
+/* line 175, ../SASS/_theme.scss */
+.UI-siteNav { background: #848484; padding-left: 0.45455em; }
+/* line 178, ../SASS/_theme.scss */
+.UI-siteNav .inner { overflow: hidden; }
+/* line 181, ../SASS/_theme.scss */
+.UI-siteNav .FR { margin-top: 0.81818em; }
+/* line 184, ../SASS/_theme.scss */
+.UI-siteNav a { color: #fff; }
+
+/* line 190, ../SASS/_theme.scss */
+ul.mainNav li a:hover { background: #999999; }
+/* line 193, ../SASS/_theme.scss */
+ul.mainNav li a span { display: block; height: 3.63636em; line-height: 3.63636em; padding: 0em 0.45455em; text-decoration: none; }
+
+/* line 197, ../SASS/_theme.scss */
+.globalSearchBar { -moz-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; -webkit-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; }
+
+/* line 201, ../SASS/_theme.scss */
+.globalSearch .iconText { display: none; padding: 0; }
+
+/************************************************************************************
+* Tabber
+************************************************************************************/
+/* line 210, ../SASS/_theme.scss */
+.Tabber { border-bottom: 0.1em solid #e3e3e3; }
+/* line 212, ../SASS/_theme.scss */
+.Tabber li { border: 0.1em solid #e3e3e3; border-bottom: none; }
+/* line 215, ../SASS/_theme.scss */
+.Tabber li.current a { background: white; font-weight: bold; }
+
+/* line 221, ../SASS/_theme.scss */
+.TabberBody { border: solid #e3e3e3; border-width: 0em 0.1em 0.1em 0.1em; }
+
+/************************************************************************************
+* Forms
+************************************************************************************/
+/* line 229, ../SASS/_theme.scss */
+input, textarea, select { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; font-size: 1.18182em; }
+
+/************************************************************************************
+* Tables
+************************************************************************************/
+/* line 237, ../SASS/_theme.scss */
+tr.UI-header { line-height: 1.27273em; }
+
+/* line 241, ../SASS/_theme.scss */
+.DataGrid th { background: #5b5b5b; color: #fff; }
+/* line 244, ../SASS/_theme.scss */
+.DataGrid th a { color: #fff; }
+
+/* line 250, ../SASS/_theme.scss */
+.IE7 .DataGrid th, .IE7 .DataGrid td { border-right: 0.1em solid white; }
+
+/* line 254, ../SASS/_theme.scss */
+.IconCol { width: 2.18182em; text-align: center; }
+
+/* line 259, ../SASS/_theme.scss */
+table.Itemized td { border-bottom: 0.1em dotted #e3e3e3; }
+/* line 262, ../SASS/_theme.scss */
+table.Itemized th { border-bottom: 1px solid #333333; text-align: left; }
+
+/************************************************************************************
+* Grid Filters, Pagination etc.
+************************************************************************************/
+/* line 272, ../SASS/_theme.scss */
+.GridFilters .Button { line-height: 2.27273em; }
+
+/* line 277, ../SASS/_theme.scss */
+.Pagination { margin-left: 0.1em; padding: 0.45455em; line-height: 2.54545em; }
+/* line 281, ../SASS/_theme.scss */
+.Pagination .Bar { margin: 0 auto; text-align: center; width: 18.18182em; float: left; height: 2.54545em; background-color: #efefef; color: #5e5e5e; }
+/* line 295, ../SASS/_base.scss */
+.Pagination .Bar a { color: #333333; }
+/* line 297, ../SASS/_base.scss */
+.Pagination .Bar a.Button { color: #eff6eb; }
+/* line 300, ../SASS/_base.scss */
+.Pagination .Bar a:hover { color: #707070; }
+/* line 303, ../SASS/_base.scss */
+.Pagination .Bar a.Button:hover { color: #fff; }
+/* line 289, ../SASS/_theme.scss */
+.Pagination a { display: block; width: 2.54545em; height: 2.54545em; line-height: 3.63636em; overflow: hidden; background-color: #d2d2d2; background-image: -moz-linear-gradient(top, rgba(210, 210, 210, 0.5) 0%, #bababa 100%); /* FF3.6+ */ background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d2d2d2), color-stop(100%, #bababa)); /* Chrome,Safari4+ */ background-image: -webkit-linear-gradient(top, #d2d2d2 0%, #bababa 100%); /* Chrome10+,Safari5.1+ */ background-image: -o-linear-gradient(top, #d2d2d2 0%, #bababa 100%); /* Opera 11.10+ */ background-image: -ms-linear-gradient(top, #d2d2d2 0%, #bababa 100%); /* IE10+ */ background-image: linear-gradient(to bottom, rgba(210, 210, 210, 0.5) 0%, #bababa 100%); /* W3C */ }
+/* line 296, ../SASS/_theme.scss */
+.Pagination a span { display: block; }
+
+/************************************************************************************
+* Resources
+************************************************************************************/
+/* line 305, ../SASS/_theme.scss */
+.Rwrapper { background: #fff; }
+
+/* line 308, ../SASS/_theme.scss */
+.Rtitle { font-weight: bold; }
+
+/* line 311, ../SASS/_theme.scss */
+.Resource .Updated { background: #000; color: #fff; }
+
+/************************************************************************************
+* Docked Info Card (Media Bundle, Tree View, Graphical Viewer)
+************************************************************************************/
+/* line 319, ../SASS/_theme.scss */
+.infoCardWindow { filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90); opacity: 0.9; }
+
+/************************************************************************************
+* Widgets
+************************************************************************************/
+/* line 326, ../SASS/_theme.scss */
+.WidgetTitle { -moz-box-shadow: 0em 0em 0.27273em rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0em 0em 0.27273em rgba(0, 0, 0, 0.3); box-shadow: 0em 0em 0.27273em rgba(0, 0, 0, 0.3); border: 0.18182em solid white; margin: 0.18182em 0.18182em 0.63636em; -moz-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; -webkit-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; }
+
+/* line 332, ../SASS/_theme.scss */
+.WidgetBody, .WidgetUtility, .widgetDrillLinks, .listBody { margin: 0em 0.45455em 0.45455em; }
+
+/* line 335, ../SASS/_theme.scss */
+.widgetTabs { font-size: 0.81818em; height: 2.66667em; }
+/* line 338, ../SASS/_theme.scss */
+.widgetTabs li, .widgetTabs span, .widgetTabs .current a { line-height: 2.66667em; }
+/* line 341, ../SASS/_theme.scss */
+.widgetTabs.current a { font-weight: normal; }
+
+/************************************************************************************
+* Downline Tree
+************************************************************************************/
+/* line 350, ../SASS/_theme.scss */
+.FlatTree #treeContainer { background: white; }
+
+/* line 355, ../SASS/_theme.scss */
+#DownlineKeys .widgetTabs { margin: 0em 0.55556em; }
+/* line 358, ../SASS/_theme.scss */
+#DownlineKeys .listBody { margin: 0em 0.45455em; }
+
+/************************************************************************************
+* Bundle Pack Creation
+************************************************************************************/
+/* line 367, ../SASS/_theme.scss */
+#BundlePackItems h2 { border-bottom: 0.1em dotted #e3e3e3; }
+/* line 369, ../SASS/_theme.scss */
+#BundlePackItems h2.UI-Warning span { color: #633a89; }
+/* line 372, ../SASS/_theme.scss */
+#BundlePackItems h2.UI-Complete span { color: #6eb43f; }
+/* line 376, ../SASS/_theme.scss */
+#BundlePackItems .removeProduct span { border-bottom: 0.1em dotted #e3e3e3; }
+
+/* line 380, ../SASS/_theme.scss */
+.BundleOption { background-color: #b6d99f; color: #444444; }
+/* line 383, ../SASS/_theme.scss */
+.BundleOption .optionText a { color: #444444; text-decoration: underline; }
+/* line 386, ../SASS/_theme.scss */
+.BundleOption .optionText a:hover { text-decoration: none; }
+/* line 390, ../SASS/_theme.scss */
+.BundleOption .icon-bundle-option { background-position: 0 bottom; color: White; text-transform: uppercase; }
+
+/************************************************************************************
+* Bookings Calendar Theme
+************************************************************************************/
+/* line 400, ../SASS/_theme.scss */
+.fc-event-skin { background: #6eb43f; color: #fff; }
+
+/* line 404, ../SASS/_theme.scss */
+.fc-widget-header .fc-agenda-divider-inner { background: #efefef; color: #000; }
+
+/* line 408, ../SASS/_theme.scss */
+.fc-event-vert .fc-event-bg { position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%; background: white; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30); opacity: 0.3; }
+
+/* line 418, ../SASS/_theme.scss */
+.fc-widget-header, .fc-widget-content { border: 0.1em solid #e3e3e3; }
+
+/* line 421, ../SASS/_theme.scss */
+.fc-state-highlight { background: #fffde7; }
+
+/* line 424, ../SASS/_theme.scss */
+.fc-cell-overlay { background: #d1d1d1; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20); opacity: 0.2; }
+
+/* line 429, ../SASS/_theme.scss */
+.fc-state-default { border-style: solid; border-color: #e3e3e3 #cccccc #b5b5b5; background: #f2f2f2; color: #444444; }
+/* line 430, ../SASS/_theme.scss */
+.fc-state-default .fc-button-effect span { border-width: 100px 0 0 1px; border-style: solid; border-color: white; background: #333333; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=9); opacity: 0.09; }
+/* line 441, ../SASS/_theme.scss */
+.fc-state-default .fc-button-inner { border-style: solid; border-color: #e3e3e3 #cccccc #b5b5b5; background: #f2f2f2; color: #444444; }
+
+/* line 448, ../SASS/_theme.scss */
+.fc-state-hover { border-color: #939393; }
+/* line 450, ../SASS/_theme.scss */
+.fc-state-hover .fc-button-inner { border-color: #939393; }
+
+/* line 454, ../SASS/_theme.scss */
+.fc-state-down { border-color: #717171; background: #777; }
+/* line 457, ../SASS/_theme.scss */
+.fc-state-down .fc-button-inner { border-color: #717171; background: #777; }
+
+/* line 462, ../SASS/_theme.scss */
+.fc-state-active { border-color: #717171; background: #777; color: #fff; }
+/* line 466, ../SASS/_theme.scss */
+.fc-state-active .fc-button-inner { border-color: #717171; background: #777; color: #fff; }
+
+/* line 472, ../SASS/_theme.scss */
+.fc-state-disabled { color: #999; border-color: #e5e5e5; }
+/* line 475, ../SASS/_theme.scss */
+.fc-state-disabled .fc-button-inner { color: #999; border-color: #e5e5e5; }
+
+/* line 481, ../SASS/_theme.scss */
+.listShopping { position: relative; }
+/* line 483, ../SASS/_theme.scss */
+.listShopping .productQty .errorMessageBubble { left: 328px !important; top: 40px !important; }
+
+/************************************************************************************
+* Tooltip plugin
+************************************************************************************/
+/************************************************************************************
+* Alerts
+************************************************************************************/
+/* line 496, ../SASS/_theme.scss */
+.UI-Alert { background: #633a89 url("../Images/alertsquare1.png") no-repeat scroll left top; font-size: 1.27273em; font-weight: bold; height: 3.72727em; line-height: 3.72727em; margin: 0em 0em 0.45455em 0em; text-transform: uppercase; text-align: center; color: #fff; }
+
+/* line 507, ../SASS/_theme.scss */
+.errorMessageBubble { background: #f3cfdb; border: 0.1em solid #633a89; display: none; font-size: 1.09091em; font-weight: bold; margin-bottom: 0.83333em; padding: 0.16667em 0.41667em 0.25em 0.25em; color: #633a89; position: absolute; height: 1.16667em; }
+
+/* line 520, ../SASS/_theme.scss */
+#ReturnSuccessMessage { background: #c5e1b2; display: block; font-weight: bold; margin-bottom: 0.90909em; padding: 0.63636em; }
+/* line 526, ../SASS/_theme.scss */
+#ReturnSuccessMessage #SuccessMessage { color: #6eb43f; display: block; }
+
+/************************************************************************************
+* Modals
+************************************************************************************/
+/* line 535, ../SASS/_theme.scss */
+.LModal { background: rgba(0, 0, 0, 0.6); }
+/* line 537, ../SASS/_theme.scss */
+.LModal .mContent { background: white; }
+
+/* line 542, ../SASS/_theme.scss */
+.IE7 .LModal, .IE8 .LModal { background: #555; }
+
+/* line 547, ../SASS/_theme.scss */
+.BundleOption .bundleModal { line-height: 1.5em; }
+
+/* line 550, ../SASS/_theme.scss */
+.bundleModal { position: fixed !important; min-width: 250px; max-width: 450px; }
+/* line 554, ../SASS/_theme.scss */
+.bundleModal .bundleOption a { font-size: 1.09091em; margin: 0.33333em 0em; }
+
+/************************************************************************************
+* Page Headers
+************************************************************************************/
+/* line 563, ../SASS/_theme.scss */
+.PageTitle { font-size: 1.81818em; margin: -0.25em -0.25em 1em; padding: 0.5em 0.5em 1em; background: #f7f7f7; }
+/* line 568, ../SASS/_theme.scss */
+.PageTitle .Crumbs { font-size: 0.55em; }
+
+/************************************************************************************
+* Dashboard/Home
+************************************************************************************/
+/* line 576, ../SASS/_theme.scss */
+.WidgetTitle { background: #bebebe; color: white; }
+
+/* line 580, ../SASS/_theme.scss */
+.welcomeFlag { background-color: #efefef; }
+
+/* line 584, ../SASS/_theme.scss */
+.Resources .ImgWrapper { background-color: white; }
+/* line 587, ../SASS/_theme.scss */
+.Resources .scrollable .items { border-left: 0; }
+
+/* line 591, ../SASS/_theme.scss */
+#documentScroller { line-height: normal; }
+
+/* line 595, ../SASS/_theme.scss */
+#BreakingNews { text-align: center; border: 1px dotted #e3e3e3; }
+/* line 599, ../SASS/_theme.scss */
+#BreakingNews h1 span { display: block; overflow: hidden; line-height: 1.15em; }
+
+/* line 608, ../SASS/_theme.scss */
+.partyStatsList .custName { font-weight: bold; }
+
+/************************************************************************************
+* Contacts Tab
+************************************************************************************/
+/************************************************************************************
+* Performance Tab KPIs
+************************************************************************************/
+/* line 620, ../SASS/_theme.scss */
+.PerfKPIHold { margin-top: 1.81818em; }
+
+/* line 623, ../SASS/_theme.scss */
+.PerfKPI { margin-right: 10px; min-width: 280px; width: 48%; }
+/* line 628, ../SASS/_theme.scss */
+.PerfKPI .UI-secBg span { line-height: 2em; }
+
+/* line 633, ../SASS/_theme.scss */
+.PerfKPIHold .last { margin-right: 0; }
+
+/* line 637, ../SASS/_theme.scss */
+.kpiVolumeCompare .body { height: 19.09091em; overflow: auto; }
+
+/* line 642, ../SASS/_theme.scss */
+.PSLIV a.Button { position: absolute; margin: -32px 0 0 33px; }
+/* line 646, ../SASS/_theme.scss */
+.PSLIV .Inner { margin: 0 5px 0 5px; border-top: none; }
+/* line 650, ../SASS/_theme.scss */
+.PSLIV #visualization { margin: 0 0 0 25px; }
+/* line 653, ../SASS/_theme.scss */
+.PSLIV .Lawyer { padding: 0 5px 0 5px; }
+
+/* line 658, ../SASS/_theme.scss */
+.DonorGoalDisplays { color: #125379; margin: 40px 0px 0px 0px; width: 130px; font-weight: bold; }
+
+/* line 664, ../SASS/_theme.scss */
+.PerfKPI .WidgetTitle { width: 226px; }
+
+/* line 669, ../SASS/_theme.scss */
+.Seg1 { background-position: 0 146px; }
+
+/* line 669, ../SASS/_theme.scss */
+.LV1 .GoalProgress { height: 86%; }
+
+/* line 670, ../SASS/_theme.scss */
+.Seg2 { background-position: 0 116px; }
+
+/* line 670, ../SASS/_theme.scss */
+.LV2 .GoalProgress { height: 72%; }
+
+/* line 671, ../SASS/_theme.scss */
+.Seg3 { background-position: 0 93px; }
+
+/* line 671, ../SASS/_theme.scss */
+.LV3 .GoalProgress { height: 57%; }
+
+/* line 672, ../SASS/_theme.scss */
+.Seg4 { background-position: 0 70px; }
+
+/* line 672, ../SASS/_theme.scss */
+.LV4 .GoalProgress { height: 43%; }
+
+/* line 673, ../SASS/_theme.scss */
+.Seg5 { background-position: 0 47px; }
+
+/* line 673, ../SASS/_theme.scss */
+.LV5 .GoalProgress { height: 29%; }
+
+/* line 674, ../SASS/_theme.scss */
+.Seg6 { background-position: 0 24px; }
+
+/* line 674, ../SASS/_theme.scss */
+.LV6 .GoalProgress { height: 16%; }
+
+/* line 675, ../SASS/_theme.scss */
+.Seg7 { background-position: 0 0; }
+
+/* line 675, ../SASS/_theme.scss */
+.LV7 .GoalProgress { height: 0%; }
+
+/* line 677, ../SASS/_theme.scss */
+.LV1 .ProgressIndicator { margin-top: 138px; }
+
+/* line 678, ../SASS/_theme.scss */
+.LV2 .ProgressIndicator { margin-top: 115px; }
+
+/* line 679, ../SASS/_theme.scss */
+.LV3 .ProgressIndicator { margin-top: 92px; }
+
+/* line 680, ../SASS/_theme.scss */
+.LV4 .ProgressIndicator { margin-top: 69px; }
+
+/* line 681, ../SASS/_theme.scss */
+.LV5 .ProgressIndicator { margin-top: 46px; }
+
+/* line 682, ../SASS/_theme.scss */
+.LV6 .ProgressIndicator { margin-top: 23px; }
+
+/* line 683, ../SASS/_theme.scss */
+.LV7 .ProgressIndicator { margin-top: 0px; }
+
+/* line 685, ../SASS/_theme.scss */
+.kpiNameValue { width: 100%; margin: 1em 0; }
+/* line 688, ../SASS/_theme.scss */
+.kpiNameValue .WidgetUtility, .kpiNameValue .WidgetBody { margin: 2px; }
+/* line 691, ../SASS/_theme.scss */
+.kpiNameValue li { padding: 5px; border-bottom: 0.1em dotted #e3e3e3; }
+/* line 694, ../SASS/_theme.scss */
+.kpiNameValue li a { display: inline-block; padding: 0; }
+/* line 699, ../SASS/_theme.scss */
+.kpiNameValue li span.bold { width: 70px; }
+/* line 702, ../SASS/_theme.scss */
+.kpiNameValue li span.FR { width: 100px; }
+
+/************************************************************************************
+* News Tab
+************************************************************************************/
+/* line 713, ../SASS/_theme.scss */
+#News .news { border-bottom: 0.1em dotted #e3e3e3; }
+/* line 715, ../SASS/_theme.scss */
+#News .news .newsDate { border: 0.1em solid #e3e3e3; -moz-box-shadow: 0em 0em 0.18182em rgba(0, 0, 0, 0.2); -webkit-box-shadow: 0em 0em 0.18182em rgba(0, 0, 0, 0.2); box-shadow: 0em 0em 0.18182em rgba(0, 0, 0, 0.2); text-align: center; width: 4.36364em; margin-right: 0.45455em; }
+/* line 722, ../SASS/_theme.scss */
+#News .news .newsDate span.newsMonth { background: #f4f4f4; padding: 0.18182em; }
+/* line 726, ../SASS/_theme.scss */
+#News .news .newsDate span.newsDay { font-size: 1.45455em; padding: 0.3125em 0em 0.125em; }
+/* line 730, ../SASS/_theme.scss */
+#News .news .newsDate span.newsYear { font-size: 0.81818em; }
+/* line 736, ../SASS/_theme.scss */
+#News a:hover { background-color: #f4f4f4; }
+
+/************************************************************************************
+* Documents Tab
+************************************************************************************/
+/************************************************************************************
+* Orders/Parties Tab
+************************************************************************************/
+/* line 748, ../SASS/_theme.scss */
+.paymentTypeList label { cursor: pointer; }
+
+/* line 751, ../SASS/_theme.scss */
+.partyAppliedHeader { border-right: 0.1em solid #e3e3e3; }
+
+/* line 754, ../SASS/_theme.scss */
+.custAppliedHeader { border-left: 0.1em solid #e5e5e5; }
+
+/* line 757, ../SASS/_theme.scss */
+.partyPaymentsColumn { border-right: 0.1em solid #e3e3e3; }
+
+/* line 760, ../SASS/_theme.scss */
+.customerCartHeader { line-height: 2em; height: 2.18182em; }
+/* line 763, ../SASS/_theme.scss */
+.customerCartHeader .guestName span { padding-right: 0.45455em; }
+
+/* line 767, ../SASS/_theme.scss */
+.collapsedCart { -moz-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; -webkit-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; margin: 0.45455em 0em; }
+
+/* line 771, ../SASS/_theme.scss */
+#ParySumGuestWrap { max-height: 18.18182em; overflow: auto; overflow-x: hidden; overflow-y: auto; }
+
+/* line 777, ../SASS/_theme.scss */
+body.IE7 span.Total { padding-right: 1.81818em; }
+
+/************************************************************************************
+* My Account
+************************************************************************************/
+/************************************************************************************
+* Communication Tab
+************************************************************************************/
+/* line 789, ../SASS/_theme.scss */
+#EmailForm input { padding: 0.45455em; margin: 0em 0em 0.45455em 0em; }
+/* line 793, ../SASS/_theme.scss */
+#EmailForm .qq-upload-button { margin: 0em 0.81818em 0.45455em 0em; }
+
+/* line 797, ../SASS/_theme.scss */
+.emailToFullContainer { background: white; border: 0.1em soild #cbcbcb; }
+
+/* line 801, ../SASS/_theme.scss */
+.emailEntry { background: #F3F7FD; border: 0.1em #bbd8fb solid; }
+
+/* line 805, ../SASS/_theme.scss */
+#emailsContainer .titlecontent { background-color: #F5FFEF; }
+
+/* line 809, ../SASS/_theme.scss */
+.NewsletterStatisticsNav { margin: 1.81818em 0em 0em 0em; padding: 0em; height: 5.45455em; }
+/* line 813, ../SASS/_theme.scss */
+.NewsletterStatisticsNav ul { display: block; width: 100%; margin: 0em; padding: 0em; min-width: 54.54545em; }
+/* line 820, ../SASS/_theme.scss */
+.NewsletterStatisticsNav li { display: block; float: left; width: 8.63636em; background: white; font-weight: normal; line-height: normal; }
+/* line 827, ../SASS/_theme.scss */
+.NewsletterStatisticsNav li a, .NewsletterStatisticsNav li.current a { line-height: normal; }
+/* line 831, ../SASS/_theme.scss */
+.NewsletterStatisticsNav a { display: block; padding: 0.18182em; height: 5.45455em; }
+/* line 836, ../SASS/_theme.scss */
+.NewsletterStatisticsNav .current { font-weight: bold; }
+/* line 838, ../SASS/_theme.scss */
+.NewsletterStatisticsNav .current a:hover { cursor: default; }
+/* line 842, ../SASS/_theme.scss */
+.NewsletterStatisticsNav span { display: block; }
+/* line 845, ../SASS/_theme.scss */
+.NewsletterStatisticsNav .label { width: 4.54545em; }
+/* line 848, ../SASS/_theme.scss */
+.NewsletterStatisticsNav .statValue { font-size: 1.45455em; }
+/* line 851, ../SASS/_theme.scss */
+.NewsletterStatisticsNav a.NewsletterStatisticsTabNotClickable, .NewsletterStatisticsNav li.current a.NewsletterStatisticsTabNotClickable { background-color: #f2f2f2; color: #9e9e9e; cursor: text; }
+
+/* line 857, ../SASS/_theme.scss */
+.personalPhoto { background: url(../Images/Encore/newsletterImgBlank.png) no-repeat; }
+
+/* line 861, ../SASS/_theme.scss */
+.newsLetterPreview { background: url(../Images/Encore/newsletterPreview.png) no-repeat; }
+
+/*******************************************************************************
+* Party Guest List
+*******************************************************************************/
+/* line 870, ../SASS/_theme.scss */
+.invitedGuestListHoverDetails .Total { color: #3b3; border: 1px solid lightgreen; padding: 1px 5px; background-color: #cfc; cursor: help !important; }
+
+/************************************************************************************
+* Support Tab
+************************************************************************************/
+/************************************************************************************
+* Misc Rules
+************************************************************************************/
+/* line 886, ../SASS/_theme.scss */
+.UI-header { padding: 0.27273em 0.45455em; }
+
+/* line 890, ../SASS/_theme.scss */
+.FauxTable label, .FormTable label, .FormContainer label, .GridFilters label, #siteWidgets li label { font-weight: bold; }
+
+/* line 894, ../SASS/_theme.scss */
+.defaultProfile, .emailRowUnread { font-weight: bold; }
+
+/* line 897, ../SASS/_theme.scss */
+.listNav li, .brdrBottom, #siteWidgets li { border-bottom: 0.1em dotted #e3e3e3; }
+
+/* line 900, ../SASS/_theme.scss */
+.PerfKPI .UI-secBg.brdrAll, .brdrAll .UI-header { /*-moz-border-radius: 0.45455em 0.45455em 0 0;  -webkit-border-radius: 0.45455em 0.45455em 0 0; border-radius: 0.45455em 0.45455em 0 0; */}
+
+/* line 903, ../SASS/_theme.scss */
+.flatList .current { background: #232323; -moz-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; -webkit-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; }
+
+/* line 907, ../SASS/_theme.scss */
+.BalanceCovered { background: #6eb43f !important; }
+
+/* line 910, ../SASS/_theme.scss */
+.qq-upload-button { background-color: #e7f1e1; font-size: 1.27273em; padding: 0.71429em; font-weight: bold; cursor: pointer; display: block; }
+
+/* line 918, ../SASS/_theme.scss */
+.qq-upload-button-hover { background-color: #64a63a; color: #fff; cursor: pointer; }
+
+/* line 923, ../SASS/_theme.scss */
+.jqmWindow h1 { text-align: left; color: #fff; padding: 0.16667em; }
+
+/* line 928, ../SASS/_theme.scss */
+.listBody { margin-bottom: 1.36364em; }
+
+/* line 932, ../SASS/_theme.scss */
+.errorBody { line-height: 2.5em; }
+
+/* line 936, ../SASS/_theme.scss */
+.UI-lightBg .UI-mainBg a { color: white; }
+/* line 938, ../SASS/_theme.scss */
+.UI-lightBg .UI-mainBg a:hover { color: #a7a7a7; }
+
+/* line 943, ../SASS/_theme.scss */
+#ActiveLinkTerm { display: none; padding: 0.27273em; margin: 0em 0.45455em; }
+
+/* line 4, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleChart .chart { position: absolute; z-index: 10; }
+
+/* line 8, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleRadial_Chart_Paid { top: 15px; left: 28px; }
+
+/* line 12, ../SASS/Performance/_titleProgressWidget.scss */
+.chart .highcharts-container { background: transparent !important; }
+
+/* line 15, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleChart.circularChartWrap { position: relative; height: 150px; min-width: 176px; width: 40%; }
+
+/* line 21, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleBar_Chart { width: 60%; position: absolute; right: 0; top: 0; }
+/* line 27, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleBar_Chart .highcharts-container { top: 0 !important; }
+
+/* line 31, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleBar_View { position: relative; }
+
+/* line 34, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevels { height: 151px; width: 100%; }
+
+/* line 38, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevels span { display: block; padding-left: 10px; }
+
+/* line 43, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleProgressLegend { height: 35px; }
+
+/* line 46, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevel { font-size: 15px; font-weight: bold; position: absolute; text-align: center; left: 60px; top: 60px; width: 55px; }
+/* line 54, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevel span { display: block; }
+
+/* line 59, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend .chartLegend { overflow: hidden; }
+/* line 61, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend .chartLegend .label { color: #5e5e5e; }
+/* line 64, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend .chartLegend .term { color: #7e7e7e; font-weight: normal; }
+/* line 69, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend .chartLegendColor { display: block; width: 15px; height: 15px; }
+
+/* line 75, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleChart, #TitleProgressLegend2 { float: left; }
+
+/* line 79, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend div.FL { margin: 2px; }
+/* line 82, ../SASS/Performance/_titleProgressWidget.scss */
+.titleProgressLegend div { line-height: 15px; margin: 0 10px 0 0; }
+
+/* line 87, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleProgressLegend2 { margin: 15px 0 0 15px; padding: 5px 0; }
+/* line 90, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleProgressLegend2 .chartLegend { margin: 5px 10px; }
+/* line 92, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleProgressLegend2 .chartLegend span { float: left; clear: left; }
+
+/* line 99, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevels span { background: #f7f7f7; }
+
+/* line 102, ../SASS/Performance/_titleProgressWidget.scss */
+#TitleLevels span:nth-child(2n) { background: #efefef; }
+
+/* line 106, ../SASS/Performance/_titleProgressWidget.scss */
+.TitleProgress .recognized { color: #3d3d3d; font-weight: bold; }
+/* line 110, ../SASS/Performance/_titleProgressWidget.scss */
+.TitleProgress .paidAs { color: #6eb43f; font-weight: bold; }
+
+/* line 115, ../SASS/Performance/_titleProgressWidget.scss */
+.chartLegendColor { -moz-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; -webkit-border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; border-radius: 0.45455em 0.45455em 0.45455em 0.45455em; }
+/* line 117, ../SASS/Performance/_titleProgressWidget.scss */
+.chartLegendColor.recognizedLegend { background-color: #3d3d3d; }
+/* line 120, ../SASS/Performance/_titleProgressWidget.scss */
+.chartLegendColor.paidAsLegend { background-color: #6eb43f; }
+
+/* line 124, ../SASS/Performance/_titleProgressWidget.scss */
+.titleLevel.complete { color: #8e8e8e; }
+
+/* line 2, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator { margin: 20px 0px; }
+/* line 4, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator .Number { font-size: 28px; line-height: 56px; color: #fff; display: block; }
+/* line 10, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator .qmark_trigger { font-size: 0.42857em; color: #fff; right: -5px; line-height: 1.35em; }
+/* line 15, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator .qmark_trigger .qmark { font-size: 0.91667em; }
+/* line 18, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator .qmark_trigger .qmark_close { font-size: 1.63636em; right: -0.44444em; top: -0.38889em; }
+/* line 24, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator.Good { background: #6eb43f; }
+/* line 27, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator.Warn { background: #f7e40c; }
+/* line 30, ../SASS/Performance/_salesVolumeWidget.scss */
+#kpiSV .Indicator.Alert { background: #633a89; }
+
+/* line 35, ../SASS/Performance/_salesVolumeWidget.scss */
+#RemainingVolume { position: absolute; text-align: center; left: 28px; top: 43px; width: 68px; }
+/* line 41, ../SASS/Performance/_salesVolumeWidget.scss */
+#RemainingVolume span { display: block; color: #aaaaaa; }
+
+/* line 46, ../SASS/Performance/_salesVolumeWidget.scss */
+.chart .highcharts-container { background: transparent !important; }
+
+/* line 49, ../SASS/Performance/_salesVolumeWidget.scss */
+#SalesVolRadial_View.circularChartWrap { position: relative; float: right; }
+
+/* line 53, ../SASS/Performance/_salesVolumeWidget.scss */
+#SalesVolRadial_Chart { height: 115px; width: 105px; }
+
+/* line 57, ../SASS/Performance/_salesVolumeWidget.scss */
+.salesVolumeRadial { background: #ffffff; border-radius: 55px 0 0 55px; padding: 0 10px; }
+
+/* line 62, ../SASS/Performance/_salesVolumeWidget.scss */
+#SalesIndicator.salesRadialIndicator { margin-top: 14px; }
+
+/* line 66, ../SASS/Performance/_salesVolumeWidget.scss */
+#SalesVolBar_View { position: relative; overflow: hidden; background: #6eb43f; border: 1px solid black; }
+
+/* line 72, ../SASS/Performance/_salesVolumeWidget.scss */
+.PerfKPIHold .kpiVolume #SalesVolBar_View .Indicator { display: block; margin: 0; height: 24px; line-height: 24px; color: rgba(255, 255, 255, 0.6); }
+
+/* line 79, ../SASS/Performance/_salesVolumeWidget.scss */
+.PerfKPIHold .kpiVolume .Indicator.salesVolLevel { float: left; width: 32.5%; }
+
+/* line 83, ../SASS/Performance/_salesVolumeWidget.scss */
+.PerfKPIHold .kpiVolume .Indicator.salesVolSlider { position: absolute; left: 0; width: 100%; background: #000; opacity: .5; filter: alpha(opacity=55); }
+
+/* line 91, ../SASS/Performance/_salesVolumeWidget.scss */
+.salesVolLevel.Warn { border: solid black; border-width: 0 1px; }
+
+/* line 95, ../SASS/Performance/_salesVolumeWidget.scss */
+.salesVolSlider:before { position: absolute; top: -4px; left: -14px; font-size: 32px; color: #000; }
+
+/* line 102, ../SASS/Performance/_salesVolumeWidget.scss */
+.Indicator.Alert { -moz-box-shadow: 0 0 20px #890c35 inset; -webkit-box-shadow: 0 0 20px #890c35 inset; box-shadow: 0 0 20px #890c35 inset; }
+
+/* line 105, ../SASS/Performance/_salesVolumeWidget.scss */
+.Indicator.Warn { -moz-box-shadow: 0 0 20px #ac9f08 inset; -webkit-box-shadow: 0 0 20px #ac9f08 inset; box-shadow: 0 0 20px #ac9f08 inset; }
+
+/* line 108, ../SASS/Performance/_salesVolumeWidget.scss */
+.Indicator.Good, #SalesVolBar_View { -moz-box-shadow: 0 0 20px #4d7d2c inset; -webkit-box-shadow: 0 0 20px #4d7d2c inset; box-shadow: 0 0 20px #4d7d2c inset; }
+
+/* line 2, ../SASS/Performance/_overviewWidget.scss */
+#OverviewBar_Chart { height: 120px; }
+
+/* line 5, ../SASS/Performance/_overviewWidget.scss */
+.overviewNameValue { width: 45%; margin: 0.3%; padding: 12px 2%; font-size: 120%; }
+
+/* line 11, ../SASS/Performance/_overviewWidget.scss */
+.WidgetBody.flatList .overviewNameValue { width: 95%; padding: 6px 2%; font-size: 100%; }
+/* line 15, ../SASS/Performance/_overviewWidget.scss */
+.WidgetBody.flatList .overviewNameValue span.FR { text-align: right; }
+
+/* line 20, ../SASS/Performance/_overviewWidget.scss */
+#OverviewBar_View #GV, #OverviewBar_View #PV { display: none; }
+
+/* line 25, ../SASS/Performance/_overviewWidget.scss */
+#OverviewText_View .overviewNameValue { background: white; width: 96%; border: none; border-bottom: 0.1em dotted #e3e3e3; padding: 8px; font-size: 100%; margin: 0 1%; }
+/* line 33, ../SASS/Performance/_overviewWidget.scss */
+#OverviewText_View .overviewNameValue span.FL { font-weight: bold; }
+/* line 36, ../SASS/Performance/_overviewWidget.scss */
+#OverviewText_View .overviewNameValue span.FR { font-weight: normal; }

@@ -1,0 +1,73 @@
+@model NetSteps.Data.Entities.Category
+@{
+    ViewBag.Title = Model.Translations.Name();
+    var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+	var accountTypeId = CoreContext.CurrentAccount != null ? CoreContext.CurrentAccount.AccountTypeID : (short)Constants.AccountType.RetailCustomer;
+}
+@section head {
+}
+<h1 class="pageTitle shoppingPageTitle">
+    <span>@Model.Translations.Name()</span></h1>
+@Html.Raw(Model.Translations.HtmlContent().BuildContent())
+<span class="ClearAll"></span>
+@{var childCategories = ((List<Category>)ViewBag.ActiveCategories).Where(c => c.ParentCategoryID == Model.CategoryID);
+  var currencyID = CoreContext.CurrentOrder == null ? SmallCollectionCache.Instance.Markets.GetById(CoreContext.CurrentMarketId).GetDefaultCurrencyID() : CoreContext.CurrentOrder.CurrencyID;
+}
+
+@{
+    var allParentCategoryProducts = inventory.GetActiveProductsForCategory(NetSteps.Data.Entities.ApplicationContext.Instance.StoreFrontID, Model.CategoryID, accountTypeId);
+    var parentCategoryProducts = inventory.ExcludeInvalidProducts(allParentCategoryProducts, accountTypeId, currencyID).Where(p => p.ProductBase.Products.Count == 1 || p.IsVariantTemplate).ToList();
+}
+
+@if (parentCategoryProducts.Count > 0)
+{
+    <div class="CategoryGroup">
+        <div class="clr mb10 ProductThumbRows">
+		@{
+			int parentCount = parentCategoryProducts.Count();
+			int categoryCount = (int)ViewData["GetCategoryCount"];
+			for (int i = 0; i < Math.Min(parentCount, categoryCount); i++)
+			{     
+            <div class="row">
+				@foreach (var product in parentCategoryProducts.Skip(i * categoryCount).Take(categoryCount))
+				{
+					Html.RenderPartial("ProductListing", product);
+				}
+            </div>    
+			}
+		}
+        </div>
+    </div>
+}
+
+
+@if (childCategories.Count() > 0)
+{
+    foreach (var category in childCategories.OrderBy(c => c.SortIndex))
+    {
+        bool hasMore;
+        var products = inventory.GetActiveValidProductsForCategory(NetSteps.Data.Entities.ApplicationContext.Instance.StoreFrontID, category.CategoryID, (int)ViewData["GetCategoryCount"], out hasMore, accountTypeId);
+    <div class="CategoryGroup">
+        <div class="categoryHeading">
+            <div class="FL categoryName">
+                @category.Translations.Name()
+            </div>
+            @if (hasMore)
+            {
+                <div class="FR ViewAll">
+                    <a href="@(Url.Resolve("~/Shop/Category/") + category.CategoryID)" class="viewAllLink"><span>
+                        @Html.Term("ViewEntireCategory", "View Entire {0}", category.Translations.Name())
+                        </span>
+                        </a>
+                </div>
+            }
+            <span class="clr"></span>
+        </div>
+        <div class="ProductThumbRows">
+           
+                @foreach (var product in products) { Html.RenderPartial("ProductListing", product); }
+            
+        </div>
+    </div>
+    }
+}

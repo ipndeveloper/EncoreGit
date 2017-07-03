@@ -1,0 +1,37 @@
+﻿@model  List<SupportTicketGestionBE>
+
+    <div class="demo">
+    <span class="ClearAll"></span>
+    <div class="ModTitle" id="uxNotesDiv">
+      <br />  <br />
+            <span style='color: #0080FF'>    <strong>@Html.Term("DetailGestion", "DETAIL GESTION")   </strong>  
+       <span class="ClearAll"></span>
+            </span>
+
+ 
+    </div>
+    @for (int indice = 0; indice < Model.Count(); indice++)
+      {  
+    <div id="notesSuportGestion">
+       <div class="AcctNote">
+            <span class="FL NoteTitle">
+              
+            </span>
+            <span class="ClearAll">
+            </span>
+            <span class="NoteAuthor">
+              @Html.Term("PostedOn") : 
+                  @Model[indice].DateCreatedUTC.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)
+                <br>   @Html.Term("PostedBy"):  @Model[indice].Username<br>  @Html.Term("PublishNoteToOwner"):@Model[indice].isInternal?"Yes":"no"
+             
+             <br>   @Html.Term("StatusSupportGestion","Status"):  @Model[indice].NameStatus
+
+            </span>
+       <strong >
+        @Model[indice].Descripction
+       </strong>   
+
+        </div>
+    </div>
+   }  
+    </div>

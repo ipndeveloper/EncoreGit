@@ -1,0 +1,83 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        exportE();
+        IsValid();
+        LoadInitialMessage();
+    });
+
+    function LoadInitialMessage() {
+        var cuv = $("#cuvInputFilter").val();
+        var sapcod = $("#sapCodeInputFilter").val();
+        if (cuv == '' && sapcod == '') {
+            ShowAlert('PLEASE ENTER INFORMATION FOR SEARCHING');
+        }
+    }
+
+    function IsValid() {
+        $('div.GridFilters a.filterButton').text('Generate Report');
+        $('div.GridFilters a.filterButton').click(function () {
+            var cuv = $("#cuvInputFilter").val();
+            var sapcod = $("#sapCodeInputFilter").val();
+
+            if (cuv == '' && sapcod == '') {
+                ShowAlert('CUV OR SAP CODE MUST BE INCLUDE FOR SEARCHING');
+                return false;
+            }
+        });
+    }
+
+    function exportE() {
+        $('#exportToExcel').click(function () {
+            var cuv = $("#cuvInputFilter").val();
+            var sapcod = $("#sapCodeInputFilter").val();
+            var fIni = $("#completeDateUTCIniInputFilter").val();
+            var fFin = $("#completeDateUTCFinInputFilter").val();
+            var parameters = '?parameters=' + cuv + "*" + sapcod + "*" + fIni + "*" + fFin;
+
+            if (cuv == '' && sapcod == '') {
+                ShowAlert('CUV OR SAP CODE MUST BE INCLUDE FOR SEARCHING');
+                return false;
+            }
+            else window.location = '@Href("~/Reports/Reports/ItemsAllocatedByProductExport")' + parameters;
+        });
+    }
+
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetItemsAllocatedByProductReport")
+        .AddInputFilter(Html.Term("CUV", "CUV"), "cuv", ViewData["CUV"])
+        .AddInputFilter(Html.Term("SAP Code", "SAP Code"), "sapCode", ViewData["SAP Code"])
+
+        .AddInputFilter(Html.Term("DateRange", "Initial Date"), "completeDateUTCIni", ViewData["CompleteDateUTCIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "completeDateUTCFin", ViewData["CompleteDateUTCFin"], true)
+
+        .AddColumn(Html.Term("Order Number"), "OrderNumber")
+        .AddColumn(Html.Term("Account Number"), "AccountNumber")
+        .AddColumn(Html.Term("Account Type"), "AccountType")
+        .AddColumn(Html.Term("Order Type"), "OrderType")
+        .AddColumn(Html.Term("Order Status"), "OrderStatus")
+        .AddColumn(Html.Term("Order Date"), "OrderDate")
+        .AddColumn(Html.Term("Parent Code"), "ParentCode")
+        .AddColumn(Html.Term("CUV"), "CUV")
+        .AddColumn(Html.Term("SAP Code"), "SAP")
+        .AddColumn(Html.Term("BPCS Code"), "BPCS")
+        .AddColumn(Html.Term("Product Description"), "ProductDescription")
+        .AddColumn(Html.Term("Quantity."), "Quantity")
+        .AddColumn(Html.Term("Order Shipment"), "OrderShipmentID")
+        .AddColumn(Html.Term("Price."), "Price")
+        .AddColumn(Html.Term("CV"), "CV")
+        .AddColumn(Html.Term("QV"), "QV")
+        .AddColumn(Html.Term("Net Sale"), "Net")
+        .AddColumn(Html.Term("Subtotal"), "Subtotal")
+        .AddColumn(Html.Term("Tax Amount"), "TaxAmount")
+        .AddColumn(Html.Term("Grand Total"), "GrandTotal")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow();
+    grid.Render(); 
+}
+
+

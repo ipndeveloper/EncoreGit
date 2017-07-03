@@ -1,0 +1,104 @@
+﻿@model nsCore.Areas.Products.Models.Promotions.ICartRewardsPromotionModel
+<script type="text/javascript">
+
+    $(function () {
+
+        var url1 = $("#HF_URL_1").val();
+        var data1 = null;
+        var response1 = null;
+
+        var promise1 = $.get(url1, data1);
+
+        promise1.done(function () {
+            response1 = JSON.parse(promise1.responseText);
+        });
+        promise1.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            alert('@Html.Term("AnErrorHasOccurredToLoadTheProductPriceTypes", "An error has occurred to load the product price types")');
+        });
+
+        //Condition
+        @{
+            int defaultConditionTypePrice = ViewData["conditionProductPriceTypeId"] != null ? (int)ViewData["conditionProductPriceTypeId"] : 0;
+        } 
+        $.when(promise1).done(function (promise1) {
+            var ddlProductPriceTypes = document.getElementById("ddlProductPriceTypes");
+
+            $.each(response1, function (i, item) {
+                ddlProductPriceTypes.options[i] = new Option(item.TermName, item.ProductPriceTypeID);
+                
+                if(item.ProductPriceTypeID == @defaultConditionTypePrice){
+                    ddlProductPriceTypes.selectedIndex = i;
+                }
+
+                i += 1;
+            });
+        });
+
+    });
+
+</script>
+<div style="display: none;" id="crQVSub" class="TabContent">
+    @{	
+        var promotionModel = Model.CartCondition as nsCore.Areas.Products.Models.Promotions.ICustomerQVRangeCartCondition;
+
+        decimal? qvMinimumTotal = null;
+        decimal? qvMaximumTotal = null;
+
+        if (ViewBag.AndConditionQvTotal != null && ViewBag.AndConditionQvTotal)
+        {
+            qvMinimumTotal = ViewBag.QvMin;
+            qvMaximumTotal = ViewBag.QvMax;
+        }
+        else {
+            if (promotionModel != null)
+            {
+                qvMinimumTotal = promotionModel.QVMinimumSubtotal;
+                qvMaximumTotal = promotionModel.QVMaximumSubtotal;
+            }
+        }
+        
+    }
+    <table>
+        <tr>
+            <td style="width: 230px; vertical-align: middle;">
+                @Html.Term("Promotions_ConditionsCartQVTotalMinimumLabel", "Cart's QV total is greater than or equal to:")<br />
+            </td>
+            <td style="width: 200px; vertical-align: middle;">
+              @*  <input type="text" value="@(qvMinimumTotal.HasValue ? qvMinimumTotal.Value.ToString("0.00").Replace(",", ".") : "")"
+					style="width: 200px;" class="pad5 mr10 numeric" id="qvSubVal" />*@
+
+                      <input type="text"  monedaidioma='CultureIPN' value="@(qvMinimumTotal.HasValue ? qvMinimumTotal.Value.ToString("N", CoreContext.CurrentCultureInfo) : "")"
+					style="width: 200px;" class="pad5 mr10 numeric" id="qvSubVal" />
+            </td>
+            <td style="width: 230px; vertical-align: middle;">
+                <span class="lawyer block">
+                    @Html.Term("Promotions_CartRewardsDoesNotIncludeText", "does not consider taxes & shipping")</span>
+            </td>
+            @*<td style="width:230px; vertical-align: middle;">
+                <select style="width: 200px;" class="pad5 mr10 numeric"   id="ddlProductPriceTypes" name="ddlProductPriceTypes"></select>
+            </td>  *@
+            <td style="width: 230px; vertical-align: middle;">
+                <input type="checkbox" id="chkAndConditionQVTotal" />
+                <label for="chkAndConditionQVTotal">@Html.Term("AndCondition", "'And' condition")
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 230px; vertical-align: middle;">
+                @Html.Term("Promotions_ConditionsCartQVTotalMaximumLabel", "Cart's QV total is less than or equal to:")<br />
+            </td>
+            <td style="width: 200px; vertical-align: middle;">
+               @* <input type="text" value="@(qvMaximumTotal.HasValue ? qvMaximumTotal.Value.ToString("0.00").Replace(",", ".") : "")"
+					style="width: 200px;" class="pad5 mr10 numeric" id="qvSubMaxValue" />*@
+                     <input type="text" value="@(qvMaximumTotal.HasValue ? qvMaximumTotal.Value.ToString("N", CoreContext.CurrentCultureInfo) : "")"
+					style="width: 200px;" class="pad5 mr10 numeric" id="qvSubMaxValue"  monedaidioma='CultureIPN'/>
+            </td>
+            <td style="width: 230px; vertical-align: middle;">
+                <span class="lawyer block">
+                    @Html.Term("Promotions_CartRewardsDoesNotIncludeText", "does not consider taxes & shipping")</span>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+</div>

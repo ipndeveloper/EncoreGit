@@ -1,0 +1,12 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Shared.HeaderTotalsModel
+
+<cite class="labelItems">
+    <span class="itemsCount">@Html.Term("Items", "Items"):</span>
+    <span class="itemsInCart" data-bind="text: NumberOfItemsInCart">@Model.Count</span>
+</cite>
+<cite class="labelSubs">
+    <span class="subTotal">@Html.Term("Subtotal", "Subtotal"):</span>
+
+
+    <span class="Total" data-bind="text: Subtotal">@Model.Amount.ToString("c", Model.FormatProvider)</span>
+</cite>

@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NetSteps.OrderAdjustments.Common</name>
+    </assembly>
+    <members>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentProviderManager.RegisterAdjustmentProvider(NetSteps.OrderAdjustments.Common.IOrderAdjustmentProvider)">
+            <summary>
+            Registers an IOrderAdjustmentProvider with the adjustment provider manager.
+            </summary>
+            <param name="provider">The Provider.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentProviderManager.UnregisterAdjustmentProvider(NetSteps.OrderAdjustments.Common.IOrderAdjustmentProvider)">
+            <summary>
+            Unregisters an IOrderAdjustmentProvider with the adjustment provider manager.
+            </summary>
+            <param name="provider">The Provider being removed.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentProviderManager.GetProvider(System.String)">
+            <summary>
+            Gets a provider by its ProviderKey.
+            </summary>
+            <param name="providerKey">The provider's key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentProviderManager.GetAllProviders">
+            <summary>
+            Gets all providers.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:NetSteps.OrderAdjustments.Common.IObjectFilter`1">
+            <summary>
+            Very simple pattern for filtration.  
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile">
+            <summary>
+            IOrderAdjustment contains the information necessary to record the order adjustment "header" and order and orderline adjustments
+            </summary>
+        </member>
+        <member name="P:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile.AffectedAccountIDs">
+            <summary>
+            Gets the AccountIDs of the accounts to be affected by this adjustment.
+            </summary>
+            <value>
+            The affected AccountIDs.
+            </value>
+        </member>
+        <member name="P:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile.OrderModifications">
+            <summary>
+            Gets modifications to be applied to the order or order customer.
+            </summary>
+            <value>
+            The order modifications.
+            </value>
+        </member>
+        <member name="P:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile.OrderLineModificationTargets">
+            <summary>
+            Gets the order item targeting information necessary to identify the items in the order that are to be adjusted.
+            </summary>
+            <value>
+            The order line modification targets.
+            </value>
+        </member>
+        <member name="P:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile.AddedOrderSteps">
+            <summary>
+            Gets steps added to the Order Process added by the OrderAdjustment components.
+            </summary>
+            <value>
+            The added order steps.
+            </value>
+        </member>
+        <member name="P:NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile.Description">
+            <summary>
+            Gets or sets the description of the OrderAdjustmentProfile (should identify the source).
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="T:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler">
+            <summary>
+            Interface for the Order Adjustment handler, responsible for applying/removing adjustments to orders and retrieving applied adjustments from an order.
+            </summary>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler.ApplyAdjustments(NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}},System.Boolean)">
+            <summary>
+            Applies the adjustments to the order.
+            </summary>
+            <param name="orderContext">The order.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler.GetOrderAdjustments(NetSteps.Data.Common.Context.IOrderContext)">
+            <summary>
+            Gets the order adjustments.
+            </summary>
+            <param name="orderContext">The order context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler.RemoveAdjustment(NetSteps.Data.Common.Context.IOrderContext,NetSteps.Data.Common.Entities.IOrderAdjustment)">
+            <summary>
+            Removes the adjustment.
+            </summary>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler.RemoveAllAdjustments(NetSteps.Data.Common.Context.IOrderContext)">
+            <summary>
+            Removes all adjustments.
+            </summary>
+            <param name="orderContext">The order context.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler.CommitAdjustments(NetSteps.Data.Common.Context.IOrderContext)">
+            <summary>
+            Commits the adjustments.
+            </summary>
+            <param name="orderContext">The order context.</param>
+        </member>
+        <member name="T:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions">
+            <summary>
+            Extension methods for the IOrderAdjustmentHandler.
+            </summary>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile})">
+            <summary>
+            Applies the adjustments to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Predicate{NetSteps.Data.Common.Context.IOrderContext})">
+            <summary>
+            Applies the adjustments to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}})">
+            <summary>
+            Applies the adjustments to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile)">
+            <summary>
+            Applies an adjustment to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Predicate{NetSteps.Data.Common.Context.IOrderContext})">
+            <summary>
+            Applies an adjustment to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}})">
+            <summary>
+            Applies an adjustment to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}})">
+            <summary>
+            Applies an adjustment to the order and strips existing adjustments.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Boolean)">
+            <summary>
+            Applies the adjustments to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Boolean)">
+            <summary>
+            Applies the adjustments to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustments(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}},System.Boolean)">
+            <summary>
+            Applies the adjustments to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustments">The adjustments.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Boolean)">
+            <summary>
+            Applies an adjustment to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Boolean)">
+            <summary>
+            Applies an adjustment to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}},System.Boolean)">
+            <summary>
+            Applies an adjustment to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandlerExtensions.ApplyAdjustment(NetSteps.OrderAdjustments.Common.IOrderAdjustmentHandler,NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Collections.Generic.IEnumerable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}},System.Boolean)">
+            <summary>
+            Applies an adjustment to the order.
+            </summary>
+            <param name="handler">The handler.</param>
+            <param name="orderContext">The order context.</param>
+            <param name="adjustment">The adjustment.</param>
+            <param name="orderValidityFilter">The order validity filter.</param>
+            <param name="orderAdjustmentValidityFilter">The order adjustment validity filter.</param>
+            <param name="stripExistingAdjustments">if set to <c>true</c> [strip existing adjustments].</param>
+        </member>
+        <member name="T:NetSteps.OrderAdjustments.Common.ModuleWireup">
+            <summary>
+            Wireup command called at bootstrap time by the wireup coordinator.
+            </summary>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.ModuleWireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+            <summary>
+            Wires this module.
+            </summary>
+            <param name="coordinator">the coordinator</param>
+            <seealso cref="T:NetSteps.Encore.Core.Wireup.IWireupCoordinator"/>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentService.GetApplicableOrderAdjustments(NetSteps.Data.Common.Context.IOrderContext,System.Predicate{NetSteps.Data.Common.Context.IOrderContext},System.Predicate{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Func{NetSteps.Data.Common.Context.IOrderContext,System.Linq.IQueryable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile},System.Linq.IQueryable{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}},NetSteps.OrderAdjustments.Common.IObjectFilter{NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile}[])">
+            <summary>
+            Gets the order adjustments which are applicable for the supplied order context.  This will check all registered providers and return a set which may be filtered before application to the order.  Note that this method does not make any changes to the order or order context.
+            </summary>
+            <param name="targetOrderContext">The target order context.</param>
+            <param name="orderValidator">The order validator.</param>
+            <param name="adjustmentValidator">The adjustment validator.</param>
+            <param name="adjustmentFilter">The adjustment filter.</param>
+            <param name="filters">The filters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentService.CommitOrderAdjustments(NetSteps.Data.Common.Context.IOrderContext)">
+            <summary>
+            Intended for order completion.  This will notify all order adjustment providers that adjustments need to be committed.  Should be wrapped in the same transaction.
+            </summary>
+            <param name="orderContext">The order context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.OrderAdjustments.Common.IOrderAdjustmentService.CombineAdjustments(NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile)">
+            <summary>
+            Combines two order adjustments using the primary profile as a base (i.e. description will remain the description of the primary profile).
+            </summary>
+            <param name="primaryProfile">The primary profile.</param>
+            <param name="secondaryProfile">The secondary profile.</param>
+        </member>
+    </members>
+</doc>

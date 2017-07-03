@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="NetSteps.Wpf.Controls.ItemProgressControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="100" Width="450" >
+    <UserControl.Resources>
+    </UserControl.Resources>
+    <Grid>
+    	<Border BorderBrush="#FF686868" CornerRadius="0" BorderThickness="1">
+			<Border.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FFF4F4F4" Offset="0"/>
+					<GradientStop Color="#FFF3F3F3" Offset="1"/>
+					<GradientStop Color="#FFFDFDFD" Offset="0.478"/>
+				</LinearGradientBrush>
+			</Border.Background>
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="3" Opacity="0.4"/>
+			</Border.Effect>
+		</Border>
+		<TextBlock x:Name="uxProcessTitle" Text="Processing items..." Margin="5" FontWeight="Bold"/>
+		<TextBlock x:Name="uxTimeLeft" Text="Time Left..." Margin="5" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+		<Border HorizontalAlignment="Center" Height="25" VerticalAlignment="Center" Width="400" Background="Black">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="3" Opacity="0.4"/>
+			</Border.Effect>
+            <ProgressBar x:Name="progressBar" Grid.RowSpan="3" Grid.ColumnSpan="3">
+            </ProgressBar>
+		</Border>
+		<StackPanel Margin="30, 42, 30, 0" Orientation="Horizontal">
+			<TextBlock x:Name="uxProgressText" Text="5/100 (4%) complete"/>
+		</StackPanel>
+		<TextBlock x:Name="uxCurrentItemText" Margin="25, 65, 25, 0" Text="Current Item" />
+
+		<Button x:Name="uxClose" Click="uxClose_Click" Content="Close" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="75" Margin="5" Foreground="White" BorderBrush="#FF006FAC" Height="25">
+			<Button.Background>
+				<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+					<GradientStop Color="#FF5FA6D5" Offset="0"/>
+					<GradientStop Color="#FF3691C9" Offset="0.483"/>
+					<GradientStop Color="#FF0076B9" Offset="0.522"/>
+					<GradientStop Color="#FF006FAC" Offset="1"/>
+				</LinearGradientBrush>
+			</Button.Background>
+		</Button>
+	</Grid>
+</UserControl>

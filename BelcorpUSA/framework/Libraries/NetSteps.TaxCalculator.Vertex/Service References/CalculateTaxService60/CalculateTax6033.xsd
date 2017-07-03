@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>TransactionExists transaction composite messages. Declaration of structure and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="TransactionExistsRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Transaction Exists Request message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationRequestType">
+        <xsd:attribute name="transactionId" use="required">
+          <xsd:annotation>
+            <xsd:documentation>An identifier that further defines the document and corresponds to the transaction stored in the host system. The Transaction ID is used for synchronization services, but is not used for reporting purposes. Stored in the Tax Journal as transSyncIdCode.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:minLength value="1" />
+              <xsd:maxLength value="40" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionExistsResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Transaction Exists Response message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationResponseType">
+        <xsd:attribute name="transactionId" use="required">
+          <xsd:annotation>
+            <xsd:documentation>An identifier that further defines the document and corresponds to the transaction stored in the host system. The Transaction ID is used for synchronization services, but is not used for reporting purposes. Stored in the Tax Journal as transSyncIdCode.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:minLength value="1" />
+              <xsd:maxLength value="40" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="transactionExistsIndicator" type="xsd:boolean" use="required">
+          <xsd:annotation>
+            <xsd:documentation>Indicates whether or not a transaction with the specified transactionId exists in the Tax Journal. Note: Transactions flagged as Deleted are considered to NOT exist in the Tax Journal.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

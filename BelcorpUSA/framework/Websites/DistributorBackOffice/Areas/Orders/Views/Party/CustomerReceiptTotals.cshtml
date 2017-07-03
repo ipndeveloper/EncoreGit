@@ -1,0 +1,76 @@
+﻿@model OrderCustomer
+@{
+    string shippingString = "";
+    if (Model.Order.ShouldDividePartyShipping)
+    {
+        shippingString = (Model.ShippingTotal + Model.HandlingTotal).ToString(Model.Order.CurrencyID);
+    }
+    else
+    {
+        if (Model.OrderShipments.Count > 0)
+        {
+            shippingString = (Model.ShippingTotal + Model.HandlingTotal).ToString(Model.Order.CurrencyID);
+        }
+        else
+        {
+            shippingString = "(" + Html.Term("ShippingToParty", "Shipping to party") + ")";
+        }
+    }
+}
+<tr class="GridTotalBar">
+	<td style="text-align: right;">
+		@Html.Term("Subtotal"):<br />
+
+        @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+		@Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                           }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+		@Html.Term("Tax"):<br />
+		@Html.Raw(Html.Term("S&H", "S&amp;H")):<br />
+		<b>@Html.Term("Total"):</b>
+	</td>
+	<td>
+		@{
+            var subtotal = Model.Subtotal;
+            var adjustedSubtotal = Model.AdjustedSubTotal;
+		}
+		@if (subtotal != adjustedSubtotal)
+  {
+				<span class="subtotal strikethrough">@subtotal.ToString(Model.Order.CurrencyID)</span>
+				<span class="subtotal">@adjustedSubtotal.ToString(Model.Order.CurrencyID)</span>
+  }
+  else
+  {
+				<span class="subtotal">@subtotal.ToString(Model.Order.CurrencyID)</span>
+  }
+		<br />
+
+         @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+		<span class="commissionableTotal">
+			@Model.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>
+		<br />
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+		<span class="taxTotal">
+			@Model.TaxAmountTotal.ToString(Model.Order.CurrencyID)</span>
+		<br />
+		<span class="shippingTotal">
+			@shippingString</span>
+		<br />
+		<b><span class="grandTotal">
+			@Model.Total.ToString(Model.Order.CurrencyID)</span></b>
+	</td>
+</tr>

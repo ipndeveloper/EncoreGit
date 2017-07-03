@@ -1,0 +1,181 @@
+@model DistributorBackOffice.Areas.Communication.Models.Email.MailboxModel
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+
+            $(".DataGrid tbody tr:even").addClass("Alt");
+            $("ul.lr li:odd").addClass("Alt");
+
+            $('#deleteSelected').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWouldLikeToDeleteTheseItems", "Are you sure you would like to delete these items?")')) {
+                    var data = {}, i = 0;
+                    $('input[name="mailMessages"]').each(function () {
+                        if ($(this).is(':checked')) {
+                            data['ids[' + i + ']'] = $(this).val();
+                            ++i;
+                        }
+                    });
+
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Communication/Email/DeleteSelected")', data, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("EmailsDeletedSuccessfully", "Email(s) deleted successfully!")', false);
+                            window.location = '@(Href("~/Communication/Email/Mailbox?folder=") + Model.MailFolderName)';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                }
+            });
+
+
+            $('#undeleteSelected').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWouldLikeToUndeleteTheseItems", "Are you sure you would like to undelete these items?")')) {
+                    var data = {}, i = 0;
+                    $('input[name="mailMessages"]').each(function () {
+                        if ($(this).is(':checked')) {
+                            data['ids[' + i + ']'] = $(this).val();
+                            ++i;
+                        }
+                    });
+
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Communication/Email/UndeleteSelected")', data, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("EmailsUndeletedSuccessfully", "Email(s) undeleted successfully!")', false);
+                            window.location = '@(Href("~/Communication/Email/Mailbox?folder=") + Model.MailFolderName)';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                }
+            });
+
+
+            $('#markSelectedAsUnRead').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWouldLikeToMarktheSelectedAsUnread", "Are you sure you would like to mark the selected as unread?")')) {
+                    var data = {}, i = 0;
+                    $('input[name="mailMessages"]').each(function () {
+                        if ($(this).is(':checked')) {
+                            data['ids[' + i + ']'] = $(this).val();
+                            ++i;
+                        }
+                    });
+
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Communication/Email/MarkSelectedAsUnRead")', data, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("EmailsMarkedAsUnreadSuccessfully", "Email(s) marked as unread successfully!")', false);
+                            window.location = '@(Href("~/Communication/Email/Mailbox?folder=") + Model.MailFolderName)';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                }
+            });
+
+
+            $('#markSelectedAsRead').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWouldLikeToMarktheSelectedAsRead", "Are you sure you would like to mark the selected as read?")')) {
+                    var data = {}, i = 0;
+                    $('input[name="mailMessages"]').each(function () {
+                        if ($(this).is(':checked')) {
+                            data['ids[' + i + ']'] = $(this).val();
+                            ++i;
+                        }
+                    });
+
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Communication/Email/MarkSelectedAsRead")', data, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("EmailsMarkedAsReadSuccessfully", "Email(s) marked as read successfully!")', false);
+                            window.location = '@(Href("~/Communication/Email/Mailbox?folder=") + Model.MailFolderName)';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                }
+            });
+
+            $('#emptyFolder').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWouldLikeToEmptyThisFolder", "Are you sure you would like to empty this folder?")')) {
+                    var p = $(this).parent();
+                    showLoading(p);
+
+                    $.post('@Href("~/Communication/Email/EmptyDeletedFolder")', {}, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("EmailDeletedSuccessfully", "Email deleted successfully!")', false);
+                            window.location = '@(Href("~/Communication/Email/Mailbox?folder=") + Model.MailFolderName)';
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json');
+                }
+            });
+
+
+            if (parseBool('@(Model.MailFolderName != NetSteps.Data.Entities.Mail.Constants.MailFolderType.Trash.ToString())')) {
+                $('#emptyFolder').hide();
+                $('#undeleteSelected').hide();
+            }
+
+        });
+    </script>
+
+}
+@section breadcrumb{
+}
+@section title {
+    @Html.Term(Model.MailFolderName, Model.MailFolderName.PascalToSpaced())
+    (@Model.MessageCount.ToString())
+}
+@{
+    Html.PaginatedGrid("~/Communication/Email/GetMail")
+        .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+        .AddColumn("<input type=\"checkbox\" id=\"selectedHeader\"/>", string.Empty, true)
+        .AddColumn(Html.Term("SubjectMessagePreview", "Subject / Message Preview"), "Subject", true)
+        .AddColumn(Html.Term("Sent"), "DateAddedUTC", true)
+        .SetDefaultSort("DateAddedUTC", NetSteps.Common.Constants.SortDirection.Descending)
+        //.AddOption("markSelectedAsUnRead", Html.Term("MarkSelectedAsUnRead", "Mark selected as unread"))
+        //.AddOption("markSelectedAsRead", Html.Term("MarkSelectedAsRead", "Mark selected as read"))
+        .AddOption("deleteSelected", Html.Term("DeleteSelected", "Delete Selected"))
+        //.AddOption("undeleteSelected", Html.Term("UnDeleteSelected", "Undelete Selected"))
+        .AddOption("emptyFolder", Html.Term("EmptyFolder", "Empty Folder"))
+        .ClearPageSizeOptions()
+        .AddPageSizeOption(10, "10")
+        .AddPageSizeOption(15, "15")
+        .AddPageSizeOption(25, "25")
+        .AddPageSizeOption(50, "50")
+        .AddData("startDate", null)
+        .AddData("endDate", null)
+        .AddData("folder", Model.MailFolderName)
+        .AddData("length", 150)
+        .AddData("mailAccountID", Model.MailAccountID)
+        .ClickEntireRow()
+        .Render();
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#paginatedGrid .sort:first').attr('title', '').unbind('click').click(function () {
+            $('#paginatedGrid input[name="mailMessages"]').each(function () {
+                $(this).attr('checked', $('#selectedHeader').is(':checked'));
+            }).parent().css('width', '20px');
+        });
+    });
+</script>
+

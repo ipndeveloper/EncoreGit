@@ -1,0 +1,622 @@
+@model NetSteps.Data.Entities.Order
+@using NetSteps.Addresses.Common.Models
+@{
+    var autoshipSchedule = (ViewData["AutoshipSchedule"] as NetSteps.Data.Entities.AutoshipSchedule);
+    string baseUrl = "~/".ResolveUrl() + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";
+}
+@section head {
+	@{Html.RenderPartial("_sharedjs");}
+	<script type="text/javascript">
+		$(function () {
+			onpageLoadHooks();
+			$('#shippingAddressContainer').hide();
+
+			if (parseBool('@(Model.OrderPayments.Count == 0)')) {
+				$('#paymentMethodContainer').show();
+			}
+
+			getSelectedShippingProfile();
+			$('#sShippingAddress').change(updateShippingAddress);
+
+			$('.quickskuadd').watermark('@Html.JavascriptTerm("AutoshipQuickAdd", "Type SKU or name to add to your autoship")');
+
+			if (eval('@autoshipSchedule.AutoshipScheduleDays.Count > 1')) {
+				$('#editAutoshipDayModal').jqm({ modal: false,
+					trigger: '#selectAutoshipDay',
+					onShow: function (h) {
+						h.w.css({
+							top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+							left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+						}).fadeIn();
+					}
+				});
+
+				$('#editEditProcessingDayLink').click(function () {
+					$('#editAutoshipDayModal').jqmShow();
+				});
+			} else {
+				$('#editEditProcessingDayLink').hide();
+			}
+
+			$('#btnSetProcessingDay').click(function () {
+				var newValue = $('#autoshipScheduleDaySelect').val();
+				$.post('@(baseUrl)SetAutoshipDay',
+					{ Day: newValue },
+					function (result) {
+						if (result.result) {
+							$('#autoshipDayValue').val(newValue);
+							$('#autoshipDayDisplay').html($('#autoshipScheduleDaySelect option[value="' + newValue + '"]').text());
+							$('#editAutoshipDayModal').jqmHide();
+							orderChanged();
+						}
+					});
+			});
+
+			$('#bulkAddModal').jqm({ modal: false, trigger: '#btnOpenBulkAdd',
+				onShow: function (h) {
+					h.w.css({
+						top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+						left: '0px'
+					}).fadeIn();
+				},
+				onHide: function (h) {
+					h.w.fadeOut('slow');
+				}, overlay: 0
+			});
+
+			$('#btnQuickAdd').click(function () {
+				$('#ProductLoad').show();
+				var shippingMethodID = $('#SelectedShippingMethod_ShippingMethodID:checked').val();
+				var productId = $('#hQuickAddProductId').val(), quantity = parseInt($('#txtQuickAddQuantity').val());
+				if (productId && quantity) {
+
+					if ($('#hQuickAddNeedsBackOrderConfirmation').val() == "true") {
+						if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+							$('#ProductLoad').hide();
+							hideLoading(t);
+							return false;
+						}
+					}
+
+					$.post('@(baseUrl)AddToCart', { productId: $('#hQuickAddProductId').val(), quantity: parseInt($('#txtQuickAddQuantity').val()), selectedShippingMethodID: shippingMethodID }, function (results) {
+						if (results.result) {
+							$('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');
+							updateCartAndTotals(results);
+							orderChanged();
+							//showMessage('Product successfully added.', false);
+						}
+						else {
+							showMessage('@Html.Term("TheProductCouldNotBeAdded", "The product could not be added"): ' + results.message, true);
+						}
+					});
+				}
+				else if (!productId) {
+					showMessage('@Html.Term("NoProductSelected", "No product selected")', true);
+				}
+				else if (!quantity) {
+					showMessage('@Html.Term("NoQuantityEntered", "No quantity entered")', true);
+				}
+
+				$('#ProductLoad').hide();
+
+			});
+
+			$('#txtQuickAddSearch').jsonSuggest('@(baseUrl)SearchProducts', { minCharacters: 3, source: $('#txtQuickAddSearch'), ajaxResults: true, onSelect: function (item) {
+				$('#hQuickAddProductId').val(item.id);
+				$('#txtQuickAddQuantity').val('1');
+				$('#hQuickAddNeedsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+			}
+			});
+			$('.quantity').numeric();
+
+			$('#btnUpdateCart').click(function () {
+				$('#ProductLoad').show();
+				var data = {};
+				$('#products tbody:first tr').each(function (i) {
+					data['products[' + i + '].Key'] = $('.productId', this).val();
+					data['products[' + i + '].Value'] = $('.quantity', this).val();
+				});
+
+				$.post('@(baseUrl)UpdateCart', data, function (results) {
+					if (results.result) {
+						updateCartAndTotals(results);
+						orderChanged();
+						//showMessage('The cart has been updated.', false);
+					}
+					else {
+						showMessage('@Html.Term("ErrorUpdatingCart", "The cart could not be updated"): ' + results.message, true);
+					}
+					$('#ProductLoad').hide();
+				});
+			});
+
+			$('#btnCancelAutoshipEdit').click(function () {
+				$.post('@(baseUrl)CancelAutoship');
+				window.location = '/Account';
+			});
+
+			$('#btnSaveAutoship').click(function () {
+
+				if (!$('#sShippingAddress').val()) {
+					showMessage('Please select a shipping address.', true);
+					return false;
+				}
+				if (!$('#sPaymentMethod').val()) {
+					showMessage('Please select a payment method.', true);
+					return false;
+				}
+				$('#autoshipWait').jqmShow();
+
+				var data = {
+					scheduleId: '@autoshipSchedule.AutoshipScheduleID',
+					paymentMethodId: $('#sPaymentMethod').val(),
+					autoshipScheduleDay: $('#autoshipDayValue').val(),
+					selectedShippingMethodID: $('#SelectedShippingMethod_ShippingMethodID:checked').val()
+				};
+
+				if ($('#shippingAddressContainer').is(':visible')) {
+					data['shippingAddressId'] = $('#sShippingAddress').val();
+				}
+
+				$.post('@Href("~/Account/Autoships/Save")', data, function (response) {
+					if (response.result) {
+						window.location = '@NetSteps.Web.WebContext.PageUrlWithQueryString';
+					}
+					else {
+						showMessage('The order could not be submitted: ' + response.message, true);
+						$('#autoshipWait').jqmHide();
+						return false;
+					}
+				});
+			});
+
+			//$('#SavePage').hide();
+
+		});
+
+		function updateShippingAddress() {
+			//TODO: change order shipment address in controller and get shipping methods
+			if ($('#sShippingAddress').is(":visible")) {
+				$.post('@(baseUrl)ChangeShippingAddress', { shippingAddressId: $('#sShippingAddress').val() }, function (results) {
+					if (results.result) {
+						updateCartAndTotals(results);
+						orderChanged();
+					}
+					else {
+						showMessage('@Html.Term("ErrorSettingShippingAddress", "There was a problem setting the shipping address"): ' + results.message, true);
+					}
+				});
+				getSelectedShippingProfile();
+			}
+		}
+
+		function updateCartAndTotals(results) {
+			if (results.orderItems) {
+				var orderItem, i;
+				for (i = 0; i < results.orderItems.length; i++) {
+					orderItem = $('#oi' + results.orderItems[i].orderItemId);
+					if (orderItem.length) {
+						orderItem.replaceWith(results.orderItems[i].orderItem);
+					} else {
+						$('#products tbody:first').append(results.orderItems[i].orderItem);
+					}
+				}
+			}
+			// remove payments (the payments were already removed from the object, now we need to update the html)
+			$('#payments .paymentItem').remove();
+			if (!$('#payments .paymentItem').length)
+				$('#noPaymentsRow').show();
+
+			if (results.outOfStockItems && results.outOfStockItems.length > 0 && results.showOutOfStockMessage) {
+				$('#outOfStockProducts li').remove();
+				$('#outOfStockMessage').show();
+				for (var i = 0; i < results.outOfStockItems.length; i++) {
+					$('#outOfStockProducts').append('<li>' + results.outOfStockItems[i] + '</li>');
+				}
+			}
+			else {
+				$('#outOfStockMessage').hide();
+			}
+
+			// refresh the totals
+			updateTotals(results);
+			$('#shippingMethods').html(results.shippingMethods);
+			$('.quantity').numeric();
+		}
+
+		function updateTotals(results) {
+			$.each(['subtotal', 'commissionableTotal', 'taxTotal', 'shippingTotal', 'grandTotal'], function (i, item) {
+				$('.' + item).text(results.totals[item]);
+			});
+		}
+
+		function removeItem(orderItemId) {
+			$('#ProductLoad').show();
+			var t = $(this);
+			var shippingMethodID = $('#SelectedShippingMethod_ShippingMethodID:checked').val();
+			$.post('@(baseUrl)RemoveFromCart', { orderItemGuid: orderItemId, selectedShippingMethodID: shippingMethodID }, function (results) {
+
+				if (results.result) {
+					$('#oi' + orderItemId).remove();
+					updateCartAndTotals(results);
+					//				showMessage('The product was removed.', false);
+					$('#ProductLoad').hide();
+
+					if (results.message !== undefined && results.message.length > 0) {
+						showMessage(results.message, true);
+					}
+				}
+				else {
+					showMessage('@Html.Term("ErrorRemovingProduct", "The product could not be removed"): ' + results.message, true);
+					$('#ProductLoad').hide();
+				}
+			});
+		}
+
+	</script>
+}
+@section breadcrumb {
+	<a href="@Href("~/Account")">
+		@Html.Term("AccountOverview", "Account Overview")</a>
+}
+@section title {
+	@Html.Term("Autoship")
+}
+@{
+    bool fixedAutoship = autoshipSchedule != null && autoshipSchedule.AutoshipScheduleProducts.Count > 0;
+    bool virtualAutoship = autoshipSchedule != null && autoshipSchedule.IsVirtualSubscription;
+    var autoshipScheduleDay = ViewData["AutoshipDay"] as int? ?? 1; // this needs to be cleaned up when we refactor autoships/subscriptions - but it doesn't make sense to error just because the db doesn't contain a day that's in the schedule, that error should be worried about when saving an autoship
+}
+<div id="autoshipWait" class="PModal WaitWin">
+	@Html.Term("SavingAutoship", "Please wait while we save your autoship...")
+	<br />
+	<img src="@Href("~/Resource/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+</div>
+@if ((bool)ViewData["NewAutoship"])
+{
+	<div id="ReturnSuccessMessage" class="autoshipMessage">
+		<div id="SuccessMessage">
+			@Html.Term("NewAutoship", "You are creating a new autoship.")</div>
+	</div>
+}
+<!-- day of month for autoship -->
+<a href="javascript:void(0);" id="selectAutoshipDay" class="autodom" title="Click to change your autoshipment processing day">
+	<input id="autoshipDayValue" type="hidden" value="@autoshipScheduleDay" />
+	<b>
+		@Html.Term("ProcessingDay", "Processing Day")</b> <span id="autoshipDayDisplay" class="mnum">
+			@autoshipScheduleDay</span> </a>
+<div class="UI-mainBg icon-24 brdrAll GridUtility">
+	<a href="javascript:void(0);" class="UI-icon-container Edit EditMyAccount overlay"
+		id="editEditProcessingDayLink" rel="#EditAccountInfo"><span class="UI-icon icon-edit">
+		</span><span>
+			@Html.Term("EditProcessingDay", "Edit Processing Day")</span></a> <a href="@Href("~/Account/Autoships/View", CoreContext.CurrentAccount.AccountID, new { autoshipScheduleId = autoshipSchedule.AutoshipScheduleID })"
+					class="UI-icon-container Edit EditMyAccount overlay" id="A1" rel="#EditAccountInfo">
+				<span class="UI-icon icon-search"></span><span>
+					@Html.Term("ViewOrders", "View Orders")</span></a> <span class="clr"></span>
+</div>
+<br />
+<div class="content">
+	<div class="message ui-state-error" style="display: none;">
+		<div>
+			<p>
+				<span class="FL ui-icon ui-icon-info"></span>You have removed items from your cart
+				that have put your monthly total below the minimum amount <b>($80)</b>. You will
+				not be allowed to save this page until this has been corrected.
+			</p>
+			<span class="clr"></span>
+		</div>
+	</div>
+	<!-- panel -->
+	<div class="FL mr10 splitCol AutoshipCart">
+		@if (!fixedAutoship)
+  {
+			<div class="UI-secBg brdrAll GridUtility MiniCart icon-24">
+				<h5>
+					@Html.Term("MonthlyRetailOrderItems", "Monthly Retail Order Items")</h5>
+				<div class="FL FancyInput ProductAdd">
+					<div class="FL pad5">
+						<input id="txtQuickAddSearch" type="text" class="TextInput quickskuadd" />
+						<input id="hQuickAddProductId" type="hidden" />
+						<input id="hQuickAddNeedsBackOrderConfirmation" type="hidden" />
+						@Html.Term("Quantity", "Quantity"):
+						<input id="txtQuickAddQuantity" type="text" class="Short quantity" style="width: 30px" />
+					</div>
+					<a id="btnQuickAdd" href="#" class="UI-icon-container QuickAdd"><span class="UI-icon icon-plus">
+																					</span><span>
+																							@Html.Term("Add")</span></a>
+					<img id="ProductLoad" src="@Href("~/Resource/Content/Images/processing.gif")"
+						 alt="@Html.Term("loading", "loading...")" class="FR" />
+
+					<div>
+						<a href="javascript:void(0);" id="btnOpenBulkAdd" class="OverrideDisable">
+							@Html.Term("OpenBulkAdd", "Open Bulk Add")</a>
+					</div>
+				</div>
+				<span class="clr"></span>
+			</div>
+  }
+		<table id="products" width="100%" class="DataGrid editableGrid responsive">
+			<thead>
+				<tr class="GridColHead">
+					<th class="GridCheckBox">
+					</th>
+					<th>
+						@Html.Term("SKU")
+					</th>
+					<th>
+						@Html.Term("Product")
+					</th>
+					<th>
+						@Html.Term("Price")
+					</th>
+					<th>
+						@Html.Term("CV_QV")
+					</th>
+					<th style="width: 100px;">
+						@Html.Term("Quantity")
+					</th>
+					<th>
+						@Html.Term("Total")
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }
+				@foreach (var orderItem in Model.OrderCustomers[0].OrderItems)
+    {
+        decimal commissionableTotal = (orderItem.CommissionableTotalOverride != null) ? orderItem.CommissionableTotalOverride.ToDecimal() : orderItem.CommissionableTotal.ToDecimal();
+        Product product = inventory.GetProduct(orderItem.ProductID.Value);
+					<tr id="@("oi" + orderItem.Guid.ToString("N"))">
+						<td data-label="" class="icon-24">
+							@if (!fixedAutoship)
+       {
+								<a onclick="removeItem('@(orderItem.Guid.ToString("N"))');" href="javascript:void(0);" title="@Html.Term("Remove")" class="UI-icon icon-x" />
+       }
+						</td>
+						<td data-label="@Html.Term("SKU")">
+							<input type="hidden" class="productId" value="@product.ProductID" />
+							@orderItem.SKU
+						</td>
+						<td data-label="@Html.Term("Product")">
+							@product.Name
+						</td>
+						<td data-label="@Html.Term("Price")">
+							@orderItem.GetAdjustedPrice().ToString(Model.CurrencyID)
+						</td>
+
+                        @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+       string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+       if (valorSCV == "S")
+       {
+						<td data-label="@Html.Term("CV_QV")">
+							@commissionableTotal.ToString("C")
+						</td>
+       }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+						<td data-label="@Html.Term("Quantity")">
+							@if (fixedAutoship)
+       {
+								@orderItem.Quantity
+       }
+       else
+       {
+								<input type="text" class="quantity" value="@orderItem.Quantity" style="width: 30px;" />
+       }
+						</td>
+						<td data-label="@Html.Term("Total")">
+							@((orderItem.Quantity * orderItem.GetAdjustedPrice()).ToString(Model.CurrencyID))
+						</td>
+					</tr>
+    }
+			</tbody>
+			<tbody class="GridTotalBar">
+				<tr id="productTotalBar" class="GridTotalBar">
+					<td colspan="4">
+						&nbsp;
+					</td>
+					<td>
+						@if (!fixedAutoship)
+      {
+							<a id="btnUpdateCart" href="javascript:void(0);" class="DTL Update OverrideDisable">
+								@Html.Term("Update")</a>
+      }
+					</td>
+					<td class="bold">
+						(@Html.Term("SubTotal", "Sub Total"))
+					</td>
+					<td>
+						<b><span class="subtotal">
+							@Model.Subtotal.ToDecimal().ToString(Model.CurrencyID)</span> </b>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="7" class="UI-lightBg pad5 bold">
+						<span class="FL">@Html.Term("Totals") </span>
+						<div class="FL Loading" id="TotalsLoad">
+						</div>
+						<span class="clr"></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" class="right">
+						@Html.Term("Subtotal", "Subtotal"):
+					</td>
+					<td>
+						<span class="subtotal">
+							@Model.Subtotal.ToString(Model.CurrencyID)</span>
+					</td>
+				</tr>
+
+                 @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                string valorSCV2 = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV2 == "S")
+                                {
+				<tr>
+					<td colspan="6" class="right">@Html.Term("CommissionableTotal", "Commissionable Total"):
+					</td>
+					<td>
+						<span class="commissionableTotal">
+							@Model.CommissionableTotal.ToString(Model.CurrencyID)</span>
+					</td>
+				</tr>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+				<tr>
+					<td colspan="6" class="right">@Html.Term("Tax", "Tax"):
+					</td>
+					<td>
+						<span class="taxTotal">
+							@((Model.TaxAmountTotalOverride != null) ? Model.TaxAmountTotalOverride.ToString(Model.CurrencyID) : Model.TaxAmountTotal.ToString(Model.CurrencyID))</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" class="right">
+						@Html.Term("S&H"):
+					</td>
+					<td>
+						<span class="shippingTotal">
+							@((Model.ShippingTotalOverride != null) ? Model.ShippingTotalOverride.ToString(Model.CurrencyID) : Model.ShippingTotal.ToString(Model.CurrencyID))</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" class="right bold">
+						@Html.Term("OrderTotal", "Order Total"):
+					</td>
+					<td>
+						<b><span class="grandTotal">
+							@Model.GrandTotal.ToString(Model.CurrencyID)</span></b>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="FormTable Section" width="100%">
+			<tr>
+				<td>
+					<div id="outOfStockMessage" style="background: none repeat scroll 0pt 0pt rgb(254, 233, 233);
+																																							border: 1px solid rgb(255, 0, 0); color: rgb(255, 0, 0); display: none;">
+						@Html.Term("ProductsAreOutOfStock", "The following product(s) that you tried to add to your order are out of stock:")
+						<ul id="outOfStockProducts">
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="FR splitCol">
+		<div class="FL mr10 ShipsTo" id="shipToWidget">
+			<h5>@Html.Term("ShipsTo", "Ships To"):</h5>
+			<div id="ShippingCurrentlyTo">
+			
+				@if (ViewBag.SelectedShippingAddress != null)
+    {
+        IAddress selectedShipping = (IAddress)ViewBag.SelectedShippingAddress;
+					@Html.Raw(selectedShipping.ToDisplay(false, true));
+    }
+
+				<a id="lnkUpdateShipping" class="DTL Update OverrideDisable">@Html.Term("Update")</a>
+			</div>
+			<div id="shippingAddressContainer">
+				<select id="sShippingAddress">
+					@{
+                        var shippingAddresses = CoreContext.CurrentAccount.Addresses.Where(a => a.AddressTypeID == Constants.AddressType.Shipping.ToInt()).ToList();
+
+                        bool showActualShippingAddress = false;
+                        OrderShipment shipment = null;
+					}
+					@if (shippingAddresses.Count == 0)
+     {
+						<option value="">-- @Html.Term("PleaseAddShippingAddress", "Please add a shipping address")
+							--</option>
+     }
+     else
+     {
+         int shippingAddressId = 0;
+
+         if (ViewBag.SelectedShippingAddress != null)
+         {
+             shippingAddressId = ViewBag.SelectedShippingAddress.AddressID;
+         }
+         else
+         {
+             showActualShippingAddress = true;
+							<option value="">--@Html.Term("PleaseAddShippingAddress")--</option>
+         }
+
+         foreach (Address shippingAddress in shippingAddresses.OrderByDescending(a => a.IsDefault))
+         {
+             string profileName = shippingAddress.ProfileName + (shippingAddress.IsDefault ? " (" + Html.Term("default") + ")" : "");
+             if (string.IsNullOrEmpty(profileName))
+             {
+                 profileName = SmallCollectionCache.Instance.AddressTypes.GetById(shippingAddress.AddressTypeID).GetTerm();
+             }
+							<option value="@shippingAddress.AddressID" @Html.Raw(shippingAddress.AddressID == shippingAddressId ? "selected=\"selected\"" : "")>
+								@profileName</option>
+         }
+     }
+				</select>
+				<a id="lnkCancelShipping" class="DTL Update OverrideDisable">@Html.Term("Cancel")</a>
+				<div>
+					@foreach (Address shippingAddress in shippingAddresses)
+     {
+						<div id="shippingAddress@(shippingAddress.AddressID)" class="shippingAddressDisplay">
+							<b>
+								@shippingAddress.ProfileName</b>
+							<br />
+							@Html.Raw(shippingAddress.ToString().ToHtmlBreaks())
+						</div>
+     }
+					
+					@*if order shipping address doesn't match an existing account shipping address, just show the actual order shipping address (for accuracy)*@
+					@if (showActualShippingAddress && shipment.IsNotNull())
+     {
+						<div id="Div1" class="shippingAddressDisplay">
+							@Html.Raw(shipment.ToDisplay())
+						</div>
+     }
+				</div>
+			</div>
+		</div>
+		<!-- panel -->
+		@{Html.RenderPartial("_billingPanel", Model);}
+		<span class="clr"></span>
+		@{Html.RenderPartial("_shippingMethods", ViewData["ShippingMethods"]);}
+		<span class="clr"></span>
+	</div>
+	<span class="clr"></span><span class="clr"></span>
+	<div id="SavePage" class="center PageSaveButtons" @*style="@((bool)ViewData["NewAutoship"] ? "" : "display: none;")"*@>
+		@Html.LinkWithSpan("Cancel", cssClasses: "Button Cancel", id: "btnCancelAutoshipEdit")
+		<a href="javascript:void(0);" id="btnSaveAutoship" class="Button"><span>
+																			@((bool)ViewData["NewAutoship"] ? Html.Term("Save") : Html.Term("SaveMyChanges", "Save My Changes"))
+																		  </span></a>
+	</div>
+</div>
+@Html.Partial("AddBulkOrder", (DistributorBackOffice.Models.IBulkAddModel)ViewBag.BulkAddModel)
+<div id="editAutoshipDayModal" class="LModal jqmWindow">
+	<div class="mContent">
+		<div>
+			@Html.Term("ProcessingDay", "Processing Day"):
+			@if (autoshipSchedule.AutoshipScheduleDays.Count > 1)
+   {
+				<select id="autoshipScheduleDaySelect">
+					@foreach (var day in autoshipSchedule.AutoshipScheduleDays)
+     {
+						<option value="@day.Day" @Html.Raw(day.Day == autoshipScheduleDay ? "selected=\"selected\"" : "")>
+							@day.Day</option>
+     }
+				</select><br />
+   }
+			<a id="btnSetProcessingDay" href="javascript:void(0);" class="DTL Add">
+				@Html.Term("Select")</a>
+		</div>
+	</div>
+</div>
+

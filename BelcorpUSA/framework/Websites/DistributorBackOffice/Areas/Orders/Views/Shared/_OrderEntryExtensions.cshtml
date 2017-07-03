@@ -1,0 +1,20 @@
+﻿@* This is an example of wiring up event handlers to the order entry model.
+@{
+	// Use htmlFieldPrefix as a prefix for global vars inside a partial to avoid name collision.
+	var htmlFieldPrefix = Html.HtmlFieldPrefix();
+	var modelName = htmlFieldPrefix + "orderEntryModel";
+}
+<script type="text/javascript">
+    $(function () {
+		@(modelName).onProductSelected(function (event, productData) {
+			alert(productData.productId);
+		});
+		@(modelName).onCartItemAdding(function (event, addToCartData) {
+			alert(addToCartData.productId);
+			
+			// You can cancel the "AddToCart" call thusly:
+			event.preventDefault();
+		});
+    });
+</script>
+*@

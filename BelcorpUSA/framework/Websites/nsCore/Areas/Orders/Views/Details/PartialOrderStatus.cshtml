@@ -1,0 +1,9 @@
+﻿@model NetSteps.Data.Entities.Order
+
+<b>@Html.Term("Status", "Status"):</b>
+@SmallCollectionCache.Instance.OrderStatuses.GetById(Model.OrderStatusID).GetTerm()
+@if (Model.CanChangeToPaidStatus())
+{
+    <a href='@(Href("~/Orders/OrderEntry/ChangeToPaidStatus") + "?orderNumber=" + Model.OrderNumber)'>
+        @Html.Term("ChangeStatusToPaid", "Change Status To Paid")</a>
+}

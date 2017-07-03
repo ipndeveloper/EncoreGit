@@ -1,0 +1,105 @@
+@using System;
+@model NetSteps.Web.Mvc.Controls.Models.TextEditorModel
+@if (Model.IsRichText || Model.ShowTabbedHeader)
+{
+	<script type="text/javascript">
+		$(function () {
+			if ('True' === '@Model.IsRichText') {
+				$('#@Model.InstanceName').ckeditor({ 
+				
+				enterMode: CKEDITOR.ENTER_BR,
+				toolbar: [
+					@Html.Raw(!Model.ShowTabbedHeader ? "['Source', '-', ]," : string.Empty)
+					['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Templates', '-', 'Scayt'],
+					['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+					['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak'],
+					['Maximize'],
+					'/',
+					['Styles', 'Format'],
+					['Bold', 'Italic', 'Strike'],
+					['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+					['Link', 'Unlink', 'Anchor']
+				]
+				});
+			}
+			if ('True' === '@Model.ShowTabbedHeader') {
+				$('#@(Model.InstanceName)EditorTabber li').click(function () {
+					$(this).parent().find('.NS-current').removeClass('NS-current');
+					$(this).addClass('NS-current');
+
+					var currentVal = $('.content:visible .editor').val();
+					$('#@(Model.InstanceName)TextEditor .content').hide();
+					var container = $('#' + $(this).attr('rel')).css('display', 'block');
+					if (container.hasClass('WYSIWYG')) {
+						CKEDITOR.instances['@Model.InstanceName'].setData(currentVal);
+					} else {
+						container.find('.editor').val(currentVal);
+					}
+				});
+
+				$('#@(Model.InstanceName)Preview').click(function (e) {
+					$.ajax({
+						type: 'POST',
+						url: '@Href("~/Edit/SetPreview")',
+						data: { sectionId: '@Model.HtmlSectionID', body: $('#@Model.InstanceName').val() },
+						success: function (response) {
+							if (!response.result) {
+								e.preventDefault();
+								showMessage(response.message, true);
+							}
+						},
+						async: false
+					});
+				});
+			}
+		});
+	</script>
+
+}
+<div id="@(Model.InstanceName)TextEditor" class="TextEditor">
+	@if (Model.ShowName)
+ {
+		<div class="ContentChoiceName brALL">
+			<a name="choiceTitle"></a>
+			<input type="text" id="name" class="NS-TextInput" value="@(String.IsNullOrWhiteSpace(Model.ContentName) ? "" : Model.ContentName.Trim())" maxlength="50" />
+		</div>
+ }
+	@if (Model.ShowTabbedHeader)
+ {
+		<div id="@(Model.InstanceName)EditorTabber" class="emTextEditorTabber NS-Tabber">
+			<ul class="NS-inlineNav NS-flatUL emContentTypeTab">
+				<li class="NS-current" rel="@(Model.InstanceName)Container"><a href="javascript:void(0);"><span>WYSIWYG</span></a></li>
+				<li rel="@(Model.InstanceName)HtmlContainer"><a href="javascript:void(0);"><span>HTML</span></a></li>
+			</ul>
+		</div>
+	 if (Model.ShowMediaLibraryLink || Model.ShowPreviewLink)
+	 { 
+		<div class="FR ContentEditUtilities">
+			<ul class="NS-inlineNav NS-MediaLinks NS-flatUL NS-noText">
+				@if (Model.ShowMediaLibraryLink)
+	{ 
+					<li><a href="javascript:void(0);" class="emIconLink NS-MediaLibrary MediaLibrary" title="My media library"><span>Libary</span></a></li>
+	}
+				@if (Model.ShowPreviewLink && ViewData["ReturnUrl"] != null)
+	{ 
+					<li><a id="@(Model.InstanceName)Preview" href="@ViewData["ReturnUrl"].ToString().AppendOrReplaceQueryStringValue("PageMode", "Preview")" target="_blank" rel="external" class="emIconLink NS-PreviewContent PreviewContent" title="Preview this content in another window"><span>Preview</span></a></li>
+	}
+	else if (Model.ShowPreviewLink)
+	{
+					<li><a id="@(Model.InstanceName)Preview" href="javascript:void(0);" rel="external" class="emIconLink NS-PreviewContent PreviewContent" title="Preview this content in another window"><span>Preview</span></a></li>
+	}
+			</ul>
+			<span class="clr"></span>
+		</div>
+	 }
+ }
+	<div class="content ContentEditor WYSIWYG" id="@(Model.InstanceName)Container">
+		<textarea class="editor wysiwyg" id="@Model.InstanceName" rows="" cols="">@(String.IsNullOrWhiteSpace(Model.ContentBody) ? "" : Model.ContentBody)</textarea>
+	</div>
+	@if (Model.ShowTabbedHeader)
+ {
+		<div class="content ContentEditor HTMLEdit" id="@(Model.InstanceName)HtmlContainer" style="display: none;">
+			<textarea class="editor HTMLEditor" id="@(Model.InstanceName)Html" rows="" cols="">@(String.IsNullOrWhiteSpace(Model.ContentBody) ? "" : Model.ContentBody)</textarea>
+		</div>
+ }
+</div>

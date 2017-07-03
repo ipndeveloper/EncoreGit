@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DistributorBackOffice.Models.Agreements.AgreementModel>
+@{
+    ViewBag.Title = "Index";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('<div></div>').prependTo('body').attr('id', 'OverlayPolicy');
+            $('#OverlayPolicy').css({ 'height': ($('#fixed_nav').height() + $('#TopPane').height()), 'width': $(document).width() });
+            @if (ViewBag.ErrorMessagePolicy != null)
+            {
+                @:alert('@ViewBag.ErrorMessagePolicy', true);
+            }
+        });
+		//]]>
+    </script>
+}
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.EditorForModel()
+
+    <span class="clr"></span>
+    <p class="PolicyNoteButton">
+        <a href="javascript:void(0);" class="Button btnContinue" data-click-submit="parent">
+            <span>@Html.Term("Enrollment_Agreements_SubmitButtonLabel", "Continue")</span>
+        </a>
+    </p>
+    @Html.AntiForgeryToken()
+}

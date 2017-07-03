@@ -1,0 +1,19 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.AboutYouModel
+
+<div class="UI-lightBg">
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="FormContainer">
+        @Html.EditorFor(model => model.AccountPropertyList)
+    </div>        
+    <p class="FormSubmit">
+        <span class="FR">
+            <a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent">
+                <span>@Html.Term("Next")</span>
+            </a>
+        </span>
+    </p>
+    @Html.AntiForgeryToken()
+}
+</div>

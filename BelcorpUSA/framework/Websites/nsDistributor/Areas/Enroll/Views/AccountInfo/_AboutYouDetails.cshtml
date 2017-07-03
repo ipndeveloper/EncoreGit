@@ -1,0 +1,23 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.AboutYouModel
+@using nsDistributor.Areas.Enroll.Models.AccountInfo;
+
+@foreach (AccountPropertyModel prop in Model.AccountPropertyList)
+{ 
+    <div class="aboutQuestion">
+        @prop.PropertyTypeLabel
+        <div class="aboutAnswer truncate">
+            @prop.PropertyValue
+        </div>
+    </div>
+}
+<script type="text/javascript" language="javascript">
+    $(function () {
+        $('.truncate').each(function (index) {
+            var substr = $(this).text();
+
+            if (substr.length > 280) {
+                $(this).text(substr.substring(0, 273) + '...');
+            }
+        });
+    });
+</script>

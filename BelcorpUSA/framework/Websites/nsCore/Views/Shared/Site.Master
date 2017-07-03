@@ -1,0 +1,351 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+<%@ Import Namespace="System.Web.Optimization" %>
+<%@ Import Namespace="NetSteps.Web.Mvc.Controls.Analytics" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <%: Html.Partial("ServerInfo") %>
+    <meta name="googlebot" content="noarchive" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ENCORE - Global Management Portal - Powered by NetSteps</title>
+   <link rel="icon" type="image/x-icon" href='@Url.Content("~/Content/Images/favicon.ico")' />
+    
+    <%: Styles.Render("~/Content/stylebundles/site")%>
+    <%: Styles.Render("~/Content/stylebundles/jqueryui")%>
+    <%: Scripts.Render("~/scriptbundles/jquery")%>
+    <%: Scripts.Render("~/scriptbundles/jqueryui")%>
+    <%: Scripts.Render("~/scriptbundles/jqueryval")%>
+    <%: Scripts.Render("~/scriptbundles/knockout")%>
+    <%: Scripts.Render("~/scriptbundles/site")%>
+    <script type="text/javascript">
+        
+            var cultureInfo = '<%= CoreContext.CurrentCultureInfo.Name%>';
+
+                var format ='';
+                if (cultureInfo === 'en-US')
+                    format = 'mm/dd/yy';
+                else if (cultureInfo === 'es-US')
+                    format = 'mm/dd/yy';
+                else if (cultureInfo === 'pt-BR')
+                    format = 'dd/mm/yy';
+
+
+
+
+
+  
+
+        $.fn.showLoading.defaults.imageUrl = '@Url.Content("~/Content/Images/Icons/loading-blue.gif")';
+
+        var sessionTimer = '<%= Session.Timeout %>', sessionInterval, __overrideAjaxLoading = false;
+
+        function displaySessionTimeout() {
+            $("#sessionTime").text(--sessionTimer);
+
+            if (sessionTimer == 0) {
+                window.letUnload = true;
+                window.clearInterval(sessionInterval);
+                var returnUrl = window.location.pathname + window.location.search;
+                if (/\/Enrollment/i.test(returnUrl)) {
+                    if (window.enrollmentAccountNumber && typeof (window.enrollmentAccountNumber) == 'string') {
+                        returnUrl = '<%= ResolveUrl("~/Accounts/Overview/Index/") %>' + window.enrollmentAccountNumber;
+                    } else {
+                        returnUrl = '<%= ResolveUrl("~/Accounts") %>';
+                    }
+                }
+                window.location = '<%= ResolveUrl("~/Login?autoLoggedOut=true&returnUrl=") %>' + encodeURIComponent(returnUrl);
+            }
+        }
+
+        function resetSessionTimeout() {
+            if (sessionTimer > 0) {
+                window.clearInterval(sessionInterval);
+                sessionTimer = '<%= Session.Timeout %>';
+                $('#sessionTime').text(sessionTimer);
+                sessionInterval = window.setInterval(displaySessionTimeout, 60000);
+            } else {
+                window.letUnload = true;
+                var returnUrl = window.location.pathname + window.location.search;
+                if (/\/Enrollment/i.test(returnUrl)) {
+                    if (window.enrollmentAccountNumber && typeof (window.enrollmentAccountNumber) == 'string') {
+                        returnUrl = '<%= ResolveUrl("~/Accounts/Overview/Index/") %>' + window.enrollmentAccountNumber;
+                    } else {
+                        returnUrl = '<%= ResolveUrl("~/Accounts") %>';
+                    }
+                }
+                window.location = '<%= ResolveUrl("~/Login?autoLoggedOut=true&returnUrl=") %>' + encodeURIComponent(returnUrl);
+            }
+        }
+
+        function setMarket(marketId) {
+            if (marketId != '<%= CoreContext.CurrentMarketId %>') {
+                $.post('<%= ResolveUrl("~/Security/SetMarket") %>', { marketId: marketId }, function (response) {
+                    if (response && response.redirectURL) {
+                        window.location = response.redirectURL;
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+
+        function setLanguage(languageId) {
+            if (languageId != '<%= CoreContext.CurrentLanguageID %>') {
+                $.post('<%= ResolveUrl("~/Security/SetLanguage") %>', { languageId: languageId }, function () {
+                    window.location.reload();
+                });
+            }
+        }
+
+        function showLoading(element, css) {
+            if (!element.jquery)
+                element = $(element);
+            var loading = $('<img src="<%= ResolveUrl("~/Content/Images/Icons/loading-blue.gif") %>" alt="loading..." />');
+            if (css) {
+                loading.css(css);
+            }
+            else if (element.height()) {
+                loading.css('height', element.height() + 'px');
+            }
+            element.after(loading).hide();
+        }
+
+        function hideLoading(element) {
+            if (!element.jquery)
+                element = $(element);
+            element.show().next().remove();
+        }
+
+        $(function () {
+            // setup async exception handling
+            $(document).ajaxComplete(function (e, request, settings) {
+                var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+                if (isErrorPage) {
+                    window.location = '/Error/';
+                }
+            });
+
+            //Set up jqModal defaults
+            $.extend($.jqm.params, {
+                modal: true,
+                target: '.mContent',
+                ajaxText: '<img src="<%= ResolveUrl("~/Content/Images/Icons/loading-blue.gif") %>" alt="loading..." />',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                },
+                onHide: function (h) {
+                    h.w.fadeOut('slow');
+                    if (h.o)
+                        h.o.remove();
+                }
+            });
+
+            $.ajaxSetup({
+                cache: false
+            });
+            $('body').ajaxStop(function () {
+                resetSessionTimeout();
+            });
+
+            sessionInterval = window.setInterval(displaySessionTimeout, 60000);
+
+            $('.Loading').hide().ajaxStart(function () { $(this).show(); }).ajaxStop(function () {
+                if (!window.__overrideAjaxLoading) {
+                    $(this).hide();
+                }
+            });
+                $.datepicker.setDefaults($.datepicker.regional[cultureInfo]);
+
+                $.datepicker.setDefaults({
+                       dateFormat: format
+                });
+            $('.DatePicker:not(.Manual)').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(1900, 0, 1), yearRange: '-100:+100' });
+
+            $('.SubTab').hoverIntent(
+				function () { $(this).addClass('Selected'); $('.DropDown', this).slideDown('fast'); },
+				function () { $('.DropDown', this).fadeOut('fast', function () { $(this).clearQueue(); }); $(this).removeClass('Selected'); }
+			);
+
+
+            $('#lnkCommissionsRun').click(function () {
+                window.open('<%= ResolveUrl("~/Commissions/Run") %>', '_blank', 'width=600,height=450,toolbar=no,menubar=no,location=no,status=no');
+            });
+
+            $('.SearchBox .TextInput, .FancySearch .TextInput').focus(function () {
+                $(this).parent().addClass('SearchFocus');
+            }).blur(function () {
+                $(this).parent().removeClass('SearchFocus');
+            });
+
+            if (!$.trim($('#ContentWrap td.CoreLeftNav').text())) {
+                $('body').addClass('FullPane');
+            }
+
+            // Tabber
+            $('.Tabber li').live('click', function () {
+                var tabber = $(this).parent();
+
+                $('.current', tabber).removeClass('current');
+                $(this).addClass('current');
+
+                $('.' + tabber.attr('id')).hide();
+                $('#' + $(this).attr('rel')).css('display', 'block');
+                return false;
+            });
+
+            if ($.browser.msie) {
+                $('body').addClass('IE IE' + parseInt($.browser.version));
+            }
+            $('div.GridFilters a.filterButton').text('<%= @Html.Term("ApplyFilter", "Apply Filter")%>');
+            $('input.fromDate').watermark('Start Date');
+            $('input.toDate').watermark('End Date');
+            $('input.accountSearch').watermark('ID, first, or last name');
+        });      
+    </script>
+    <script language="javascript" type="text/javascript">
+        function setCookie(cookieName, cookieValue, expiredays) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + expiredays);
+            document.cookie = cookieName + "=" + escape(cookieValue) + ((expiredays == null) ? "" : ";expires=" + exdate.toUTCString());
+        }
+
+        function getCookie(cookieName) {
+            if (document.cookie.length > 0) {
+                cookieStart = document.cookie.indexOf(cookieName + "=");
+                if (cookieStart != -1) {
+                    cookieStart = cookieStart + cookieName.length + 1;
+                    cookieEnd = document.cookie.indexOf(";", cookieStart);
+                    if (cookieEnd == -1) cookieEnd = document.cookie.length;
+                    return unescape(document.cookie.substring(cookieStart, cookieEnd));
+                }
+            }
+            return "";
+        }
+
+        function getUtcOffset() {
+            return (new Date()).getTimezoneOffset();
+        }
+
+        function checkCookie() {
+            var timeOffset = getCookie("TimeZoneOffset");
+            if (timeOffset == null || timeOffset == "") {
+                setCookie("TimeZoneOffset", getUtcOffset(), 1);
+                window.location.reload();
+            }
+        }
+
+
+        $(function () {
+            checkCookie();
+        });
+    </script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+    <%= StackExchange.Profiling.MiniProfiler.RenderIncludes()%>
+    <!--[if lte IE 7]><script src="<%= Url.Content("~/Resource/Content/Fonts/lte-ie7.js") %>"></script><![endif]-->
+</head>
+<body>
+    <div id="SiteWrap">
+        <div id="TopPane">
+            <p id="nsLogo" class="FL">
+                <img src="<%= ResolveUrl("~/") %>Content/Images/encore.png" alt="ENCORE - Global Management Portal" />
+            </p>
+            <div id="GlobalUtilities" class="FR">
+                <span class="FL bold userDisplay">
+                    <%= CoreContext.CurrentUser.FirstName + " " + CoreContext.CurrentUser.LastName%></span>
+                <span class="FR">Global Management Portal</span>
+                <div class="clr SessionInfo">
+                    <ul class="FL">
+                        <li class="SubTab Market">
+                            <%--<%= Html.Term("Market") %>:--%><a href="javascript:void(0);" title="<%=Html.Term("SetYourMarket","Set Your Market") %>">
+                                <span>
+                                    <%= CoreContext.CurrentMarket.GetTerm() %></span> </a>
+                            <div class="DropDown">
+                                <ul>
+                                    <% foreach (Market market in CoreContext.CurrentUserMarkets)
+                                       { %>
+                                    <li class="<%= (market.MarketID == CoreContext.CurrentMarketId) ? "selected" : "" %>">
+                                        <a href="javascript:void(0);" onclick="setMarket(<%= market.MarketID %>);">
+                                            <%= market.GetTerm() %></a></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                            <span class="clr"></span></li>
+                        <li class="SubTab Language">
+                            <%--<%= Html.Term("Language")%>:--%><a href="javascript:void(0);" title="<%=Html.Term("SetYourLanguage","Set Your Language") %>">
+                                <span>
+                                    <%= CoreContext.CurrentLanguage.GetTerm() %></span> </a>
+                            <div class="DropDown">
+                                <ul>
+                                    <% foreach (var language in TermTranslation.GetTranslatedLanguages())
+                                       { %>
+                                    <li class="<%= (language.Key == CoreContext.CurrentLanguageID) ? "selected" : "" %>">
+                                        <a href="javascript:void(0);" onclick="javascript:setLanguage(<%= language.Key %>);">
+                                            <%= language.Value %></a></li>
+                                    <% } %> 
+                                </ul>
+                            </div>
+                        </li>
+                        <%--<% if (CoreContext.CurrentUser.HasFunction("Commissions"))
+		{ %>
+					<li>|</li><li><a id="lnkCommissionsRun" href="javascript:void(0);">Commissions Run</a>
+						<% if (!string.IsNullOrEmpty(CoreContext.CurrentCommissions.PercentCompleteMsg))
+		 { %>
+						(<%= CoreContext.CurrentCommissions.PercentCompleteMsg %>)
+						<% } %></li>
+					<% } %>--%>
+                        <li><a href="<%= ResolveUrl("~/Logout") %>">
+                            <%= Html.Term("GMP-Nav-Logout", "Logout")%></a></li>
+                    </ul>   
+                    <span class="FR LawyerText" id="SessionTimeout">
+                        <%= Html.Term("SessionTimeLeft", "Session time left")%>: <span id="sessionTime">
+                            <%= Session.Timeout %></span>
+                        <%= Html.Term("minutes")%>.</span> <span class="clr"></span>
+                </div>
+            </div>
+            <span class="clr"></span>
+            <ul id="GlobalNav">
+                <%-- Html.SelectedLink("~/Home.aspx", Html.Term("Home"), LinkSelectionType.ActualPageAndQueryString, "", CoreContext.CurrentUser) --%>
+                <%= Html.Tab("~/Sites", Html.Term("GMP-Nav-Sites","Sites"), "Sites")%>
+                <%= Html.Tab("~/Accounts", Html.Term("GMP-Nav-Accounts","Accounts"), "Accounts", new List<string>() { "Enrollment" })%>
+                <%= Html.Tab("~/Orders", Html.Term("GMP-Nav-Orders", "Orders"), "Orders")%>
+                <%= Html.Tab("~/Products", Html.Term("GMP-Nav-Products", "Products"), "Products")%>
+                <%= Html.Tab("~/Commissions", Html.Term("GMP-Nav-Commissions", "Commissions"), "Commissions")%>
+                <%= Html.Tab("~/Logistics/Routes", Html.Term("GMP-Nav-Logistics", "Admin"), "Admin")%><!--KLC- CSTI (BR.LG-001) -->
+                <%= Html.Tab("~/Communication", Html.Term("GMP-Nav-Communication", "Communication"), "Communication")%>
+                <%= Html.Tab("~/Support/Consult", Html.Term("GMP-Nav-Support", "Support"), "Support")%>
+                <%= Html.Tab("~/Reports/Reports", Html.Term("GMP-Nav-Reports", "Reports"), "Reports")%>
+                <%= Html.Tab("~/Admin", Html.Term("GMP-Nav-Admin", "Admin"), "Admin")%>  
+                <%= Html.Tab("~/CTE/InterestRules/BrowseRules/", Html.Term("GMP-Nav-CTE", "Admin"), "Admin")%><!-- KLC - CSTI (BR-CC-014) -->              
+                <%= Html.Tab("~/GeneralLedger", Html.Term("GMP-Nav-General-Ledger", "General Ledger"), "Admin")%>
+                <%--D01 Comentado temporal para despligue--%>
+
+                 <%--CVELEZ: Se quita Menu debido a inconvenientes en rendimiento en la opción /MLMQueries--%>
+                <%-- Html.Tab("~/MLMQueries", Html.Term("GMP-Nav-MLMQueries", "MLM Queries"))--%>
+                <% Html.RenderPartial("_ExtraTabs"); %>
+                
+            </ul>
+            <span class="clr"></span>
+            <div class="SubNav">
+                <ul id="SubNav">
+                    <asp:ContentPlaceHolder ID="SubNavigation" runat="server">
+                    </asp:ContentPlaceHolder>
+                </ul>
+                <span class="clr"></span>
+            </div>
+        </div>
+        <div id="ContentWrap">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <span class="clr"></span>
+        </div>
+    </div>
+    <% Html.RenderPartial("MessageCenter"); %>
+    <%this.Html.RenderPartial("_GoogleAnalytics", new AnalyticsModel(new HttpRequestWrapper(this.Request)));%>
+</body>
+</html>

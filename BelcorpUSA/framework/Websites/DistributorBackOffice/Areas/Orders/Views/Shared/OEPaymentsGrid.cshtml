@@ -1,0 +1,111 @@
+﻿@model NetSteps.Data.Entities.Order
+@{
+    var customer = Model.OrderCustomers.FirstOrDefault();
+    List<OrderPayment> orderPayments = customer == null ? new List<OrderPayment>() :
+        customer.OrderPayments.Where(op => op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Pending
+            || op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Completed
+            || op.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Declined).ToList();
+}
+
+<div class="FR splitCol">
+    <h5 class="addtext center">@*"UI-mainBg pad5 brdrAll"*@
+    
+        @Html.Term("Payments")
+    </h5>
+    <div class="pad5">
+        <table id="payments">
+        <tr> <td></td> <td><span style="font-size:12px;" >@Html.Term("OrderTotal", "Order Total"):</span></td> <td>
+        
+     @*  <span class="font-size:12px;" > @Model.GrandTotal.ToString(Model.CurrencyID)</span></td> <td></td> </tr>*@
+       <span class="font-size:12px;" > @Model.GrandTotal.ToString(CoreContext.CurrentCultureInfo)</span></td> <td></td> </tr>
+        @{
+            var indice = 0;
+         }
+        @foreach (var payment in orderPayments)
+        {
+            indice--;
+            string declinedMessage = payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Declined ? string.Format(" <i style=\"color:red\">({0})</i>", Html.Term("Declined")) : string.Empty;
+            var i = orderPayments.IndexOf(payment);
+            <tr id="pmt@(payment.Guid.ToString("N"))" class="paymentItem @(i.IsEven() ? "" : "Alt")">
+                <td>
+                    @if (payment.OrderPaymentStatusID == (int)Constants.OrderPaymentStatus.Completed || payment.PaymentTypeID == 6)
+                    {
+                        @:&nbsp;
+                    }
+                    else
+                    {
+                       
+                    <a id="pmtRemove@(payment.Guid.ToString("N"))" href="javascript:void(0);" onclick="removePayment('@(payment.Guid.ToString("N"))',@(indice))" title="Remove Payment" >
+                        <img src="@(Href("~/Content/Images/Icons/remove-trans.png"))" alt="" />
+                    </a>
+                    <img id="pmtLoader@(payment.Guid.ToString("N"))" src="@Href("~/Resource/Content/Images/loader_20x20.gif")" style="display: none;" alt="loading" />
+                        
+                        <input type="hidden" id="hdid" value="@(payment.Guid.ToString("N"))" />
+                        <input type="hidden" id="hdindice" value="@(indice)"/>
+                        <input type="hidden" id="hdamountPay" value="@(payment.Amount)" />
+                    }
+                </td>
+                <td>
+                <span class="font-size:12px">
+                  @*  @(payment.DecryptedAccountNumber.IsNullOrWhiteSpace() ? SmallCollectionCache.Instance.PaymentTypes.GetById(payment.PaymentTypeID).GetTerm() : payment.DecryptedAccountNumber.MaskString(4))*@
+                     @payment.BankName
+                    @Html.Raw(declinedMessage)
+                 </span>
+                </td>
+                @{
+                    var amount = payment.Amount;
+                    var amountpoc01 = "";
+                    var amountpoc02 = "";
+                    if (amount < 0 && payment.BankName == "Product Credit")
+                    {
+                        amount = amount * -1;
+                        //amountpoc01 = amount.ToString(Model.CurrencyID);
+                        amountpoc01 = amount.ToString("C",CoreContext.CurrentCultureInfo);
+                    }
+                        
+                    else
+                    {
+                        //amountpoc02 = amount.ToString(Model.CurrencyID);
+                        amountpoc02 = amount.ToString("C",CoreContext.CurrentCultureInfo);
+                    }
+
+          
+                    }
+                <td >
+                <span class="font-size:12px" style="color:Red" >
+                @amountpoc01</span>
+                </td>
+                <td>
+               <span class="font-size:12px" >
+                 @amountpoc02</span>
+                    @*@payment.Amount.ToString(Model.CurrencyID)*@
+                </td>
+            </tr>
+        }
+            <tr id="noPaymentsRow" style="@(orderPayments.Any() ? "display: none;" : string.Empty)">
+                <td id="noPayments" colspan="3" class="center pad10 noPayApp">
+                    <b>@Html.Term("NoPaymentsAppliedYet", "No payments applied yet")</b>
+                    <p class="lawyer">@Html.Term("Instructions_ApplyPayment", "Enter the payment amount you wish to apply, using the field above.")</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="UI-lightBg">
+         
+     <table style="font-size:13px"><tr><td>
+                <br />
+                    <label   
+                    style="background:white;border-width: 0px; display: block; font-weight: bold;" >
+                   @( Html.Term("Label-PayentAmountToApply", "Amount to Apply")):</label>
+             @{          var Balance = Model.Balance;
+                         var AmountToPayment = "";
+                         if (Balance > 0)
+                         {
+                             AmountToPayment = Model.Balance.GetRoundedNumber().ToString();
+                         }}
+         
+                    </td><td><input id="txtPaymentAmount" type="text"   value="@AmountToPayment"
+                         style="background:white;border-width: 0px; display: block; font-weight: bold;"/>
+                       <input type="hidden" id="hdnPaymentAmount" value= value="@AmountToPayment" /></td></tr></table>
+    </div>
+</div>

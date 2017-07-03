@@ -1,0 +1,436 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Addresses.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Addresses.Common.IAddressValidationProvider">
+      <summary>
+            Common interface for validating addresses.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.IAddressValidationProvider.ValidateAddress(NetSteps.Addresses.Common.Models.IAddressBasic)">
+      <summary>
+            Validates an address.
+            </summary>
+      <param name="address">The address to validate.</param>
+      <returns>A <see cref="T:NetSteps.Common.Base.BasicResponseItem`1" /> indicating if validation was successful.</returns>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.IGeoCodeProvider">
+      <summary>
+            Common interface for looking up geocodes.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.IGeoCodeProvider.GetGeoCode(NetSteps.Addresses.Common.Models.IAddressBasic)">
+      <summary>
+            Gets the geocode for an address.
+            </summary>
+      <param name="address">The address.</param>
+      <returns>The geocode.</returns>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddress">
+      <summary>
+            Common interface for Address.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddressBasic">
+      <summary>
+            Common interface for basic address info.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.Address1">
+      <summary>
+            The Address1 for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.Address2">
+      <summary>
+            The Address2 for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.Address3">
+      <summary>
+            The Address3 for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.City">
+      <summary>
+            The City for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.County">
+      <summary>
+            The County for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.State">
+      <summary>
+            The State for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.PostalCode">
+      <summary>
+            The PostalCode for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressBasic.Country">
+      <summary>
+            The Country for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.AddressID">
+      <summary>
+            The AddressID for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.AddressTypeID">
+      <summary>
+            The AddressTypeID for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.ProfileName">
+      <summary>
+            The ProfileName for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.FirstName">
+      <summary>
+            The FirstName for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.LastName">
+      <summary>
+            The LastName for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.Attention">
+      <summary>
+            The Attention for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.Name">
+      <summary>
+            The Name for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.StateProvinceID">
+      <summary>
+            The StateProvinceID for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.CountryID">
+      <summary>
+            The CountryID for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.PhoneNumber">
+      <summary>
+            The PhoneNumber for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.IsDefault">
+      <summary>
+            The IsDefault for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.Latitude">
+      <summary>
+            The Latitude for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.Longitude">
+      <summary>
+            The Longitude for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.CountryCode">
+      <summary>
+            The CountryCode for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.StateProvinceAbbreviation">
+      <summary>
+            The StateProvinceAbbreviation for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.ProfileID">
+      <summary>
+            The ProfileID for this Address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddress.IsWillCall">
+      <summary>
+            The IsWillCall for this Address.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddressBasicExtensions">
+      <summary>
+            Extension methods for IAddressBasic models.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.Models.IAddressBasicExtensions.IsEmpty(NetSteps.Addresses.Common.Models.IAddressBasic)">
+      <summary>
+            Determines if an <see cref="T:NetSteps.Addresses.Common.Models.IAddressBasic" /> is empty.
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="address != null" vb="address &lt;&gt; Nothing">address != null</requires>
+      <exception cref="T:System.ArgumentNullException">address == null</exception>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddressProperty">
+      <summary>
+            Common interface for AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.AddressPropertyID">
+      <summary>
+            The AddressPropertyID for this AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.AddressID">
+      <summary>
+            The AddressID for this AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.AddressPropertyTypeID">
+      <summary>
+            The AddressPropertyTypeID for this AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.PropertyValue">
+      <summary>
+            The PropertyValue for this AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.Address">
+      <summary>
+            The Address for this AddressProperty.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressProperty.AddressPropertyType">
+      <summary>
+            The AddressPropertyType for this AddressProperty.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddressPropertyType">
+      <summary>
+            Common interface for AddressPropertyType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.Models.IAddressPropertyType.AddAddressProperty(NetSteps.Addresses.Common.Models.IAddressProperty)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Addresses.Common.Models.IAddressProperty" /> to the AddressProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Addresses.Common.Models.IAddressProperty" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.Models.IAddressPropertyType.RemoveAddressProperty(NetSteps.Addresses.Common.Models.IAddressProperty)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Addresses.Common.Models.IAddressProperty" /> from the AddressProperties collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Addresses.Common.Models.IAddressProperty" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.AddressPropertyTypeID">
+      <summary>
+            The AddressPropertyTypeID for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.Name">
+      <summary>
+            The Name for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.TermName">
+      <summary>
+            The TermName for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.Description">
+      <summary>
+            The Description for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.Active">
+      <summary>
+            The Active for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressPropertyType.AddressProperties">
+      <summary>
+            The AddressProperties for this AddressPropertyType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IAddressType">
+      <summary>
+            Common interface for AddressType.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.Models.IAddressType.AddAddress(NetSteps.Addresses.Common.Models.IAddress)">
+      <summary>
+            Adds an <see cref="T:NetSteps.Addresses.Common.Models.IAddress" /> to the Addresses collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Addresses.Common.Models.IAddress" /> to add.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="M:NetSteps.Addresses.Common.Models.IAddressType.RemoveAddress(NetSteps.Addresses.Common.Models.IAddress)">
+      <summary>
+            Removes an <see cref="T:NetSteps.Addresses.Common.Models.IAddress" /> from the Addresses collection.
+            </summary>
+      <param name="item">The <see cref="T:NetSteps.Addresses.Common.Models.IAddress" /> to remove.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+      <exception cref="T:System.ArgumentNullException">item == null</exception>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.AddressTypeID">
+      <summary>
+            The AddressTypeID for this AddressType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.Name">
+      <summary>
+            The Name for this AddressType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.TermName">
+      <summary>
+            The TermName for this AddressType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.Description">
+      <summary>
+            The Description for this AddressType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.Active">
+      <summary>
+            The Active for this AddressType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IAddressType.Addresses">
+      <summary>
+            The Addresses for this AddressType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IGeoCodeData">
+      <summary>
+            Contains location coordinates.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IGeoCodeData.Latitude">
+      <summary>
+            The latitude coordinate.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IGeoCodeData.Longitude">
+      <summary>
+            The longitude coordinate.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IPhoneType">
+      <summary>
+            Common interface for PhoneType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPhoneType.PhoneTypeID">
+      <summary>
+            The PhoneTypeID for this PhoneType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPhoneType.Name">
+      <summary>
+            The Name for this PhoneType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPhoneType.TermName">
+      <summary>
+            The TermName for this PhoneType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPhoneType.Description">
+      <summary>
+            The Description for this PhoneType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPhoneType.Active">
+      <summary>
+            The Active for this PhoneType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IPickupPoint">
+      <summary>
+            Common interface for PickupPoint.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPickupPoint.PickupPointID">
+      <summary>
+            The PickupPointID for this PickupPoint.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPickupPoint.PickupPointCode">
+      <summary>
+            The PickupPointCode for this PickupPoint.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPickupPoint.AddressID">
+      <summary>
+            The AddressID for this PickupPoint.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPickupPoint.Name">
+      <summary>
+            The Name for this PickupPoint.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IPickupPoint.Address">
+      <summary>
+            The Address for this PickupPoint.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Addresses.Common.Models.IStateProvince">
+      <summary>
+            Common interface for StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.StateProvinceID">
+      <summary>
+            The StateProvinceID for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.Name">
+      <summary>
+            The Name for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.CountryID">
+      <summary>
+            The CountryID for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.ChargeTaxOnShipping">
+      <summary>
+            The ChargeTaxOnShipping for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.IsContinental">
+      <summary>
+            The IsContinental for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.ShippingRegionID">
+      <summary>
+            The ShippingRegionID for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.CountryRegionID">
+      <summary>
+            The CountryRegionID for this StateProvince.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Addresses.Common.Models.IStateProvince.StateAbbreviation">
+      <summary>
+            The StateAbbreviation for this StateProvince.
+            </summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,146 @@
+@model NetSteps.Data.Entities.Product
+@{
+    bool isOutOfStock = Model.IsOutOfStock ?? Product.CheckStock(Model.ProductID).IsOutOfStock;
+    var currentDate= System.DateTime.Now;
+    bool isVisible = Model.CatalogItems.Where(ct => ct.Catalog.Active
+                     && ct.Catalog.StoreFronts.Where(st => st.Name == "PWS").Count() > 0
+                     && (ct.Catalog.StartDate == null || ct.Catalog.StartDate <= currentDate)
+                     && (ct.Catalog.EndDate == null || ct.Catalog.EndDate >= currentDate)
+                     && ct.Active
+                     && (ct.StartDate == null || ct.StartDate <= currentDate)
+                     && (ct.EndDate == null || ct.EndDate >= currentDate)
+                     ).Count() > 0;
+}
+@helper ProductThumbBox()
+    {
+        bool isDynamicKit = Model.IsDynamicKit();
+        bool isStaticKit = Model.IsStaticKit();
+    
+    @(ViewBag.IsBundle != null && ViewBag.IsBundle ? "AddToBundle" : isDynamicKit ? "bundleItem" : "item")
+}
+@helper AddToCart()
+    {
+        bool isVariantTemplate = Model.IsVariantTemplate;
+        bool requiresCustomization = Model.RequiresCustomization();
+        bool isDynamicKit = Model.IsDynamicKit();
+        bool isStaticKit = Model.IsStaticKit();
+        if (isDynamicKit)
+        {
+    <input type="hidden" value="1" class="FL quantity" /><span class="FL bundleQty">@(1)</span>
+        }
+        else if (isVariantTemplate)
+        {
+
+        }
+        else
+        {
+    <input type="text" value="1" class="FL quantity" />
+        }
+        var shopTerm = Model.GetShopTerm((bool)(ViewBag.IsBundle != null && ViewBag.IsBundle));
+    <a id="@(Model.SKU + "_" + Guid.NewGuid().ToString("N") + "_" + Model.ProductID)" href="javascript:void(0);" 
+            class="FL UI-icon-container @(ViewBag.IsBundle != null && ViewBag.IsBundle ? "AddToBundle" : isDynamicKit ? "Add CreateBundle" : isVariantTemplate || requiresCustomization ? "ViewDetails rc" : "Add")">
+        <span class="UI-icon icon-plus"></span><span class="icon-label">@Html.Term(shopTerm.RemoveExtraWhiteSpace(), shopTerm)
+        </span><span class="clr"></span></a>
+}
+@if ((!isOutOfStock || Model.ProductBackOrderBehaviorID != (int)Constants.ProductBackOrderBehavior.Hide) && isVisible)
+{
+    var currentAccount = CoreContext.CurrentAccount;
+    var currentOrder = CoreContext.CurrentOrder;
+    var accountTypeId = currentAccount != null ? currentAccount.AccountTypeID : (int)Constants.AccountType.RetailCustomer;
+    var priceType = AccountPriceType.GetPriceType(accountTypeId, Constants.PriceRelationshipType.Products, currentOrder.OrderTypeID);
+    var adjustedPrice = Model.GetCurrentPromotionalPrice(CoreContext.CurrentOrderContext, (ConstantsGenerated.ProductPriceType)priceType.ProductPriceTypeID, currentOrder.CurrencyID, CoreContext.CurrentMarketId);
+    var originalPrice = Model.GetPrice(accountTypeId, currentOrder.CurrencyID);
+    bool isPriceAdjusted = adjustedPrice != originalPrice;
+	
+    <div class="brdr brdrAll ProductThumbBox @ProductThumbBox() @(isPriceAdjusted ? "promoItem" : "")">
+        @if (isPriceAdjusted)
+        {
+            <div id="SaleItemImg">@Html.Term("ProductThumbBox_Sale", "Sale")</div>
+        }
+        <div class="pad1">
+            <a href="@(Url.Resolve("~/Shop/Product/") + Model.ProductID)" class="UI-linkAlt ProductInfo" title="@Html.Term("ClickForProductDescription", "Click for product description")">
+                <span class="UI-secBg brdrAll pad2 productName" title="@Model.Translations.Name()">@Model.Translations.Name()
+ 
+</span>
+                                  @{                                     
+                                      
+        string productImageUrl = null;
+        ProductFile imageFile = null;
+        var variantTemplateProduct = Model.ProductBase.Products.Where(p => p.IsVariantTemplate).FirstOrDefault();
+        if (variantTemplateProduct != null)
+        {
+            imageFile = variantTemplateProduct.MainImage;
+        }
+        if (imageFile == null)
+        {
+            imageFile = Model.MainImage;
+        }
+        if (imageFile != null)
+        {
+            productImageUrl = imageFile.FilePath.ReplaceFileUploadPathToken();
+        }
+                    }
+                    @if (string.IsNullOrWhiteSpace(productImageUrl))
+                    {
+                        <span class="imagewrapper UI-lightBg noProdImg UI-icon icon-pictures"><span>@Html.Term("PWS_Ecomm_No_Image","No Image")</span></span>
+                    }
+                    else
+                    {
+                        <span class="imagewrapper">
+                        <img src="@productImageUrl" alt="@Model.Translations.Name()" />
+                        </span>
+                    }
+                    <span class="shortDescription">
+                        <h5>@Model.Translations.ShortDescription()</h5>
+                    </span>
+                    <span class="pad2 bold productPrice">
+                        @if (isPriceAdjusted)
+                        { 
+                            <span class="FL mr5 strikethrough price OriginalPrice">@originalPrice.ToString(CoreContext.CurrentOrder.CurrencyID)</span>
+                            <span class="FR price discountPrice">@adjustedPrice.ToString(CoreContext.CurrentOrder.CurrencyID)</span>
+                            <span class="clr"></span>
+                        }
+                        else
+                        {
+                            <span class="FR price OriginalPrice">@originalPrice.ToString(CoreContext.CurrentOrder.CurrencyID)</span>
+                            <span class="clr"></span>
+                        }
+                    </span>
+
+
+
+</a>
+  <div class="UI-lightBg brdrAll center listingAddToCart">
+			<div class="addToCartInner UI-linkAlt">
+                    @if (!Model.IsVariantTemplate && isOutOfStock)
+                    {
+                        switch (Model.ProductBackOrderBehaviorID)
+                        {
+                            case (int)Constants.ProductBackOrderBehavior.ShowOutOfStockMessage:
+                                <div class="outOfStock">
+                                    <div class="noStockTxt">@Html.Term("OutOfStock", "Out of stock")</div>
+                                </div>
+                                <div class="noStockGraphic"></div>
+                                                       break;
+                            case (int)Constants.ProductBackOrderBehavior.AllowBackorderInformCustomer:
+                        <div class="backOrder">
+                            <div class="backOrderTxt">@AddToCart()</div>
+                        </div>
+                        <div class="backOrderGraphic" title="@Html.Term("ProductCategoryGrid_BackOrderedTextLabel", "Place your order and we’ll ship it when it arrives!")">
+                        </div>
+                                                        break;
+                            case (int)Constants.ProductBackOrderBehavior.AllowBackorder:
+                        @AddToCart()
+                   break;
+                        }
+                    }
+                    else
+                    {
+                        @AddToCart()
+                    }
+                    <span class="clr"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+}

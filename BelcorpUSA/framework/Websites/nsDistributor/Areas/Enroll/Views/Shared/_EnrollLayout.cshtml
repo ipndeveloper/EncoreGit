@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+
+@section head
+{
+    @RenderSection("head", false)
+}
+
+@Html.Partial("MessageCenter")
+
+<div class="contentPane">
+    <div class="enrollmentPane">
+        @RenderBody()
+        <span class="clr"></span>
+    </div>
+</div>
+
+@section bodyFooter
+{
+    @RenderSection("bodyFooter", false)
+}

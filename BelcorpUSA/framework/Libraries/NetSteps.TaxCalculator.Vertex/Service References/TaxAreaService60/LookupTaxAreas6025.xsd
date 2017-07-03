@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=25" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Tax Area lookup composite messages. Declararion of structure and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="FindChangedTaxAreaIdsRequestType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxgisRequestType">
+        <xsd:sequence>
+          <xsd:element name="DatePeriod">
+            <xsd:annotation>
+              <xsd:documentation>The date range to be searched.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:complexContent mixed="false">
+                <xsd:restriction base="DatePeriodType">
+                  <xsd:sequence>
+                    <xsd:element name="BeginDate" type="xsd:date">
+                      <xsd:annotation>
+                        <xsd:documentation>The start date of the range to be searched.</xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" default="9999-12-31" name="EndDate" type="xsd:date">
+                      <xsd:annotation>
+                        <xsd:documentation>The end date of the range to be searched. Defaults to 9999-12-31.</xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:restriction>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

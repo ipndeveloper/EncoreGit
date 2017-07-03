@@ -1,0 +1,29 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/ProductCreditBalanceExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetDetailComissionsReport")
+
+        .AddSelectFilter(Html.Term("Period", "Period"), "periodId", ViewBag.Periods as Dictionary<int, string>, ViewBag.period as int?)
+        .AddSelectFilter(Html.Term("CommisionType", "Commission Type"), "commissionType", ViewBag.CommTypes as Dictionary<string, string>, ViewBag.comType as string)
+        .AddInputFilter(Html.Term("AccountNumber", "Account Number"), "accountNumber", ViewBag.account as int?)
+        
+        .AddColumn(Html.Term("SponsorNumber", "Sponsor Number"), "SponsorNumber")
+        .AddColumn(Html.Term("SponsorName", "Sponsor Name"), "SponsorName")
+        .AddColumn(Html.Term("AccountNumber", "Account Number"), "AccountNumber")
+        .AddColumn(Html.Term("AccountName", "Account Name"), "AccountName")
+        .AddColumn(Html.Term("CommissionType", "Commission Type"), "CommissionType")
+        .AddColumn(Html.Term("CommissionName", "Commission Name"), "CommissionName")
+        .AddColumn(Html.Term("OrderNumber", "Order Number"), "OrderNumber")
+        .AddColumn(Html.Term("CommissionableValue", "Commissionable Value"), "CommissionableValue")
+        .AddColumn(Html.Term("Percentage", "Percentage"), "Percentage")
+        .AddColumn(Html.Term("PayoutAmount", "Payout Amount"), "PayoutAmount")
+        .AddColumn(Html.Term("Period", "Period"), "Period");
+        //.AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        //.ClickEntireRow();
+    grid.Render(); 
+}

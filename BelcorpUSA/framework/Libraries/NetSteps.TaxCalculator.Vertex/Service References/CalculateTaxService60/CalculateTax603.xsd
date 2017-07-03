@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=25" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Tax Area Response message.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="FindTaxAreasResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Tax Area Response type structure</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxgisResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="TaxAreaLookupResult" type="TaxAreaLookupResultType">
+            <xsd:annotation>
+              <xsd:documentation>The results returned from the tax area lookup.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxAreaLookupResultType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="TaxAreaResult" type="TaxAreaResultType">
+        <xsd:annotation>
+          <xsd:documentation>The tax jurisdiction identified by the lookup.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="LookupException">
+        <xsd:annotation>
+          <xsd:documentation>If present, information about the exception that occurred for the lookup.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ExceptionType" type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation>The type of lookup exception encountered.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element minOccurs="0" name="RootCause" type="xsd:string">
+              <xsd:annotation>
+                <xsd:documentation>The cause of the exception.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="lookupId" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Internal identifier for this lookup.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

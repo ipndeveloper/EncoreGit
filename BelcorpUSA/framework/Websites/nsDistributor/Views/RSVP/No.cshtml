@@ -1,0 +1,16 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+}
+<div id="RSVP">
+    <div id="MainColumn" class="layoutColumn centerCol rsvp rsvpNo">
+        <div class="ContentColumn hostedPartiesDashboard">
+            <div class="pageTitle">
+                <h1>@Html.Term("RSVPNoHeader", "We're sorry that you can't make it...")</h1>
+            </div>
+            <div class="rsvpContent">
+                @Model.HtmlSections.GetBySectionName("Content").ToDisplay()
+            </div>
+        </div>
+    </div>
+    @Html.Partial("RightColumn")
+</div>

@@ -1,0 +1,149 @@
+﻿@using NetSteps.Common.Extensions
+@using NetSteps.Data.Entities.Extensions
+@using NetSteps.Web.Mvc.Extensions
+@model DistributorBackOffice.Areas.Orders.Models.Party.OrderItemModel
+@{
+	var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+	var product = inventory.GetProduct(Model.OrderItem.ProductID.ToInt());
+	var orderItemMessagesDictionary = ViewBag.OrderItemMessagesDictionary as IDictionary<Guid, IList<string>>;
+	IList<string> orderItemMessages = null;
+	if (orderItemMessagesDictionary != null)
+	{
+		orderItemMessagesDictionary.TryGetValue(Model.OrderItem.Guid, out orderItemMessages);
+	}
+}
+@{
+	string trClass = string.Empty;
+	if (Model.OrderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct)
+	{
+		trClass = string.Format("{0} {1}", trClass, "ExclusiveProductsRow").Trim();
+	}
+
+	if (Model.OrderItem.HasChanges)
+	{
+		trClass = string.Format("{0} {1}", trClass, "partyPendingItem");
+	}
+}
+<tr id="@("oi" + Model.OrderItem.Guid.ToString("N"))" class="@trClass">
+	<td class="icon-24">
+		@if (Model.OrderItem.OrderItemTypeID != (short)Constants.OrderItemType.FreeItem)
+		{
+			<a href="javascript:void(0);" class="UI-icon icon-x RemoveOrderItem" title="@Html.Term("RemoveItemFromCart", "Remove item from cart")">
+				<input type="hidden" value="@Model.OrderItem.Guid.ToString("N")" class="orderItemGuid" />
+				<input type="hidden" value="@Model.OrderItem.OrderCustomer.Guid.ToString("N")" class="orderCustomerId" /></a>
+		}
+		<input type="hidden" value="@product.ProductID" class="productId" />
+	</td>
+	<td>
+		@Model.OrderItem.SKU
+	</td>
+	<td>
+		@Html.Raw((Model.OrderItem.OrderItemTypeID == (int)Constants.OrderItemType.ExclusiveProduct ? String.Format("<span class=\"ExclusiveProductsIndicator\">{0}</span>", Html.Term("ExclusiveProductsIndicator", "*")) : ""))
+		@if (product.IsDynamicKit())
+		{
+			<a href="@Url.Content("~/Orders/Party/BundlePackItems?productId=" + product.ProductID + "&bundleGuid=" + Model.OrderItem.Guid.ToString("N") + "&orderCustomerId=" + Model.Hostess.Guid.ToString("N"))">@product.Translations.Name()</a>
+		}
+		else
+		{
+			@product.Translations.Name()
+		}
+		<br />
+		@if (orderItemMessages != null && orderItemMessages.Any())
+		{
+			<div>
+				@foreach (var orderItemMessage in orderItemMessages)
+				{
+					<span class="block">@orderItemMessage</span>
+				}
+			</div>
+		}
+		@if (product.IsDynamicKit() || product.IsStaticKit())
+		{
+			if (product.IsDynamicKit())
+			{
+				int requiredItemsInBundleCount = product.DynamicKits[0].DynamicKitGroups.Sum(g => g.MinimumProductCount);
+				if (Model.OrderItem.ChildOrderItems.Sum(oi => oi.Quantity) == requiredItemsInBundleCount)
+				{
+					<span class="UI-icon icon-bundle-full"></span>
+				}
+				else
+				{
+					<span class="UI-icon icon-bundle-add"></span>
+				}
+			}
+			<div class="bundlePackItemList">
+				<table cellspacing="0" width="100%">
+					<tbody>
+						<tr>
+							<th>
+							</th>
+							<th>@Html.Term("SKU")
+							</th>
+							<th>@Html.Term("Product")
+							</th>
+							<th>@Html.Term("Quantity")
+							</th>
+						</tr>
+						@foreach (OrderItem childItem in Model.OrderItem.ChildOrderItems)
+						{
+							Product childProduct = inventory.GetProduct(childItem.ProductID.Value);
+							<tr>
+								<td>
+									<span class="UI-icon icon-bundle-arrow"></span>
+								</td>
+								<td class="KitSKU">
+									@childItem.SKU
+								</td>
+								<td>
+									@childProduct.Translations.Name()
+								</td>
+								<td>
+									@childItem.Quantity
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
+	</td>
+	<td>
+		@Model.OrderItem.ItemPrice.ToString(Model.Order.CurrencyID)
+	</td>
+	<td style="text-align: center;">
+		@{ 
+			bool isQuantityLocked = product.IsDynamicKit() || Model.OrderItem.OrderItemTypeID == (short)Constants.OrderItemType.FreeItem || Model.OrderItem.OrderItemTypeID == (short)Constants.OrderItemType.ExclusiveProduct;
+		}
+		@if (isQuantityLocked)
+		{
+			<input type="hidden" class="quantity" value="@Model.OrderItem.Quantity" />@Model.OrderItem.Quantity
+		}
+		else
+		{
+			<input type="text" class="quantity" value="@Model.OrderItem.Quantity" style="width: 50px;" />
+		}
+	</td>
+	<td>
+		<span class="price originalPrice">@(0m.ToString(@Model.Order.CurrencyID))</span>
+	</td>
+	<td>
+		@{
+			if (Model.OrderItem.Discount.HasValue)
+			{
+				@Model.OrderItem.Discount.Value.ToString(Model.Order.CurrencyID)
+			}
+			else if (Model.OrderItem.DiscountPercent.HasValue)
+			{
+				@(((Model.OrderItem.ItemPrice * Model.OrderItem.Quantity) * Model.OrderItem.DiscountPercent).ToString(Model.Order.CurrencyID))@:&nbsp;
+					@Html.Term("XPercentOff", "({0} off)", Model.OrderItem.DiscountPercent.ToDecimal().ToString("P"))
+			}
+			else if (Model.OrderItem.OrderItemTypeID == (int)Constants.OrderItemType.FreeItem)
+			{
+				@Html.Term("Free", "Free")
+			}
+		}
+	</td>
+	<td>
+		@((Model.OrderItem.GetAdjustedPrice() * Model.OrderItem.Quantity).ToString(Model.Order.CurrencyID))
+	</td>
+</tr>

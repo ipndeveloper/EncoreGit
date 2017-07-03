@@ -1,0 +1,491 @@
+@model NetSteps.Web.Mvc.Controls.Models.PaginatedGridModel
+<script type="text/javascript">
+	//<![CDATA[
+    if (!parseBool('@Model.ExcludeScriptSection') && /^\s*true\s*$/i.test('@(Model.Filters.Any(f => f.Multiselect) || Model.AdvancedFilters.Any(f => f.Multiselect))' && !window.jQuery.multiselect)) {
+        document.write(unescape('%3Cscript src="@Href("~/Resource/Scripts/multiselect.js")" type="text/javascript"%3E%3C/script%3E'));
+        var link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('type', 'text/css');
+        link.setAttribute('href', '@Href("~/Resource/Content/CSS/multiselect.css")');
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }
+
+    //funcion setear parametros a la accion de la grilla Dev By SvG G&S
+    function SetParamSearchGridView(Parametro, Value) {
+        if (window.Data == undefined || window.Data == null) {
+            window.Data = {};
+        }
+        window.Data[Parametro] = Value;
+    }
+
+
+
+
+    $(function () {
+        $('#additionalFilterButton@(Model.Id)').click(function () {
+            var plusText = $("#additionalFilterPlus@(Model.Id)").text();
+            $("#additionalFilters@(Model.Id)").slideToggle('fast'),
+            $("#additionalFilterPlus@(Model.Id)").text(plusText == "+" ? "-" : "+");
+            return false;
+        });
+
+        var currentPage = 0;
+        var maxPage;
+        var sortableColumns = $('#paginatedGrid@(Model.Id) th.sort'),
+
+		buildSelectedItems = function () {
+		    var data = {};
+		    $('#paginatedGrid@(Model.Id) input[type="checkbox"]:checked:not(.checkAll)').each(function (i) {
+		        data['items[' + i + ']'] = $(this).val();
+		    });
+		    return data;
+		},
+
+		resetPage = function () {
+		    currentPage = 0;
+		    showPage();
+		},
+
+		showPage = function () {
+		    $('#paginatedGrid@(Model.Id) .checkAll').removeAttr('checked');
+		    $('#paginatedGrid@(Model.Id) tbody').html('<tr class="noHover"><td colspan="5"><img src="@Href("~/Resource/Content/Images/Icons/loading-blue.gif")" alt="@Html.Term("loading", "loading...")" /></td></tr>');
+
+		    var data = { page: currentPage,
+		        pageSize: $('#paginatedGridPagination@(Model.Id) .pageSize').val()
+		    };
+
+
+
+		    if ($('#paginatedGridExtraData@(Model.Id)').length) {
+		        $('#paginatedGridExtraData@(Model.Id) input.Data').each(function () {
+		            var t = $(this);
+		            data[t.attr('id').replace(/Data$/, '')] = t.val();
+		        });
+		    }
+
+		    $('#paginatedGridFilters@(Model.Id) .Filter').each(function () {
+		        var t = $(this), val = t.val(), key = t.attr('id').replace(/(Select|Input)?Filter$/, '');
+		        if (t.attr('multiple')) {
+		            val = t.multiselect('getChecked').map(function () {
+		                return this.value;
+		            }).get();
+		            var i = 0;
+		            for (i; i < val.length; i++) {
+		                data[key + '[' + i + ']'] = val[i];
+		            }
+		        } else {
+		            data[key] = val;
+		        }
+		    });
+            //Agregado por Salcedo vila G. G&S
+            //Enviar parametros adicionales a la grilla {
+		    if (window.Data != undefined & window.Data != null) {
+		        var Data = window.Data;
+		        for (var key in Data) {
+		            data[key] = Data[key];
+		        }
+		    }
+            //}
+
+		    if (sortableColumns.length) {
+		        var currentSort = sortableColumns.filter('.currentSort');
+		        data.orderBy = currentSort.attr('id');
+		        data.orderByDirection = currentSort.attr('class').split(' ')[2];
+		    }
+
+		    $.get('@Model.GetUrl', data, function (response) {
+		        if (response.result === undefined || response.result) {
+		            $('#paginatedGrid@(Model.Id) tbody').html(response.page || '<tr><td colspan="@Model.Columns.Count">@Html.Term("NoRecords", "There are no records that match that criteria.  Please try again.")</td></tr>').find('tr:even').addClass('Alt');
+
+		            maxPage = !response.totalPages ? 0 : response.totalPages - 1;
+		            $('#paginatedGridPagination@(Model.Id) a').removeClass('disabled');
+		            if (currentPage == maxPage)
+		                $('#paginatedGridPagination@(Model.Id) a.nextPage').addClass('disabled');
+		            if (currentPage == 0)
+		                $('#paginatedGridPagination@(Model.Id) a.previousPage').addClass('disabled');
+
+		            $('#paginatedGridPagination@(Model.Id) span.pages').text(String.format('@Html.Term("XOfXPages", "{0} of {1}")', !response.totalPages ? 0 : currentPage + 1, response.totalPages || 0));
+		        } else {
+		            showMessage(response.message, true);
+		        }
+		    });
+		},
+
+		handleResponse = function (response) {
+		    if (response.result) {
+		        showPage();
+		        var button = $(".BigBlue");
+		        if (button.length > 0)
+		            hideLoading(button);
+		    } else {
+		        showMessage(response.message, true);
+		    }
+		},
+
+		changeActiveStatus = function (active) {
+		    var data = buildSelectedItems();
+		    data.active = active;
+		    $.post('@Model.ActiveChangeUrl', data, handleResponse);
+		};
+
+        $('#paginatedGridFilters@(Model.Id) select[multiple]').multiselect({
+            selectedText: '@Html.Term("XSelected", "# selected")',
+            noneSelectedText: '@Html.Term("SelectOptions", "Select options")',
+            checkAllText: '@Html.Term("CheckAll", "Check all")',
+            uncheckAllText: '@Html.Term("UncheckAll", "Uncheck all")'
+        });
+        $('#paginatedGridFilters@(Model.Id) .AutoPost').bind('multiselectclick', resetPage).bind('multiselectcheckall', resetPage).bind('multiselectuncheckall', resetPage);
+        $('#paginatedGridFilters@(Model.Id) select.Filter').change(resetPage);
+
+        $('#paginatedGridFilters@(Model.Id) input.Filter.DatePicker').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(1900, 0, 1), yearRange: '-100:+100', onSelect: resetPage });
+
+        $('#paginatedGridFilters@(Model.Id) input.TextInput').keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#paginatedGridFilters@(Model.Id) a.filterButton').click();
+        });
+
+        $('#paginatedGridFilters@(Model.Id) a.filterButton').click(resetPage);
+
+        $('#paginatedGridOptions@(Model.Id) a.clearFiltersButton').click(function () { window.location.reload(); });
+
+        $('#paginatedGridOptions@(Model.Id) a.deleteButton').click(function () {
+            if (confirm('@Html.Term("AreYouSureYouWantToDeleteTheSelectedItems", "Are you sure you want to delete the selected items?")')) {
+                var button = $(".BigBlue");
+                if (button.length > 0)
+                    showLoading(button);
+                $.post('@Model.DeleteUrl', buildSelectedItems(), handleResponse);
+            }
+        });
+        $('#paginatedGridOptions@(Model.Id) a.deactivateButton').click(function () { changeActiveStatus(false); });
+        $('#paginatedGridOptions@(Model.Id) a.activateButton').click(function () { changeActiveStatus(true); });
+
+
+        $('#paginatedGridOptions@(Model.Id) a#btnShip').click(function () {
+            if ($('#paginatedGrid@(Model.Id) input[type="checkbox"]:checked:not(.checkAll)').length > 0) {
+                var data = buildSelectedItems();
+                window.location = '@Model.ActiveChangeUrl?' + $.param(data);
+            }
+        });
+
+        if (sortableColumns.length) {
+            if (!sortableColumns.filter('.currentSort').length) {
+                $(sortableColumns.get(0)).addClass('currentSort Ascending');
+            }
+            sortableColumns.click(function () {
+                var t = $(this), s = t.find('span.IconLink');
+                if (t.hasClass('currentSort') > 0) {
+                    t.toggleClass('Ascending').toggleClass('Descending');
+                    s.toggleClass('SortDescend');
+                } else {
+                    $('#paginatedGrid@(Model.Id) th.currentSort').attr('class', 'sort');
+                    t.addClass('currentSort Ascending');
+                }
+                showPage();
+            });
+        }
+
+        $('#paginatedGrid@(Model.Id) input.checkAll').click(function () {
+            $('#paginatedGrid@(Model.Id) input[type="checkbox"]').not(':disabled').attr('checked', $(this).is(':checked'));
+        });
+
+        $('#paginatedGrid@(Model.Id)').delegate('tr:not(.noHover)', 'hover', function () {
+            $(this).toggleClass('hover');
+        });
+
+        if (/^\s*true\s*$/i.test('@Model.EntireRowClickable')) {
+            var index = parseInt('@Model.RowClickLinkIndex');
+            $('#paginatedGrid@(Model.Id)').delegate('tr', 'click', function (e) {
+                //We normally use a tags with spans in them, so I have to check for both, otherwise this will fire on decorated buttons, as well as inputs for checkboxes - DES
+                if (e.target.nodeName.toLowerCase() != 'a' && e.target.nodeName.toLowerCase() != 'span' && e.target.nodeName.toLowerCase() != 'input') {
+                    var a = $('a', this);
+                    if (a.length >= index + 1) {
+                        var tag = $(a.get(index)), href = tag.attr('href');
+                        if (href && href == '#' || href == 'javascript:void(0)' || href == 'javascript:void(0);')
+                            tag.triggerHandler('click');
+                        else {
+                            if ((tag.attr('target') && tag.attr('target') == '_blank') || (tag.attr('rel') && tag.attr('rel') == 'external')) {
+                                window.open(href);
+                            } else {
+                                window.location = href;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        $('#paginatedGridPagination@(Model.Id) a.nextPage').click(function () {
+            if (currentPage < maxPage) {
+                ++currentPage;
+                showPage();
+            }
+        });
+        $('#paginatedGridPagination@(Model.Id) a.previousPage').click(function () {
+            if (currentPage > 0) {
+                --currentPage;
+                showPage();
+            }
+        });
+
+        if (!$('#paginatedGridPagination@(Model.Id) select.pageSize option:selected').length) {
+            $('#paginatedGridPagination@(Model.Id) select.pageSize option:first').attr('selected', 'selected');
+        }
+
+        $('#paginatedGridPagination@(Model.Id) select.pageSize').change(resetPage);
+
+        $('#paginatedGridRefresh@(Model.Id)').click(showPage);
+
+        showPage();
+
+        $('#paginatedGridOptions@(Model.Id) a:gt(0)').before('<span class="pipe">&nbsp;</span>');
+    });
+	//]]>
+</script>
+@if (Model.ExtraData.Count > 0)
+{
+    <div id="paginatedGridExtraData@(Model.Id)" style="display: none;">
+        @foreach (var data in Model.ExtraData)
+        {
+            <input type="hidden" id="@(data.Key)Data" class="Data" value="@data.Value" />
+        }
+    </div>
+}
+@if (Model.Filters.Count > 0 || Model.AdvancedFilters.Count > 0)
+{
+    <div id="paginatedGridFilters@(Model.Id)" class="UI-lightBg brdrAll GridFilters">
+        @if (Model.Filters.Count > 0 || Model.AdvancedFilters.Count > 0)
+        {
+            <div class="FL FilterSet">
+                @foreach (var filter in Model.Filters.OrderByDescending(f => f.HasValues)/*.ThenByDescending(f => f.IsDateTime)*/)
+                {
+                    var inputType = "";
+                    var inputLabelStyle = "";
+                    if (string.IsNullOrEmpty(filter.Type))
+                    {
+                        inputType = filter.IsHidden ? "hidden" : "text";
+                        inputLabelStyle = filter.IsHidden ? "style=\"display: none;\"" : string.Empty;
+                    }
+                    else
+                    {
+                        inputType = filter.Type;
+                    }
+
+                    <div class="FL" @Html.Raw(inputLabelStyle)>
+                        <label>
+                            @filter.Label:</label>
+                        @if (filter.HasValues)
+                        {
+                            <select id="@(filter.ParameterName)SelectFilter" class="Filter@(filter.AutoPostBack ? " AutoPost" : "")" @Html.Raw(filter.Multiselect ? "multiple=\"multiple\"" : "")>
+                                @{var e = filter.Values.GetEnumerator(); }
+                                @while (e.MoveNext())
+                                {
+                                    var selected = Model.IsSelectedEntry(filter, e.Entry);
+                                    <option value="@e.Key" @Html.Raw(selected ? "selected=\"selected\"" : "")>
+                                        @e.Value</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            
+                            <input id="@(filter.ParameterName)InputFilter" class="@(filter.IsDateTime ? "DatePicker Manual " : "")Filter TextInput" type="@inputType" value="@filter.StartingValue" />
+                        }
+                    </div>
+                        if (filter.AddBreak)
+                        {
+                    <span class="ClearAll"></span>
+                        }
+                }
+                @if (Model.Filters.Any(f => !f.HasValues) || Model.AdvancedFilters.Any(f => !f.HasValues))
+                {
+                   <div class="FL RunFilter">
+                        <a class="Button ModSearch filterButton" href="javascript:void(0);"><span>
+                            @Html.Term("Go")</span></a> <span class="ClearAll"></span>
+                    </div>
+                }
+                @if (Model.AdvancedFilters.Count > 0)
+                {
+                    <div class="FL AdditionalFilterButton">
+                        <a id="additionalFilterButton@(Model.Id)" class="ModSearch additionalFilterButton" href="javascript:void(0);">
+                            <span><b id="additionalFilterPlus@(Model.Id)" class="plus">+</b>
+                                @Html.Term("AdditionalFilterOptions", "Additional Filter Options")</span>
+                        </a><span class="ClearAll"></span>
+                    </div>
+                }
+            </div>
+            <span class="ClearAll"></span>
+        }
+        @if (Model.AdvancedFilters.Count > 0)
+        {
+            <div id="additionalFilters@(Model.Id)" class="FL AdvancedFilterSet UI-lightBg" style="display: none;">
+                @foreach (var filter in Model.AdvancedFilters.OrderByDescending(f => f.HasValues)/*.ThenByDescending(f => f.IsDateTime)*/)
+                {
+                    var inputType = "";
+                    var inputLabelStyle = "";
+                    if (string.IsNullOrEmpty(filter.Type))
+                    {
+                        inputType = filter.IsHidden ? "hidden" : "text";
+                        inputLabelStyle = filter.IsHidden ? "style=\"display: none;\"" : string.Empty;
+                    }
+                    else
+                    {
+                        inputType = filter.Type;
+                    }
+                     
+                    <div class="FL" @Html.Raw(inputLabelStyle)>
+                        <label>
+                            @filter.Label:</label>
+                        @if (filter.HasValues)
+                        {
+                            <select id="@(filter.ParameterName)SelectFilter" class="Filter@(filter.AutoPostBack ? " AutoPost" : "")" @Html.Raw(filter.Multiselect ? "multiple=\"multiple\"" : "")>
+                                @{var e = filter.Values.GetEnumerator();}
+                                @while (e.MoveNext())
+                                {
+                                    var selected = Model.IsSelectedEntry(filter, e.Entry);
+                                    <option value="@e.Key" @Html.Raw(selected ? "selected=\"selected\"" : "")>
+                                        @e.Value</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <input id="@(filter.ParameterName)InputFilter" class="@(filter.IsDateTime ? "DatePicker Manual " : "")Filter TextInput" type="@inputType" value="@filter.StartingValue" />
+                        }
+                    </div>
+                        if (filter.AddBreak)
+                        {
+                    <span class="ClearAll"></span>
+                        }
+                }
+                <span class="ClearAll"></span>
+            </div>
+            <span class="ClearAll"></span>    
+        }
+    </div>
+}
+@if (Model.CanDelete || Model.CanDeactivate || Model.CanActivate || Model.Filters.Count > 0 || Model.Options.Count > 0 || Model.IsShippable)
+{
+    <div id="paginatedGridOptions@(Model.Id)" class="UI-mainBg icon-24 brdrAll brdr1 GridSelectOptions GridUtility">
+        @if (Model.Filters.Count > 0)
+        {
+            <a class="clearFiltersButton UI-icon-container" href="javascript:void(0);"><span
+                class="UI-icon icon-refresh"></span><span>@Html.Term("ClearFilters", "Clear Filters")</span></a>
+        }
+        @if (Model.CanDelete)
+        {
+            <a class="deleteButton UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-deleteSelected">
+            </span><span>@Html.Term("DeleteSelected", "Delete Selected")</span></a>
+        }
+        @if (Model.CanDeactivate)
+        {
+            <a class="deactivateButton UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-x icon-deactive">
+            </span><span>@Html.Term("DeactivateSelected", "Deactivate Selected")</span></a>
+        }
+        @if (Model.CanActivate)
+        {
+            <a class="activateButton UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-plus icon-activate">
+            </span><span>@Html.Term("ActivateSelected", "Activate Selected")</span></a>
+        }
+        
+        @if (Model.IsShippable)
+        {
+            <a id="btnShip" class="shipButton UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-print icon-activate">
+            </span><span>@Html.Term("PrintPackageSlip", "Print Package Slip")</span></a>
+        }
+        
+        @foreach (var option in Model.Options)
+        {
+            <a id="@option.Id" class="UI-icon-container" href="javascript:void(0);"><span class="UI-icon icon-@option.Id">
+            </span><span>
+                @Html.Raw(option.Text)</span></a>
+        }
+        <span class="ClearAll"></span>
+    </div>
+}
+@{
+    string strTableClasses = Model.GridTable != null && !Model.GridTable.CssClasses.IsNullOrEmpty() ? " " + Model.GridTable.CssClasses : "";
+}
+<div class="responsiveDataGrid">
+<table id="paginatedGrid@(Model.Id)" class="DataGrid@(Model.EntireRowClickable ? " ClickableDataGrid" : "")@(strTableClasses)" cellspacing="0" width="100%">
+    <thead>
+        <tr class="GridColHead UI-bg UI-header">
+            @if (Model.CanDelete || Model.CanDeactivate || Model.CanActivate || Model.IsShippable)
+            {
+                <th class="GridCheckBox">
+                    <input type="checkbox" class="checkAll" title="@Html.Term("SelectAll", "Select All...")" />
+                </th>
+            }
+            @foreach (var column in Model.Columns)
+            {
+                if (column.IsSortable)
+                {
+                <th @(column.IsSortable ? Html.Raw("id=\"" + column.PropertyName + "\"") : Html.Raw("")) title="@Html.Term("SortBy", "Sort by...")" class="sort@(column.IsDefaultSort ? " currentSort " + column.DefaultSortDirection : "")"  colspan="@(column.ColSpan > 1 ? column.ColSpan.ToString() : "1")">
+                    <a style="float: left;" href="javascript:void(0);">
+                        @Html.Raw(column.Header)
+                    </a>
+
+                    @*CS.11JUL2016.Inicio.Ancho de columna*@
+                    @if (column.WidthColumn != null)
+                    {
+                        if (column.WidthColumn > 0)
+                        { 
+                          <span class="IconLink SortColumn sort@(column.DefaultSortDirection == Constants.SortDirection.Ascending ? "s" : "n")" style="float: right;width:@column.WidthColumn.ToString()px;"></span>  
+                        }
+                    }
+                    else
+                    {
+                        <span class="IconLink SortColumn sort@(column.DefaultSortDirection == Constants.SortDirection.Ascending ? "s" : "n")" style="float: right;"></span>
+                    }
+                    @*CS.11JUL2016.Fin.Ancho de columna*@
+                    
+                </th>
+                }
+                else
+                {
+                <th class="noHover" colspan="@(column.ColSpan > 1 ? column.ColSpan.ToString() : "1")">
+                    @Html.Raw(column.Header)
+                    @if (column.IsDefaultSort)
+                    {
+                        <span class="IconLink SortColumn sort@(column.DefaultSortDirection == Constants.SortDirection.Ascending ? "s" : "n")" style="float: right;(@column.WidthColumn!= null ? (@column.WidthColumn > 0 ? "width:"+@column.WidthColumn+"px;" : "") : "") ">
+                        </span>
+                    }
+                </th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+</div>
+<div id="paginatedGridPagination@(Model.Id)" class="UI-mainBg Pagination">
+<input type="hidden" id="paginatedGridRefresh@(Model.Id)" />
+    <div class="PaginationContainer" @Html.Raw(Model.HidePagination ? "style=\"display:none;\"" : "")>
+        <div class="Bar">
+            <a href="javascript:void(0);" class="previousPage"><span>&lt;&lt;
+                @Html.Term("Previous")</span></a> <span class="pages"></span><a href="javascript:void(0);"
+                    class="nextPage"><span>
+                        @Html.Term("Next") &gt;&gt;</span></a> <span class="ClearAll clr"></span>
+                        
+        </div>
+        <div class="PageSize" style="@(Model.PageSizeOptions.Count <= 1 ? "display:none;" : "")">
+            @Html.Term("ResultsPerPage", "Results Per Page"):
+            @if (Model.PageSizeOptions.Count == 1)
+            {
+                @Model.PageSizeOptions.First().Value
+                <input type="hidden" class="pageSize" value="@Model.PageSizeOptions.First().Key" />
+            }
+            else
+            {
+                <select class="pageSize">
+                    @foreach (var pageSizeOption in Model.PageSizeOptions)
+                    {
+                        <option value="@pageSizeOption.Key">
+                            @pageSizeOption.Value</option>
+                    }
+                </select>
+            }
+        </div>
+        <span class="ClearAll clr"></span>
+    </div>
+</div>

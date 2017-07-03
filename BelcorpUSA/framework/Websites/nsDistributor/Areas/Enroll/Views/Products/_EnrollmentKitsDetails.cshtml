@@ -1,0 +1,12 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.EnrollmentKitsModel
+
+@{
+    if(Model.SelectedProductID != null)
+    {
+        var selectedKit = Model.EnrollmentKits.FirstOrDefault(x => x.ProductID == Model.SelectedProductID);
+        if (selectedKit != null)
+        {
+            @string.Format(Model.FormatProvider, "{0} {1:C}", selectedKit.Name, selectedKit.Price)
+        }
+    }
+}

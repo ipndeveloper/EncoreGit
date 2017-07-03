@@ -1,0 +1,62 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Party.PartyPromotionOrderItems
+@using NetSteps.Data.Common.Entities
+@using NetSteps.Encore.Core.IoC
+@{
+	var inventory = Create.New<InventoryBaseRepository>();
+}
+@foreach (var grouping in Model.Items)
+{
+	<tr class="UI-lightBg specialPromotionItem bold autoGift">
+		<td>
+		</td>
+		<td data-label="" class="icon-24 center noText">
+			<span class="UI-icon icon-star"></span>
+		</td>
+		<td>
+			<span class="promoHeader">@Html.Term(grouping.Key.Description, grouping.Key.Description)</span>
+			@foreach (var step in grouping.Key.InjectedOrderSteps.Where(s => s.CustomerAccountID == Model.OrderCustomerAccountID))
+			{ 
+				<a href="javascript:void(0);" class="ml5 selectGift" stepId="@step.OrderStepReferenceID">@Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>
+			}
+		</td>
+		<td>
+			@((0M).ToString(((OrderAdjustment)grouping.Key).Order.CurrencyID))
+		</td>
+		<td class="center cartQty">
+			@grouping.Count()
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+		<td>
+			@((0M).ToString(((OrderAdjustment)grouping.Key).Order.CurrencyID))
+		</td>
+	</tr>
+    
+foreach (var item in grouping)
+{
+	var product = inventory.GetProduct(item.ProductID.ToInt());
+        
+	<tr>
+		<td class="icon-24">
+		</td>
+		<td>
+			<span class="FL UI-icon icon-bundle-arrow"></span>@product.SKU
+		</td>
+		<td class="promoItemName">
+			@product.Translations.Name()<br />
+		</td>
+		<td>
+			<span class="FL freeItemPrice">@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+		</td>
+		<td class="center cartQty">
+			@item.Quantity
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+	</tr>
+}
+}

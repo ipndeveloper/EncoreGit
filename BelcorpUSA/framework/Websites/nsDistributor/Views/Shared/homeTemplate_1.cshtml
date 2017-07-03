@@ -1,0 +1,67 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+	Layout = "~/Views/Shared/_Site.cshtml";
+}
+@{
+	ViewBag.Title = Html.Term("PWS_CWS-HomePageTitle", "Home Page");
+	var hasFeatured = ViewBag.News as IEnumerable<News>;	
+}
+@section head {
+	<meta name="Description" content="@Html.Term("Meta_PWS_CWS-Home_Description", "Flourish and grow. Your opportunity for improvement is right around the corner.")" />
+	<meta name="Keywords" content="@Html.Term("Meta_PWS_CWS-Home_Keywords", "Financial freedom, growth, sales, independence")" />
+	<!-- TEMPLATE: Home Template 1 -->
+}
+<div id="HomeInner" class="tmplt1 NewsRollHome ">
+	@if (BaseController.CurrentSite.SiteTypeID == (short)Constants.SiteType.Corporate)
+	{
+		<div class="homeCol_a corpTemplate">
+			<div class="UI-cmsWrap block2 btChoice">
+				@Model.HtmlSections.DisplayHtmlSection("Module", Model.PageID)
+			</div>
+		</div>
+	 }
+	 else
+	 {
+		<div class="homeCol_a">
+				<div class="UI-cmsWrap block1">
+					<div id="Module_Bio">
+						<div class="MyPhoto btPhoto">
+							@(((HtmlSection)ViewBag.MyPhoto).ToDisplay(Model.PageID))
+						</div>
+						@Html.Partial("AccountInfo")
+						@if (ViewBag.IsPartyOrderClient)
+	  { 
+						<div class="clr" id="Module_MyParties">
+							<h3 class="UI-secBg pad5 openPartiesHeader">@Html.Term("MyPartiesHeader", "My Parties")</h3>
+							@Html.Partial("OpenParties")
+						</div>
+						<!--/ end parties list -->
+	  }
+					</div>
+				</div>
+			<div class="UI-cmsWrap block2 btChoice">
+				@Model.HtmlSections.DisplayHtmlSection("Module", Model.PageID)
+			</div>
+		</div>
+	}
+	@if (hasFeatured != null && hasFeatured.Any())
+	{
+		<div class="UI-cmsWrap NewsRollWrapper">
+			@Html.Partial("NewsTicker")
+		</div>
+	}
+	<div class="homeCol_b">
+		<div class="UI-cmsWrap block3 btCorp">
+			@Model.HtmlSections.DisplayHtmlSection("Content", Model.PageID)
+		</div>
+		<div class="columnCmsBlocks">
+			<div id="ColumnCms1" class="UI-cmsWrap block4 columnCms homeColumnCms1 btChoice">
+				@Model.HtmlSections.DisplayHtmlSection("Ad1", Model.PageID)
+			</div>
+			<div id="ColumnCms2" class="UI-cmsWrap block5 columnCms homeColumnCms2 btCorp">
+				@Model.HtmlSections.DisplayHtmlSection("Ad2", Model.PageID)
+			</div>
+		</div>
+	</div>
+	<span class="clr"></span>
+</div>

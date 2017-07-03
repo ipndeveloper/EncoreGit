@@ -1,0 +1,411 @@
+@model NetSteps.Data.Entities.AccountPaymentMethod
+@{
+    ViewBag.Title = "";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('#btnDelete').click(function () {
+                if (confirm('@Html.Term("DeleteBillingProfile", "Are you sure you want to delete this billing profile?")')) {
+                    var t = $(this);
+                    showLoading(t);
+                    $.post('@Url.Resolve("~/Account/DeletePaymentMethod")', { paymentMethodId: '@Model.AccountPaymentMethodID' }, function (response) {
+                        if (response.result) {
+                            window.location = '@Url.Resolve("~/Account/ShippingAndBillingProfiles")';
+                        }
+                        else {
+                            hideLoading(t);
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            var showPaymentType = function () {
+                if ($('#rbPaymentCreditCard').prop('checked')) {
+                    $('#creditCard').show();
+                    $('#EFT').hide();
+                } else {
+                    $('#creditCard').hide();
+                    $('#EFT').show();
+                }
+            };
+
+            $('input[name="payment"]').click(showPaymentType);
+            showPaymentType();
+
+            $('#btnSetDefault').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Url.Resolve("~/Account/SetDefaultPaymentMethod")', { paymentMethodId: '@Model.AccountPaymentMethodID' }, function (response) {
+                    if (response.result) {
+                        window.location = '@Url.Resolve("~/Account/ShippingAndBillingProfiles")';
+                    }
+                    else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            $('#btnSavePaymentMethod').click(function () {
+                if ($('#rbPaymentEFT').prop('checked')) {
+                    if (!$('#paymentMethodEntry').checkRequiredFields()) {
+                        return false;
+                    }
+
+                    if (!$('#accountInput').val()) {
+                        $('#accountInput').showError('@Html.JavascriptTerm("AccountNumberIsRequired", "Account Number is required.")');
+                        return false;
+                    }
+
+                    if (!$('#routingInput').val()) {
+                        $('#routingInput').showError('@Html.JavascriptTerm("RoutingNumberIsRequired", "Routing Number is required.")');
+                        return false;
+                    }
+
+                    if ($('#accountTypeAccount').val() == '@Html.Term("-ChooseAccountType-","-Choose Account Type-")') {
+                        $('#accountTypeAccount').showError('@Html.JavascriptTerm("AccountTypeIsRequired", "Account Type is required.")');
+                        return false;
+                    }
+
+                    if (!$('#verifyroutingInput').val()) {
+                        $('#verifyroutingInput').showError('@Html.JavascriptTerm("VerifyRoutingNumberIsRequired", "Verify Routing Number is required.")');
+                        return false;
+                    }
+
+                    if (!$('#verifyaccountInput').val()) {
+                        $('#verifyaccountInput').showError('@Html.JavascriptTerm("VerifyAccountNumberIsRequired", "Verify Account Number is required.")');
+                        return false;
+                    }
+
+                    $('#addressEntry input').each(function () {
+                        if ($(this).val() == $(this).attr('title')) {
+                            $(this).val('');
+                        }
+                    });
+
+                    if ($('#routingInput').val() != $('#verifyroutingInput').val()) {
+                        $('#routingInput,#verifyroutingInput').showError('@Html.JavascriptTerm("RoutingNumbersDoNotMatch", "Routing Numbers do not match")').keyup(function () {
+                            if ($('#routingInput').val() == $('#verifyroutingInput').val())
+                                $('#routingInput,#verifyroutingInput').clearError();
+                        });
+                        $('#routingInput').focus();
+                        return false;
+                    }
+
+                    if ($('#accountInput').val() != $('#verifyaccountInput').val()) {
+                        $('#accountInput,#verifyaccountInput').showError('@Html.JavascriptTerm("AccountNumbersDoNotMatch", "Account Numbers do not match")').keyup(function () {
+                            if ($('#accountInput').val() == $('#verifyaccountInput').val())
+                                $('#accountInput,#verifyaccountInput').clearError();
+                        });
+                        $('#accountInput').focus();
+                        return false;
+                    }
+
+                    var data = {
+                        paymentMethodId: '@(Model.AccountPaymentMethodID == 0 ? "" : Model.AccountPaymentMethodID.ToString())',
+                        bankName: $('#BankName').val(),
+                        nameOnCard: $('#nameOnAccount').val(),
+                        accountNumber: $('#accountInput').val(),
+                        routingNumber: $('#routingInput').val(),
+                        bankAccountTypeID: $('#accountTypeAccount').val()
+                    };
+
+                    if ($('#chkUseDefaultShippingAddress').length && $('#chkUseDefaultShippingAddress').prop('checked')) {
+                        data.useDefaultShippingAddress = true;
+                    } else {
+                        data.attention = $('#paymentMethodAddressAttention').val();
+                        data.address1 = $('#paymentMethodAddressAddress1').val();
+                        data.address2 = $('#paymentMethodAddressAddress2').val();
+                        data.address3 = $('#paymentMethodAddressAddress3').val();
+                        data.zip = $('#paymentMethodAddressControl .PostalCode').fullVal();
+                        data.city = $('#paymentMethodAddressCity').val();
+                        data.state = $('#paymentMethodAddressState').val();
+                        data.county = $('#paymentMethodAddressCounty').val();
+                        data.countryId = $('#paymentMethodAddressCountry').val();
+                        data.profilename = $('#paymentMethodAddressProfileName').val();
+                        data.street = $('#paymentMethodAddressStreet').val();
+                    }
+                    if ($('#BankAccountCertCheckbox').prop('checked')) {
+                        var p = $(this).parent();
+                        showLoading(p, { float: 'right' });
+
+                        $.post('@Url.Resolve("~/Account/SavePaymentMethodEFT")', data, function (response) {
+                            if (response.result) {
+                                window.location = '@Url.Resolve("~/Account/ShippingAndBillingProfiles")';
+                            }
+                            else {
+                                hideLoading(t);
+                                showMessage(response.message, true);
+                            }
+                        });
+                    }
+                    else {
+                        showMessage('@Html.Term("AccountCertCheckbox", "Account Certify Checkbox should be checked")', true);
+                        $('#BankAccountCertCheckbox').focus();
+                        return false;
+                    }
+                }
+                else {
+                    if (!$('#paymentMethodEntry').checkRequiredFields()) {
+                        return false;
+                    }
+
+                    if (!CreditCard.validate($('#accountNumber').val()).isValid) {
+                        if (!/\**\d{4}/.test($('#accountNumber').val())) {
+                            $('#accountNumber').showError('Credit card number is invalid.');
+                            return false;
+                        }
+                    }
+                    var today = new Date();
+                    var lastDayInMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+
+                    if (new Date($('#expYear').val(), $('#expMonth').val(), 1) < new Date()) {
+                        $('#expMonth,#expYear').showError('Expiration date must be in the future.').change(function () {
+                            if (new Date($('#expYear').val(), $('#expMonth').val(), 1) > new Date()) {
+                                $('#expMonth,#expYear').clearError().unbind('change');
+                            }
+                        });
+                        return false;
+                    }
+
+                    $('#addressEntry input').each(function () {
+                        if ($(this).val() == $(this).data('watermark')) {
+                            $(this).val('');
+                        }
+                    });
+
+                    var data = {
+                        paymentMethodId: '@(Model.AccountPaymentMethodID == 0 ? "" : Model.AccountPaymentMethodID.ToString())',
+                        nameOnCard: $('#nameOnCard').val(),
+                        accountNumber: $('#accountNumber').val(),
+                        expDate: $('#expMonth').val() + '/1/' + $('#expYear').val()
+                    };
+
+                    if ($('#chkUseDefaultShippingAddress').length && $('#chkUseDefaultShippingAddress').prop('checked')) {
+                        data.useDefaultShippingAddress = true;
+                    } else {
+                        data.attention = $('#paymentMethodAddressAttention').val();
+                        data.address1 = $('#paymentMethodAddressAddress1').val();
+                        data.address2 = $('#paymentMethodAddressAddress2').val();
+                        data.address3 = $('#paymentMethodAddressAddress3').val();
+                        data.zip = $('#paymentMethodAddressControl .PostalCode').fullVal();
+                        data.city = $('#paymentMethodAddressCity').val();
+                        data.state = $('#paymentMethodAddressState').val();
+                        data.county = $('#paymentMethodAddressCounty').val();
+                        data.countryId = $('#paymentMethodAddressCountry').val();
+                        data.profilename = $('#paymentMethodAddressProfileName').val();
+                        data.street = $('#paymentMethodAddressStreet').val();
+                    }
+
+                    var t = $(this);
+                    showLoading(t);
+
+                    $.post('@Url.Resolve("~/Account/SavePaymentMethod")', data, function (response) {
+                        if (response.result) {
+                            window.location = '@Url.Resolve("~/Account/ShippingAndBillingProfiles")';
+                        }
+                        else {
+                            hideLoading(t);
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('#chkUseDefaultShippingAddress').click(function () {
+                $('#defaultAddress,#newAddress').slideToggle();
+            });
+        });
+		//]]>
+    </script>
+}
+
+@{string canDoEFT = (CoreContext.CurrentAccount.HasFunction(SmallCollectionCache.Instance.PaymentTypes.Where(p => p.PaymentTypeID == (int)Constants.PaymentType.EFT).FirstOrDefault().FunctionName)) ? "visible" : "hidden";}
+
+<div id="paymentMethodTypeChoose" class="mb10 overflow" style="visibility:@canDoEFT">
+    <h2>
+        @Html.Term("PaymentMethodType", "Payment Method Type")
+    </h2>
+    <div>
+        <p>
+            @{if (!Model.RoutingNumber.IsNullOrEmpty())
+              {
+                 <input id="rbPaymentCreditCard" name="payment" value="CreditCard" type="radio" disabled="disabled" /><label for="rbPaymentCreditCard">@Html.Term("CreditCard", "Credit Card")</label>
+                 <input id="rbPaymentEFT" name="payment" value="EFT" type="radio" checked="checked"/><label for="rbPaymentEFT">@Html.Term("BankAccount", "Bank Account")</label>
+              }
+              else if(!Model.ExpirationDate.IsNullOrEmpty())
+              {
+                 <input id="rbPaymentCreditCard" name="payment" value="CreditCard" type="radio" checked="checked"/><label for="rbPaymentCreditCard">@Html.Term("CreditCard", "Credit Card")</label>
+                 <input id="rbPaymentEFT" name="payment" value="EFT" type="radio" disabled="disabled"/><label for="rbPaymentEFT">@Html.Term("BankAccount", "Bank Account")</label>
+              }
+              else
+              {
+                 <input id="rbPaymentCreditCard" name="payment" value="CreditCard" type="radio" checked="checked"/><label for="rbPaymentCreditCard">@Html.Term("CreditCard", "Credit Card")</label>
+                 <input id="rbPaymentEFT" name="payment" value="EFT" type="radio"/><label for="rbPaymentEFT">@Html.Term("BankAccount", "Bank Account")</label>
+              }}
+        </p>
+    </div>
+</div>
+
+<table id="paymentMethodEntry">
+    <tr>
+        <td colspan="2">
+            <h1 style="margin-bottom: @(Model.AccountPaymentMethodID > 0 ? "0" : "5px");">
+                @(Model.AccountPaymentMethodID == 0 ? Html.Term("AddaNewBillingProfile", "Add a new billing profile") : Html.Term("EditBillingProfile", "Edit billing profile"))
+            </h1>
+        </td>
+    </tr>
+    @if (Model.AccountPaymentMethodID > 0)
+    {
+        <tr>
+            <td colspan="2">
+                <div class="UI-mainBg pad10 brdrAll GridUtility" style="margin: 5px 2px;">
+                    <input type="hidden" id="currentPaymentId" value="@Model.AccountPaymentMethodID" />
+                    <a id="btnDelete" href="javascript:void(0);" class="UI-icon-container"><span class="UI-icon icon-x"></span><span>
+                        @Html.Term("DeleteProfile", "Delete profile")</span> </a>
+                    @if (!Model.IsDefault)
+                    {
+                        <a id="btnSetDefault" href="javascript:void(0);" class="UI-icon-container"><span class="UI-icon icon-check"></span><span>
+                            @Html.Term("MakeMyDefaultProfile", "Make my default profile")</span> </a>
+                    }
+                    <span class="ClearAll"></span>
+                </div>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td id="EFT" style="display: none;">
+            <div class="mr10">
+                <p>
+                    <span class="FL Label">
+                        <label for="BankName">
+                            @Html.Term("BankName", "BankName"):</label></span>
+                    <input type="text" maxlength="100" id="BankName" name="@Html.Term("BankNameIsRequired", "Bank Name is required.")"
+                        class="required" value="@Model.BankName" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        <label for="nameOnAccount">
+                            @Html.Term("NameonAccount", "Name on Account"):</label></span>
+                    <input type="text" maxlength="50" id="nameOnAccount" name="@Html.Term("NameOnAccountIsRequired", "Name on Account is required.")"
+                        class="required" value="@Model.NameOnCard" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        <label for="routingTransit">
+                            @Html.Term("Routing/Transit#", "Routing/Transit #"):</label></span>
+                        <input type="text" maxlength="40" id="routingInput" name="@Html.Term("RoutingNumberIsRequired", "Routing Number is required.")"
+                        class="required" value="@Model.RoutingNumber" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        <label for="verifyroutingTransit">
+                            @Html.Term("VerifyRouting/Transit#", "Verify Routing/Transit #"):</label></span>
+                        <input type="text" maxlength="40" id="verifyroutingInput" name="@Html.Term("VerifyRoutingNumberIsRequired", "Verify Routing Number is required.")"
+                        class="required"  />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        <label for="bankAccountNumber">
+                            @Html.Term("Account#", "Account #"):</label></span>
+                    <input type="text" maxlength="40" id="accountInput" name="@Html.Term("AccountNumberIsRequired", "Account Number is required.")"
+                        class="required" value="@Model.DecryptedAccountNumber.MaskString(4)" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        <label for="verifybankAccountNumber">
+                            @Html.Term("VerifyAccount#", "Verify Account #"):</label></span>
+                    <input type="text" maxlength="40" id="verifyaccountInput" name="@Html.Term("VerifyAccountNumberIsRequired", "Verify Account Number is required.")"
+                        class="required" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        @Html.Term("AccountType","Account Type") :
+                    </span>
+                    <select id="accountTypeAccount" class="required" name="@Html.Term("BankAccountTypeIsRequired", "Bank Account Type is required")">
+				        <option>
+                            @Html.Term("-ChooseAccountType","-Choose Account Type-")
+                        </option>
+                        @foreach (var bankType in Enum.GetValues(typeof(Constants.BankAccountTypeEnum)).Cast<Constants.BankAccountTypeEnum>())
+                        {
+                        <option value="@(bankType.ToShort())" @(Model.BankAccountTypeID == bankType.ToShort() ? "selected=\"selected\"" : string.Empty)>@Html.Term("BankAccountType_" + bankType.ToString(), bankType.ToString())</option>
+                        }
+			        </select>
+                </p>
+                <p>
+                    <input type="checkbox" id="BankAccountCertCheckbox" />
+                    <label for="BankAccountCert">@Html.Term("BankAccountCert", "I certify that I am the owner of the account")</label>
+                </p>
+            </div>
+        </td>
+        <td id="creditCard" style="vertical-align: top;">
+            <div>
+                <p>
+                    <span class="FL Label">
+                        @Html.Term("NameOnCard", "Name on Card"):</span>
+                    <input type="text" maxlength="50" id="nameOnCard" name="@Html.Term("NameOnCardisRequired", "Name On Card is required.")" class="required" value="@Model.NameOnCard" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        @Html.Term("CreditCard#", "Credit Card #"):</span>
+                    <input type="text" maxlength="16" id="accountNumber" name="@Html.Term("CardNumberIsRequired", "Card Number is required.")" class="required" value="@Model.DecryptedAccountNumber.MaskString(4)" />
+                </p>
+                <p>
+                    <span class="FL Label">
+                        @Html.Term("Expiration", "Expiration"):</span>
+                    <select id="expMonth" name="@Html.Term("ExpMonthIsRequired", "Exp Month is required.")" class="required">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i" @Html.Raw(i == Model.ExpirationDate.ToDateTime().Month ? "selected=\"selected\"" : "")>
+                                @(i + " - " + Html.Term(Enum.ToObject(typeof(Constants.Month), i).ToString()))</option>
+                        }
+                    </select>
+                    &nbsp;/&nbsp;
+                    <select id="expYear" name="@Html.Term("ExpYearIsRequired", "Exp Year is required.")" class="required">
+                        @for (int i = DateTime.Today.Year; i <= DateTime.Today.Year + 10; i++)
+                        {
+                            <option value="@i" @Html.Raw(i == Model.ExpirationDate.ToDateTime().Year ? "selected=\"selected\"" : "")>
+                                @i.ToString()</option>
+                        }
+                    </select>
+                </p>
+            </div>
+        </td>
+        <td style="width: 345px; vertical-align: top;">
+            @{
+                var defaultShippingAddress = CoreContext.CurrentAccount.Addresses.GetDefaultByTypeID(Constants.AddressType.Shipping);
+                var showDefault = Model.AccountPaymentMethodID == 0 && defaultShippingAddress != null;
+            }
+            @if (showDefault)
+            {
+                <input type="checkbox" id="chkUseDefaultShippingAddress" checked="checked" /><label
+                    for="chkUseDefaultShippingAddress">@Html.Term("UseMyDefaultShippingAddress", "Use my default shipping address")</label>
+                <div id="defaultAddress" style="margin-left: 30px;">
+                    @Html.Raw(defaultShippingAddress.ToDisplay(false))
+                </div>
+            }
+            <div id="newAddress" style="@(showDefault ? "display: none;" : "")">
+                @{
+                    Html.RenderPartial("Address", new AddressModel()
+                       {
+                           Address = Model.BillingAddress,
+                           LanguageID = CoreContext.CurrentLanguageID,
+                           ShowCountrySelect = true,
+                           ChangeCountryURL = "~/Account/GetAddressControl",
+                           ExcludeFields = new List<string>() { "PhoneNumber" },
+                           Prefix = "paymentMethodAddress"
+                       });
+                }
+            </div>
+        </td>
+    </tr>
+</table>
+<hr />
+<p>
+    <a href="javascript:void(0);" id="btnSavePaymentMethod" class="FR Button BigBlue"><span>
+        @Html.Term("SaveProfile", "Save Profile")</span></a> <a href="@Url.Resolve("~/Account/ShippingAndBillingProfiles")" class="jqmClose FL">
+            @Html.Term("Cancel", "Cancel")</a>
+</p>
+@Html.Partial("MessageCenter")

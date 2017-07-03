@@ -1,0 +1,5 @@
+﻿@model OrderItem
+@foreach (var description in Model.OrderAdjustmentOrderLineModifications.GroupBy(a => a.OrderAdjustmentID).Select(g => g.First().OrderAdjustment.Description))
+			{			
+				<span class="promoName">@description</span>
+			}

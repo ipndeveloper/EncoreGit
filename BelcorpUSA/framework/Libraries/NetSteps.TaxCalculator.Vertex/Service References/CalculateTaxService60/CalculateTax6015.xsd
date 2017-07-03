@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Jurisdiction level specification. Declararion of structures and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="JurisdictionLevelCodeType">
+    <xsd:annotation>
+      <xsd:documentation>Identifies the jurisdiction's common classification based on its geopolitical and/or taxing context.  They are state, province, county, city, parish, districts.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="60" />
+      <xsd:enumeration value="APO" />
+      <xsd:enumeration value="BOROUGH" />
+      <xsd:enumeration value="CITY" />
+      <xsd:enumeration value="COUNTRY" />
+      <xsd:enumeration value="COUNTY" />
+      <xsd:enumeration value="DISTRICT" />
+      <xsd:enumeration value="FPO" />
+      <xsd:enumeration value="LOCAL_IMPROVEMENT_DISTRICT" />
+      <xsd:enumeration value="PARISH" />
+      <xsd:enumeration value="PROVINCE" />
+      <xsd:enumeration value="SPECIAL_PURPOSE_DISTRICT" />
+      <xsd:enumeration value="STATE" />
+      <xsd:enumeration value="TERRITORY" />
+      <xsd:enumeration value="TOWNSHIP" />
+      <xsd:enumeration value="TRADE_BLOCK" />
+      <xsd:enumeration value="TRANSIT_DISTRICT" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="JurisdictionLevel" type="JurisdictionLevelCodeType">
+    <xsd:annotation>
+      <xsd:documentation>Jurisdiction level structure.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+</xsd:schema>

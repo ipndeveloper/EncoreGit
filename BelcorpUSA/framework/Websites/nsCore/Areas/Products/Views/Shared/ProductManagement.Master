@@ -1,0 +1,34 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks">
+				<%= Html.SelectedLink("~/Products/Products", Html.Term("BrowseProducts", "Browse Products"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "") %>
+				<%= Html.SelectedLink("~/Products/Products/Create", Html.Term("AddaNewProduct", "Add a New Product"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "") %>
+
+                <%--Developed by BAL - CSTI - A01--%>
+                <%= Html.SelectedLink("~/Products/Quotas", Html.Term("ProductQuota", "Product Quota"), new List<string>() { "~/Products/Quotas/Create" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+
+				<%= Html.SelectedLink("~/Products/Properties", Html.Term("PropertiesManagement", "Properties Management"), new List<string>(){"~/Products/Properties/Edit"}, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "") %>
+				<%= Html.SelectedLink("~/Products/ProductTypes", Html.Term("ProductTypesManagement", "Product Types Management"), new List<string>() { "~/Products/ProductTypes/Edit" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+				<%= Html.SelectedLink("~/Products/PriceTypes", Html.Term("PriceTypesManagement", "Price Types Management"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "") %>
+				<%= Html.SelectedLink("~/Products/ResourceTypes", Html.Term("ResourceTypesManagement", "Resource Types Management"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "") %>
+				<%= Html.SelectedLink("~/Products/CustomerTypes", Html.Term("CustomerTypesManagement", "Customer Types Management"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "") %>
+
+                <%= Html.SelectedLink("~/Products/Campaign/Information", Html.Term("CampaignInformation", "Campaign Information"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>

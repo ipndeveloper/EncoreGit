@@ -1,0 +1,87 @@
+﻿
+/***********************
+* Action Items
+************************/
+
+.actionItems {
+	margin-bottom: em(20);
+	ul {
+		li {
+			a {
+				overflow:hidden;
+				display:block;
+				@media screen and (max-width: $break-med) {
+					text-align:center;
+					line-height:normal;
+					span {
+						line-height: normal;
+						&.lbl {
+							width:70%;
+							display:inline-block;
+						}
+					}
+				}
+				.UI-icon {
+					float:left;
+					@media screen and (max-width: $break-med) {
+						float:none;
+						display:block;
+					}
+				}
+			}
+		} 
+		@media screen and (max-width: $break-med) {
+			@include inline-nav;
+			overflow:hidden;
+			line-height:normal;
+			font-size:90%;
+			li {
+				margin-right:1.5%;
+			}
+		}
+	}
+	.UI-icon-container {
+		line-height: em($action-link-size + 4);
+		clear:both;
+	}
+	[class^="icon-"], [class*=" icon-"] {
+			height: em($action-link-size + 4);
+			width: em($action-link-size + 4);
+			&:before, .ie7Icon {
+				font-size:em($action-link-size);
+			}
+	}
+	.icon-help:before {
+		font-size: em(21);
+	}
+}
+
+
+//A fix for IE9 with multiple rules assigning em font size
+body.IE9, body.IE10 {
+    .actionItems {
+	    [class^="icon-"], [class*=" icon-"] {
+		    &:before {
+			    font-size:em($action-link-size, $IconSize + $action-link-size + $base_font_size); 
+		    }
+		    @media screen and (max-width: $break-med) {
+			    width: auto;
+		    }
+	    }
+    }
+}
+
+
+/****************
+* Saved Reports
+****************/
+.SavedReports {
+	a {
+		padding: em(10);
+	}
+	.WidgetTitle {
+		padding: em(5);
+	}
+}
+
+

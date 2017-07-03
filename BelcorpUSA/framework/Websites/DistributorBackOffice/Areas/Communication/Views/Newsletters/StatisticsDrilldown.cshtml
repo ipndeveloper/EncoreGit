@@ -1,0 +1,63 @@
+﻿@model IEnumerable<FakeNewsletterStatistic>
+@{
+    ViewBag.Title = "Newsletters";
+}
+
+    <!-- Data Grid -->
+    <table class="DataGrid">
+        <tr class="UI-bg UI-header">
+            <td>
+                @Html.Term("FirstName", "First Name")
+            </td>
+            <td>
+                @Html.Term("LastName", "Last Name")
+            </td>
+            <td>
+                @Html.Term("EmailAddress", "Email Address")
+            </td>
+            <td>
+                @Html.Term("TotalActions", "Total Actions")
+            </td>
+            <td>
+                @Html.Term("LastActionDateTime", "Last Action Date/Time")
+            </td>
+            @{List<string> attributes = Model.Where(x => x.Attributes != null).SelectMany(x => x.Attributes).Where(x => x.Value.Trim() != "").GroupBy(x => x.Type).Select(x => x.Key).ToList();}
+            @foreach (string attributeKey in attributes)
+            {
+                <td>
+                    @attributeKey
+                </td>
+            }
+        </tr>
+        @foreach (NetSteps.Data.Entities.Account account in Model.GroupBy(x => x.Account).Select(x => x.Key))
+        {
+            FakeNewsletterStatistic statistic = Model.First(x => x.Account == account);
+            <tr>
+                <td>
+                    @statistic.Account.FirstName
+                </td>
+                <td>
+                    @statistic.Account.LastName
+                </td>
+                <td>
+                    @statistic.Account.EmailAddress
+                </td>
+                <td>
+                    @Model.Count(x => x.Account == statistic.Account)
+                </td>
+                <td>
+                    @(Model.Where(x => x.Account == statistic.Account).OrderByDescending(x => x.TimestampUTC).First().TimestampUTC.ToString("MM/dd/yyyy hh:mm tt"))
+                </td>
+                @if (statistic.Attributes != null)
+                {
+                    foreach (string attributeKey in attributes)
+                    {
+                    <td>
+                        @((statistic.Attributes.FirstOrDefault(x => x.Type == attributeKey) ?? new FakeNewsletterStatisticAttribute()).Value)
+                    </td>
+                    }
+                }
+            </tr>
+        }
+    </table>
+    

@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NetSteps.SSO.Common</name>
+    </assembly>
+    <members>
+        <member name="T:NetSteps.SSO.Common.AuthenticatorExtensions">
+            <summary>
+            Extension methods that are the same regardless of implementation
+            </summary>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.EncodeInteger(NetSteps.SSO.Common.IAuthenticator,System.Int32)">
+            <summary>
+            Returns a string of encoded text from integer and default key
+            </summary>
+            <param name="service"></param>
+            <param name="toEncode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.EncodeInteger(NetSteps.SSO.Common.IAuthenticator,System.Int32,System.Action{System.Exception})">
+            <summary>
+            Returns a string of encoded text from integer and default key
+            </summary>
+            <param name="service"></param>
+            <param name="toEncode"></param>
+            <param name="exceptionHandler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Encode(NetSteps.SSO.Common.IAuthenticator,NetSteps.SSO.Common.ISingleSignOnModel)">
+            <summary>
+            Encodes DecodedText and stores the value in DecodedText
+            </summary>
+            <param name="service"></param>
+            <param name="model"></param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Encode(NetSteps.SSO.Common.IAuthenticator,NetSteps.SSO.Common.ISingleSignOnTimeStampedModel)">
+            <summary>
+            Encodes DecodedText and stores the value in DecodedText
+            </summary>
+            <param name="service"></param>
+            <param name="model"></param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Encode(NetSteps.SSO.Common.IAuthenticator,System.String,System.Action{System.Exception})">
+            <summary>
+            Encrypts the accountID into a string using pre-supplied key and salt (Most likely in the configuration file). 
+            </summary>
+            <param name="service"></param>
+            <param name="textToEncrypt"></param>
+            <param name="exceptionHandler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Encode(NetSteps.SSO.Common.IAuthenticator,System.String)">
+            <summary>
+            Encrypts the accountID into a string using pre-supplied key and salt (Most likely in the configuration file). 
+            </summary>
+            <param name="service"></param>
+            <param name="textToEncrypt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.DecodeInteger(NetSteps.SSO.Common.IAuthenticator,System.String)">
+            <summary>
+            Decodes encoded text and returns an integer using default key
+            </summary>
+            <param name="service"></param>
+            <param name="toDecode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.DecodeInteger(NetSteps.SSO.Common.IAuthenticator,System.String,System.Action{System.Exception})">
+            <summary>
+            Decodes encoded text and returns an integer using default key
+            </summary>
+            <param name="service"></param>
+            <param name="toDecode"></param>
+            <param name="exceptionHandler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Decode(NetSteps.SSO.Common.IAuthenticator,NetSteps.SSO.Common.ISingleSignOnModel)">
+            <summary>
+            Decrypts the EncodedText and stores the value in DecodedText
+            </summary>
+            <param name="service"></param>
+            <param name="model"></param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Decode(NetSteps.SSO.Common.IAuthenticator,NetSteps.SSO.Common.ISingleSignOnTimeStampedModel)">
+            <summary>
+            Decrypts the EncodedText and stores the value in DecodedText
+            </summary>
+            <param name="service"></param>
+            <param name="model"></param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Decode(NetSteps.SSO.Common.IAuthenticator,System.String,System.Action{System.Exception})">
+            <summary>
+            Decrypts the accountID from the provided string using the pre-supplied key and salt (Most likely in the configuration file).
+            </summary>
+            <param name="service"></param>
+            <param name="textToDecode"></param>
+            <param name="exceptionHandler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.AuthenticatorExtensions.Decode(NetSteps.SSO.Common.IAuthenticator,System.String)">
+            <summary>
+            Decrypts the accountID from the provided string using the pre-supplied key and salt (Most likely in the configuration file).
+            </summary>
+            <param name="service"></param>
+            <param name="textToDecode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NetSteps.SSO.Common.Config.SsoConfigurationSection">
+            <summary>
+            Configuration section for SSO
+            </summary>
+        </member>
+        <member name="F:NetSteps.SSO.Common.Config.SsoConfigurationSection.SectionName">
+            <summary>
+            Section name used in configuration file
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.Config.SsoConfigurationSection.KeyName">
+            <summary>
+            Name of the key used by SSO (should exist in the local box' key provider).
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.Config.SsoConfigurationSection.Salt">
+            <summary>
+            Salt, default being a preset GUID
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.Config.SsoConfigurationSection.Current">
+            <summary>
+            Gets the current SSO configuration or the default configuration.
+            </summary>
+        </member>
+        <member name="T:NetSteps.SSO.Common.EncryptionUtilities">
+            <summary>
+            Collection of static methods used to encrypt or decrypt byte[]'s
+            </summary>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.DecryptTripleDES(System.Byte[],System.String,System.String)">
+            <summary>
+            Deciphers a base 64 encoded string.
+            </summary>
+            <param name="key">cipher key</param>
+            <param name="base64Text">the base 64 encoded text to decipher.</param>
+            <param name="salt">salt</param>
+            <returns>The decrypted text, or empty string if failure</returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.DecryptTripleDES``1(System.Byte[],System.String,System.String)">
+            <summary>
+            Decryptns a base 64 encrypted string
+            </summary>
+            <typeparam name="T">The type of object to be returned</typeparam>
+            <param name="key">The encryption key</param>
+            <param name="base64Text">The base 64 encoded text to be decrypted</param>
+            <param name="salt">The salt to be used</param>
+            <returns>The decrypted text, or default(T) if failure</returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.EncryptTripleDES(System.Byte[],System.String,System.String)">
+            <summary>
+            Creates cipher text from a plaintext string and base64 encodes the result.
+            </summary>
+            <param name="key">Encryption key</param>
+            <param name="plainText">Text to be encrypted</param>
+            <param name="salt">Salt to use for encryption</param>
+            <returns>The ciphered text, empty string if failure</returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.EncryptTripleDES(System.Byte[],System.Object,System.String)">
+            <summary>
+            Creates cipher text from an object serialized to JSON and base64 encodes the result.
+            </summary>
+            <param name="key">Encryption key</param>
+            <param name="obj">Object to be JSON encoded and encrypted</param>
+            <param name="salt">Salt to use for encryption</param>
+            <returns>The encrypted text, empty string if failure</returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.Encrypt(System.Byte[],System.Byte[])">
+            <summary>
+            Encrypts bytesToEncrypt using the provided key
+            </summary>
+            <param name="bytesToEncrypt"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NetSteps.SSO.Common.EncryptionUtilities.Decrypt(System.Byte[],System.Byte[])">
+            <summary>
+            Decrypts bytesToDecrypt with the provided key
+            </summary>
+            <param name="bytesToDecrypt"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NetSteps.SSO.Common.IAuthenticator">
+            <summary>
+            Encodes and decodes url parameters
+            </summary>
+        </member>
+        <member name="M:NetSteps.SSO.Common.IAuthenticator.Encode(NetSteps.SSO.Common.ISingleSignOnModel,System.Action{System.Exception})">
+            <summary>
+            Encodes DecodedText with provided key ?? defaultKey and provided salt
+            </summary>
+            <param name="model"></param>
+            <param name="exceptionHandler">Code executed when an exception is thrown</param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.IAuthenticator.Decode(NetSteps.SSO.Common.ISingleSignOnModel,System.Action{System.Exception})">
+            <summary>
+            Decodes EncodedText with provided key ?? defaultKey and provided salt
+            </summary>
+            <param name="model"></param>
+            <param name="exceptionHandler">Code executed when an exception is thrown</param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.IAuthenticator.Encode(NetSteps.SSO.Common.ISingleSignOnTimeStampedModel,System.Action{System.Exception})">
+            <summary>
+            Encodes DecodedText with provided key ?? defaultKey and provided salt
+            </summary>
+            <param name="model"></param>
+            <param name="exceptionHandler">Code executed when an exception is thrown</param>
+        </member>
+        <member name="M:NetSteps.SSO.Common.IAuthenticator.Decode(NetSteps.SSO.Common.ISingleSignOnTimeStampedModel,System.Action{System.Exception})">
+            <summary>
+            Decodes EncodedText with provided key ?? defaultKey and provided salt
+            </summary>
+            <param name="model"></param>
+            <param name="exceptionHandler">Code executed when an exception is thrown</param>
+        </member>
+        <member name="T:NetSteps.SSO.Common.ISingleSignOnModel">
+            <summary>
+            Model used to encode and decode url parameters
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.ISingleSignOnModel.DecodedText">
+            <summary>
+            Decoded text, text that is going to be encoded
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.ISingleSignOnModel.EncodedText">
+            <summary>
+            Encoded text, text that is going to be decoded
+            </summary>
+        </member>
+        <member name="T:NetSteps.SSO.Common.ISingleSignOnTimeStampedModel">
+            <summary>
+            Model used to encode and decode url parameters
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.ISingleSignOnTimeStampedModel.DecodedText">
+            <summary>
+            Decoded text, text that is going to be encoded
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.ISingleSignOnTimeStampedModel.TimeStamp">
+            <summary>
+            Timestamp for the SSO token
+            </summary>
+        </member>
+        <member name="P:NetSteps.SSO.Common.ISingleSignOnTimeStampedModel.EncodedText">
+            <summary>
+            Encoded text, text that is going to be decoded
+            </summary>
+        </member>
+        <member name="T:NetSteps.SSO.Common.Wireup">
+            <summary>
+            Wireup command called at bootstrap time by the wireup coordinator.
+            </summary>
+        </member>
+        <member name="M:NetSteps.SSO.Common.Wireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+            <summary>
+            Wires this module.
+            </summary>
+            <param name="coordinator">the coordinator</param>
+        </member>
+    </members>
+</doc>

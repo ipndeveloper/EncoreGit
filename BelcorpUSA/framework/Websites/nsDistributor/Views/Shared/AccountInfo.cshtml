@@ -1,0 +1,46 @@
+﻿@using NetSteps.Addresses.Common.Models
+<div class="Bio">
+    @if (!string.IsNullOrWhiteSpace(ViewBag.AccountName))
+    {
+        <div class="myName">
+            @Html.Raw(ViewBag.AccountName)
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(ViewBag.AccountTitle))
+    {
+        <div class="myTitle">
+            @ViewBag.AccountTitle
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(ViewBag.AccountPhone))
+    {
+        <div class="myPhone">
+            <div class="UI-icon-container">
+                <span class="FL UI-icon icon-phoneBio"></span>
+                <span class="icon-label">@(ViewBag.AccountPhone == null ? "" : ((string)ViewBag.AccountPhone).FormatPhone(BaseController.CurrentCulture.Name))</span>
+            </div>
+        </div>
+    }
+
+
+    @if (HttpContext.Current.Request.Url.AbsolutePath != "/ContactMe")
+    {
+        if (!string.IsNullOrWhiteSpace(ViewBag.AccountEmail))
+        {
+            <div class="myEmail">
+                <a href="@("mailto:" + Html.Raw(ViewBag.AccountEmail))" class="UI-icon-container" title="@Html.Raw(ViewBag.AccountEmail)">
+                    <span class="FL UI-icon icon-emailBio"></span>
+                    <span class="icon-label">@Html.Term("DistributorEmailLinkText", "Email Me")</span></a>
+            </div>
+        }            
+        else
+        { 
+            <div class="myEmail">
+                <a href="@Url.Resolve("~/ContactMe")" class="UI-icon-container" title="@Html.Term("DistributorContactToolTip", "Contact Me")">
+                    <span class="FL UI-icon icon-emailBio"></span>
+                    <span class="icon-label">@Html.Term("DistributorContactLinkText", "Contact Me")</span></a>
+            </div>
+        }
+    }
+
+<span class="clr"></span></div>

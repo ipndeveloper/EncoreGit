@@ -1,0 +1,1 @@
+%~dp0..\Libraries\Assemblies\SQLTransmogrifier\SQLTransmogrifierFileGenerator.exe -td %~dp0Deployments -t NewScript -bc TRUNK

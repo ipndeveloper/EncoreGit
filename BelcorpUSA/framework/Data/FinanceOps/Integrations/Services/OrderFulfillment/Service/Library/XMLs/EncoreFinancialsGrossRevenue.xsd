@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="FinancialsGrossRevenue">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1" maxOccurs="1">
+        <xsd:element name="CreditCardRevenue" type="Money"/>
+        <xsd:element name="CashRevenue" type="Money"/>
+        <xsd:element name="ProductCreditRevenue" type="Money"/>
+        <xsd:element name="GiftCardRevenue" type="Money" />
+        <xsd:element name="ServiceIncomeRevenue" type="Money"/>
+        <xsd:element name="SalesTaxRevenue" type="Money"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType mixed="false" name="Money">
+    <xsd:annotation>
+      <xsd:documentation>Describe a monetary amount in one of the allowed currencies. Also see the currency type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attribute name="Currency" type="Currency" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="Currency">
+    <xsd:annotation>
+      <xsd:documentation>The currency types available for use with the money type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USD"/>
+      <xsd:enumeration value="CAD"/>
+      <xsd:enumeration value="YEN"/>
+      <xsd:enumeration value="AUD"/>
+      <xsd:enumeration value="GBP"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

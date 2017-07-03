@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:simpleType name="OrderStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Pending"/>
+      <xsd:enumeration value="Pending Error"/>
+      <xsd:enumeration value="Paid"/>
+      <xsd:enumeration value="Cancelled"/>
+      <xsd:enumeration value="Partially Paid"/>
+      <xsd:enumeration value="Printed"/>
+      <xsd:enumeration value="Shipped"/>
+      <xsd:enumeration value="Credit Card Declined"/>
+      <xsd:enumeration value="Credit Card Declined - Retry"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="OrderCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Order" minOccurs="0" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Order">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderNumber" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="Status" type="OrderStatus" minOccurs="1" maxOccurs="1" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

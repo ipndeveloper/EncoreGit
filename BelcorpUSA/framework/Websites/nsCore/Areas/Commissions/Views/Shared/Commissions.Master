@@ -1,0 +1,146 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+<script type="text/javascript">
+ $(document).ready(function () {
+
+      
+      $('input[monedaidioma=CultureIPN]').keyup(function (event) {
+
+          var cultureInfo = '<%= CoreContext.CurrentCultureInfo.Name%>';
+          var formatDecimal = '$1.$2'; // valores por defaul 
+          var formatMiles = ",";  // valores por defaul
+
+          if (cultureInfo === 'en-US') {
+              formatDecimal = '$1.$2';
+              formatMiles = ",";
+          }
+          else if (cultureInfo === 'es-US') {
+              formatDecimal = '$1,$2';
+              formatMiles = ".";
+          }
+          else if (cultureInfo === 'pt-BR') {
+              formatDecimal = '$1,$2';
+              formatMiles = ".";
+          }
+
+          if (event.which >= 37 && event.which <= 40) {
+              event.preventDefault();
+          }
+
+          $(this).val(function (index, value) {
+
+
+              return value.replace(/\D/g, "")
+                                 .replace(/([0-9])([0-9]{2})$/, formatDecimal)
+                                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, formatMiles);
+          });
+
+
+      });
+
+     });
+   
+
+</script>
+    <script type="text/javascript">
+    
+
+
+    </script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="SubNavigation">
+    <%= Html.SubTab("~/Commissions/Admin", Html.Term("Admin", "Admin"), onlyCheckController: true, function: "Admin-Create and Edit User")%>
+    <%--<% foreach (NetSteps.Commissions.Common.Models.ICommissionPlan p in (List<NetSteps.Commissions.Common.Models.ICommissionPlan>)ViewData["Plans"]) 
+		{ %> 
+			<%= Html.SubTab(String.Format("~/Commissions/Job/Index/{0}", p.DisbursementFrequency), p.PlanCode, onlyCheckController: true, function: "Admin-Create and Edit Role")%>
+		<%}%>--%>
+    <%--<%= Html.SubTab("~/Commissions/Disbursements", Html.Term("Disbursements", "Disbursements"), onlyCheckController: true, function: "Admin-Create and Edit Schedule")%>--%>
+    <%= Html.DropDownNavigation(Html.Term("Rules", "Rules"), "", new List<NavigationItem>()
+		    {
+			new NavigationItem() { LinkText = Html.Term("SponsorshipRules", "Sponsorship Rules"), Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+          
+			}) %>
+    <%= Html.DropDownNavigation(Html.Term("Configurations", "Configurations"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("TitleConfigurations", "Titles"), Url = "~/Commissions/Configurations/Titles", MappedUrls = new List<string>(){ "~/Commissions/Configurations/*" } },
+            new NavigationItem() { LinkText = Html.Term("RuleConfigurations", "Rules by Plan"), Url = "~/Commissions/Configurations/Rules", MappedUrls = new List<string>(){ "~/Commissions/Configurations/*" } },
+			}) %>
+    <%= Html.SubTab("~/Commissions/BonusRequirement", Html.Term("BonusRequirement", "Commissions Rules"), onlyCheckController: true, function: "Admin-Create and Edit Schedule")%>
+    <!-- CSTI - mescobar -INICIO-->
+    <%= Html.DropDownNavigation(Html.Term("Disbursements"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("Payments"), Url = "~/Commissions/Payments/IndexCharge", MappedUrls = new List<string>(){ "~/Commissions/Payments/*" } },
+            new NavigationItem() { LinkText = Html.Term("Minimums"), Url = "~/Commissions/Minimums/Index", MappedUrls = new List<string>(){ "~/Commissions/Minimums/*" } },
+            new NavigationItem() { LinkText = Html.Term("Fees"), Url = "~/Commissions/Fees/Index", MappedUrls = new List<string>(){ "~/Commissions/Fees/*" } },
+            //new NavigationItem() { LinkText = Html.Term("ManagementDisbursements"), Url = "~/Commissions/Managment/Index", MappedUrls = new List<string>(){ "~/Commissions/Managment/*" } },
+            new NavigationItem() { LinkText = Html.Term("ManagementDisbursements"), Url = "~/Commissions/Managment/Index" },
+            new NavigationItem() { LinkText = Html.Term("ManagmentLedger"), Url = "~/Commissions/ManagmentLedger/Index" },
+            new NavigationItem() { LinkText = Html.Term("DisbursementReport"), Url = "~/Commissions/DisbursementReport/Index" }
+			}) %>
+    <!-- CSTI - mescobar -FIN  -->
+    <%= Html.DropDownNavigation(Html.Term("Closing"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("SupportExecCampaignMontlyClosing", "Exec Campaign Monthly Closing"), Url = "~/Support/ExecMonthlyClosing", MappedUrls = new List<string>(){ "~/Commissions/ExecMonthlyClosing/*" } },
+            new NavigationItem() { LinkText = Html.Term("SupportCampaignMontlyClosing", "Campaign Monthly Closing"), Url = "~/Support/MonthlyClosing", MappedUrls = new List<string>(){ "~/Commissions/MonthlyClosing/*" } },            
+			}) %>
+            
+    <%= Html.DropDownNavigation(Html.Term("ReportCommissions", "Reports"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("KPIsPerPeriod", "KPIs per Period"), Url = "~/Commissions/Reports/KpisPerPeriodGate", MappedUrls = new List<string>(){ "~/Commissions/Reports/*" } },
+            new NavigationItem() { LinkText = Html.Term("EarningsPerPeriod", "Earnings per Period"), Url = "~/Commissions/Reports/EarningsPerPeriodGate", MappedUrls = new List<string>(){ "~/Commissions/Reports/*" } },
+            new NavigationItem() { LinkText = Html.Term("BonusPerPeriod", "Bonus per Period"), Url = "~/Commissions/Reports/BonusPerPeriodGate", MappedUrls = new List<string>(){ "~/Commissions/Reports/*" } }
+		}) %>
+     <%= Html.SubTab("~/Accounts/AccountsWithoutSponsor", Html.Term("AccountsWithoutSponsor", "Consultants Without Sponsor"), onlyCheckController: true, function: "Admin-Create and Edit Schedule")%> 
+     <%= Html.SubTab("~/Commissions/ManualBonusEntry", Html.Term("BonusPerPeriod", "Manual Bonus"), onlyCheckController: true, function: "Admin-Create and Edit Schedule")%>                      
+</asp:Content>
+<asp:Content ID="Content3" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<div class="TagInfo">
+					<asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+</asp:Content>
+<%--<asp:Content ID="Content3" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server" >
+                    <div class="SectionNav">
+			            <ul class="SectionLinks">
+                        <%= Html.SelectedLink("~/Commissions/Minimums/Index", Html.Term("Minimums"), new List<string>() { "~/Commissions/Minimums/Index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser)%>
+                        <%= Html.SelectedLink("~/Commissions/Fees/Index", Html.Term("Fees"), new List<string>() { "~/Commissions/Fees/Index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser)%>
+                        <%= Html.SelectedLink("~/Commissions/Managment/Index", Html.Term("ManagementDisbursements"), new List<string>() { "~/Commissions/Managment/Index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser)%>
+			            </ul>
+		            </div>
+                </asp:ContentPlaceHolder>
+			</td>   
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server">
+				</asp:ContentPlaceHolder>
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+</asp:Content>--%>

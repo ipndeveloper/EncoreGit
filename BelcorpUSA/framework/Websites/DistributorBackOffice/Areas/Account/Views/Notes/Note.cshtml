@@ -1,0 +1,81 @@
+﻿@*@model NetSteps.Data.Entities.Note*@
+ @model DistributorBackOffice.Areas.Account.Models.Notes.AccountNoteViewModel
+           
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#btnNote').click(function () {
+            alert("note");
+            $('#newNoteSubject,#newNoteText').val('').clearError();
+        });
+
+
+        $("#btnSaveNote").click(function () {
+            if ($('#myNote').checkRequiredFields()) {
+
+                var t = $(this);
+                showLoading(t, { float: "right" });
+
+                $.post('@Url.Content("~/Account/Notes/Add")', { accountID: '@Model.AccountID', parentId: $('#parentNoteID').val(), subject: $('#newNoteSubject').val(), noteText: $('#newNoteText').val() }, function (response) {
+                    if (response.result) {
+                        $('#noteModal').jqmHide();
+                        hideLoading(t);
+                        $('#parentNoteID,#newNoteSubject,#newNoteText').val('');
+
+                        showMessage('@Html.Term("NoteSaved", "Note saved!")', false);
+                        $('#paginatedGridPaginationNotesGrid .pageSize').triggerHandler('change');
+                    }
+                    else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }
+        });
+
+    });
+    
+</script>
+
+@{
+    var shouldDisable = Model.isDisabled ? "disabled" : string.Empty;
+}
+
+<div id="myNote">
+    <div class="mContent">
+        <h2>
+            @Html.Term("AddaNote", "Add a Note")</h2>
+        <div id="noteErrors">
+        </div>
+        <div class="FormStyle2">
+            @Html.Term("Title", "Title"):
+            <br />
+            <input id="newNoteSubject" type="text" style="width: 250px;" maxlength="120" value="@Model.Note.Subject" class="required" @shouldDisable/><br />
+            @Html.Term("Subject", "Subject"):
+            <br />
+       
+            @Html.TextArea("newNoteText", Model.Note.NoteText, Model.isDisabled ?(object) new{ cols="", rows="", style="width: 250px; height: 100px;", disabled="true"}
+                                                                             :(object) new { cols = "", rows = "", style = "width: 250px; height: 100px;"})
+
+        </div>
+        <br />
+        <input type="hidden" id="parentNoteID" value="" /><br />
+        <p>
+       
+                <a href="javascript:void(0);" class="FL LinkCancel jqmClose" id="btnCancel">
+                    @Html.Term("Cancel", "Cancel")
+                </a>
+            
+            @if (!Model.isDisabled)
+            {
+                <a href="javascript:void(0);" id="btnSaveNote" class="Button BigBlue FR">
+                    <span>
+                        @Html.Term("Save", "Save")
+                    </span>
+                 </a>
+            }
+      
+        </p>
+        <span class="clr"></span>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+﻿@model IEnumerable<OrderItem>
+@using System.Collections.Generic;
+@using NetSteps.Data.Common.Entities;
+@using NetSteps.Data.Entities.Extensions
+@using NetSteps.Data.Common.Services
+@using NetSteps.Encore.Core.IoC
+@{
+    var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+    var customTextPropertyType = SmallCollectionCache.Instance.OrderItemPropertyTypes.FirstOrDefault(y => y.Name == "CustomItemText");
+    var customTextPropertyTypeID = customTextPropertyType != null ? customTextPropertyType.OrderItemPropertyTypeID : 0;
+}
+@foreach (var orderItem in Model.OrderByDescending(oi => oi.OrderItemTypeID))
+{
+    if (!orderItem.OrderItemProperties.Any())
+    {
+        orderItem.LoadOrderItemProperties();
+    }
+    
+    var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+    var customText = orderItem.OrderItemProperties.FirstOrDefault(x => x.OrderItemPropertyTypeID == customTextPropertyTypeID);
+    var customTextValue = customText != null ? customText.PropertyValue : String.Empty;
+    <tr>
+        <td>
+            @orderItem.SKU
+        </td>
+        <td>
+            @product.Translations.Name()
+            @if (@customTextValue != String.Empty)
+            {
+                <br />
+                @customTextValue
+            }
+			<div class="lawyer lineItemPromoList">
+                @Html.Partial("_DisplayOrderAdjustmentDescription", orderItem)
+            </div>
+            @if (orderItem.OrderCustomer.Order.OrderStatusID != (int)Constants.OrderStatus.Pending && orderItem.OrderCustomer.Order.OrderStatusID != (int)Constants.OrderStatus.PendingError
+                                                                && orderItem.GiftCards != null && orderItem.GiftCards.Any())
+            {
+
+                foreach (var gc in orderItem.GiftCards)
+                {
+                @:<br />&nbsp;&nbsp;&nbsp;@gc.Code
+                                                                                                }
+            }
+        </td>
+        <td>
+            @{
+            var preAdjustmentPriceValue = orderItem.GetPreAdjustmentPrice(orderItem.ProductPriceTypeID.Value);
+            var adjustedPriceValue = orderItem.GetAdjustedPrice(orderItem.ProductPriceTypeID.Value);
+            }
+            @if (preAdjustmentPriceValue != adjustedPriceValue)
+            {
+                if (adjustedPriceValue == 0)
+                {
+                <span class="price originalPrice">FREE</span>
+                }
+                else
+                {
+                <span class="block price originalPrice strikethrough">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+                <span class="block price discountPrice">@adjustedPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span>
+                }
+            }
+            else
+            {
+                <span class="price originalPrice">@preAdjustmentPriceValue.ToString(orderItem.OrderCustomer.Order.CurrencyID)</span> 
+            }
+        </td>
+        <td class="center cartQty">
+            @orderItem.Quantity
+        </td>
+        <td>
+		  	@{
+				var adjustedPriceCommissionableTotal = @orderItem.GetAdjustedPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+				var preAdjustmentPriceCommissionableTotal = @orderItem.GetPreAdjustmentPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+            }
+            @if ((adjustedPriceCommissionableTotal * orderItem.Quantity) != (preAdjustmentPriceCommissionableTotal * orderItem.Quantity))
+            {
+                <span class="block price originalPrice strikethrough">@((preAdjustmentPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+                <span class="block price discountPrice">@((adjustedPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+            }
+            else
+            {
+                <span class="price originalPrice">@((preAdjustmentPriceCommissionableTotal * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span> 
+            }
+        </td>
+        <td>
+            @if (preAdjustmentPriceValue != adjustedPriceValue)
+            {
+                if (adjustedPriceValue == 0)
+                {
+                <span class="price originalPrice">FREE</span>
+                }
+                else
+                {
+                <span class="block price originalPrice strikethrough">@((preAdjustmentPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+                <span class="block price discountPrice">@((adjustedPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+                }
+            }
+            else
+            {
+                <span class="price originalPrice">@((preAdjustmentPriceValue * orderItem.Quantity).ToString(orderItem.OrderCustomer.Order.CurrencyID))</span>
+            }
+        </td>
+    </tr>
+    foreach (var childItem in orderItem.ChildOrderItems)
+    {
+        var childProduct = inventory.GetProduct(childItem.ProductID.Value);
+        <tr class="DynamicKitChild @orderItem.Guid.ToString("N")">
+            <td class="icon-24">
+                <span class="UI-icon icon-bundle-arrow"></span>
+                @childProduct.SKU
+            </td>
+            <td>
+                @childProduct.Translations.Name()
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td class="center cartQty">
+                @childItem.Quantity
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    }
+}

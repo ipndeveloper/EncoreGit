@@ -1,0 +1,9 @@
+﻿@using nsDistributor.Models.Shared
+@model nsDistributor.Models.Shared.AccountLocatorModel
+           
+@Html.RadioButtonFor(m => m.SearchType, AccountLocatorModel.AccountLocatorSearchType.AccountInfo, new { id = "btnSearchTypeAccountInfo", @class = "toggleButton", data_bind = "checked: searchParams.searchType" })
+<strong><label for="btnSearchTypeAccountInfo">@Html.Term("AccountLocator_SearchByDistributor", "Search by distributor")</label></strong>
+@Html.RadioButtonFor(m => m.SearchType, AccountLocatorModel.AccountLocatorSearchType.Location, new { id = "btnSearchTypeLocation", @class = "toggleButton alignRight", style = "margin-left:100px", data_bind = "checked: searchParams.searchType" })
+<strong><label for="btnSearchTypeLocation">@Html.Term("AccountLocator_SearchByLocation", "Don't know a distributor? Search by your location.")</label></strong>
+
+

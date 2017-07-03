@@ -1,0 +1,599 @@
+/***********************************
+
+1. Do Not Make Client-Specific Changes To This File.
+2. Do Not Copy This File Into the Customer Override.
+
+***********************************/
+
+@import 'theme';
+@import 'sencha-touch/default/all';
+/*** Icons ***/
+@include pictos-iconmask('user_list');		
+@include pictos-iconmask('shop3');	
+@include pictos-iconmask('chart4');
+@include pictos-iconmask('team');	
+@include pictos-iconmask('list');
+
+@include sencha-panel;
+@include sencha-buttons;
+@include sencha-sheet;
+@include sencha-picker;
+@include sencha-tabs;
+@include sencha-toolbar;
+@include sencha-toolbar-forms;	
+// @include sencha-carousel;
+@include sencha-indexbar;
+@include sencha-list;
+@include sencha-list-paging;
+@include sencha-list-pullrefresh;
+@include sencha-layout;
+@include sencha-form;
+@include sencha-msgbox;
+@include sencha-loading-spinner; 
+/*** the sync icon MUST be included last ***/
+@include pictos-iconmask('sync');	
+
+$test: hello;
+
+.x-list-header {@include column-header}
+x-tab .x-button-label {color:$main_nav_text_active;}
+x-tab-normal .x-button-label {color: $main_nav_text_inactive;}
+.x-tab-active .x-button-label {color: $main_nav_text_active;}
+$full_img_width: 100%;
+
+/****** 
+Body and Login
+*******/
+body {
+	font-family:Helvetica, Arial, sans-serif;
+	margin:0px;padding:0;
+	@include appStartup-img;
+	background-color: $body_bg_color;
+}
+@media screen and (min-width: 1024px) and (max-width: 2560px) {
+	body {background-size:auto;}
+}
+
+.loginPane {
+	background-color: $body_bg_color;
+}
+
+.loginPane-body  {
+	background-image: url(../themes/images/#{$customer_name}/#{$login_graphic});
+	background-repeat: no-repeat;
+	background-position:top;
+	background-size:100%;
+	padding-top: $loginform_top;
+}
+@media screen and (min-width: 1024px) and (max-width: 2560px) {
+	.loginPane-body {background-size:auto;padding-top: $loginform_top/2;}
+	.loginForm {margin:0 25% 0 25%;}
+	#loginPanel {margin:0 20% 0 20%;}
+}
+
+
+
+/**********************
+	General Rules
+**********************/
+input {border-top-width:0px !important;}
+.x-list-item {background:#fff;}
+.bTitle {font-weight:bold;}
+.articleView header, .snapShotInfo, .basicInfo {
+	border-bottom: $border_width $border_style $border_color;
+	padding:1em;
+	@include nuetral-gradient ;	
+	overflow:hidden;
+}
+.basicInfo {background-image:none;@include button-shadow;font-size:100%;}
+.snapShotInfo h2  {font-size:125%;line-height:normal;}
+.snapShotInfo h3 {font-size:70%;}
+.staticList li, .drillDownList li, .ordersList {font-size:75%;}
+.staticList li {
+	border-bottom:	$border_width $border_style $border_color;
+	padding:.25em;	
+	overflow:hidden;	
+}
+.staticList li:last-child {
+	border:none;
+}
+a {color: $link_color;}
+/******* Drilldown rules *******/
+.clickableRow, .ordersList .bTitle {color:$link_color;}
+.clickableRow:active {@include clickable-active;}
+.clickableRow:active {@include clickable-selected;}
+.drillDownList li {
+	@include drilldown-button;
+	padding:.7em;
+	margin: .5em .5em 0 .5em ;	
+	-moz-border-radius:$radius_value;
+	border-radius:$radius_value;
+}
+
+.ordersList .clickableRow, .drillDownList li, .ovfl, .orderStats li {overflow:hidden;}
+.clickableRow .crcw, .ordersList .clickableRow {
+	@include click-icon;
+}
+
+.clickableRow.DISABLED .crcw
+{
+	background:	none !important;
+}
+
+/*
+.detailsList span {
+	display:inline-block;
+	vertical-align:top;
+}
+*/
+.dataList .label, .orderInfo, .orderStats li .label {
+	color: $light_color;
+	width: 35%;
+	float:left;
+	margin-right:1em;
+}
+
+.detailsList span.data, .orderStats  {
+	width:65%;
+	float:left;
+}
+#contactInfo .contactDetails .perferred {
+	vertical-align:middle;
+}
+@media screen and (max-width: 480px) {
+	.orderInfo  {width:30%;}
+	.orderStats li .label {width:40%;}
+	.orderStats li .data 	{width:50%;}	
+}
+/* .orderInfo {border-right:1px  #dadada;}*/
+.kpiGroup p {float:left;margin-right:1em;}
+.kpiGroup .kpiName {display:block;float:none;font-size:75%;font-weight:normal;}
+.kpiGroup .kpiData {color:$light_color/4}
+.contactProfile .basicInfo .label {width:$profile_img_size;margin-right:1em;}
+.contactProfile .basicInfo .data {
+	width:$full_img_width - $profile_img_size - 5;float:left;
+	}
+.orderInfo span {display:block;}
+.orderStats li {width:100%;color: $light_color;}
+.orderStats li .data {color:#000;}
+
+/****** End Drilldown rules ******/
+
+
+
+.perferred {
+	background:url(../themes/images/encore/favorite.png) no-repeat right;
+	width:20px;
+	height:20px;
+}
+.clickIcon {
+	@include click-icon;
+	width:20px;
+	height:20px;
+	text-align:right;
+	float:right;
+}
+.rightIcon {float:right;text-align:right;}
+
+
+.button {
+	line-height:$button_size;
+	-webkit-box-sizing: border-box;
+	  padding: 0 $button_size/2;
+	  height: $button_size;
+	  display: inline-block;
+	  @include border-radius($button_size/2);
+	  border: 1px solid darken($base_color, 20%);
+	   @include background-image(linear-gradient($base_color 75%, $base_color 80%, $base_color));
+	  color: #fff;
+	  text-decoration: none;
+
+&:hover {
+    @include background-image(linear-gradient($active_color, $active_color 50%, $base_color));
+	@include text-shadow;
+  }
+  
+&:active {
+    @include background-image(linear-gradient($base_color 5%, $base_color 50%, $base_color 80%));
+  }
+}
+
+/**************************
+	News articles
+***************************/
+/****** full article view ******/
+.newsTitle {
+	font-weight:bold;
+	display:block;
+	color: $active_color;
+}
+.newsSummary {
+	font-size: .65em !important;
+}
+.newsTitle-viewed, .newsSummary-viewed {color:#cacaca !important;}
+.articleBody .newsTitle2 {color:$alert_color;}
+.articleBody .newsTitle2-viewed {color:$viewed_alert_color;}
+.articlePage-body {background:#fff;}
+.articleView .articleBody {padding:1em;}
+.articleView .articleBody  p {margin-bottom:1em;font-weight:normal;}
+.articleView .articleBody .articleImg {
+	display:inline;
+	float:left;
+	margin:0 1em 0 0;
+	padding:0;
+}
+.articleView .articleBody .articleImg img {
+	background:#fff;
+	padding:.2em;
+	width: 125px;
+}
+/*** article preview ****/
+.articleType1 {@include click-icon;}
+.articlePreview {
+	display:table;
+	width:100%;
+	padding-right:20px;
+}
+.articlePreview .thumb {
+	display:table-cell;
+	@include cell-props;
+	margin-top:3px;
+}
+.articlePreview .thumb .wrap {
+	@include border-style;
+	background-size:50%;
+	width: $article_img_width;
+	height: $article_img_height;
+	overflow:hidden;
+}
+.articlePreview .thumb img {width:100%;height:100%}
+.articlePreview.articleType1 .thumb {
+	border:none;
+}
+.articlePreview .title {
+	display:table-cell;
+	@include cell-props;
+	padding-left:10px;
+	width:100%;
+	font-size:150%;
+}
+.articlePreview .summary {font-size:65%;color: $light_color;}
+@media screen and (max-width: 600px) {
+	.articlePreview .thumb .wrap {
+		width: $article_img_width/2;
+		height: $article_img_height/2;
+	}
+	.articlePreview .title {
+		font-size:100%;
+	}
+}
+
+
+
+
+.formTop {
+	background:#fff;
+	color:$link_color;
+	width:100%;
+}
+.formTop .x-form-label {
+	border-top-left-radius:$radius_value;
+}
+.performanceForm .x-form-field-container:first-child, .performanceForm .x-field:first-child input {
+	border-top-right-radius:$radius_value;
+}
+
+.performanceForm .x-field:last-child {
+	@include bottom-rounded;
+}
+
+.performanceForm .x-field:last-child .x-form-label {
+	border-bottom-left-radius:$radius_value;
+}
+.performanceForm .x-field:last-child .x-form-field-container, .performanceForm .x-field:last-child input {
+	border-bottom-right-radius:$radius_value;
+}
+
+/*********
+ Performance Volume Progress Bar
+ ********/
+/*.performanceKPIs .clickableRow {height:4em;vertical-align:middle;} */
+.progressBar {
+	background:$grey_color;
+	@include inset-shadow;
+	vertical-align:top;
+	font-size:.8em;
+	width:95%;
+	border-radius:$radius_value/2;
+	border:$border_width $border_style $border_color;
+	clear:both;
+	margin-top:.35em;
+}
+
+.indicatorBar {
+	border-radius:$radius_value/2;
+	background-image:
+	-webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.51, $positive_color/.92),
+    color-stop(0.49, $positive_color)
+);
+	text-align:center;
+	height: $progress-bar_height;
+	z-index:2;
+}
+
+.pendingVolume {
+	background:#f1f69d;
+	font-size:.8em;
+	color:#8c8c8c;
+	height:15px;
+	vertical-align:middle;
+}
+
+.indicatorText span {display:block;}
+.goalText {
+	color:#c0c0c0;
+	font-style:normal;
+}
+.currentVolume {
+	color: $positive_color;
+}
+
+
+/*******************
+ Contact Profile Pane 
+********************/
+.contactHeader h2 {
+	display:inline-block;
+	float:left;
+	vertical-align:middle;
+	width:$full_img_width - $profile_img_size - 10;
+}
+.contactHeader h2 span {
+	display:block;
+}
+.contactHeader h2 .titleDisplay {border-top:$border_width groove $border_color;font-size:60%;padding-top:.5em;margin-top:.25em;}
+.contactHeader .profileThumb {
+	width:$profile_img_size;
+	margin-right:1em;
+	display:inline-block;
+	float:left;
+	overflow:hidden;
+}
+@media screen and (min-width: 600px) {
+	.contactHeader .profileThumb {
+		 @if $profile_img_size > 20% {width:10%;}	
+	}
+	.contactProfile .basicInfo .label {
+		@if $profile_img_size > 20% {width:10%;}
+	}
+}
+.contactHeader .profileThumb img {
+	width:100%;
+}
+
+
+
+ 
+ 
+.x-tabbar-dark.x-docked-bottom .x-tab-active img {
+background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, from($positive_color), color-stop(0.5, $positive_color), color-stop(0.51, $positive_color), to($positive_color));
+}
+.x-panel-body .performanceForm, .x-panel-body .Orders,  .x-panel-body .networkDetails {
+background: url(../themes/images/encore/deadspace.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #262626),
+    color-stop(1, #828282)
+);
+}
+
+
+/**************
+Party Plan
+**************/
+.partyHeader .left {
+	display:table-cell;
+	width:50%;
+	font-size:.75em;
+}
+.partyHeader .right {
+	display:table-cell;
+	width:50%;
+	font-size:.6em;
+}
+.partyHeader span {
+	display:block;
+	color:#222;
+}
+.partyStats {
+	background-image:none;
+	padding:0;
+	margin: .5em .5em 0 .5em ;
+	-webkit-box-shadow: 0px 0px 2px #d1d3d4;
+	background:#fff;
+	border-radius:$radius_value;
+	font-size:.75em;
+}
+.partyStats p, .inputForm .inputRow {
+	border-bottom:$border_width $border_style $border_color;
+	padding:.45em;
+}
+.partyStats p {
+	padding:.35em;
+}
+.partyStats p:last-child, .inputForm .inputRow:last-child {
+	border:none;
+}
+.partyStats p .label {
+	display:table-cell;
+	width:100%;
+	color:#333;
+}
+.partyStats p .data {
+	display:table-cell;
+	width:25%;
+	text-align:right;
+}
+
+.guestPanel .left {
+	display:table-cell;
+	width:100%;
+}
+.guestPanel .left span.name {
+	display:block;	
+}
+.guestPanel .left span.info {
+	font-size:.65em;
+	color:#222;
+}
+.guestPanel .right {
+	display:table-cell;
+	width:20px;
+	vertical-align:middle;
+}
+.rsvpno {
+	color:$alert_color;
+}
+.partyHeader header {
+	padding:.25em 1em .25em 1em;
+}
+.partyHeader header h1 {
+	font-size:.9em;
+}
+
+
+
+$icon_off: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #545454),
+    color-stop(0.45, #9C9C9C),
+    color-stop(0.63, #B5B5B5)
+);
+$icon_on: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.47, #6EB33F),
+    color-stop(0.45, #87C45E)
+);
+
+@mixin inset-item {
+	-webkit-box-shadow:inset 0 0 10px #545454;
+}
+
+
+.icon-panel {
+	padding:5px;
+	border-radius:$radius_value/2;
+	@include nuetral-gradient;
+	@include inset-item
+}
+
+
+
+.icon-guestCart {
+	display:block;
+  -webkit-mask-box-image: url(../themes/images/encore/guestCart.png);
+  width:24px;
+  height:24px;
+   background-image: $icon_off;
+}
+
+.icon-active {
+	@include button-shadow;
+}
+.icon-active .icon-guestCart {
+	background-image: $icon_on;
+}
+
+
+.inputRow input {
+	width:80%;
+	border:none;
+	-webkit-box-shadow:none;
+	padding:.5em;
+	-webkit-appearance: none;
+}
+
+.icon-openList {
+	display:block;
+  -webkit-mask-box-image: url(../themes/images/#{$customer_name}/openList2.png);
+  width:24px;
+  height:24px;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#ffffff), color-stop(0.02, #969696), color-stop(0.3, #737373), color-stop(0.65, #6b6b6b), to(#6b6b6b));
+}
+.icon-openList:active {
+	background-image: $icon_on;
+}
+.formSubmit {
+	padding:.5em;
+}
+
+.formSubmit input {
+	width:100%;
+	@include nice-button;
+	padding:.5em;
+	color:#fff;
+	font-size:1em;
+	border:none;
+	@include button-shadow;
+	border-radius:$radius_value;
+	text-shadow: 1px -1px 0px #50822c;
+	font-weight:bold;
+}
+
+.responsePop .x-panel-body {
+	padding:5px;
+}
+
+.iconAddGuest.x-button-confirm .x-button-label {
+	color:#fff;
+	font-size:1em;
+	font-weight:bold;
+}
+/**************
+End Party Plan
+**************/
+
+
+
+
+.noDataDisplay {
+	padding:2em;
+	text-align:center;
+	font-size:1em;
+}
+.noDataDisplay p {
+	background:#333;
+	opacity:.7;
+	border-radius:$radius_value*2;
+	color:#fff;
+	padding:.5em;
+}
+
+@-webkit-keyframes syncIcon {
+	0% {-webkit-transform:rotate(0deg);}
+	100% {-webkit-transform:rotate(360deg);}
+	
+}
+
+.x-tabbar-dark.x-docked-bottom .x-tab img.sync {
+background-image:none;
+background-color:#fff;
+-webkit-animation-name: syncIcon;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+.x-tabbar-dark.x-docked-bottom .x-tab img.sync-android {
+	background-image:none;
+	background-color:#fff;
+}

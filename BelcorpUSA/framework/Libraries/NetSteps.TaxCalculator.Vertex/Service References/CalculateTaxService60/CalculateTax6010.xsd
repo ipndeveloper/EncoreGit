@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=25" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/CalculateTax60?xsd=24" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Accrual Synchronization transaction composite messages. Declaration of structure and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="LineItemASIType">
+    <xsd:annotation>
+      <xsd:documentation>Line Item declaration for Accrual Synchronization Request message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Buyer" type="BuyerType">
+        <xsd:annotation>
+          <xsd:documentation>The buyer for the line item. The buyer is described by the child elements and attributes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Vendor" type="VendorType">
+        <xsd:annotation>
+          <xsd:documentation>The vendor for the line item. The vendor is described by the child elements and attributes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" ref="TaxOverride" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ImpositionToProcess" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="JurisdictionOverride" />
+      <xsd:element minOccurs="0" ref="SitusOverride" />
+      <xsd:element minOccurs="0" ref="Purchase" />
+      <xsd:element minOccurs="0" ref="CommodityCode" />
+      <xsd:element minOccurs="0" ref="Quantity" />
+      <xsd:element minOccurs="0" ref="Weight" />
+      <xsd:element minOccurs="0" ref="Volume" />
+      <xsd:element minOccurs="0" ref="Freight" />
+      <xsd:element minOccurs="0" ref="UnitPrice" />
+      <xsd:element minOccurs="0" ref="ExtendedPrice" />
+      <xsd:element minOccurs="0" ref="ChargedTax" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="InputTax" />
+      <xsd:element minOccurs="0" ref="LandedCost" />
+      <xsd:element minOccurs="0" ref="AmountBilledToDate" />
+      <xsd:element minOccurs="0" ref="FlexibleFields" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineItem" type="LineItemASIType">
+        <xsd:annotation>
+          <xsd:documentation>A sub-component (or child line item) of the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="AccrualSyncLineItemGroup" />
+    <xsd:attribute name="syncType" type="SyncronizationCodeType" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The type of synchronization service to be performed.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="LineItemASOType">
+    <xsd:annotation>
+      <xsd:documentation>Line Item declaration for Accrual Synchronization Response message.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Buyer" type="BuyerType">
+        <xsd:annotation>
+          <xsd:documentation>The buyer for the line item.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Vendor" type="VendorType">
+        <xsd:annotation>
+          <xsd:documentation>The vendor for the line item.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" ref="TaxOverride" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ImpositionToProcess" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="JurisdictionOverride" />
+      <xsd:element minOccurs="0" ref="SitusOverride" />
+      <xsd:element minOccurs="0" ref="Purchase" />
+      <xsd:element minOccurs="0" ref="CommodityCode" />
+      <xsd:element minOccurs="0" ref="Quantity" />
+      <xsd:element minOccurs="0" ref="Weight" />
+      <xsd:element minOccurs="0" ref="Volume" />
+      <xsd:element minOccurs="0" ref="Freight" />
+      <xsd:element minOccurs="0" ref="UnitPrice" />
+      <xsd:element minOccurs="0" ref="ExtendedPrice" />
+      <xsd:element minOccurs="0" ref="ChargedTax" />
+      <xsd:element minOccurs="0" ref="AmountBilledToDate" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="Taxes" />
+      <xsd:element minOccurs="0" name="TotalTax" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>Amount of tax based on variables of transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" ref="FlexibleFields" />
+      <xsd:element minOccurs="0" name="AssistedParameters" type="AssistedParametersType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineItem" type="LineItemASOType">
+        <xsd:annotation>
+          <xsd:documentation>A sub-component (or child line item) of the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="AccrualSyncLineItemGroup" />
+    <xsd:attribute name="syncType" type="SyncronizationCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The type of synchronization service.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="AccrualSyncRequestType">
+    <xsd:annotation>
+      <xsd:documentation>The request used to reconcile transactions between a Vertex O Series product and your host system. Any changes made to a financial document can impact previously calculated transactions already written to the Tax Journal. This request enables you to accept changes made to a financial document and update the transaction in the Tax Journal accordingly.
+</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="Currency" />
+          <xsd:element minOccurs="0" ref="OriginalCurrency" />
+          <xsd:element minOccurs="0" name="Buyer" type="BuyerType">
+            <xsd:annotation>
+              <xsd:documentation>The buyer for the transaction. The buyer is described by the child elements and attributes.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Vendor" type="VendorType">
+            <xsd:annotation>
+              <xsd:documentation>The vendor for the transaction. The vendor is described by the child elements and attributes.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" ref="TaxOverride" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ImpositionToProcess" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="JurisdictionOverride" />
+          <xsd:element minOccurs="0" ref="SitusOverride" />
+          <xsd:element minOccurs="0" ref="ChargedTax" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineItem" type="LineItemASIType">
+            <xsd:annotation>
+              <xsd:documentation>The header for a component of a transaction.  Note that a line item can contain child line items.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="AccrualSyncTransactionGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccrualSyncResponseType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxSynchronizationResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="Currency" />
+          <xsd:element minOccurs="0" ref="OriginalCurrency" />
+          <xsd:element minOccurs="0" name="Buyer" type="BuyerType">
+            <xsd:annotation>
+              <xsd:documentation>The buyer for the transaction.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Vendor" type="VendorType">
+            <xsd:annotation>
+              <xsd:documentation>The vendor for the transaction.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" ref="TaxOverride" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ImpositionToProcess" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="JurisdictionOverride" />
+          <xsd:element minOccurs="0" ref="SitusOverride" />
+          <xsd:element minOccurs="0" ref="ChargedTax" />
+          <xsd:element minOccurs="0" ref="SubTotal" />
+          <xsd:element minOccurs="0" ref="Total" />
+          <xsd:element minOccurs="0" ref="TotalTax" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="LineItem">
+            <xsd:annotation>
+              <xsd:documentation>The header for a component of a transaction.  Note that a line item can contain child line items.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:complexContent mixed="false">
+                <xsd:extension base="LineItemASOType" />
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="AccrualSyncTransactionGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:attributeGroup name="AccrualSyncLineItemGroup">
+    <xsd:attribute name="lineItemNumber" type="xsd:integer" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A line number for the line item. This number can be used as a reference in reports or in audits. If no line item number is supplied, a number will be assigned.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date on which the line item record was produced. This can also be represented as a PO line item date, a lease line item date, and so on. Defaults to the documentDate of the transaction.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="lineItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>An identifier that further defines the line item and corresponds to the transaction stored in the host system. This parameter is needed to perform synchronization services, but it is not used for reporting purposes.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="isMulticomponent" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether the calculation engine calculates component-level max tax, where applicable. Amounts at the child level of the multi-component item are used for tax calculation. Amounts at the parent level are ignored. Set this attribute to true for line items at the parent level only. Line items at the child level remain false. Defaults to false.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="locationCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that can be used for tax return filing in jurisdictions that require taxes to be filed for individual retail locations.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="20" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="deliveryTerm" type="DeliveryTermCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An identifier that determines the vendor or customer jurisdiction in which the title transfer of a supply takes place. This is also known as Shipping Terms. Delivery Terms information could be critical to determine the place of supply, for example, in distance selling.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="postingDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date when the transaction is posted for auditing and reporting purposes. If no date is provided, the Calculation Engine uses the date when the transaction was processed.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="costCenter" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that indicates a specific area of an organization generally related to functional or accounting areas.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="departmentCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A unique identifier that associates a line item to a department for purchasing purposes.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="generalLedgerAccount" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that is used with company's Chart of Accounts.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="materialCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that represents a specific item or product.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="projectNumber" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A unique identifier that associates a line item to a project for purchasing purposes.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="usage" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Directly identifies a usage by user-defined usage code.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="usageClass" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Directly identifies a usage class by user-defined usage class code.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="vendorSKU" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that represents a specific item or product SKU number.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="countryOfOriginISOCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The 3-digit ISO 3166 code of the country where the product was produced or manufactured.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="modeOfTransport" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates the type of vehicle that transported the product across the country border. For a list of acceptable values, see the filing instructions for each country where you file an Intrastat report.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:positiveInteger">
+          <xsd:maxInclusive value="99" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="natureOfTransaction" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates the type of transaction being declared for Intrastat purposes. For a list of acceptable values, see the filing instructions for each country where you file an Intrastat report.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:positiveInteger">
+          <xsd:minInclusive value="1" />
+          <xsd:maxInclusive value="999" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="intrastatCommodityCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Used to classify the goods and services. For a list of acceptable values, see the filing instructions for each country where you file an Intrastat report.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]{1,8}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="netMassKilograms" type="xsd:integer" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The mass of the product in kilograms.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxIncludedIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether tax is included in the Extended Price.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="transactionType" type="ProcurementTransactionType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An identifier for the specific transaction type to be used by the transaction and/or line item. If transactionType is not set at the line item level, the line item uses the transaction level value.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="simplificationCode" type="SimplificationCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates a special action on the transaction being processed. </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="recoverableDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date used to calculate Recoverable Input VAT.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="recoverableOverridePercent" type="PercentType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The rate to be used in place of the standard rate to calculate recoverability on the self-accrual portion of the VAT tax.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="titleTransfer" type="PointOfTitleTransferCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A contractual term indicating where the title to goods actually changes hands from seller to buyer. This indicator is evaluated to determine the situs (or place of supply) for the transaction.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="chainTransactionPhase" type="ChainTransactionPhaseCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Identifies a phase within a series of transactions in which multiple invoices are raised with only a single movement of goods.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="AccrualSyncTransactionGroup">
+    <xsd:attribute name="documentNumber" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The document number in the host application that references the event.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="postingDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date when the transaction is posted for auditing and reporting purposes. If no date is provided, the Calculation Engine uses the date when the transaction was processed.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="locationCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A value that can be used for tax return filing in jurisdictions that require taxes to be filed for individual retail locations.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="20" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="returnAssistedParametersIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether the response message should contain an additional structure that shows the elements/attributes that were changed by Tax Assist. This is for informational purposes only and contains no tax results.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="returnGeneratedLineItemsIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>If this indicator is set, the response message returns child line items that were generated by the Tax Assist allocation feature. Otherwise, these line items are deleted after the transaction is written to the Tax Journal and only the primary line item, which contains the combined tax results of the child line items, is passed back to the host system. </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="deliveryTerm" type="DeliveryTermCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An identifier that determines the vendor or customer jurisdiction in which the title transfer of a supply takes place. This is also known as Shipping Terms. Delivery Terms information could be critical to determine the place of supply, for example, in distance selling.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="documentDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The actual date of the requested action. The calculation engine uses this date to determine the valid tax rates and rules.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="transactionId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>An identifier that further defines the document and corresponds to the transaction stored in the host system. The Transaction ID is used for synchronization services, but is not used for reporting purposes.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="transactionType" type="ProcurementTransactionType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An identifier for the specific transaction type to be used by the transaction and/or line item. If transactionType is not set at the line item level, the line item uses the transaction level value.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="recoverableDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The date used to calculate Recoverable Input VAT.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+</xsd:schema>

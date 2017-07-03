@@ -1,0 +1,36 @@
+﻿@model OrderEntryModel
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td class="FLabel">
+            @Html.Term("OrderType", "Order Type")
+        </td>
+        <td>
+            @Html.Label("markAsAutoship", Html.Term("MarkAsAutoship", "Mark As Autoship"))
+            @Html.CheckBox("markAsAutoship", Model.Order.IsAutoshipOrder())
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+
+    $(function () {
+        $.post('@Href("~/Orders/OrderEntry/GetStatusMarkAsAutoship")', function (response) {
+            if (response.StatusMarkAsAutoship == 1) {
+                $('#markAsAutoship').attr('disabled', true);
+            }
+            else {
+                $('#markAsAutoship').removeAttr('disabled');
+            }
+        });
+
+        $('#markAsAutoship').click(function () {
+            $.post('@Href("~/Orders/OrderEntry/UpdateMarkAsAutoship")', { markAsAutoship: this.checked }, function (response) {
+                if (response.success) {
+                    updateCartAndTotals(response);
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+    });
+
+</script>

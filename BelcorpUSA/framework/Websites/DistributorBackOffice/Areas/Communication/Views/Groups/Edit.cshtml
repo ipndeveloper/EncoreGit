@@ -1,0 +1,180 @@
+@model NetSteps.Data.Entities.DistributionList
+@section head {
+    <script type="text/javascript">
+
+        function ShowContactsGrid() {
+
+            $('#groupID').val(@Model.DistributionListID);
+
+            if ($('#groupID').val() > 0) {
+                $('#contactsGrid').show();
+                $('#btnSaveGroup span').html('@Html.Term("UpdateGroup", "Update Group")');
+            }
+            else {
+                $('#contactsGrid').hide();
+            }
+        }
+
+        function RemoveContact(id) {
+        
+            $.post('@Href("~/Communication/Groups/RemoveContact")', {
+                groupID: $('#groupID').val(),
+                ID: id
+            }, function (response) {
+                //hideLoading(p);
+                if (response.result) {                    
+                    $('#paginatedGridPagination .pageSize').triggerHandler('change');
+                    showMessage(response.message || '@Html.Term("ContactRemoved", "Contact removed!")', !response.result);
+
+                } else {
+                    showMessage(response.message, true);
+                }
+                });
+
+                $('#toAddress').val('');
+                $('#toAddress').focus();
+        }                                
+
+        $(function () {
+
+            ShowContactsGrid();
+
+            $('#toAddress').jsonSuggest('@Href("~/Communication/Groups/SearchContacts")', { minCharacters: 3, source: $('#toAddress'), ajaxResults: true, onSelect: function (item) {
+            
+                $.post('@Href("~/Communication/Groups/SaveContact")', {
+                    groupID: $('#groupID').val(),
+                    accountID: item.accountID
+                }, function (response) {
+                    //hideLoading(p);
+                    if (response.result) {
+                        $('#paginatedGridPagination .pageSize').triggerHandler('change');
+                        showMessage(response.message || '@Html.Term("ContactAdded", "Contact added!")', !response.result);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+
+                //var emailHtml = '<div id="' + item.id + '" class="emailEntry"><span>' + item.text + '</span><img href="javascript:void(0)" src="@Href("~/Resource/Content/Images/Icons/remove-trans.png")" class="Delete" /></div>';
+                //$('#uxAddresses').html($('#uxAddresses').html() + emailHtml);
+
+                $('#toAddress').val('');
+                $('#toAddress').focus();
+            }
+            });
+
+            $('#btnDeleteGroup').click(function () {
+
+                $.post('@Href("~/Communication/Groups/Delete")', {
+                    groupID: $('#groupID').val()
+                }, function (response) {
+                    //hideLoading(p);
+                    if (response.result) {
+                        showMessage(response.message || '@Html.Term("GroupDeleted", "Group deleted!")', !response.result);
+
+                        window.location = '/Communication';
+                    } 
+                    else {
+                        showMessage(response.message, true);
+                        ShowContactsGrid();
+                    }
+                });
+            });
+
+            $('#btnSaveGroup').click(function () {
+                if (!$('#groupForm').checkRequiredFields()) {
+                    return false;
+                }
+
+                //var p = $(this).parent();
+                //showLoading(p);
+
+                $.post('@Href("~/Communication/Groups/Save")', {
+                    groupID: $('#groupID').val(),
+                    groupName: $('#groupName').val()
+                }, function (response) {
+                    //hideLoading(p);
+                    if (response.result) {
+                        showMessage(response.message || '@Html.Term("GroupSaved", "Group saved!")', !response.result);
+
+                        if ($('#groupID').val() == 0) {
+                            window.location = '/Communication/Groups/Edit/' + response.groupID;
+                        }
+                        else {
+                            $('#groupActionItem' + response.groupID + ' span').html($('#groupName').val());
+                        }
+
+                        $('#groupID').val(response.groupID);
+
+                    } 
+                    else {
+                        showMessage(response.message, true);
+                        ShowContactsGrid();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@section breadcrumb{
+    <a href="@Href("~/Communication/")">
+        @Html.Term("Communication")</a>
+}
+@section title {
+    @{ Write(Model.DistributionListID > 0 ? Model.Name : Html.Term("NewGroup", "New Group")); }
+}
+<div id="groupForm">
+    <div class="UI-lightBg brdrAll GridFilters">
+        <input id="groupID" type="hidden" value="" />
+        <div class="FL FilterSet">
+            <label>@Html.Term("GroupName", "Group Name"):</label>
+            <input type="text" id="groupName" class="required" name="@Html.Term("GroupNameRequired", "Group Name is required.")"
+                            value="@Model.Name" />
+        </div>
+        
+        <div class="FL RunFilter">
+            <a href="javascript:void(0);" id="btnSaveGroup" class="Button FormSubmit FL"><span>@Html.Term("SaveGroup", "Save Group")</span></a> 
+            
+            @{ WriteLiteral(Model.DistributionListID > 0 ? "<a href=\"javascript:void(0);\" id=\"btnDeleteGroup\" class=\"Button Cancel FormSubmit FL\"><span>" + Html.Term("DeleteGroup", "Delete Group") + "</span></a>" : ""); }            
+
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div id="contactsGrid">
+    
+
+        <div class="UI-mainBg icon-24 brdrAll brdr1 GridSelectOptions GridUtility">
+        <div class="FL FilterSet">
+    <label> 
+    @Html.Term("AddNewContact", "Add New Contact"):&nbsp;
+    </label>
+    </div>
+            <p>
+                <input type="text" style="width: 300px" class="TextInput emailToTextBox" id="toAddress" value="" />
+            </p>
+        <span class="clr"></span>
+        </div>
+        @{
+            Html.PaginatedGrid("~/Communication/Groups/GetGroupContacts")
+        .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+                      .AddColumn(" ", "Delete", true)
+                      .AddColumn(Html.Term("FirstName", "First Name"), "FirstName", true)
+                      .AddColumn(Html.Term("LastName", "Last Name"), "LastName", true)
+                      .AddColumn(Html.Term("Email", "Email"), "EmailAddress", true)
+                      .AddData("groupID", @Model.DistributionListID)
+                //.AddInputFilter(Html.Term("SearchForName", "Search for Name"), "name", currentReportParameters.Name.ToCleanString())
+                //.AddInputFilter(Html.Term("SearchForEmail", "Search for Email"), "email", currentReportParameters.Email.ToCleanString())
+                //.AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+                //.AddOption("saveReportLink", Html.Term("SaveReport", "Save Report"))
+                //.AddOption("deleteReportLink", Html.Term("DeleteReport", "Delete Report"))
+                      .ClearPageSizeOptions()
+                      .AddPageSizeOption(15, "15")
+                      .AddPageSizeOption(25, "25")
+                      .AddPageSizeOption(50, "50")
+                      .AddPageSizeOption(100, "100")
+                      .AddPageSizeOption(200, "200")
+                      .AddPageSizeOption(null, Html.Term("ShowAll", "Show All"))
+                //.SetDefaultSort(currentReportParameters.OrderBy, currentReportParameters.OrderByDirection)
+                      .Render();
+        }
+    </div>
+</div>

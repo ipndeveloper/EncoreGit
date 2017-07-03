@@ -1,0 +1,87 @@
+@model DisbursementProfileViewModel
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+
+            var DPAshow = JSON.parse('@ViewBag.DPA');
+
+            if (!DPAshow) {
+                $('#divAccount2').hide();
+                $('#percentToDepositAccount1').val('100').closest('tr').hide();
+            }
+
+            $('#btnSave').click(function () {
+                if (AreProfilesValid()) {
+                    var t = this;
+                    showLoading(t);
+
+                    $.post('@Href("~/Account/DisbursementProfiles/Save")', data, function (response) {
+                        if (response.result) {
+
+                            if (response.id != 0) {
+                                $('#CheckDisbursementProfileID').val(response.id);
+                            }
+
+                            if (response.eftId1 != 0) {
+                                $('#EFTDisbursementProfileID1').val(response.eftId1);
+                            }
+
+                            if (response.eftId2 != 0) {
+                                $('#EFTDisbursementProfileID2').val(response.eftId2);
+                            }
+
+                            showMessage('@Html.Term("DisbursementProfileSaved", "Your disbursement profile(s) were saved successfully!")', false);
+                            hideLoading(t);
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    }, 'json')
+                    .fail(function () {
+                        showMessage('@Html.Term("FatalErrorEncountered", "There was a fatal error processing your request.")', true);
+                    })
+                    .always(function () {
+                        hideLoading(t);
+                    });
+                }
+            });
+
+            $('#btnCheckPropayAccount').click(function () {
+                var data = {
+                    accountNumber: $('#txtPropayAccount').val()
+                };
+
+                $.get('@Href("~/Account/DisbursementProfiles/CheckProPayAccount")', data, function (response) {
+
+                    if (response.result === undefined || response.result) {
+                        $('#ProPayAddress').show();
+                        $('#ppAddress').html(response.ppAddress);
+                        $('#ppCity').html(response.ppCity);
+                        $('#ppState').html(response.ppState);
+                        $('#ppPostalCode').html(response.ppPostalCode);
+                    }
+                    else
+                        showMessage(response.message, true);
+                });
+            });
+
+            $('.disbursementOptions li').click(function () {
+                $('.disbursementOptions').find('li').removeClass('UI-lightBg current');
+                $(this).addClass('UI-lightBg current');
+            });
+        });
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Accounts")">@Html.Term("AccountOverview", "Account Overview")</a>
+}
+@Html.Partial("_DisbursementProfilesControl", Model)
+
+@section title{
+    @Html.Term("DisbursementProfiles", "Disbursement Profiles")
+}
+
+<div class="center PageSaveButtons">
+    <a id="btnSave" href="javascript:void(0);" class="FR Button"><span>@Html.Term("Save")</span></a> <a href="@Href("~/Account")" class="FL Cancel"><span>@Html.Term("Cancel")</span></a>
+</div>

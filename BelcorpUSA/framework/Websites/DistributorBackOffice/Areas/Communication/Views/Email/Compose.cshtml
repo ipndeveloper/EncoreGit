@@ -1,0 +1,777 @@
+@model DistributorBackOffice.Areas.Communication.Models.Email.ComposeMailMessageModel
+@section head {
+	<link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/timepickr.css")" />
+	<link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/timepickr.js")"></script>
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/fileuploader.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/pure-2.70.min.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/json2.js")"></script>
+	<script src="/fileuploads/resources/ckeditor/4.4.4/ckeditor.js" type="text/javascript"></script>
+	<script src="/fileuploads/resources/ckeditor/4.4.4/adapters/jquery.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function () {
+
+			function formatTo() {
+				return JSON.stringify(ns.compose.getRecipients());
+			}
+
+			setDownlineEmailAllValue();
+			$('#toAddress').watermark('@Html.JavascriptTerm("To"):');
+			$('#subject').watermark('@Html.JavascriptTerm("Subject"):');
+			$('#archiveLibrarySearch').watermark('@Html.JavascriptTerm("AddFromDocumentLibrary", "Add From Document Library")');
+
+			$('#delayedDate').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(1900, 0, 1), yearRange: '-5:+5' });
+			$('#delayedTime').timepickr({ convention: 12 });
+
+			$('#templates a.templateThumb').click(function () {
+				if ($('#htmlMessageBody').val().length > 1) {
+					if (!confirm('@Html.JavascriptTerm("EmailTemplateDeleteExistingContent", "This will delete your existing content, do you want to proceed?")')) {
+						return false;
+					}
+				}
+
+				$.post('@Href("~/Communication/Email/GetEmailTemplate")', {
+					emailTemplateTranslationID: $('.emailTemplateTranslationID', this).val()
+				}, function (response) {
+					if (response.result) {
+						$('#subject').val(response.subject);
+						$('#htmlMessageBody').val(response.template);
+                        //$('#archiveLibrarySearch').val(response.thumbnail);
+						$('#templates').jqmHide();
+					} else {
+						showMessage(response.message, true);
+					}
+				});
+			});
+
+			//$('#attachmentWin').jqm({ modal: false, trigger: '#showAttachmentWin' });
+			$('#attachmentWin').click(function () {
+				$('#archiveLibrarySearchDiv').show();
+			});
+
+			$('#archiveLibrarySearch').jsonSuggest('@Href("~/Communication/Email/SearchArchives")', { minCharacters: 3, source: $('#archiveLibrarySearch'), ajaxResults: true, onSelect: function (item) {
+				$.post('@Href("~/Communication/Email/AddAttachmentToMessage")', {
+					mailMessageID: $('#mailMessageID').val(),
+					archiveId: item.id,
+					to: formatTo(),
+					subject: $('#subject').val(),
+					message: $('#htmlMessageBody').val(),
+					saveDraft: 'true'
+				}, function (response) {
+					if (!response.success) {
+						showMessage(response.error, true);
+						$('#uploadAttachmentSpinner').hide();
+						$('#uploadAttachment').show();
+						return;
+					}
+
+					$('#mailMessageID').val(response.mailMessageId);
+
+					ns.compose.refreshAttachments(response.attachments);
+
+					$('#uploadAttachmentSpinner').hide();
+					$('#uploadAttachment').show();
+
+
+					$('#archiveLibrarySearch').val('').focus();
+				});
+			}
+			});
+
+			var uploader = new qq.FileUploader({
+				element: document.getElementById('uploadAttachment'),
+				action: '@Href("~/Communication/Email/AddAttachmentToMessage")',
+				messages: {
+					typeError: '@Html.JavascriptTerm("InvalidExtension", "{0} has invalid extension. Only {1} are allowed.", "{file}", "{extensions}")',
+					sizeError: '@Html.JavascriptTerm("FileTooLarge", "{0} is too large, maximum file size is {1}.", "{file}", "{sizeLimit}")',
+					minSizeError: '@Html.JavascriptTerm("FileTooSmall", "{0} is too small, minimum file size is {1}.", "{file}", "{minSizeLimit}")',
+					emptyError: '@Html.JavascriptTerm("EmptyFile", "{0} is empty, please select files again without it.", "{file}")',
+					onLeave: '@Html.JavascriptTerm("FilesStillUploading", "The files are being uploaded, if you leave now the upload will be cancelled.")'
+				},
+				template: '<div class="qq-uploader">' +
+					'<div class="qq-upload-drop-area"><span>@Html.JavascriptTerm("DropFilesHereToUpload", "Drop files here to upload")</span></div>' +
+					'<div class="qq-upload-button">@Html.JavascriptTerm("AttachFromMyComputer", "Attach from my computer")</div>' +
+					'<div class="qq-max-file-size">@Html.JavascriptTerm("MaxFileSize", "Max file size"): @NetSteps.Common.Configuration.ConfigurationManager.MaxFileSize</div>' +
+					'<ul id="qqUploadList" class="qq-upload-list"></ul>' +
+				 '</div>',
+				fileTemplate: '<li>' +
+					'<span class="qq-upload-file"></span>' +
+					'<span class="qq-upload-spinner"></span>' +
+					'<span class="qq-upload-size"></span>' +
+					'<a class="qq-upload-cancel" href="javascript:void(0);">@Html.JavascriptTerm("Cancel")</a>' +
+					'<span class="qq-upload-failed-text">@Html.JavascriptTerm("Failed")</span>' +
+				'</li>',
+				onSubmit: function () {
+					uploader.setParams({
+						to: formatTo(),
+						subject: '', //We are no longer saving the Subject on Image Upload. $('#subject').val(),
+						message: '', //We are no longer saving the Message on Image Upload. This was causing this error: 'The length of the query string for this request exceeds the configured maxQueryStringLength value'   $('#htmlMessageBody').val(),
+						saveDraft: 'true',
+						mailMessageId: $('#mailMessageID').val()
+					});
+				},
+				onComplete: function (id, fileName, response) {
+					if (!response.success) {
+						showMessage(response.error, true);
+						return;
+					}
+
+					$('#mailMessageID').val(response.mailMessageId);
+					ns.compose.refreshAttachments(response.attachments);
+				}
+			});
+
+
+			var isComplete = true;
+
+			$('#mailDeliveryOption').change(function () {
+				if ($('#mailDeliveryOption').val() == 1) {
+					$('#mailDeliveryDelayedDiv').hide();
+				}
+				else {
+					$('#mailDeliveryDelayedDiv').show();
+				}
+			});
+
+			$('.HidePreview').click(function () {
+				$(this).toggleClass('Expand');
+				$('#preview').toggle('fast');
+				return false;
+			})
+
+			$('#templates').jqm({ modal: false,
+				trigger: '#uxUseTemplate',
+				onShow: function (h) {
+					h.w.css({
+						top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+						left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+					}).fadeIn();
+				}
+			});
+
+			$('#htmlMessageBody').ckeditor({ toolbar:
+			[
+				['Source', '-', ],
+				['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Scayt'],
+				['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+				['Table', 'HorizontalRule', 'SpecialChar', 'PageBreak'],
+				'/',
+				['Styles', 'Format'],
+				['Bold', 'Italic', 'Strike'],
+				['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+				['Link', 'Unlink', 'Anchor'],
+				['Maximize', '-', ]
+			]
+			});
+
+
+			$('#uxDeleteEmail').click(function () {
+				var p = $(this).parent();
+				showLoading(p);
+
+				$.post('@Href("~/Communication/Email/Delete")', { id: $('#mailMessageID').val() }, function (response) {
+					hideLoading(p);
+					if (response.result) {
+						showMessage('@Html.JavascriptTerm("EmailDeletedSuccessfully", "Email deleted successfully!")', false);
+						window.location = '@Href("~/Communication/Email/Mailbox?folder=Inbox")';
+					} else {
+						showMessage(response.message, true);
+					}
+				}, 'json');
+			});
+
+			function sendEmail(saveDraft, self) {
+				
+				// Ensure atleast one To Address is selected to send this email
+				if (!$('div#uxAddresses div.emailEntry').length) {
+					$('#toAddress').addClass('required');
+				} else {
+					$('#toAddress').removeClass('required');
+				}
+
+				if (!$('#EmailForm').checkRequiredFields()) {
+					return false;
+				}
+
+				var isDownlineEmailAll = $('#isDownlineEmailAll').val();
+
+				if(parseBool(isDownlineEmailAll)) {
+					isDownlineEmailAll = true;
+				} else {
+					isDownlineEmailAll = false;
+				}
+
+				if (isComplete) {
+					var data = {
+						toAddress: formatTo(),
+						subject: $('#subject').val(),
+						htmlBody: $('#htmlMessageBody').val(),
+						saveDraft: saveDraft,
+						id: $('#mailMessageID').val(),
+						isDownline: $('#isDownline').val(),
+						isDownlineEmailAll: isDownlineEmailAll
+					};
+
+					var p = $(self).parent();
+					showLoading(p);
+
+					$.post('@Href("~/Communication/Email/Send")', data, function (response) {
+						hideLoading(p);
+						showMessage(response.message || '@Html.JavascriptTerm("SavedSuccessfully", "Saved successfully")', !response.result);
+						if (response.result) {
+							window.location = '@Href("~/Communication/Email/Mailbox?folder=Inbox")';
+						}
+					}, 'json');
+				} else {
+					showMessage('@Html.JavascriptTerm("ErrorsBelow", "There are some errors below, please correct them before continuing.")', true);
+				}
+			}
+
+			$('#uxSendEmail').click(function() { sendEmail('false', this); });
+			$('#uxSaveDraft').click(function() { sendEmail('true', this); });
+			$('#uxPreviewEmail').click(function () {
+				var data = {
+					Subject: $('#subject').val(),
+					Body: $('#htmlMessageBody').val(),
+					EmailTemplateTypeID: '1'
+				};
+				$.post('@Href("~/Communication/Email/GeneratePreview")', data, function (response) {
+					if (response.success) {
+						var newWindow = window.open('', '');
+						newWindow.location = '@Href("~/Communication/Email/Preview")';
+					}
+					else {
+						showMessage(response.error, true);
+					}
+				})
+				.fail(function() {
+					showMessage('@Html.JavascriptTerm("ServerCommunicationError", "There was an error communicating to the server.")', true);
+				});
+			});
+
+			function verifyAndAdd(text) {
+				var data = { text: text }; //, p = $("#uxSaveDraft").parent();
+
+				$('#toAddress').val('').focus();
+				//showLoading(p);
+				$.post('@Href("~/Communication/Email/VerifyContact")', data, function (response) {
+					if (response.result) {
+
+						if (response.recipients) {
+							//add recipient(s)
+							var list, i, length;
+							list = response.recipients;
+							length = list.length;
+							for (i = 0; i < length; i++) {
+								ns.compose.addEmail(list[i]);
+							}
+						}
+
+						if (response.group) {
+							//add group
+							ns.compose.addGroup(response.group);
+						}
+					}
+					else {
+						showMessage(response.message || '@Html.JavascriptTerm("EmailInvalid", "Email is invalid")', !response.result);
+					}
+					//hideLoading(p);
+				});
+			}
+			$('#toAddress').jsonSuggest('@Href("~/Communication/Email/SearchRecipients")', { minCharacters: 3, source: $('#toAddress'), ajaxResults: true,
+				onSelect: function (item) {
+					verifyAndAdd(item.id);
+				}
+			});
+			function tryAddress() {
+				var text = $('#toAddress').val().trim();
+				if (isValidEmailAddress(text)) {
+					verifyAndAdd(text);
+				}
+			}
+			$('#toAddress').keyup(function (e) {
+				if (e.keyCode == 13 || //enter
+					e.keyCode == 32 || //space
+					e.keyCode == 59 || e.keyCode == 186) { //;
+
+					//remove semi-colon, if there is one
+					$(this).val($(this).val().replace(';', ''));
+					tryAddress();
+				}
+			});
+			$('#toAddress').blur(tryAddress);
+			function isValidEmailAddress(emailAddress) {
+				return /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i.test(emailAddress);
+			}
+
+			//$('.emailToFullContainer .Delete').die().live('click', function () {
+			//	$(this).parent().remove();
+			//});
+			
+			function setDownlineEmailAllValue() {
+				$('#isDownlineEmailAll').val('@ViewBag.DownlineAllEmail');
+			}
+		});
+
+		var ns = ns || {};
+		ns.compose = (function () {
+
+			var hideSaveDraft = false,
+				recipients, groups,
+				tempID = 0,
+			//http://beebole.com/pure/documentation/
+			//template and directive for rendering an email
+				emailTemplate,
+				emailDirective = {
+					"span": function (arg) {
+						var c = arg.context;
+						if (c.Name) {
+							if (c.Internal) {
+								return c.Name;
+							}
+							else {
+								return c.Name + " &lt;" + c.Email + "&gt;";
+							}
+						}
+						else if (c.Email) {
+							return c.Email;
+						}
+						else {
+							return "no name or email";
+						}
+					},
+					"span@@title": function (arg) {
+						var c = arg.context;
+						if (c.Name) {
+							if (c.Internal) {
+								//internal assumed if there is an accountID
+								return '(@Html.JavascriptTerm("Internal"))' + " " + c.Name;
+							}
+							else {
+								return '(@Html.JavascriptTerm("External"))' + " " + c.Name + " &lt;" + c.Email + "&gt;";
+							}
+						}
+						else if (c.Email) {
+							return (c.Internal ? '(@Html.JavascriptTerm("Internal"))' : '(@Html.JavascriptTerm("External"))') + " " + c.Email;
+						}
+						else {
+							return "no name or email";
+						}
+					},
+					"a[class*=remove]@@onclick": function (arg) {
+						var c = arg.context;
+						if (!c.tempID) {
+							c.tempID = getNextTempID();
+						}
+						return "ns.compose.removeEmail(this," + c.tempID + ");";
+					},
+					"a[class*=remove]@@title": '@Html.JavascriptTerm("Delete")'
+				},
+			//template and directive for rendering a group
+				groupTemplate,
+				groupDirective = {
+					"span[class*=name]": "Name",
+					"a[class*=expand]>span": function (arg) {
+						var c = arg.context;
+						return '(@Html.JavascriptTerm("Group") - ' + c.Recipients.length + ')';
+					},
+					"a[class*=expand]@@onclick": function (arg) {
+						var c = arg.context;
+						if (!c.tempID) {
+							c.tempID = getNextTempID();
+						}
+						return "ns.compose.expandGroup(this," + c.tempID + ");";
+					},
+					"a[class*=remove]@@onclick": function (arg) {
+						var c = arg.context;
+						if (!c.tempID) {
+							c.tempID = getNextTempID();
+						}
+						return "ns.compose.removeGroup(this," + c.tempID + ");";
+					},
+					"a[class*=remove]@@title": '@Html.JavascriptTerm("Delete")'
+				},
+			//template and directive for rendering attachments
+			//	<div class="attachments">
+			//		<span><img style="cursor: pointer;" src="../../Content/Images/Icons/remove-trans.png" alt="X"><span class="name"></span></span>
+			//	</div>
+				attachmentsTemplate,
+				attachmentsDirective = {
+					//set the id
+					"@@id": "'attachments'",
+					//select the span tag and repeat it for each attachment in attachments
+					"span[class*=attachment]": {
+						//a<- is the syntax for selecting each object out of the array
+						"a<-": {
+							"span[class*=name]": function (arg) { return arg.item; },
+							"img@@onclick": function (arg) { return "ns.compose.removeAttachment('" + arg.item + "');"; }
+						}
+					}
+				};
+			function getNextTempID() {
+				tempID += 1;
+				return tempID;
+			}
+			function compile() {
+				//compile the templates for rendering
+				emailTemplate = $("div#pureTemplates div.email").clone().compile(emailDirective);
+				groupTemplate = $("div#pureTemplates div.group").clone().compile(groupDirective);
+				attachmentsTemplate = $("div#pureTemplates div.attachments").clone().compile(attachmentsDirective);
+			}
+			function renderAddress(addressJson, template) {
+				//make a new div, render in it the passed in address using the passed in template, then append it to the addresses div
+				$(document.createElement("div")).render(addressJson, template).appendTo("#uxAddresses");
+			}
+			function renderEmail(emailJson) { renderAddress(emailJson, emailTemplate); }
+			function renderGroup(groupJson) { renderAddress(groupJson, groupTemplate); }
+
+			function addEmail(emailJson) {
+				recipients.push(emailJson);
+				renderEmail(emailJson);
+			}
+			function addGroup(data) {
+				groups.push(data);
+				renderGroup(data);
+			}
+
+			function attemptHideForDownline() {
+				if (groups.length > 0) {
+					$('#toAddress').hide();
+					if (hideSaveDraft) { $('#uxSaveDraft').hide(); }
+					$('.attachmentContainer').hide();
+
+					$('#isDownline').val('true');
+				}
+			}
+			function attemptShowForDownline() {
+				if (recipients.length === 0 && groups.length === 0) {
+					$('#toAddress').show();
+					$('#uxSaveDraft').show();
+					$('.attachmentContainer').show();
+
+					$('#isDownline').val('false');
+				}
+				setDownlineEmailAllOff();
+			}
+			
+			function setDownlineEmailAllOff() {
+				$('#isDownlineEmailAll').val('false');
+			}
+			
+			function findInList(list, id) {
+				var i, length, removed, result = { index: -1, item: null };
+				length = list.length;
+				for (i = 0; i < length; i += 1) {
+					if (list[i].tempID === id) {
+						result.index = i;
+						result.item = list[i];
+						break;
+					}
+				}
+				return result;
+			}
+			function removeFromList(list, id) {
+				var findResult = findInList(list, id);
+				if (findResult.index > -1) {
+					list.splice(findResult.index, 1);
+				}
+				return findResult.item;
+			}
+			function removeEmail(elem, id) {
+				//remove it from the ui
+				$(elem).parent().remove();
+				//remove from list
+				var r = removeFromList(recipients, id);
+
+				attemptShowForDownline();
+				return r;
+			}
+			function removeGroup(elem, id, expanding) {
+				//remove it from the ui
+				$(elem).parent().remove();
+				//remove from list
+				var group = removeFromList(groups, id);
+
+				if (!expanding) {
+					attemptShowForDownline();
+				}
+				return group;
+			}
+
+			function expandGroup(elem, id) {
+				var i, length, findResult, g, list;
+
+				//find group
+				findResult = findInList(groups, id);
+				if (findResult.index > -1) {
+					g = findResult.item;
+					if (g.Recipients.length > 500) {
+						if (!confirm('@Html.JavascriptTerm("ContinueGroupExpand", "This is a large list of recipients and may take a while to expand. Click ok to continue.")')) {
+							return;
+						}
+					}
+					//remove group
+					g = removeGroup(elem, id, true);
+
+					if (g && g.Recipients) {
+						//add recipients from group
+						list = g.Recipients;
+						length = list.length;
+						for (i = 0; i < length; i += 1) {
+							addEmail(list[i]);
+						}
+					}
+				}
+				else {
+					//couldn't find group with that id
+				}
+			}
+
+			function getRecipients() {
+				var result = [];
+				
+				//add recipients to the new array
+				$.merge(result, recipients);
+
+				//add group recipients to the new array
+				var i, length;
+				length = groups.length;
+				for (i = 0; i < length; i += 1) {
+					$.merge(result, groups[i].Recipients);
+				}
+
+				return result;
+			}
+
+			function refreshAttachments(attachments) {
+				//grab the attachments div and render the attachments in it
+				$('#attachments').render(attachments, attachmentsTemplate);
+			}
+			function removeAttachment(fileName) {
+				$.post('/Communication/Email/RemoveAttachmentFromMessage', { mailMessageId: $('#mailMessageID').val(), fileName: fileName },
+					function (response) {
+						$('#mailMessageID').val(response.MailMessageId);
+						ns.compose.refreshAttachments(response.attachments);
+					}
+				);
+			}
+
+
+			function init(r, g, a) {
+				compile();
+
+				var i, length, topRecipients = 20;
+
+				recipients = r || [];
+				groups = g || [];
+
+				//hide "to" text box if the message starts with a group
+				//	 it should only have a group if it's a downline message
+				attemptHideForDownline();
+
+				//render top recipients
+				length = recipients.length;
+				if (length > topRecipients + 1) {//+1 makes groups larger than 1
+					length = topRecipients;
+				}
+				for (i = 0; i < length; i += 1) {
+					renderEmail(recipients[i]);
+				}
+				//create leftover group so we don't render thousands of emails until the user tells us to
+				length = recipients.length;
+				if (i < length) {
+					//remove from the recipients array and add to the recipients array for the new group
+					groups.push({ "Name": '@Html.JavascriptTerm("RemainingRecipients", "Remaining Recipients")', Recipients: recipients.splice(i, length - i) });
+				}
+
+				//render groups
+				length = groups.length;
+				for (i = 0; i < length; i += 1) {
+					renderGroup(groups[i]);
+				}
+
+				//render attachments
+				refreshAttachments(a);
+			}
+
+			//public
+			return {
+				addEmail: addEmail,
+				removeEmail: removeEmail,
+
+				addGroup: addGroup,
+				removeGroup: removeGroup,
+				expandGroup: expandGroup,
+
+				getRecipients: getRecipients,
+
+				refreshAttachments: refreshAttachments,
+				removeAttachment: removeAttachment,
+
+				init: init
+			};
+		})();
+		
+		function loadRecipients(messageId) {
+			var data = { mailMessageId: messageId };
+			$.post('@Href("~/Communication/Email/GetRecipients")', data, function (response) {
+				if (response.result) {
+					var list, i, length;
+					if (response.recipients) {
+						//add recipient(s)
+						list = response.recipients;
+						length = list.length;
+						for (i = 0; i < length; i++) {
+							ns.compose.addEmail(list[i]);
+						}
+					}
+
+					if (response.groups) {
+						//add group
+						list = response.groups;
+						length = list.length;
+						for (i = 0; i < length; i++) {
+							ns.compose.addGroup(list[i]);
+						}
+					}
+				}
+				else {
+					showMessage(response.message, !response.result);
+				}
+			});
+		}
+
+		$(document).ready(function () {
+
+			//use eval so that javascript still formats
+			var recipients = [];
+			
+			if('@Model.Message.MailMessageID' > 0) {
+				loadRecipients('@Model.Message.MailMessageID');
+			}
+
+			recipients = $.merge(recipients, @(new HtmlString(Model.Message.To.ToJSON())));
+			var groups = @Html.Raw(ViewData["DownlineGroup"] != null ? NetSteps.Common.Serialization.JsonSerializationHelper.Serialize(ViewData["DownlineGroup"]) : "[]");
+			var attachments = eval('@Html.Raw(Model.Message.Attachments.Select(a => a.FileName).ToJSON())');
+
+			ns.compose.init(recipients, groups, attachments);
+			@if (Model.RemovedArchives.Count > 0)
+   {
+				@:setTimeout(function(){showMessage('@Html.Raw(@Html.Term("NonDistributableDocumentRemovedFromEmail", "The follow documents are not allowed to be distributed publicly and were not added to the email:") + " <br/> " + Model.RemovedArchives.Select(a => a.GetArchiveName()).ToArray().Join("<br/>"))', true);},0);
+			}
+		});
+	</script>
+}
+@section breadcrumb{
+	<a href="@Href("~/Communication/Email/")">
+		@Html.Term("Communication")</a>
+}
+@section title {
+	@Html.Term("ComposeaNewMessage ", "Compose a New Message")
+}
+<input id="mailMessageID" type="hidden" value="@Model.Message.MailMessageID" />
+<input id="isDownline" type="hidden" value="false" />
+<input id="isDownlineEmailAll" type="hidden" value="@ViewBag.DownlineAllEmail"/>
+<div class="LModal jqmWindow" id="templates">
+	<div class="mContent">
+		<h2 class="UI-icon-container">
+			<span class="FL">@Html.Term("EmailTemplates", "Email Templates")</span><a href="javascript:void(0);" class="jqmClose FR UI-icon icon-x"></a>
+		</h2>
+		<span class="ClearAll" />
+		<div class="ModalContent">
+			@foreach (EmailTemplate emailTemplate in ViewBag.EmailTemplates)
+   {
+	   foreach (var emailTempalteTranslation in emailTemplate.EmailTemplateTranslations)
+	   {
+				<a href="javascript:void(0);" class="FL templateThumb b1 mr10">
+					<input type="hidden" class="emailTemplateTranslationID" value="@emailTempalteTranslation.EmailTemplateTranslationID" />
+					<img class="clr" src="@(string.IsNullOrEmpty(emailTempalteTranslation.AttachmentPath) ? "" : emailTempalteTranslation.AttachmentPath.AddWebUploadPath())" alt="" width="200" height="133" />
+					@emailTemplate.Name - @SmallCollectionCache.Instance.Languages.GetById(emailTempalteTranslation.LanguageID).GetTerm()</a>
+	   }
+   }
+			<span class="clr"></span>
+		</div>
+	</div>
+</div>
+<div class="UI-mainBg icon-24 brdrAll brdr1 GridUtility">
+	<a href="javascript:void(0);" class="UI-icon-container Template overlay" rel="#templates" id="uxUseTemplate"><span class="UI-icon icon-template"></span><span>
+		@Html.Term("UseAnEmailTemplate", "Use an Email Template")</span></a> <a href="javascript:void(0);" class="UI-icon-container Save" id="uxSaveDraft"><span class="UI-icon icon-save"></span><span>
+			@Html.Term("SaveAsDraft", "Save as Draft")</span></a>
+	@if (Model.Message.MailFolderTypeID != NetSteps.Data.Entities.Mail.Constants.MailFolderType.Trash.ToShort() && Model.Message.MailMessageID > 0)
+ {
+		<a href="javascript:void(0);" id="uxDeleteEmail" class="UI-icon-container Delete"><span class="UI-icon icon-x"></span><span>
+			@Html.Term("Delete")</span></a>
+ }
+	<span class="clr"></span>
+</div>
+<table class="FormTable" width="100%" id="EmailForm">
+	<tr>
+		<td class="FLabel has-wtrmk" style="width: 100px;">
+			@Html.Term("To"):
+		</td>
+		<td>
+			<div class="emailToFullContainer">
+				<div id="uxAddresses" class="emailToContainer">
+				</div>
+				<input type="text" class="TextInput fullWidth emailToTextBox" id="toAddress" value="" />
+				<span class="ClearAll"></span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="FLabel has-wtrmk">
+			@Html.Term("Subject"):
+		</td>
+		<td>
+			<input type="text" class="TextInput fullWidth" id="subject" value="@Model.Message.Subject" />
+		</td>
+	</tr>
+	<tr class="attachmentContainer">
+		<td class="FLabel has-wtrmk">
+			<span>@Html.Term("Attachments"):</span>
+		</td>
+		<td>
+			<div id="uploadAttachment">
+			</div>
+			<div>
+				&nbsp;<input type="text" class="TextInput emailToTextBox" id="archiveLibrarySearch" />
+			</div>
+		</td>
+	</tr>
+	<tr class="attachmentContainer">
+		<td>
+			<span style="display: none" id="uploadAttachmentSpinner" class="Spinner">Please Wait...<img src="@Href("~/Content/images/processing.gif")" alt="" /></span>
+		</td>
+		<td>
+			<div id="attachments">
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="FLabel has-wtrmk">
+			@Html.Term("Message"):
+		</td>
+		<td colspan="2">
+			<textarea id="htmlMessageBody" class="fullWidth composeEmail">@(!Model.Message.HTMLBody.IsNullOrEmpty() ? Model.Message.HTMLBody : Model.Message.Body)</textarea>
+		</td>
+	</tr>
+</table>
+<div class="center PageSaveButtons">
+	<a href="javascript:void(0);" class="Button FormSubmit FL" id="uxSendEmail"><span>
+		@Html.Term("SendMessage", "Send Message")</span></a><a href="#" class="Button MoreOptions FL" id="uxPreviewEmail"><span>
+			@Html.Term("Preview")</span></a> <a href="@Href("~/Communication/")" class="Cancel FL" id="uxCancel"><span>
+				@Html.Term("Cancel")</span></a> <span class="ClearAll"></span>
+</div>
+<div id="pureTemplates" style="display: none;">
+	<div class="emailEntry email">
+		<span class="emailToAddress"></span><a class="UI-icon icon-x remove Delete" href="javascript:void(0)"></a>
+	</div>
+	<div class="emailEntry group">
+		<span class="name"></span><a class="expand Delete"><span title="@Html.Term("ExpandGroup", "Expand Group")" style="cursor:pointer;"></span></a><a class="UI-icon icon-x remove Delete" href="javascript:void(0)"></a>
+	</div>
+	<div class="attachments">
+		<span class="attachment">
+			<img style="cursor: pointer;" src="../../Content/Images/Icons/remove-trans.png" alt="X " /><span class="name"></span> </span>
+	</div>
+</div>
+<!--/ end compose -->

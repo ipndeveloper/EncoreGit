@@ -1,0 +1,551 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Foundation.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Foundation.Common.IOrderByParameters">
+      <summary>
+            Parameters to specify how a result should be sorted.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IOrderByParameters.OrderBy">
+      <summary>
+            A string indicating the property to order by.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IOrderByParameters.OrderByDescending">
+      <summary>
+            Indicates whether the sort order is descending.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IOrderByParametersExtensions">
+      <summary>
+            Extension methods for sorting.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.IOrderByParametersExtensions.DynamicOrderByString(NetSteps.Foundation.Common.IOrderByParameters)">
+      <summary>
+            Returns an "OrderBy" string that includes sort direction to allow the use of DynamicQueryable.OrderBy().
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="parameters != null" vb="parameters &lt;&gt; Nothing">parameters != null</requires>
+      <exception cref="T:System.ArgumentNullException">parameters == null</exception>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.ILazyDictionary`2">
+      <summary>
+            Represents a generic collection of key/value pairs where the values are lazy-initialized.
+            </summary>
+      <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
+      <typeparam name="TValue">The type of lazy-initialized values in the dictionary.</typeparam>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.ILazyDictionary`2.TryGetValue(`0,`1@)">
+      <summary>
+            Gets the lazy-initialized value associated with the specified key.
+            </summary>
+      <param name="key">The key whose value to get.</param>
+      <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+      <returns>true if the object that implements <see cref="T:NetSteps.Foundation.Common.ILazyDictionary`2" /> contains an element with the specified key; otherwise, false.</returns>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.ILazyDictionary`2.Values">
+      <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the lazy-initialized values in the <see cref="T:NetSteps.Foundation.Common.ILazyDictionary`2" />.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.ILazyDictionary`2.Item(`0)">
+      <summary>
+            Gets the lazy-initialized element with the specified key.
+            </summary>
+      <param name="key">The key of the element to get.</param>
+      <returns>The lazy-initialized element with the specified key.</returns>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.LazyDictionary`2">
+      <summary>
+            Represents a generic collection of key/value pairs where the values are lazy-initialized.
+            </summary>
+      <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
+      <typeparam name="TValue">The type of lazy-initialized values in the dictionary.</typeparam>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that is empty, has the default initial capacity, and uses the default equality comparer for the key type.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Int32)">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that is empty, has the specified initial capacity, and uses the default equality comparer for the key type.
+            </summary>
+      <param name="capacity">The initial number of elements that the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> can contain.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that is empty, has the default initial capacity, and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" />.
+            </summary>
+      <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> implementation to use when comparing keys, or null to use the default <see cref="T:System.Collections.Generic.EqualityComparer`1" /> for the type of the key.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Int32,System.Collections.Generic.IEqualityComparer{`0})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that is empty, has the specified initial capacity, and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" />.
+            </summary>
+      <param name="capacity">The initial number of elements that the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> can contain.</param>
+      <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> implementation to use when comparing keys, or null to use the default <see cref="T:System.Collections.Generic.EqualityComparer`1" /> for the type of the key.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,System.Lazy{`1}})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that contains elements copied from the specified <see cref="T:System.Collections.Generic.IDictionary`2" /> where TValue is a <see cref="T:System.Lazy`1" /> and uses the default equality comparer for the key type.
+            </summary>
+      <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2" /> where TValue is a <see cref="T:System.Lazy`1" /> whose elements are copied to the new <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,System.Lazy{`1}},System.Collections.Generic.IEqualityComparer{`0})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that contains elements copied from the specified <see cref="T:System.Collections.Generic.IDictionary`2" /> where TValue is a <see cref="T:System.Lazy`1" /> and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer`1" />.
+            </summary>
+      <param name="dictionary">The <see cref="T:System.Collections.Generic.IDictionary`2" /> where TValue is a <see cref="T:System.Lazy`1" /> whose elements are copied to the new <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.</param>
+      <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> implementation to use when comparing keys, or null to use the default <see cref="T:System.Collections.Generic.EqualityComparer`1" /> for the type of the key.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,System.Lazy{`1}}})">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class that contains elements copied from the specified <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Collections.Generic.KeyValuePair`2" /> where TValue is a <see cref="T:System.Lazy`1" /> and uses the default equality comparer for the key type.
+            </summary>
+      <param name="collection">The <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Collections.Generic.KeyValuePair`2" /> where TValue is a <see cref="T:System.Lazy`1" /> whose elements are added to the new <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> class with serialized data.
+            </summary>
+      <param name="info">A System.Runtime.Serialization.SerializationInfo object containing the information required to serialize the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.</param>
+      <param name="context">A System.Runtime.Serialization.StreamingContext structure containing the source and destination of the serialized stream associated with the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.</param>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.LazyDictionary`2.TryGetValue(`0,`1@)">
+      <summary>
+            Gets the lazy-initialized value associated with the specified key.
+            </summary>
+      <param name="key">The key whose value to get.</param>
+      <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+      <returns>true if the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" /> contains an element with the specified key; otherwise, false.</returns>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.LazyDictionary`2.Values">
+      <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the lazy-initialized values in the <see cref="T:NetSteps.Foundation.Common.LazyDictionary`2" />.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.LazyDictionary`2.Item(`0)">
+      <summary>
+            Gets the lazy-initialized element with the specified key.
+            </summary>
+      <param name="key">The key of the element to get.</param>
+      <returns>The lazy-initialized element with the specified key.</returns>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IPaginationParameters">
+      <summary>
+            Parameters to specify how a result should be paginated.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginationParameters.PageIndex">
+      <summary>
+            The zero-based page index requested.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginationParameters.PageSize">
+      <summary>
+            The number of items per page requested.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IPaginationParametersExtensions">
+      <summary>
+            Extension methods for pagination.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.IPaginationParametersExtensions.ApplyPagination``1(System.Linq.IQueryable{``0},NetSteps.Foundation.Common.IPaginationParameters)">
+      <summary>
+            Applies pagination to an <see cref="T:System.Linq.IQueryable`1" /> using the specified <see cref="T:NetSteps.Foundation.Common.IPaginationParameters" />.
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="query != null" vb="query &lt;&gt; Nothing">query != null</requires>
+      <exception cref="T:System.ArgumentNullException">query == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="parameters != null" vb="parameters &lt;&gt; Nothing">parameters != null</requires>
+      <exception cref="T:System.ArgumentNullException">parameters == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="parameters.PageIndex &gt;= 0" vb="parameters.PageIndex &gt;= 0">parameters.PageIndex &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">parameters.PageIndex &lt; 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="(() =&gt; {
+    {
+        if (parameters.PageSize.HasValue)
+        {
+            local_1 = parameters.PageSize;
+            push local_1.GetValueOrDefault() &gt; 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()" vb="(() =&gt; {
+    If parameters.PageSize.HasValue Then
+    local_1 = parameters.PageSize
+    push local_1.GetValueOrDefault() &gt; 0 AndAlso local_1.HasValue;
+    else    push 1;
+    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (parameters.PageSize.HasValue)
+        {
+            local_1 = parameters.PageSize;
+            push local_1.GetValueOrDefault() &gt; 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">parameters.PageSize != null &amp;&amp; parameters.PageSize &lt;= 0</exception>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IPaginatedList`1">
+      <summary>
+            A list of items that includes pagination info.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.PageIndex">
+      <summary>
+            The current zero-based page index.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.PageSize">
+      <summary>
+            The number of items per page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.TotalCount">
+      <summary>
+            The total number of items on all pages.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.TotalPages">
+      <summary>
+            The total number of pages.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.HasPreviousPage">
+      <summary>
+            Indicates whether there is a previous page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPaginatedList`1.HasNextPage">
+      <summary>
+            Indicates whether there is a next page.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.PaginatedList`1">
+      <summary>
+            A list of items that includes pagination info.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="M:NetSteps.Foundation.Common.PaginatedList`1.#ctor(System.Int32,System.Nullable{System.Int32},System.Int32,System.Collections.Generic.IEnumerable{`0})">
+      <summary>
+            Initializes a new <see cref="T:NetSteps.Foundation.Common.PaginatedList`1" /> with the given pagination info and the items from an <see cref="T:System.Collections.Generic.IEnumerable`1" />.
+            </summary>
+      <param name="pageIndex">The zero-based page index.</param>
+      <param name="pageSize">The number of items per page.</param>
+      <param name="totalCount">The total number of items on all pages.</param>
+      <param name="items">The items to add to the list.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="pageIndex &gt;= 0" vb="pageIndex &gt;= 0">pageIndex &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">pageIndex &lt; 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="(() =&gt; {
+    {
+        if (pageSize.HasValue)
+        {
+            local_0 = pageSize;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()" vb="(() =&gt; {
+    If pageSize.HasValue Then
+    local_0 = pageSize
+    push local_0.GetValueOrDefault() &gt; 0 AndAlso local_0.HasValue;
+    else    push 1;
+    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (pageSize.HasValue)
+        {
+            local_0 = pageSize;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">pageSize != null &amp;&amp; pageSize &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="totalCount &gt;= 0" vb="totalCount &gt;= 0">totalCount &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">totalCount &lt; 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="items != null" vb="items &lt;&gt; Nothing">items != null</requires>
+      <exception cref="T:System.ArgumentNullException">items == null</exception>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.PageIndex">
+      <summary>
+            The current zero-based page index.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.PageSize">
+      <summary>
+            The number of items per page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.TotalCount">
+      <summary>
+            The total number of items on all pages.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.TotalPages">
+      <summary>
+            The total number of pages.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.HasPreviousPage">
+      <summary>
+            Indicates whether there is a previous page.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.PaginatedList`1.HasNextPage">
+      <summary>
+            Indicates whether there is a next page.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.PaginatedListExtensions">
+      <summary>
+            Extension methods for <see cref="T:NetSteps.Foundation.Common.PaginatedList`1" />.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.PaginatedListExtensions.ToPaginatedList``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Nullable{System.Int32},System.Int32)">
+      <summary>
+            Returns a new <see cref="T:NetSteps.Foundation.Common.PaginatedList`1" /> with the given pagination info and the items from an <see cref="T:System.Collections.Generic.IEnumerable`1" />.
+            </summary>
+      <typeparam name="T" />
+      <param name="items">The items to add to the list.</param>
+      <param name="pageIndex">The zero-based page index.</param>
+      <param name="pageSize">The number of items per page.</param>
+      <param name="totalCount">The total number of items on all pages.</param>
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="items != null" vb="items &lt;&gt; Nothing">items != null</requires>
+      <exception cref="T:System.ArgumentNullException">items == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="pageIndex &gt;= 0" vb="pageIndex &gt;= 0">pageIndex &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">pageIndex &lt; 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="(() =&gt; {
+    {
+        if (pageSize.HasValue)
+        {
+            local_0 = pageSize;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()" vb="(() =&gt; {
+    If pageSize.HasValue Then
+    local_0 = pageSize
+    push local_0.GetValueOrDefault() &gt; 0 AndAlso local_0.HasValue;
+    else    push 1;
+    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (pageSize.HasValue)
+        {
+            local_0 = pageSize;
+            push local_0.GetValueOrDefault() &gt; 0 &amp;&amp; local_0.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">pageSize != null &amp;&amp; pageSize &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="totalCount &gt;= 0" vb="totalCount &gt;= 0">totalCount &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">totalCount &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.PaginatedListExtensions.ToPaginatedList``1(System.Collections.Generic.IEnumerable{``0},NetSteps.Foundation.Common.IPaginationParameters,System.Int32)">
+      <summary>
+            Returns a new <see cref="T:NetSteps.Foundation.Common.PaginatedList`1" /> with the given pagination info and the items from an <see cref="T:System.Collections.Generic.IEnumerable`1" />.
+            </summary>
+      <typeparam name="T" />
+      <param name="items">The items to add to the list.</param>
+      <param name="parameters">The pagination parameters.</param>
+      <param name="totalCount">The total number of items on all pages.</param>
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="items != null" vb="items &lt;&gt; Nothing">items != null</requires>
+      <exception cref="T:System.ArgumentNullException">items == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="parameters != null" vb="parameters &lt;&gt; Nothing">parameters != null</requires>
+      <exception cref="T:System.ArgumentNullException">parameters == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="parameters.PageIndex &gt;= 0" vb="parameters.PageIndex &gt;= 0">parameters.PageIndex &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">parameters.PageIndex &lt; 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="(() =&gt; {
+    {
+        if (parameters.PageSize.HasValue)
+        {
+            local_1 = parameters.PageSize;
+            push local_1.GetValueOrDefault() &gt; 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()" vb="(() =&gt; {
+    If parameters.PageSize.HasValue Then
+    local_1 = parameters.PageSize
+    push local_1.GetValueOrDefault() &gt; 0 AndAlso local_1.HasValue;
+    else    push 1;
+    return pop &lt;&gt; 0; })()">(() =&gt; {
+    {
+        if (parameters.PageSize.HasValue)
+        {
+            local_1 = parameters.PageSize;
+            push local_1.GetValueOrDefault() &gt; 0 &amp;&amp; local_1.HasValue;
+        }
+        else
+        {
+            push 1;
+        }
+    }
+    return pop != 0; })()</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">parameters.PageSize != null &amp;&amp; parameters.PageSize &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="totalCount &gt;= 0" vb="totalCount &gt;= 0">totalCount &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">totalCount &lt; 0</exception>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IExecutionContext">
+      <summary>
+            Represents the execution context of the application
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IExecutionContext.CurrentUser">
+      <summary>
+            Get or set the current user
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IExecutionContext.CurrentCultureInfo">
+      <summary>
+            Get or set the current culture information string (i.e. en-us, de-de, etc.)
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.ConnectionStringNames">
+      <summary>
+            Contains the connection string names for the Encore databases.
+            Enables components to share the same connection strings.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.ConnectionStringNames.Core">
+      <summary>
+            The connection string name for the Core database.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.ConnectionStringNames.Commissions">
+      <summary>
+            The connection string name for the Commissions database.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.ConnectionStringNames.Mail">
+      <summary>
+            The connection string name for the Mail database.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.DbExtensions">
+      <summary>
+            Utility methods for database connections.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.NewOrSharedConnection(NetSteps.Encore.Core.IoC.IContainer,System.String)">
+      <summary>
+            Returns a shared connection to the data source referenced by the specified connection string.
+            </summary>
+      <param name="container">The container defining the scope of the requested connection.</param>
+      <param name="connectionStringName">The name of the connection string defining the data source.</param>
+      <returns>The shared connection to the data source.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="container != null" vb="container &lt;&gt; Nothing">container != null</requires>
+      <exception cref="T:System.ArgumentNullException">container == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="connectionStringName != null" vb="connectionStringName &lt;&gt; Nothing">connectionStringName != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionStringName == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionStringName.Length &gt; 0" vb="connectionStringName.Length &gt; 0">connectionStringName.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionStringName.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.CreateConnection(System.String)">
+      <summary>
+            Returns a new connection to the data source referenced by the specified connection string.
+            </summary>
+      <param name="connectionStringName">The name of the connection string defining the data source.</param>
+      <returns>The connection to the data source.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="connectionStringName != null" vb="connectionStringName &lt;&gt; Nothing">connectionStringName != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionStringName == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionStringName.Length &gt; 0" vb="connectionStringName.Length &gt; 0">connectionStringName.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionStringName.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.CreateEntityConnection(System.Data.Metadata.Edm.MetadataWorkspace,System.String)">
+      <summary>
+            Initializes a new instance of the System.Data.EntityClient.EntityConnection
+            class with a specified System.Data.Metadata.Edm.MetadataWorkspace and connection string.
+            </summary>
+      <param name="metadataWorkspace">A System.Data.Metadata.Edm.MetadataWorkspace to be associated with this System.Data.EntityClient.EntityConnection.</param>
+      <param name="connectionStringName">The name of the connection string to use when creating the underlying data source connection.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="metadataWorkspace != null" vb="metadataWorkspace &lt;&gt; Nothing">metadataWorkspace != null</requires>
+      <exception cref="T:System.ArgumentNullException">metadataWorkspace == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="connectionStringName != null" vb="connectionStringName &lt;&gt; Nothing">connectionStringName != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionStringName == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionStringName.Length &gt; 0" vb="connectionStringName.Length &gt; 0">connectionStringName.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionStringName.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.GetProviderConnectionString(System.String)">
+      <summary>
+            Unwraps an Entity Framework connection string and returns the connection string for the underlying provider.
+            </summary>
+      <param name="entityConnectionString">An Entity Framework connection string.</param>
+      <returns>The inner, provider-specific connection string.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="entityConnectionString != null" vb="entityConnectionString &lt;&gt; Nothing">entityConnectionString != null</requires>
+      <exception cref="T:System.ArgumentNullException">entityConnectionString == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="entityConnectionString.Length &gt; 0" vb="entityConnectionString.Length &gt; 0">entityConnectionString.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">entityConnectionString.Length &lt;= 0</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures csharp="result.Length &gt; 0" vb="result.Length &gt; 0">result.Length &gt; 0</ensures>
+    </member>
+    <member name="T:NetSteps.Foundation.Common.IPartialModel">
+      <summary>
+            A model for a partial view
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPartialModel.PartialTitle">
+      <summary>
+            An optional title that may be displayed on the containing view, outside of the partial view.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Foundation.Common.IPartialModel.PartialName">
+      <summary>
+            The name of the partial view used to render the model.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.GetDbConnectionFactory(System.String,System.String)">
+      <requires exception="T:System.ArgumentNullException" csharp="providerName != null" vb="providerName &lt;&gt; Nothing">providerName != null</requires>
+      <exception cref="T:System.ArgumentNullException">providerName == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="providerName.Length &gt; 0" vb="providerName.Length &gt; 0">providerName.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">providerName.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="connectionString != null" vb="connectionString &lt;&gt; Nothing">connectionString != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionString == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionString.Length &gt; 0" vb="connectionString.Length &gt; 0">connectionString.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionString.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.SqlConnectionFactory.#ctor(System.String)">
+      <requires exception="T:System.ArgumentNullException" csharp="connectionString != null" vb="connectionString &lt;&gt; Nothing">connectionString != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionString == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionString.Length &gt; 0" vb="connectionString.Length &gt; 0">connectionString.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionString.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Foundation.Common.DbExtensions.EfStoreConnectionFactory.#ctor(System.String)">
+      <requires exception="T:System.ArgumentNullException" csharp="connectionString != null" vb="connectionString &lt;&gt; Nothing">connectionString != null</requires>
+      <exception cref="T:System.ArgumentNullException">connectionString == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="connectionString.Length &gt; 0" vb="connectionString.Length &gt; 0">connectionString.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">connectionString.Length &lt;= 0</exception>
+    </member>
+  </members>
+</doc>

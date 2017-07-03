@@ -1,0 +1,47 @@
+﻿<tr class="UI-lightBg specialPromotionItem bold autoGift">
+    <td>
+    </td>
+	<td class="icon-24">
+		<span class="UI-icon icon-star"></span>
+	</td>
+	<td>
+	</td>
+	<td>
+		<span class="promoHeader" data-bind="text: Description"></span>
+		<!-- ko if: StepID -->
+			<a class="ml5 selectGift" href="javascript:void(0);" data-bind="attr: { 'stepId': StepID }">@Html.Term("Cart_SelectPromoProductLinkText", "(Select)")</a>
+		<!-- /ko -->
+	</td>
+	<td>
+		$0.00
+	</td>
+	<td>
+	</td>
+	<td class="center cartQty" data-bind="text: Selections().length">
+	</td>
+	<td>
+		$0.00
+	</td>
+</tr>
+<!-- ko foreach: Selections -->
+<tr>
+    <td>
+    </td>
+	<td class="icon-24">
+	</td>
+	<td>
+		<span class="FL UI-icon icon-bundle-arrow"></span><span class="FL pad5 promoItemSku" data-bind="text: SKU"></span>
+	</td>
+	<td class="promoItemName" data-bind="text: Name">
+	</td>
+	<td>
+		<span class="freeItemPrice">@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+	</td>
+	<td>
+	</td>
+	<td class="center cartQty" data-bind="text: Quantity">
+	</td>
+	<td>
+	</td>
+</tr>
+<!-- /ko -->

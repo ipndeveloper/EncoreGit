@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Basic config, additional steps TBD by client. -->
+<Enrollment>
+  <AccountTypes>
+    <AccountType AccountTypeID="1" Enabled="true">
+      <Steps>
+        <Step Name="Account Info" UseControl="AccountInfo" Skippable="false" />
+        <Step Name="Initial Order" UseControl="InitialOrder" Skippable="false" />
+        <Step Name="Site Subscriptions" UseControl="SiteSubscriptions" Skippable="false" />
+        <Step Name="Confirmation" UseControl="Confirmation" Skippable="false" />
+      </Steps>
+    </AccountType>
+    <AccountType AccountTypeID="2" Enabled="false" />
+    <AccountType AccountTypeID="3" Enabled="true">
+      <Steps>
+        <Step Name="Account Info" UseControl="AccountInfo" Skippable="false" />
+        <Step Name="Confirmation" UseControl="Confirmation" Skippable="false" />
+      </Steps>
+    </AccountType>
+  </AccountTypes>
+
+  <Controls>
+
+    <Control Name="InitialOrder">
+      <Properties>
+        <Property Name="OrderType">Variable</Property>
+        <Property Name="Products">
+          <Products>
+          </Products>
+        </Property>
+        <Property Name="MinimumCV">0</Property>
+      </Properties>
+    </Control>
+
+    <Control Name="SiteSubscriptions">
+      <Properties>
+        <Property Name="BaseSiteID">4</Property>
+        <Property Name="AutoshipSchedules">
+          <AutoshipSchedule ID="1" />
+        </Property>
+      </Properties>
+    </Control>
+
+  </Controls>
+</Enrollment>

@@ -1,0 +1,789 @@
+﻿@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components;
+@using NetSteps.Web.Mvc.Controls.Models;
+@using NetSteps.Data.Entities.Business.HelperObjects.SearchData;
+@using NetSteps.Data.Entities.Extensions;
+@model OrderEntryModel
+@{
+    AutoshipSchedule autoshipSchedule = ViewData["AutoshipSchedule"] as AutoshipSchedule;
+    bool fixedAutoship = autoshipSchedule != null && autoshipSchedule.AutoshipScheduleProducts.Count > 0;
+    ViewDataDictionary vdd = new ViewDataDictionary();
+
+    vdd.Add("FixedAutoship", fixedAutoship);
+    vdd.Add("CurrencyID", Model.Order.CurrencyID);
+
+}
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td class="FLabel">
+            <span class="FL">
+                @Html.Term("Products", "Products")</span>
+            <br />
+            <p class="InputTools FL">
+                @if (!fixedAutoship && Model.BulkAddModal)
+                {
+                    using (Ajax.BeginForm(
+                    new AjaxOptions { HttpMethod = "get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "bulkAddModal" }
+                    ))
+                    {
+                    <a href="javascript:void(0);" id="btnOpenBulkAdd" class="OverrideDisable">
+                        @Html.Term("OpenBulkAdd", "Open Bulk Add")</a>
+                    }
+
+                }
+            </p>
+            <img id="ProductLoad" src='@Href("~/Content/Images/processing.gif")'
+                alt="@Html.Term("loading", "loading...")" class="FR" />
+        </td>
+        <td>
+            @if (!fixedAutoship)
+            {
+                <p class="QuickAdd">
+                    @Html.Term("SKUOrName", "SKU or Name"):
+                    <input id="txtQuickAddSearch" type="text" style="width: 20.833em;" class="required"
+                    name='@Html.Term("SKUOrName", "SKU or Name Required")' />
+                    <input id="hQuickAddProductId" type="hidden" />
+                    <input id="hQuickAddNeedsBackOrderConfirmation" type="hidden" />
+                    @Html.Term("Quantity", "Quantity"):
+                    <input id="txtQuickAddQuantity" type="text" class="Short quantity required" style="width: 4.167em;"
+                    name="@Html.Term("Quantity", "Quantity")" />
+                    <a id="btnQuickAdd" href="javascript:void(0);" class="DTL Add">
+                        @Html.Term("AddToOrder", "Add to Order")</a>
+                </p>
+            }
+            <p>
+            </p>
+            @{
+                var promotionOrderAdjustments = Model.Order.OrderAdjustments.Where(x => x.ExtensionProviderKey == NetSteps.Promotions.Service.PromotionProvider.ProviderKey);
+                bool displayPromoHeader = promotionOrderAdjustments.Any();
+                var inventoryService = NetSteps.Encore.Core.IoC.Create.New<NetSteps.Data.Common.Services.IInventoryService>();
+                bool showModalLink = false;
+            }
+            <div class="UI-secBg mb5 pad5 promoNotifications" style="display:@(displayPromoHeader ? "block" : "none")">
+                @Html.Term("GMP_Promotions_OrderQualifiedForPromotionNotification", "* Note: This order qualified for the following promotions")
+                <div class="pad5 ml10" id="PromotionList">
+                    @foreach (var adjustment in promotionOrderAdjustments)
+                    {
+                        // this next check is not robust - this needs to be refactored to handle situations in which order adjustments may return a message as part of normal process (etc.).
+                        // For now it only checks to determine if the order has a message, then assumes that it is a promotional error message (out of stock).
+                        if (adjustment.OrderModifications.Any(modification => modification.ModificationOperationID == (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderOperationKind.Message))
+                        {
+                            // at the moment it is assumed that the only message is an out of stock message
+                        <div class="promoNotification promoNotAvailable">@adjustment.Description
+                            <span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+                        </div>
+                        }
+                        else
+                        {
+                        <div class="promoNotification">@adjustment.Description
+                            @{
+                            //unused step ids will have no response, or no selected items in the response.
+                            var orderEntryController = new nsCore.Areas.Orders.Controllers.OrderEntryController();
+                            var giftStep = adjustment.InjectedOrderSteps.FirstOrDefault(os => os is IUserProductSelectionOrderStep &&
+                            (os.Response == null || (os.Response is IUserProductSelectionOrderStepResponse && (os.Response as IUserProductSelectionOrderStepResponse).SelectedOptions.Count == 0)));
+                            }
+                            @foreach (var orderStep in adjustment.InjectedOrderSteps)
+                            {
+                                showModalLink = orderEntryController.StepHasAnItemInStockToBeChosen(orderStep.OrderStepReferenceID);
+
+                                if (showModalLink)
+                                {
+                                    if (giftStep != null)
+                                    {
+                                <a class="bold selectGift" href="javascript:void(0);" stepId="@giftStep.OrderStepReferenceID.ToString()">@Html.Term("Promotions_SelectFreeGiftLink", "Select Free Gift >")</a>
+                                    }
+                                    return;
+                                }
+                            }
+                            @if (!showModalLink && (giftStep != null))
+                            {
+                                <span title="@Html.Term("The free item(s) for this promotion are currently Out of Stock")" class="bold promotionItemAvailability">@Html.Term("Unavailable", "Unavailable")</span>
+                            }
+                        </div>
+                        }
+                    }
+                </div>
+            </div>
+            <!--End Term Markup-->
+            <table id="products" width="100%" class="DataGrid">
+                <thead>
+                    <tr class="GridColHead">
+                        <th class="GridCheckBox">
+                        </th>
+                        <th>
+                            @Html.Term("SKU", "SKU")
+                        </th>
+                        <th>
+                            @Html.Term("Product", "Product")
+                        </th>
+                        <th>
+                            @Html.Term("RetailPerItem", "Retail Per Item")
+                        </th>
+                        <th>
+                            @Html.Term("PricePerItem", "Price Per Item")
+                        </th>
+                        @*CS.03MAY2016.Inicio.Muestra CV*@
+                        @{ 
+                            string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                            if (valorSCV == "S")
+                            {
+                            <th>
+                                @Html.Term("CommissionablePrice", "Commissionable Price")
+                            </th>
+                            }
+                        }
+                        @*CS.03MAY2016.Fin.Muestra CV*@
+                        <th style="width: 9.091em;">
+                            @Html.Term("Quantity", "Quantity")
+                        </th>
+                        <th>
+                            @Html.Term("QV_Total", "Total QV")
+                        </th>
+                        <th>
+                            @Html.Term("Price", "Price")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="CartItems">
+                    @if ((Convert.ToBoolean(Session["IsClains"]) == true))
+                    {
+                        int ppt = Model.Order.AsOrder().OrderCustomers[0].ProductPriceTypeID;
+                        int accountType = CoreContext.CurrentAccount.AccountTypeID;
+
+                        var ItemClains = Order.GetClains(Model.Order.OrderCustomers[0].AccountID, Model.Order.OrderID, Model.Order.OrderTypeID, Convert.ToInt32(Session["WareHouseId"]), Convert.ToInt32(Session["PreOrder"]), ppt, accountType, true, true);
+                        foreach (var item in ItemClains.Where(x => x.ParentOrderItemID == null))
+                        { 
+                        <tr style="background: #E6E6E6;">
+                            <td>
+                            </td>
+                            <td>@item.SKU
+                            </td>
+                            <td>@item.Name
+                                <label style="color: #FE6200;">
+                                    (Claim)</label>
+                                @if (ItemClains.Where(x => x.ParentOrderItemID == item.OrderItemID).Count() > 0)
+                                {
+                                    <div class="bundlePackItemList">
+                                        <table cellspacing="0" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        @Html.Term("SKU", "SKU")
+                                                    </th>
+                                                    <th>
+                                                        @Html.Term("Product", "Product")
+                                                    </th>
+                                                    <th>
+                                                        @Html.Term("Quantity", "Quantity")
+                                                    </th>
+                                                </tr>
+                                                @foreach (var itemChild in ItemClains.Where(x => x.ParentOrderItemID == item.OrderItemID))
+                                                {
+                                                    <tr>
+                                                        <td class="KitSKU">
+                                                            @itemChild.SKU
+                                                        </td>
+                                                        <td>
+                                                            @itemChild.Name
+                                                        </td>
+                                                        <td>
+                                                            @itemChild.Quantity
+                                                        </td>
+                                                    </tr>   
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                            @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                if (valorSCV == "S")
+                                {
+                                <td>
+                                    $0.00
+                                </td>
+                                }
+                            }
+                            @*CS.05MAY2016.Fin.Muestra CV*@
+                            <td>@item.Quantity
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                        </tr>
+                        }
+                    }
+                    @{         
+                        Session.Remove("nonPromotionalItems");
+                        var addedItemOperationID = (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderLineOperationKind.AddedItem;
+                        var nonPromotionalItems = Model.Order.OrderCustomers[0].ParentOrderItems.Where(x => !x.OrderAdjustmentOrderLineModifications.Any(y => y.ModificationOperationID == addedItemOperationID)).ToList();
+                        Session["nonPromotionalItems"] = nonPromotionalItems;
+                        var promotionalItems = Model.Order.OrderCustomers[0].ParentOrderItems.Except(nonPromotionalItems).ToList();
+                        var adjustments = promotionalItems.GroupBy(x => x.OrderAdjustmentOrderLineModifications.Single(y => y.ModificationOperationID == addedItemOperationID).OrderAdjustment);
+                        /*
+                         * wv:20160606 Validacion de los Dispatch para ser asignados al account
+                         */
+                        bool existLsitDispatch = false;
+                        List<NetSteps.Data.Entities.Business.HelperObjects.SearchData.DispatchProducts> itemsProductsDispatch = new List<NetSteps.Data.Entities.Business.HelperObjects.SearchData.DispatchProducts>();
+                        List<getDispatchByOrder> loadDispatchProcessOrder = new List<getDispatchByOrder>();
+                        int edicion = Convert.ToInt32(Session["Edit"]);
+                        if (edicion != 1)
+                        {
+                            existLsitDispatch = true;
+                            itemsProductsDispatch = NetSteps.Data.Entities.Order.getDispatchProducts(Model.Order.OrderCustomers[0].AccountID, Model.Order.OrderID, Model.Order.OrderTypeID, Convert.ToInt32(Session["WareHouseId"]), Convert.ToInt32(Session["PreOrder"]), 1, 22, false, true, existLsitDispatch);
+                            Session["itemsProductsDispatch"] = itemsProductsDispatch;
+                        }
+                        else
+                        {
+                            var numeroOrden = Convert.ToInt32(Model.Order.OrderNumber);
+                            loadDispatchProcessOrder = OrderExtensions.GetDispatchByOrder(numeroOrden);
+                            Session["itemsProductsDispatch"] = OrderExtensions.GetOrderItemByDispatch(Model.Order.OrderID);
+                            Session["loadDispatchProcessOrder"] = loadDispatchProcessOrder;
+                        }
+                    }
+                    @foreach (var orderItem in nonPromotionalItems)
+                    {
+                        Html.RenderPartial("~/Areas/Orders/Views/Shared/PartialOrderEntryLineItem.ascx", orderItem, vdd);
+                    }
+                    @if (itemsProductsDispatch != null)
+                    {
+                        if (itemsProductsDispatch.Count > 0)
+                        {
+                            Html.RenderPartial("~/Areas/Orders/Views/Shared/PartialOrderEntryDispatchItems.ascx", itemsProductsDispatch, vdd); // wv: Paso de los dispatch para visualizacion                       
+                        }
+                    }
+                    @if (loadDispatchProcessOrder != null)
+                    {
+                        if (loadDispatchProcessOrder.Count > 0)
+                        {
+                            Html.RenderPartial("~/Areas/Orders/Views/Shared/PartialOrderEntryDispatchItemsEdit.ascx", loadDispatchProcessOrder, vdd); // wv: Paso de los dispatch para visualizacion                       
+                        }
+                    }
+                    @if (adjustments != null && adjustments.Count() > 0)
+                    {
+                        Html.RenderPartial("~/Areas/Orders/Views/Shared/PartialOrderEntryPromotionItems.ascx", adjustments, vdd);
+                    }
+                </tbody>
+                @if (NetSteps.Common.ApplicationContextCommon.Instance.UseDefaultBundling)
+                {
+                    <tbody>
+                        <tr style="display: @(((string)ViewBag.DynamicKitUpSaleHTML).IsNullOrEmpty() ? "none" : "table-row");">
+                            <td class="BundleOption" colspan="7">
+                                <span class="optionText">
+                                    @string.Format("{0} ", Html.Term("BundleOptionText",
+                                                  "Get a deal by combining this guest's cart into one of these product bundles:"))
+                                    <span id="BundleOptionsSpan">
+                                        @Html.Raw(ViewBag.DynamicKitUpSaleHTML)
+                                    </span></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                
+                }
+                <tbody>
+                    <tr id="productTotalBar" class="GridTotalBar">
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td style="text-align: right;">
+                        </td>
+                        <td>
+                            @*CS:21AB2016.Inicio*@ @* @if (!fixedAutoship)
+                            {
+                                <a id="btnUpdateCart" href="javascript:void(0);" class="DTL Update OverrideDisable">
+                                    @Html.Term("Update")</a>
+                            }*@ @*CS:21AB2016.Fin*@
+                        </td>
+                        @*CS.03MAY2016.Inicio.Muestra CV*@
+                        @{
+                            if (valorSCV == "S")
+                            {
+                            <td>
+                                <b><span id="SubTotalCV" class="customerSubtotal">
+                                  @*  @(Model.Order.OrderCustomers[0].CommissionableTotal.ToString(Model.Order.CurrencyID))*@
+                                    @(Model.Order.OrderCustomers[0].CommissionableTotal.ToString(CoreContext.CurrentCultureInfo))
+                                </span>(@Html.Term("CV.T", "CV.T"))</b>
+                            </td>
+                            }
+                        }
+                        @*CS.03MAY2016.Fin.Muestra CV*@
+                        <td>
+                            <b><span id="SubTotalQty" class="customerSubtotal">
+                             @* @(Model.Order.OrderCustomers[0].QtySubtotal.ToString())*@
+                              @(Model.Order.OrderCustomers[0].QtySubtotal.ToString("N",CoreContext.CurrentCultureInfo))
+                            </span></b>
+                        </td>
+                        <td>
+                            <b><span id="SubTotalQV" class="customerSubtotal">@*@(Model.Order.OrderCustomers[0].SubTotalQV.ToString(Model.Order.CurrencyID))*@
+                                @*EL QV NO DEBE TENER SIGNO $*@
+                               @* @Convert.ToInt32(Model.Order.OrderCustomers[0].SubTotalQV)*@
+                                @Convert.ToInt32(Model.Order.OrderCustomers[0].SubTotalQV)
+                            </span>(@Html.Term("QV.T", "QV.T"))</b>
+                        </td>
+                        <td>
+                            <b><span id="SubTotalOriginalPrice" style="display: none" class="block originalPrice strikethrough">
+                               @* @((Model.Order.Subtotal).ToString(Model.Order.CurrencyID))*@
+                                @((Model.Order.Subtotal).ToString(CoreContext.CurrentCultureInfo))
+                                (@Html.Term("SubTotal", "Sub total")) </span><span id="SubTotalDiscountPrice" style="display: none"
+                                    class="block discountPrice">
+                                   @* @((Model.Order.Subtotal).ToString(Model.Order.CurrencyID))*@
+                                    @((Model.Order.Subtotal).ToString(CoreContext.CurrentCultureInfo))
+                                    (@Html.Term("SubTotalDTO", "Sub total dto")) </span><span id="SubTotalOnlyOriginalPrice">
+                                       @* @((Model.Order.Subtotal).ToString(Model.Order.CurrencyID))*@
+                                        @((Model.Order.Subtotal).ToString(CoreContext.CurrentCultureInfo))
+                                        (@Html.Term("SubTotal", "Sub total")) </span></b>@*CGI(CMR)-06/04/2015-Fin*@
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pad5 brdr1 promotionalCodes">
+                <table>
+                    <tr>
+                        <td>
+                            <span id="EnterPromo" class="m5 promoCodeLabel">@Html.Term("Promotions_PromotionCode", "Promotion Code"):</span>
+                            <input type="text" class="mb5 pad2 promoCode" value="" />
+                            <a class="DTL Add" href="javascript:void(0);" id="btnAddPromo"><span>@Html.Term("Promotions_Apply", "Apply")</span>
+                            </a>
+                            <img class="loading" src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" height="15" width="15" style="display: none; margin: 3px 0 0 10px; padding: 1px;" />
+                        </td>
+                        <td style="padding-left: 40px; padding-top: 8px">
+                            <a href="javascript:void(0);" id="btnViewProductsLacks" class="Button BigBlue ButtonOff'">
+                                <span>
+                                    @Html.Term("ViewProductsLacks", "View Products Lacks")
+                                </span></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+@Html.Partial("GiftSelection", new GiftSelectionModel(Href("~/Orders/OrderEntry/GetGiftStepInfo"), Href("~/Orders/OrderEntry/AddGifts"), callbackFunctionName: "updateCartAndTotals"))
+<div id="ModalExistsProductInOrder" class="jqmWindow LModal Overrides">
+    <div class="mContent" style="text-align: center">
+        <p>
+            @Html.Term("ExistsProductInOrder", "This product already exists in the order. You want to add the amount ?")
+            <br />
+            @*<a href="javascript:void(0)" onclick="AddToCart();">Si</a>*@ <a href="javascript:void(0)"
+                id="btnAddToCart">@Html.Term("Yes", "Yes")</a>
+            <br />
+            <a href="javascript:void(0)" onclick="closeFunc1();">@Html.Term("No", "No")</a>
+        </p>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#ModalExistsProductInOrder').jqm({ modal: false, onShow: function (h) {
+        h.w.css({
+            top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+            left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+        }).fadeIn();
+    }
+    });
+    $('#lnkClosePopup1').click(function () {
+        $('#ModalExistsProductInOrder').jqmHide();
+    });
+    function closeFunc1() {
+        $('#ModalExistsProductInOrder').jqmHide();
+    };
+
+    function UpdateCart() {
+        $('#ProductLoad').show();
+        var data = {};
+        $('#products tbody:first tr:not(.BundlePack,.BundleItem,.BundleCategoryRow)[id^="oi"]').each(function (i) {
+            data['products[' + i + '].ProductID'] = $('.productId', this).val();
+            data['products[' + i + '].Quantity'] = $('.quantity', this).val();
+        });
+
+        $.post('@Href("~/" + Model.UpdateCartLocation)', data, function (results) {
+            if (results.result) {
+                updateCartAndTotals(results);
+                //					showMessage('The cart has been updated.', false);
+
+                if (results.message !== undefined && results.message.length > 0) {
+                    showMessage(results.message, true);
+                }
+                updateBundleOptions(results.BundleOptionsSpanHTML);
+                //$('#lblCreditAvailable')[0].innerHTML = results.resultCreditAvailable;
+                //                    if ('@Convert.ToInt32(Session["AccountNumber"])' != 2) {
+                //                        $('#lblQualificationTotal')[0].innerHTML = results.resultQualificationTotal;
+                //                        $('#lblCommissionableTotal')[0].innerHTML = results.resultCommisionableTotal;
+                //                    }
+                BalanceCredit(results);
+                HabBotonesSubmitOrderSaveOrder(results);
+            }
+            else {
+                showMessage('@Html.Term("ErrorUpdatingCart", "The cart could not be updated"): ' + results.message, true);
+            }
+        })
+                    .fail(function () {
+                        showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+                    })
+                    .always(function () {
+                        $('#ProductLoad').hide();
+                        $('#loaderApplyPayment').hide();
+                    });
+    }
+
+    var lastProduct;
+
+    $(function () {
+        $('.quantity').numeric();
+        $('.QuickAdd .quantity').keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#btnQuickAdd').click();
+        });
+
+        $('#products .quantity').live('keyup', function (e) {
+            if (e.keyCode == 13) {
+                $('#btnUpdateCart').click();
+            }
+
+            if (e.keyCode == 38) {
+                var qty = parseInt(this.value);
+                qty = qty + 1;
+
+                this.value = qty;
+            }
+
+            if (e.keyCode == 40) {
+                var qty = parseInt(this.value);
+                qty = qty - 1;
+
+                if (qty >= 0)
+                    this.value = qty;
+            }
+        });
+
+        $('#btnUpdateCart').click(function () {
+            $('#ProductLoad').show();
+            var data = {};
+            $('#products tbody:first tr:not(.BundlePack,.BundleItem,.BundleCategoryRow)[id^="oi"]').each(function (i) {
+                data['products[' + i + '].ProductID'] = $('.productId', this).val();
+                data['products[' + i + '].Quantity'] = $('.quantity', this).val();
+            });
+
+            $.post('@Href("~/" + Model.UpdateCartLocation)', data, function (results) {
+                if (results.result) {
+                    updateCartAndTotals(results);
+                    //					showMessage('The cart has been updated.', false);
+
+                    if (results.message !== undefined && results.message.length > 0) {
+                        showMessage(results.message, true);
+                    }
+                    updateBundleOptions(results.BundleOptionsSpanHTML);
+                    //$('#lblCreditAvailable')[0].innerHTML = results.resultCreditAvailable;
+                    //                    if ('@Convert.ToInt32(Session["AccountNumber"])' != 2) {
+                    //                        $('#lblQualificationTotal')[0].innerHTML = results.resultQualificationTotal;
+                    //                        $('#lblCommissionableTotal')[0].innerHTML = results.resultCommisionableTotal;
+                    //                    }
+                    BalanceCredit(results);
+                    HabBotonesSubmitOrderSaveOrder(results);
+                }
+                else {
+                    showMessage('@Html.Term("ErrorUpdatingCart", "The cart could not be updated"): ' + results.message, true);
+                }
+            })
+            .fail(function () {
+                showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+            })
+            .always(function () {
+                $('#ProductLoad').hide();
+                $('#loaderApplyPayment').hide();
+            });
+        });
+
+
+        $('#txtQuickAddSearch').jsonSuggest('@Href("~/" + Model.SearchProductsLocation)', { minCharacters: 3, source: $('#txtQuickAddSearch'), ajaxResults: true, onSelect: function (item) {
+            $('#hQuickAddProductId').val(item.id);
+            $('#txtQuickAddQuantity').val('1');
+            if (item.isDynamicKit) {
+                $('#txtQuickAddQuantity').attr("disabled", "disabled");
+            } else {
+                $('#txtQuickAddQuantity').removeAttr("disabled");
+            }
+            $('#hQuickAddNeedsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+        }
+        });
+
+        $('#btnQuickAdd').click(function () {
+            var productId = $('#hQuickAddProductId').val(), quantity = parseInt($('#txtQuickAddQuantity').val())
+            var isComplete = $('.QuickAdd').checkRequiredFields();
+            if (!isComplete) return;
+            if (productId && quantity) {
+
+                $.post('@Href("~/" + Model.ExistsProductInOrder)', { productId: productId }, function (results) {
+                    if (results.result) {
+                        $('#ModalExistsProductInOrder').jqmShow();
+                    }
+                    else {
+                        AddToCart();
+                    }
+                });
+            }
+            $('#ProductLoad').hide();
+        });
+
+        $("#btnAddToCart").click(function () {
+            $('#ModalExistsProductInOrder').jqmHide();
+            AddToCart();
+        });
+
+        function AddToCart() {
+            $('#ModalExistsProductInOrder').jqmHide();
+            var productId = $('#hQuickAddProductId').val(), quantity = parseInt($('#txtQuickAddQuantity').val())
+            var isComplete = $('.QuickAdd').checkRequiredFields();
+            if (!isComplete) return;
+            if (productId && quantity) {
+                $('#ProductLoad').show();
+                var productId = $('#hQuickAddProductId').val();
+                var quantity = parseInt($('#txtQuickAddQuantity').val())
+                if (productId && quantity) {
+                    if ($('#hQuickAddNeedsBackOrderConfirmation').val() == "true") {
+                        if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                            $('#ProductLoad').hide();
+                            return false;
+                        }
+                    }
+                    $.post('@Href("~/" + Model.AddToCartLocation)', { productId: productId, quantity: quantity }, function (results) {
+                        if (results.result) {
+                            lastProduct = $('#txtQuickAddSearch').val();
+                            $('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');
+                            updateCartAndTotals(results);
+                            //showMessage('Product successfully added.', false);
+                            $('#divDate').show();
+                            $('#lblDateEstimated').html(results.dateEstimated);
+                            if (results.message !== undefined && results.message.length > 0) {
+                                showMessage(results.message, true);
+                            }
+
+                            updateBundleOptions(results.BundleOptionsSpanHTML);
+                            if (results.isBundle) {
+                                $("#oi" + results.bundleGuid).find('.btnAddToBundle').click();
+                            }
+
+                            if (results.orderItems.length == 0) {
+                                showMessage('@Html.Term("TheProductCouldNotBeAdded", "The product could not be added"): ' + results.message, true);
+                            }                            
+                            if (results.totals["balanceAmount"] < 0)
+                                $('#txtPaymentAmount').val(results.totals["balanceAmount"] * (-1));
+                            else
+                                $('#txtPaymentAmount').val('');
+
+
+                            BalanceCredit(results);
+                            //==============================================================================================
+                            // btnSubmitOrder y btnSaveOrder
+                            HabBotonesSubmitOrderSaveOrder(results);
+                            //==============================================================================================
+                        }
+                        else {
+                            // Developed by BAL - CSTI - A04
+                            if (results.restricted) {
+                                showMessage(results.message, true);
+                                return false;
+                            }
+
+                            if (results.shippingMessageEx) {
+                                var message = "<h2>Products</h2><ul>";
+                                $.each(results.excludedProducts, function (index, value) {
+                                    message += "<li>" + value + "</li>";
+                                });
+                                message += "</ul>";
+                                showMessage('@Html.Term("ShippingMethodNotAvailable", "There are no shipping methods available.")' + message, true);
+                            } else {
+                                showMessage('@Html.Term("TheProductCouldNotBeAdded", "The product could not be added"): ' + results.message, true);
+                            }
+                        }
+                        UpdateValue();
+                    })
+                    .fail(function () {
+                        showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+                    })
+                    .always(function () {
+                        $('#ProductLoad').hide();
+                        $('#loaderApplyPayment').hide();
+                    });
+                }
+
+            }
+        }
+
+        function UpdateValue() {
+            //alert($(".balanceDue").val());
+            //            $.ajax({
+            //                type: 'POST',
+            //                url: '/OrderEntry/UpdateValues',
+            //                asyn: false,
+            //                success: function (data) {
+            //                    if (data.success == true) {
+            //                        alert('llego')
+            //                    }
+            //                }
+            //            });
+        }
+
+        $('#btnAddPromo').click(function () {
+            var data = { promotionCode: $('input.promoCode').val() };
+            if (data.promotionCode) {
+                var options = {
+                    url: '@Href("~/" + Model.ApplyPromotionCodeLocation)',
+                    showLoading: $(this),
+                    data: data,
+                    success: function (response) {
+                        if (response.result) {
+                            showMessage('@Html.Term("Promotions_PromotionCodeApplied", "Promotion Code Successfully Applied!")', false);
+                            updateCartAndTotals(response);
+                            $('input.promoCode').val('');
+                        }
+                        else {
+                            showMessage(response.message, true);
+                        }
+                    }
+                };
+                NS.post(options)
+                    .fail(function () {
+                        showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+                    })
+                    .always(function () {
+                        hideLoading($(this));
+                    });
+            }
+        });
+
+    });
+
+
+    function removeItemBackup(orderItemId) {
+        $('#ProductLoad').show();
+
+        var options = {
+            url: '@Href("~/" + Model.RemoveFromCartLocation)',
+            data: { orderItemId: orderItemId },
+            success: function (results) {
+                if (results.result) {
+                    var row = $('#oi' + orderItemId);
+                    row.nextAll('tr').each(function () {
+                        if ($(this).attr("id") != "" && $(this).attr("id") != "undefined" && $(this).attr("id") != undefined) {
+                            return false;
+                        }
+                        $(this).remove();
+                    });
+                    row.remove();
+                    updateCartAndTotals(results);
+                    if (results.message !== undefined && results.message.length > 0) {
+                        showMessage(results.message, true);
+                    }
+                    updateBundleOptions(results.BundleOptionsSpanHTML);
+                    //$('#lblCreditAvailable')[0].innerHTML = results.resultCreditAvailable;
+                    //                    if ('@Convert.ToInt32(Session["AccountNumber"])' != 2) {
+                    //                        $('#lblQualificationTotal')[0].innerHTML = results.resultQualificationTotal;
+                    //                        $('#lblCommissionableTotal')[0].innerHTML = results.resultCommisionableTotal;
+                    //                    }
+                }
+                else {
+                    showMessage('@Html.Term("ErrorRemovingProduct", "The product could not be removed"): ' + results.message, true);
+                }
+            }
+        };
+
+        NS.post(options)
+            .fail(function () {
+                showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+            })
+            .always(function () {
+                $('#ProductLoad').hide();
+            });
+    }
+
+
+    function removeItem(orderItemId) {
+        $('#ProductLoad').show();
+
+        //--
+        var data = { orderItemId: orderItemId };
+        $.post('@Href("~/" + Model.RemoveFromCartLocation)', data, function (results) {
+            if (results.result) {
+
+                var row = $('#oi' + orderItemId);
+                row.nextAll('tr').each(function () {
+                    if ($(this).attr("id") != "" && $(this).attr("id") != "undefined" && $(this).attr("id") != undefined) {
+                        return false;
+                    }
+                    $(this).remove();
+                });
+                row.remove();
+
+                updateCartAndTotals(results);
+                if (results.message !== undefined && results.message.length > 0) {
+                    showMessage(results.message, true);
+                }
+                updateBundleOptions(results.BundleOptionsSpanHTML);
+                BalanceCredit(results);
+                //==============================================================================================
+                // btnSubmitOrder y btnSaveOrder
+                HabBotonesSubmitOrderSaveOrder(results);
+                //==============================================================================================
+            }
+            else {
+                showMessage('@Html.Term("ErrorRemovingProduct", "The product could not be removed"): ' + results.message, true);
+            }
+        })
+            .fail(function () {
+                showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+            })
+            .always(function () {
+                $('#ProductLoad').hide();
+            });
+    }; 
+
+
+    function BalanceCredit(results) {
+
+        if (results.paymentsGrid !== undefined && results.paymentsGrid.length > 0) {
+
+            $('#paymentsGrid').html(results.paymentsGrid);
+
+            if (parseFloat(results.totals['balanceAmount']) >= 0) {
+                $('.balanceDue').css('color', 'green');
+            }
+            else {
+                $('.balanceDue').css('color', 'red');
+            }
+
+            if (parseFloat(results.totals['balanceAmount']) >= 0 && results.totals['numberOfItems'] > 0) {
+                $('#btnSubmitOrder').removeClass("ButtonOff");
+                $('#btnSubmitOrder').attr('disabled', true); 
+            }
+            else {
+                $('#btnSubmitOrder').addClass("ButtonOff");
+                $('#btnSubmitOrder').attr('disabled', false);
+            }
+
+            if (parseFloat(results.totals['balanceAmount']) > 0) {
+                $('#btnApplyPayment').addClass("ButtonOff");
+                $('#sPaymentMethod').attr('disabled', 'disabled');
+                $('#sShippingAddress').attr('disabled', 'disabled');
+                $('#AddNewShippingAddress').hide();
+            }
+            else {
+                $('#btnApplyPayment').removeClass("ButtonOff");
+                $('#sPaymentMethod').attr('disabled', false);
+                $('#sPaymentMethod').val('0');
+                $('#sShippingAddress').attr('disabled', false);
+                $('#AddNewShippingAddress').show();
+            }
+        }
+    };
+</script>

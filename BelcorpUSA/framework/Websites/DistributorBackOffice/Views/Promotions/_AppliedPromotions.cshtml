@@ -1,0 +1,26 @@
+﻿@model IEnumerable<NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo>
+
+<div class="ExistingPromotions">
+@if (Model != null && Model.Any())
+{
+<table style="" class="PromotionSelector">
+    <tbody>
+        <tr>
+            <td>
+                <div id="promotionCodeContainer" class="pad5">
+                    @foreach (var displayInfo in Model)
+                    {
+                    <div id="appliedPromotion@(displayInfo.CouponCode)" class="appliedPromotionDisplay">
+                        <a title="@(Html.Term("DeletePromotion", "Delete this promotion code"))" href="javascript:void(0);" class="FL mr10 DeletePromotion UI-icon-container" onclick="removePromotion('@(displayInfo.CouponCode)');">
+                            <span class="UI-icon icon-x"></span>
+                        </a>
+                        <span class="FL appliedPromotionHeader">@(displayInfo.CouponCode) - @(displayInfo.Title) - @(displayInfo.Description)</span>
+                    </div>
+                    }
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}
+</div>

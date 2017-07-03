@@ -1,0 +1,304 @@
+@model NetSteps.Data.Entities.Product
+@{
+    ViewBag.Title = Model.Translations.Name();
+    
+    string name = Model.Translations.Name();
+    string longDescription = Model.Translations.LongDescription();
+    string imagePath = Model.MainImage != null ? Model.MainImage.FilePath.ReplaceFileUploadPathToken() : null;
+
+    var variantTemplateProduct = Model.ProductBase.Products.Where(p => p.IsVariantTemplate).FirstOrDefault();
+    
+    if (name.IsNullOrEmpty())
+    {
+        name = variantTemplateProduct != null ? variantTemplateProduct.Translations.Name() : "";
+    }
+    if (longDescription.IsNullOrEmpty())
+    {
+        longDescription = variantTemplateProduct != null ? variantTemplateProduct.Translations.LongDescription() : "";
+    }
+    if (imagePath == null)
+    {
+        imagePath = variantTemplateProduct != null ? variantTemplateProduct.MainImage == null ? Url.Content("../../Content/Images/Shopping/no-image.jpg") : variantTemplateProduct.MainImage.FilePath.ReplaceFileUploadPathToken() : "";
+    }
+}
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+            $('#morePhotos .otherPhoto').click(function () {
+                $('#bigImage').attr('src', $(this).find('img').attr('src'));
+                $('#morePhotos .otherPhoto').removeClass('current');
+                $(this).addClass('current');
+            });
+            $('#morePhotos .otherPhoto:last').addClass('last');
+
+            var bool = true;
+            var selected;
+            @if (Model.ProductBase.Products.Count > 1) {
+                @:selected = Selected(null); //Needs to run when the page loads
+                @:var isOrderable = '@Model.IsVariantTemplate' == 'True' ? false : true;
+                @:toggleAddToCartButton(isOrderable);
+                
+            }
+            
+            @if(Model.RequiresCustomization())
+            {
+                @:toggleAddToCartButton(false);
+            }
+
+            $('.variantCheckbox .frame:not(.disabled)').live('click', function () {
+                var frame = $(this);
+                var ul = frame.closest('ul');
+                $('input[type=checkbox]', ul).attr('checked', false);
+                ul.find('.frame').each(function () {
+                    $(this).removeClass('selected');
+                });
+                frame.find('input[type=checkbox]').attr('checked', true);
+                frame.addClass('selected');
+                ul.closest('.variantCheckbox').addClass('OK');
+                Selected(frame);
+            });
+
+            $('.variantRadio .frame:not(.disabled)').live('click', function () {
+                var frame = $(this);
+                var ul = frame.closest('ul');
+                $('input[type=radio]', ul).attr('checked', false);
+                ul.find('.frame').each(function () {
+                    $(this).removeClass('selected');
+                });
+                frame.find('input[type=radio]').attr('checked', true);
+                frame.addClass('selected');
+                ul.closest('.variantRadio').addClass('OK');
+                Selected(frame);
+            });
+
+            $('.variantText .frame:not(.disabled)').live('click', function () {
+                var frame = $(this);
+                var ul = frame.closest('ul');
+                ul.find('.frame').each(function () {
+                    $(this).removeClass('selected');
+                });
+                frame.addClass('selected');
+                ul.closest('.variantText').addClass('OK');
+                Selected(frame);
+            });
+
+            $('.variantDropdown select').live('change', function () {
+                var frame = $(this).closest('.frame');
+                var div = $(this).closest('.variantDropDown');
+                $(this).val() != '' ?
+                    div.addClass('OK') :
+                    div.removeClass('OK')
+                Selected(frame);
+            });
+
+            $('.variantThumbnail .frame:not(.disabled)').live('click', function () {
+                var frame = $(this);
+                var ul = frame.closest('ul');
+                ul.find('.frame').each(function () {
+                    $(this).removeClass('selected');
+                });
+                frame.addClass('selected');
+                var containerDiv = ul.closest('div');
+                containerDiv.addClass('OK');
+                Selected(frame);
+            });
+        });
+
+        function filterAndSelectProduct(frameDiv) {
+            var data = { selectedProductVariantId:  $("#selectedProductVariantId").val() };
+            var parentDiv = frameDiv.closest('div:not(.frame):not(.shell)');
+			data.productBaseId = parentDiv.find('.productBaseId').val();
+			data.productId = parentDiv.find('.productId').val();
+            if (parentDiv.hasClass("variantDropdown")) {
+                data['productPropertyTypeId'] = parentDiv.find('.productPropertyTypeId').val();
+                data['productPropertyValueId'] = frameDiv.find('.productPropertyValueId').val();
+            } else if (parentDiv.hasClass("variantRadio")) {
+                data['productPropertyTypeId'] = parentDiv.find('.productPropertyTypeId').val();
+                data['productPropertyValueId'] = frameDiv.find('input[type=radio]:checked').val();
+            } else if (parentDiv.hasClass("variantThumbnail")) {
+                data['productPropertyTypeId'] = parentDiv.find('.productPropertyTypeId').val();
+                data['productPropertyValueId'] = frameDiv.find('.productPropertyValueId').val();
+            } else if (parentDiv.hasClass("variantCheckbox")) {
+                data['productPropertyTypeId'] = parentDiv.find('.productPropertyTypeId').val();
+                data['productPropertyValueId'] = frameDiv.find('.productPropertyValueId').val();
+            } else if (parentDiv.hasClass("variantText")) {
+                data['productPropertyTypeId'] = parentDiv.find('.productPropertyTypeId').val();
+                data['productPropertyValueId'] = frameDiv.find('.productPropertyValueId').val();
+            }
+            $.post('@Url.Content("~/Shop/RenderProductVariants")', data, function (response) {
+                if (response.result) {
+                    $(".productVariants").html(response.productVariantsHTML);
+                    $("#triggerPropertyId").val(response.triggerPropertyId);
+                    $(".productTitle h1").html(response.productTitle);
+                    $(".productLongDescription").html(response.productLongDescription);
+                    $("#bigImage").attr('src', response.productImagePath);
+                    $("#bigImage").attr('alt', response.productTitle);
+                    $("#productPrice").html(response.productPrice);
+                    var currentId = $(".btnAddToCart").attr("id");
+                    var idArr = new String(currentId).split("_");
+                    $(".btnAddToCart").attr("id", response.productSKU + "_" + idArr[1]);
+                    toggleAddToCartButton(response.isOrderable);
+                    $("#selectedProductVariantId").val(response.selectedProductVariantId);
+                    if(response.isOrderable) {
+                        Selected(null);
+                    }
+                    if(response.message!="")
+                        showMessage(response.message, true);
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        }
+
+        function toggleAddToCartButton(isOrderable) {
+            var addToCartText = '@Html.Term("AddToCart", "Add to Cart")';
+            if(isOrderable) {
+                $('.btnAddToCart').show();
+                $('.btnAddToCart').find('span').html(addToCartText);
+            } else {
+                $('.btnAddToCart').hide();
+            }
+        }
+    </script>
+
+}
+@helper AddToCart()
+    {
+    <div class="FL mr10 qtyLabel"><span>@(Html.Term("Quantity") + ":")</span></div>
+    <div class="FL mr10 qtyInputWrap">
+        @{
+            bool isDynamicKit = Model.IsDynamicKit();
+            bool isStaticKit = Model.IsStaticKit();
+            if (isDynamicKit)
+            {
+                <input type="hidden" value="1" class="quantity" />@(1)
+            }
+            else
+            {
+                <input type="text" value="1" class="quantity" />
+            }
+            var term = Model.GetShopTerm();
+        }
+    </div>
+    <a id="@(Model.SKU + "_" + Guid.NewGuid().ToString("N") + "_" + Model.ProductID)" 
+    href="javascript:void(0);" 
+    class="FL Button btnAddToCart AddCart @(isDynamicKit ? "buildBundle" : "")">
+    <span>@Html.Term(term.RemoveExtraWhiteSpace(), term)</span></a>
+    <span class="clrall"></span>
+}
+@{ bool isPriceAdjusted = Model.IsPricePromotionallyDiscounted(); }
+<div class="ProductDetails @(isPriceAdjusted ? "promoItem" : "")">
+	@if (isPriceAdjusted) {
+		<div id="SaleItemImg">@Html.Term("ProductThumbBox_Sale", "Sale")</div>
+	}
+    <div class="FL splitCol40 ProductPhotos">
+        <div class="BigPhoto">
+            <span class="imgWrap"><img id="bigImage" src="@(imagePath)" alt="@name" /></span>
+        </div>
+        @{var images = Model.Files.GetByProductFileTypeID((int)Constants.ProductFileType.Image);}
+        @if (images.Count > 1)
+        {
+            <div id="morePhotos" class="MorePhotoViews">
+                @foreach (var image in images.OrderBy(i => i.SortIndex))
+                {
+                    <a href="javascript:void(0);" class="otherPhoto">
+                        <img width="75" 
+                        height="75" 
+                        src="@image.FilePath.ReplaceFileUploadPathToken()" alt="" />
+                    </a>
+                }
+                <span class="clr"></span>
+            </div>
+        }
+    </div>
+    <div class="FR splitCol60 ProductDescription">
+        <div class="productContentWrap">
+            <div class="productSKU">
+                @Model.SKU
+            </div>
+            <div class="productTitle">
+                <h1><span>@name</span></h1>
+            </div>
+            <div class="productLongDescription">
+                @Html.Raw(longDescription)
+            </div>
+            @{
+                if (Model.ProductBase.Products.Count > 1)
+                {
+                    <input type="hidden" name="selectedProductVariantId" id="selectedProductVariantId" value="@(Model.IsVariantTemplate ? 0 : Model.ProductID)" />
+                    <input type="hidden" id="triggerPropertyId" value="0" />
+                    
+                    <script type="text/javascript">
+                        
+                        var _count = 0;
+                        var Selected = function (frameDiv) {
+                            var bool = false;
+                            var sel = 0;
+                            var v = 0;
+                            _count++;
+
+                            $('.productVariants > div').each(function () { v++; });
+                            $('.productVariants > div.OK').each(function () { sel++; });
+
+                            if (frameDiv != null) {
+                                filterAndSelectProduct(frameDiv);
+                            }
+                        }
+                    </script>
+
+                    <div class="productVariants">
+                        @{Html.RenderPartial("_ProductVariants", Model);}
+                    </div>
+                }
+                else if (Model.RequiresCustomization())
+                {
+                    Html.RenderPartial("_ProductCustomization", Model);
+                }  
+            }
+        </div>
+        <div class="pricingWrap">
+            <div class="yourPrice">
+               @{Html.RenderPartial("_ProductPricing", Model);}
+            </div>
+            <div class="UI-lightBg pad10 brdrAll AddToCart">
+                
+                @if (!Model.IsVariantTemplate && Product.CheckStock(Model.ProductID).IsOutOfStock)
+                {
+                    switch (Model.ProductBackOrderBehaviorID)
+                    {
+                        case (int)Constants.ProductBackOrderBehavior.ShowOutOfStockMessage:
+                            @Html.Term("OutOfStock", "OutOfStock")
+                       break;
+                        case (int)Constants.ProductBackOrderBehavior.AllowBackorderInformCustomer:
+                            <span class="backOrder">
+                                <span>@AddToCart()</span>
+                                <br />
+                                <text>
+                                    @Html.Term("BackOrdered", "Back ordered")
+                                </text>
+                            </span>
+                               break;
+                        case (int)Constants.ProductBackOrderBehavior.AllowBackorder:
+                            @AddToCart()
+                       break;
+                    }
+                }
+                else
+                {
+                    @AddToCart()
+                }
+
+                <span class="clr"></span>
+           
+            </div>
+        </div>
+    </div>
+
+    <span class="clr"></span>
+</div>
+
+@{Html.RenderPartial("_StaticKit", Model);}
+@{Html.RenderPartial("_RelatedProducts", Model);}
+@Html.Partial("MessageCenter")
+

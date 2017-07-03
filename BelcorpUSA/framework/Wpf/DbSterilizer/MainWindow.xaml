@@ -1,0 +1,112 @@
+﻿<Window x:Class="DbSterilizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:controls="clr-namespace:NetSteps.Wpf.Controls;assembly=NetSteps.Wpf.Controls" 	
+		mc:Ignorable="d" 
+        Title="DbSterilizer" Height="380" Width="850" Icon="Shield_Grey.ico">
+	<Window.TaskbarItemInfo>
+		<TaskbarItemInfo/>
+	</Window.TaskbarItemInfo>
+	<Grid>
+		<Grid.Background>
+			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+				<GradientStop Color="#FF5C95BB" Offset="0"/>
+				<GradientStop Color="#FF8DC0DB" Offset="1"/>
+			</LinearGradientBrush>
+		</Grid.Background>
+		<Border BorderBrush="Black" BorderThickness="0" Margin="20,50,0,0" Background="White" CornerRadius="6,0,6,0">
+			<Border.Effect>
+				<DropShadowEffect ShadowDepth="0" Direction="0" BlurRadius="14" Opacity="0.6"/>
+			</Border.Effect>
+			<Grid Margin="20">
+
+				<TabControl>
+					<TabItem Header="Clean Data">
+						<Grid>
+
+							<!--<Border BorderBrush="#FFDFDFDF" BorderThickness="1" VerticalAlignment="Top" Padding="8">
+								<Border.Background>
+									<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+										<GradientStop Color="#FFF4F4F4" Offset="0"/>
+										<GradientStop Color="#FFF3F3F3" Offset="1"/>
+										<GradientStop Color="#FFFDFDFD" Offset="0.478"/>
+									</LinearGradientBrush>
+								</Border.Background>
+								<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Select areas of Database to clean" x:Name="uxTitle" VerticalAlignment="Top" Foreground="#FF715254" FontSize="18.667" FontFamily="Arial"/>
+							</Border>-->
+
+							<StackPanel Margin="0,5,0,0">
+								<CheckBox x:Name="uxCleanCorporateUsers" Content="Clean CorporateUsers" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxCleanAccount" Content="Clean Accounts" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxCleanOrders" Content="Clean Orders" Margin="0,0,0,3"/>
+
+								<CheckBox x:Name="uxCleanProducts" Content="Clean Products" IsEnabled="False" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxCleanCatalogs" Content="Clean Catalogs" IsEnabled="False" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxCleanSites" Content="Clean Sites" IsEnabled="False" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxCleanContacts" Content="Clean Contacts" IsEnabled="False" Margin="0,0,0,3"/>
+								<CheckBox x:Name="uxOldTaxCache" Content="Clean Old TaxCache" Margin="0,0,0,3"/>
+							</StackPanel>
+
+						</Grid>
+					</TabItem>
+					<TabItem Header="Generate Data">
+						<Grid>
+							<StackPanel Margin="0,5,0,0">
+								<CheckBox x:Name="uxGenerateAdminUser" Content="Generate AdminUser" Margin="0,0,0,3" />
+
+								<StackPanel Orientation="Horizontal" Margin="0,0,5,3" >
+									<CheckBox x:Name="uxGenerateAccounts" Content="Generate Accounts" Margin="0,0,15,0" VerticalAlignment="Center"/>
+									<TextBlock Text="Total Accounts to generate:" VerticalAlignment="Center" Margin="0,0,5,0" FontStyle="Italic"/>
+									<TextBox x:Name="uxAccountTotal" VerticalAlignment="Center" Width="60"/>
+								</StackPanel>
+
+								<StackPanel Orientation="Horizontal" Margin="0,0,5,3" >
+									<CheckBox x:Name="uxGenerateOrders" Content="Generate Orders" Margin="0,0,15,0" VerticalAlignment="Center"/>
+									<TextBlock Text="Total Orders to generate:" VerticalAlignment="Center" Margin="0,0,5,0" FontStyle="Italic"/>
+									<TextBox x:Name="uxOrdersTotal" VerticalAlignment="Center" Width="60"/>
+								</StackPanel>
+
+								<Button x:Name="uxStartGenerate" Content="Generate" Margin="0,10,0,0" HorizontalAlignment="Left" Width="75" Foreground="White" BorderBrush="#FF006FAC" Height="25" Click="uxStartGenerate_Click">
+									<Button.Background>
+										<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+											<GradientStop Color="#FF5FA6D5" Offset="0"/>
+											<GradientStop Color="#FF3691C9" Offset="0.483"/>
+											<GradientStop Color="#FF0076B9" Offset="0.522"/>
+											<GradientStop Color="#FF006FAC" Offset="1"/>
+										</LinearGradientBrush>
+									</Button.Background>
+								</Button>
+							</StackPanel>
+						</Grid>
+					</TabItem>
+				</TabControl>
+
+				<controls:ItemProgressControl x:Name="uxItemProgressControl" Margin="0" d:LayoutOverrides="Width, Height" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+
+			</Grid>
+		</Border>
+		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="DataBase Data Sterilizer" VerticalAlignment="Top" Margin="20,5,5,5" Foreground="White" FontSize="26.667">
+			<TextBlock.Effect>
+				<DropShadowEffect ShadowDepth="3" Opacity="0.6"/>
+			</TextBlock.Effect>
+		</TextBlock>
+		<StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,10,20,0">
+			<TextBlock x:Name="uxTreadsLabel" Text="Threads" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="White" />
+			<Slider x:Name="uxThreads" Width="100" VerticalAlignment="Center" Margin="0,0,5,0" Minimum="1" Maximum="20" Value="1" ValueChanged="uxThreads_ValueChanged"/>
+			<Button x:Name="uxBegin" Content="BEGIN" Click="uxBegin_Click"  Width="75" Foreground="White" BorderBrush="#FF006FAC" Height="25">
+				<Button.Background>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FF5FA6D5" Offset="0"/>
+						<GradientStop Color="#FF3691C9" Offset="0.483"/>
+						<GradientStop Color="#FF0076B9" Offset="0.522"/>
+						<GradientStop Color="#FF006FAC" Offset="1"/>
+					</LinearGradientBrush>
+				</Button.Background>
+			</Button>
+		</StackPanel>
+
+
+	</Grid>
+</Window>

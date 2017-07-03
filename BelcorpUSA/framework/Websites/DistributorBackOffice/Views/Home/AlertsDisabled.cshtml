@@ -1,0 +1,24 @@
+﻿@model DistributorBackOffice.Models.Home.WidgetModel
+
+<div class="WidgetWrap Network" style="display: block;">
+    <div class="Widget">
+        <div class="UI-btn txtShadowDrk WidgetTitle">
+            <span class="Txt UI-btn">@Html.Term("Alerts", "Alerts")</span> <span class="FR WidgetControls"><a href="javascript:void(0);" onclick="javascript:hideWidget(18);" title="Remove this widget from your dashboard"><span>X</span></a></span>
+        </div>
+        <div class="WidgetBody" style="display: block; ">
+			<ul class="lr listNav">
+                @*@foreach (Alert alert in ((List<Alert>)ViewBag.Alerts).Where(x=> x.Priority != ConstantsGenerated.AlertPriority.Urgent))
+                {
+                    <li>
+                        <a href="@alert.ActionLinkUrl" @Html.Raw(alert.OpenActionLinkInNewWindow ? "target=\"_blank\"" : "")>@alert.Message</a> 
+						@if (alert.CanBeDismissed)
+						{
+							<a href="#" class="dismissAlert DTL" data-accountAlertId="@alert.AccountAlertID" data-hideSelector="li">@Html.Term("Dismiss")</a>
+						}
+                    </li>
+                }*@
+            </ul>
+		</div>
+    </div>
+</div>
+

@@ -1,0 +1,569 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Promotions.Common</name>
+  </assembly>
+  <members>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.NonCachingPromotionDataProvider.FindPromotion(System.Int32,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Finds the promotion.
+            </summary>
+      <param name="promotionID">The promotion ID.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="FindPromotion requires a non-null unitOfWork." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotion(System.Int32,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="FindPromotion requires promotionID &gt; 0." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotion(System.Int32,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentOutOfRangeException" csharp="promotionID &gt; 0" vb="promotionID &gt; 0">promotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.NonCachingPromotionDataProvider.FindPromotionIDByPromotionQualificationID(NetSteps.Promotions.Common.IPromotionUnitOfWork,System.Int32)">
+      <summary>
+            Finds the promotion ID by promotion qualification ID.
+            </summary>
+      <param name="unitOfWork">The unit of work.</param>
+      <param name="promotionQualificationID">The promotion qualification ID.</param>
+      <returns />
+      <requires description="FindPromotionIDByPromotionQualificationID requires a non-null unitOfWork." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotionIDByPromotionQualificationID(NetSteps.Promotions.Common.IPromotionUnitOfWork,System.Int32)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="FindPromotionIDByPromotionQualificationID requires promotionQualificationID &gt; 0." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotionIDByPromotionQualificationID(NetSteps.Promotions.Common.IPromotionUnitOfWork,System.Int32)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentOutOfRangeException" csharp="promotionQualificationID &gt; 0" vb="promotionQualificationID &gt; 0">promotionQualificationID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionQualificationID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.NonCachingPromotionDataProvider.AddPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Adds the promotion.
+            </summary>
+      <param name="promotion">The promotion.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="AddPromotion requires a non-null promotion." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.AddPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="AddPromotion requires a non-null unitOfWork." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.AddPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.NonCachingPromotionDataProvider.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Updates the promotion.
+            </summary>
+      <param name="promotion">The promotion.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="UpdatePromotion requires a non-null promotion." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="UpdatePromotion requires a non-null unitOfWork." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="UpdatePromotion requires promotion with PromotionID &gt; 0." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentOutOfRangeException" csharp="promotion.PromotionID &gt; 0" vb="promotion.PromotionID &gt; 0">promotion.PromotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotion.PromotionID &lt;= 0</exception>
+    </member>
+    <member name="F:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager._promotionRewardHandlerConstructors">
+      <summary>
+            The dictionary of promotion reward handlers registered with a string representation of their types as a key.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.RegistrationRecord">
+      <summary>
+            A provider registration record.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.RegistrationRecord.UntypedConstruct">
+      <summary>
+            An untyped provider.
+            </summary>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.RegistrationRecord`1">
+      <summary>
+            Provides an abstraction for getting an untyped Promotion Reward Handler.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="F:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardKindManager._promotionRewardConstructors">
+      <summary>
+            The dictionary of promotions registered with a string representation of their types as a key.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardKindManager.RegistrationRecord">
+      <summary>
+            A provider registration record.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardKindManager.RegistrationRecord.UntypedConstruct">
+      <summary>
+            An untyped provider.
+            </summary>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardKindManager.RegistrationRecord`1">
+      <summary>
+            Provides an abstraction for getting an untyped promotion.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.RegisterPromotionKind``1(System.String)">
+      <summary>
+            Registers the kind of the promotion.
+            </summary>
+      <typeparam name="TPromotion">The type of the promotion.</typeparam>
+      <param name="promotionKind">Kind of the promotion.</param>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.UnregisterAdjustmentProvider(System.String)">
+      <summary>
+            Unregisters the adjustment provider.
+            </summary>
+      <param name="promotionKind">Kind of the promotion.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.CreatePromotion(System.String)">
+      <summary>
+            Creates the promotion.
+            </summary>
+      <param name="promotionKind">Kind of the promotion.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.CreatePromotion``1(System.String)">
+      <summary>
+            Creates the promotion.
+            </summary>
+      <typeparam name="TPromotion">The type of the promotion.</typeparam>
+      <param name="promotionKind">Kind of the promotion.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.GetSpecificPromotionKindString``1">
+      <summary>
+            Gets the specific promotion kind string.
+            </summary>
+      <typeparam name="TPromotion">The type of the promotion.</typeparam>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionKindManager.GetPromotionKindStrings``1">
+      <summary>
+            Gets the promotion kind strings.
+            </summary>
+      <typeparam name="TPromotion">The type of the promotion.</typeparam>
+      <returns />
+    </member>
+    <member name="F:NetSteps.Promotions.Common.CoreImplementations.PromotionKindManager._promotionConstructors">
+      <summary>
+            The dictionary of promotions registered with a string representation of their types as a key.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionKindManager.RegistrationRecord">
+      <summary>
+            A provider registration record.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionKindManager.RegistrationRecord.UntypedConstruct">
+      <summary>
+            An untyped provider.
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionKindManager.RegistrationRecord.Implements``1">
+      <summary>
+            Determines if the registration is for a type that implements the specified interface.
+            </summary>
+      <typeparam name="IPromotionType">The type of the promotion type.</typeparam>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Promotions.Common.CoreImplementations.PromotionKindManager.RegistrationRecord`1">
+      <summary>
+            Provides an abstraction for getting an untyped promotion.
+            </summary>
+      <typeparam name="T" />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IEnumerableOfIPromotionExtensions.WithQualification``1(System.Collections.Generic.IEnumerable{NetSteps.Promotions.Common.Model.IPromotion})">
+      <summary>
+            Where clause filtering an IEnumerable of IPromotion to those containing a qualification of some type.
+            </summary>
+      <typeparam name="QualificationType">The type of the qualification.</typeparam>
+      <param name="promotions">The promotions.</param>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IEnumerableOfIPromotionExtensions.WithQualificationPassingForOrder``1(System.Collections.Generic.IEnumerable{NetSteps.Promotions.Common.Model.IPromotion},NetSteps.Data.Common.Context.IOrderContext)">
+      <summary>
+            Where clause filtering an IEnumerable of IPromotion to those containing a qualification of some type that matches a provided order context.
+            </summary>
+      <typeparam name="QualificationType">The type of the qualification.</typeparam>
+      <param name="promotions">The promotions.</param>
+      <param name="orderContext">The order context.</param>
+      <returns />
+    </member>
+    <member name="T:NetSteps.Promotions.Common.IPromotionUnitOfWork">
+      <summary>
+            I don't know what this does. Build was broken when I got to it, so I'm just getting it to work
+            </summary>
+    </member>
+    <member name="T:NetSteps.Promotions.Common.ModuleWireup">
+      <summary>
+            Wireup command called at bootstrap time by the wireup coordinator.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.ModuleWireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+      <summary>
+            Wires this module.
+            </summary>
+      <param name="coordinator">the coordinator</param>
+      <seealso cref="T:NetSteps.Encore.Core.Wireup.IWireupCoordinator" />
+    </member>
+    <member name="T:NetSteps.Promotions.Common.Repository.IPromotionRepository">
+      <summary>
+            Promotion repository with matching.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.InsertPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Inserts the promotion.
+            </summary>
+      <param name="promotion">The promotion.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="InsertPromotion requires a non-null promotion." exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="InsertPromotion requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <ensures csharp="result.PromotionID != 0" vb="result.PromotionID &lt;&gt; 0">result.PromotionID != 0</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.UpdateExistingPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Updates an existing promotion.
+            </summary>
+      <param name="promotion">The promotion.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="UpdateExistingPromotion requires a non-null promotion." exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="UpdateExistingPromotion requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="UpdateExistingPromotion requires promotion with PromotionID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotion.PromotionID &gt; 0" vb="promotion.PromotionID &gt; 0">promotion.PromotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotion.PromotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.RetrievePromotion(System.Int32,NetSteps.Data.Common.IUnitOfWork)">
+      <summary>
+            Retrieves the promotion.
+            </summary>
+      <param name="promotionID">The promotion ID.</param>
+      <param name="unitOfWork">The unit of work.</param>
+      <returns />
+      <requires description="RetrievePromotion requires promotionID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotionID &gt; 0" vb="promotionID &gt; 0">promotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.RetrievePromotions(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion},System.Collections.Generic.IEnumerable{System.String})">
+      <summary>
+            Retrieves the promotions.
+            </summary>
+      <param name="unitOfWork">The unit of work.</param>
+      <param name="statusTypes">The status types.</param>
+      <param name="filter">The filter.</param>
+      <param name="ofKinds">The of kinds.</param>
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="ofKinds != null" vb="ofKinds &lt;&gt; Nothing">ofKinds != null</requires>
+      <exception cref="T:System.ArgumentNullException">ofKinds == null</exception>
+      <requires description="RetrievePromotions requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.RetrievePromotionIDByPromotionQualificationID(NetSteps.Promotions.Common.IPromotionUnitOfWork,System.Int32)">
+      <summary>
+            Retrieves the promotion ID by a child promotion qualification ID.
+            </summary>
+      <param name="unitOfWork">The unit of work.</param>
+      <param name="promotionQualificationID">The promotion qualification ID.</param>
+      <returns />
+      <requires description="RetrievePromotionIDByPromotionQualificationID requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="RetrievePromotionIDByPromotionQualificationID requires promotionQualificationID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotionQualificationID &gt; 0" vb="promotionQualificationID &gt; 0">promotionQualificationID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionQualificationID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Repository.IPromotionRepository.RetrievePromotionIDs(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,NetSteps.Promotions.Common.IPromotionInterval,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>
+            Retrieves the promotion Ids.
+            </summary>
+      <param name="unitOfWork">The unit of work.</param>
+      <param name="statusTypes">The status types.</param>
+      <param name="searchInterval">The search interval.</param>
+      <param name="ofKinds">The of kinds.</param>
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="ofKinds != null" vb="ofKinds &lt;&gt; Nothing">ofKinds != null</requires>
+      <exception cref="T:System.ArgumentNullException">ofKinds == null</exception>
+      <requires description="RetrievePromotionIDs requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.ExtensionProviderKey">
+      <getter>
+        <ensures csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotion.ValidFor``1(System.String,``0)">
+      <requires exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="(object)value != null" vb="((Object)value) &lt;&gt; Nothing">(object)value != null</requires>
+      <exception cref="T:System.ArgumentNullException">(object)value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotion.PromotionQualifications">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+      <setter>
+        <requires description="Promotion qualifications cannot be null." exception="T:System.ArgumentNullException" csharp="value != null" vb="value &lt;&gt; Nothing">value != null</requires>
+      </setter>
+      <exception cref="T:System.ArgumentNullException">value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotion.PromotionRewards">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+      <setter>
+        <requires description="Promotion rewards cannot be null." exception="T:System.ArgumentNullException" csharp="value != null" vb="value &lt;&gt; Nothing">value != null</requires>
+      </setter>
+      <exception cref="T:System.ArgumentNullException">value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotion.Description">
+      <setter>
+        <requires exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(value)" vb="Not IsNullOrEmpty(value)">!string.IsNullOrEmpty(value)</requires>
+      </setter>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(value)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotion.AssociatedPropertyNames">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotion.PromotionKind">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)">
+      <requires exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ExtensionProviderKey">
+      <getter>
+        <ensures csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.AssociatedPropertyNames">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotionRewardItemDictionary.GetOrderLineEffects(NetSteps.Promotions.Common.Model.IPromotionRewardItemSelection)">
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotionRewardItemDictionary.AddItemSelection(NetSteps.Promotions.Common.Model.IPromotionRewardItemSelection)">
+      <requires exception="T:System.ArgumentNullException" csharp="selection != null" vb="selection &lt;&gt; Nothing">selection != null</requires>
+      <exception cref="T:System.ArgumentNullException">selection == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotionRewardItemDictionary.AddEffect(NetSteps.Promotions.Common.Model.IPromotionRewardItemSelection,NetSteps.Promotions.Common.Model.IPromotionRewardItemEffect)">
+      <requires exception="T:System.ArgumentNullException" csharp="selection != null" vb="selection &lt;&gt; Nothing">selection != null</requires>
+      <exception cref="T:System.ArgumentNullException">selection == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="modification != null" vb="modification &lt;&gt; Nothing">modification != null</requires>
+      <exception cref="T:System.ArgumentNullException">modification == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Model.IPromotionRewardItemDictionary.AddToAdjustmentProfile(NetSteps.Data.Common.Context.IOrderContext,NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile)">
+      <requires exception="T:System.ArgumentNullException" csharp="context != null" vb="context &lt;&gt; Nothing">context != null</requires>
+      <exception cref="T:System.ArgumentNullException">context == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="adjustmentProfile != null" vb="adjustmentProfile &lt;&gt; Nothing">adjustmentProfile != null</requires>
+      <exception cref="T:System.ArgumentNullException">adjustmentProfile == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionRewardItemDictionary.Selections">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionReward.PromotionRewardKind">
+      <getter>
+        <ensures csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionReward.Effects">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.Model.IPromotionReward.OrderOfApplication">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.GetRewardHandler(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." inheritedFrom="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.GetRewardHandler(System.String)" inheritedFromTypeName="IPromotionRewardHandlerManager" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.GetRewardHandler``1(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." inheritedFrom="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.GetRewardHandler``1(System.String)" inheritedFromTypeName="IPromotionRewardHandlerManager" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.PromotionRewardHandlerManager.RegisterHandler``1(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." inheritedFrom="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.RegisterHandler``1(System.String)" inheritedFromTypeName="IPromotionRewardHandlerManager" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.CoreImplementations.NonCachingPromotionDataProvider.FindPromotions(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,NetSteps.Promotions.Common.IPromotionInterval,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion},System.Collections.Generic.IEnumerable{System.String})">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotions(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,NetSteps.Promotions.Common.IPromotionInterval,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion},System.Collections.Generic.IEnumerable{System.String})" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="ofKinds != null" vb="ofKinds &lt;&gt; Nothing">ofKinds != null</requires>
+      <exception cref="T:System.ArgumentNullException">ofKinds == null</exception>
+      <requires description="FindPromotions requires a non-null unitOfWork." inheritedFrom="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotions(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,NetSteps.Promotions.Common.IPromotionInterval,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion},System.Collections.Generic.IEnumerable{System.String})" inheritedFromTypeName="IPromotionDataProvider" exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotion(System.Int32,NetSteps.Data.Common.IUnitOfWork)">
+      <requires description="FindPromotion requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="FindPromotion requires promotionID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotionID &gt; 0" vb="promotionID &gt; 0">promotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotions(NetSteps.Promotions.Common.IPromotionUnitOfWork,NetSteps.Promotions.Common.Model.PromotionStatus,NetSteps.Promotions.Common.IPromotionInterval,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion},System.Collections.Generic.IEnumerable{System.String})">
+      <requires exception="T:System.ArgumentNullException" csharp="ofKinds != null" vb="ofKinds &lt;&gt; Nothing">ofKinds != null</requires>
+      <exception cref="T:System.ArgumentNullException">ofKinds == null</exception>
+      <requires description="FindPromotions requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.FindPromotionIDByPromotionQualificationID(NetSteps.Promotions.Common.IPromotionUnitOfWork,System.Int32)">
+      <requires description="FindPromotionIDByPromotionQualificationID requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="FindPromotionIDByPromotionQualificationID requires promotionQualificationID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotionQualificationID &gt; 0" vb="promotionQualificationID &gt; 0">promotionQualificationID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionQualificationID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.AddPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <requires description="AddPromotion requires a non-null promotion." exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="AddPromotion requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.Cache.IPromotionDataProvider.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.IUnitOfWork)">
+      <requires description="UpdatePromotion requires a non-null promotion." exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires description="UpdatePromotion requires a non-null unitOfWork." exception="T:System.ArgumentNullException" csharp="unitOfWork != null" vb="unitOfWork &lt;&gt; Nothing">unitOfWork != null</requires>
+      <exception cref="T:System.ArgumentNullException">unitOfWork == null</exception>
+      <requires description="UpdatePromotion requires promotion with PromotionID &gt; 0." exception="T:System.ArgumentOutOfRangeException" csharp="promotion.PromotionID &gt; 0" vb="promotion.PromotionID &gt; 0">promotion.PromotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotion.PromotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionValidator.CheckValidity(NetSteps.Promotions.Common.Model.IPromotion)">
+      <requires exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.AddPromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Promotions.Common.Model.IPromotionState@)">
+      <requires exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <ensures csharp="promotionState != null" vb="promotionState &lt;&gt; Nothing">promotionState != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.UpdatePromotion(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Promotions.Common.Model.IPromotionState@)">
+      <requires exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <ensures csharp="promotionState != null" vb="promotionState &lt;&gt; Nothing">promotionState != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.IsInstanceOfPromotion(NetSteps.Data.Common.Entities.IOrderAdjustment,NetSteps.Promotions.Common.Model.IPromotion)">
+      <requires exception="T:System.ArgumentNullException" csharp="adjustment != null" vb="adjustment &lt;&gt; Nothing">adjustment != null</requires>
+      <exception cref="T:System.ArgumentNullException">adjustment == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotion(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="promotionID &gt; 0" vb="promotionID &gt; 0">promotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotion``1(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="promotionID &gt; 0" vb="promotionID &gt; 0">promotionID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">promotionID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotion(System.Predicate{NetSteps.Promotions.Common.Model.IPromotion})">
+      <requires exception="T:System.ArgumentNullException" csharp="filter != null" vb="filter &lt;&gt; Nothing">filter != null</requires>
+      <exception cref="T:System.ArgumentNullException">filter == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotion``1(System.Predicate{``0})">
+      <requires exception="T:System.ArgumentNullException" csharp="filter != null" vb="filter &lt;&gt; Nothing">filter != null</requires>
+      <exception cref="T:System.ArgumentNullException">filter == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.IsInstanceOfPromotion(NetSteps.OrderAdjustments.Common.Model.IOrderAdjustmentProfile,NetSteps.Promotions.Common.Model.IPromotion)">
+      <requires exception="T:System.ArgumentNullException" csharp="profile != null" vb="profile &lt;&gt; Nothing">profile != null</requires>
+      <exception cref="T:System.ArgumentNullException">profile == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="addedPromotion != null" vb="addedPromotion &lt;&gt; Nothing">addedPromotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">addedPromotion == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotions(NetSteps.Promotions.Common.Model.PromotionStatus,System.Predicate{NetSteps.Promotions.Common.Model.IPromotion})">
+      <requires exception="T:System.ArgumentNullException" csharp="filter != null" vb="filter &lt;&gt; Nothing">filter != null</requires>
+      <exception cref="T:System.ArgumentNullException">filter == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetPromotions``1(NetSteps.Promotions.Common.Model.PromotionStatus,System.Predicate{``0})">
+      <requires exception="T:System.ArgumentNullException" csharp="filter != null" vb="filter &lt;&gt; Nothing">filter != null</requires>
+      <exception cref="T:System.ArgumentNullException">filter == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionService.GetQualifiedPromotions``1(NetSteps.Data.Common.Context.IOrderContext,System.Predicate{``0})">
+      <requires exception="T:System.ArgumentNullException" csharp="orderContext != null" vb="orderContext &lt;&gt; Nothing">orderContext != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderContext == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="filter != null" vb="filter &lt;&gt; Nothing">filter != null</requires>
+      <exception cref="T:System.ArgumentNullException">filter == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.GetRewardHandler(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.GetRewardHandler``1(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionRewardHandlerManager.RegisterHandler``1(System.String)">
+      <requires description="PromotionRewardHandlerManager.GetRewardHandler cannot have a null or empty rewardKindName argument." exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(rewardKindName)" vb="Not IsNullOrEmpty(rewardKindName)">!string.IsNullOrEmpty(rewardKindName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(rewardKindName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotionReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotionReward.Effects">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_Effects" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotionReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotion" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotion" exception="T:System.ArgumentNullException" csharp="(object)value != null" vb="((Object)value) &lt;&gt; Nothing">(object)value != null</requires>
+      <exception cref="T:System.ArgumentNullException">(object)value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.PromotionQualifications">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionQualifications" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+      <setter>
+        <requires description="Promotion qualifications cannot be null." inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.set_PromotionQualifications(System.Collections.Generic.IDictionary{System.String,NetSteps.Promotions.Common.Model.IPromotionQualificationExtension})" inheritedFromTypeName="IPromotion" exception="T:System.ArgumentNullException" csharp="value != null" vb="value &lt;&gt; Nothing">value != null</requires>
+      </setter>
+      <exception cref="T:System.ArgumentNullException">value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.PromotionRewards">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionRewards" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+      <setter>
+        <requires description="Promotion rewards cannot be null." inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.set_PromotionRewards(System.Collections.Generic.IDictionary{System.String,NetSteps.Promotions.Common.Model.IPromotionReward})" inheritedFromTypeName="IPromotion" exception="T:System.ArgumentNullException" csharp="value != null" vb="value &lt;&gt; Nothing">value != null</requires>
+      </setter>
+      <exception cref="T:System.ArgumentNullException">value == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.Description">
+      <setter>
+        <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.set_Description(System.String)" inheritedFromTypeName="IPromotion" exception="T:System.ArgumentException" csharp="!IsNullOrEmpty(value)" vb="Not IsNullOrEmpty(value)">!string.IsNullOrEmpty(value)</requires>
+      </setter>
+      <exception cref="T:System.ArgumentException">string.IsNullOrEmpty(value)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Common.ModelConcrete.BasePromotion.PromotionKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionKind" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Common.IPromotionOrderContextQualifier.GetQualificationResult(NetSteps.Promotions.Common.Model.IPromotion,NetSteps.Data.Common.Context.IOrderContext)">
+      <requires exception="T:System.ArgumentNullException" csharp="promotion != null" vb="promotion &lt;&gt; Nothing">promotion != null</requires>
+      <exception cref="T:System.ArgumentNullException">promotion == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="orderContext != null" vb="orderContext &lt;&gt; Nothing">orderContext != null</requires>
+      <exception cref="T:System.ArgumentNullException">orderContext == null</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+  </members>
+</doc>

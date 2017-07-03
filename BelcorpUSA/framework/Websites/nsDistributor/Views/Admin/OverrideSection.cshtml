@@ -1,0 +1,104 @@
+@model NetSteps.Data.Entities.HtmlSection
+@section head {
+    <link type="text/css" rel="Stylesheet" href="@Url.Content("~/Content/CSS/Edit.css")" />
+
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('pwsAdmin');
+            $('#btnUseCorporate').click(function () {
+                var t = $(this);
+                if (showLoading)
+                    showLoading(t);
+                $.post('@Url.Resolve("~/Admin/UseCorporateContent")', { sectionId: '@Model.HtmlSectionID' }, function (response) {
+                    if (response.redirect) {
+                        window.location = response.redirectUrl;
+                    } else if (response.result) {
+                        window.location = '@Url.Resolve("~/Admin")';
+                    } else {
+                        if (hideLoading)
+                            hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#btnUseMy').click(function () {
+                var t = $(this);
+                if (showLoading)
+                    showLoading(t);
+                $.post('@Url.Resolve("~/Admin/UseMyContent")', { sectionId: '@Model.HtmlSectionID' }, function (response) {
+                    if (response.redirect) {
+                        window.location = response.redirectUrl;
+                    } else if (response.result) {
+                        window.location = '@Url.Resolve("~/Admin")';
+                    } else {
+                        if (hideLoading)
+                            hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            if ($.browser.msie && $.browser.version < 8) {
+                $('#browserMessage').show();
+            }
+        });
+    </script>
+
+}
+@{
+    var site = SiteCache.GetSiteByID(NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite.SiteID);
+    var baseSite = site.IsBase ? site : SiteCache.GetSiteByID(site.BaseSiteID.ToInt());
+    var overriddenContent = site.HtmlSectionContents.OrderByDescending(hsc => hsc.HtmlContent.PublishDate).FirstOrDefault(hsc => hsc.HtmlSectionID == Model.HtmlSectionID && hsc.HtmlContent.LanguageID == NetSteps.Data.Entities.ApplicationContext.Instance.CurrentLanguageID);
+    bool overridden = overriddenContent != default(HtmlSectionContent);
+    bool overriddenActive = overridden && overriddenContent.HtmlContent.HtmlContentStatusID == (int)Constants.HtmlContentStatus.Production;
+}
+<div class="WelcomeBlock SectionHeader">
+    <h1>
+        @Html.Term(Model.SectionName, Model.SectionName.PascalToSpaced())</h1>
+    <a href="@Url.Resolve("~/Admin")">
+        @Html.Term("BackToDashboard", "Back to the dashboard")</a> <span id="browserMessage" style="color: Red; font-weight: bold; display: none;">
+            @Html.Term("OldIE", "We have detected that you are using an older version of Internet Explorer.  We recommend that you upgrade your browser to the newest version.")</span>
+</div>
+<div id="corporateContent" class="FL splitCol">
+    <h2 class="UI-mainBg brdrAll pad5@(overriddenActive ? "" : " mb10")">
+        @Html.Term("CorporateContent", "Corporate Content")</h2>
+    @if (overriddenActive)
+    {
+        <div id="corporateControls" class="UI-secBg NS-pad5 NS-brdrAll brdrAll GridUtility mb10">
+            <div>
+                <ul class="NS-inlineNav">
+                    <li><a id="btnUseCorporate" href="javascript:void(0);" class="UI-icon-container"><span class="UI-icon icon-save"></span><span>
+                        @Html.Term("UseCorporateContent", "Use Corporate Content")</span> </a></li>
+                </ul>
+                <span class="clr"></span>
+            </div>
+        </div>
+    }
+    <div class="preview">
+        @Html.Raw(Model.ToDisplay(baseSite, NetSteps.Common.Constants.ViewingMode.Production))
+    </div>
+</div>
+<div id="myContent" class="FR splitCol">
+    <h2 class="UI-mainBg brdrAll pad5">
+        @Html.Term("MyContent", "My Content")</h2>
+    <div id="myControls" class="UI-secBg NS-pad5 NS-brdrAll brdrAll GridUtility mb10">
+        <div>
+            <ul class="NS-inlineNav">
+                <li><a id="btnAddOrEdit" href="@Url.Resolve("~/Admin/EditContent", new { sectionId = Model.HtmlSectionID, contentId = overridden ? overriddenContent.HtmlContentID : (int?)null })" class="UI-icon-container"><span class="UI-icon icon-edit"></span><span>@(overridden ? Html.Term("EditMyContent", "Edit My Content") : Html.Term("OverrideCorporateContent", "Override Corporate Content"))</span></a> </li>
+                <li><a id="btnUseMy" href="javascript:void(0);" class="UI-icon-container" style="@(overridden && !overriddenActive ? "" : "display:none;")"><span class="UI-icon icon-save"></span><span>
+                    @Html.Term("UseMyContent", "Use My Content")</span> </a></li>
+            </ul>
+            <span class="clr"></span>
+        </div>
+    </div>
+    <div id="myContentPreview" class="preview">
+        <input type="hidden" id="contentId" value="@(overridden ? Model.ProductionContentForDisplay(site).HtmlContentID.ToString() : "")" />
+        @Html.Raw(overridden ? Model.ToDisplay(site, overriddenContent.HtmlContent.HtmlContentStatusID == (int)Constants.HtmlContentStatus.Production ? NetSteps.Common.Constants.ViewingMode.Production : NetSteps.Common.Constants.ViewingMode.Archive) : "N/A")
+    </div>
+</div>
+<div id="modal" class="LModal jqmWindow">
+    <div class="mContent">
+    </div>
+</div>
+@Html.Partial("MessageCenter")

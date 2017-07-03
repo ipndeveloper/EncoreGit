@@ -1,0 +1,59 @@
+﻿<script type="text/javascript" src="@Href("~/Resource/Scripts/jquery.alphanumeric.pack.js")"></script>
+<script type="text/javascript">
+
+    function orderChanged() {
+        $('#SavePage').show();
+    }
+
+    function getPaymentMethodId() {
+        if ($('#sPaymentMethod').is(':visible')) {
+            return $('#sPaymentMethod').val();
+        }
+        else {
+            return -1;
+        }
+    }
+
+    function getSelectedPaymentMethod() {
+        $('#paymentMethodContainer .paymentMethodDisplay').hide();
+        $('#paymentMethod' + $('#sPaymentMethod').val()).show();
+        orderChanged();
+    }
+
+    function getSelectedShippingProfile() {
+        $('#shippingAddressContainer .shippingAddressDisplay').hide();
+        $('#shippingAddress' + $('#sShippingAddress').val()).show();
+        orderChanged();
+    }
+
+    function lnkUpdate(type) {
+        $("#lnkUpdate" + type).click(function (event) {
+            event.stopPropagation();
+            $("#lnkCancel" + type).parent().show();
+            $('#' + type + 'CurrentlyTo').hide();
+            orderChanged();
+        });
+    }
+
+    function lnkCancel(type) {
+        $("#lnkCancel" + type).click(function (event) {
+            event.stopPropagation();
+            $('#' + type + 'CurrentlyTo').show();
+            $("#lnkCancel" + type).parent().hide();
+        });
+    }
+
+    function onpageLoadHooks() {
+        $('#paymentMethodContainer').hide();
+
+        $('#ProductLoad').hide();
+        $('#autoshipWait').jqm({ modal: true, overlay: 90, overlayClass: 'HModalOverlay' });
+        getSelectedPaymentMethod();
+        $('#sPaymentMethod').change(getSelectedPaymentMethod);
+
+        lnkUpdate('Billing');
+        lnkUpdate('Shipping');
+        lnkCancel('Billing');
+        lnkCancel('Shipping');
+    }
+</script>

@@ -1,0 +1,624 @@
+﻿@model HtmlSectionEditModel
+@{
+    ViewBag.Title = "Edit " + SmallCollectionCache.Instance.HtmlSectionEditTypes.GetById(Model.Section.HtmlSectionEditTypeID).GetTerm() + " Section";
+}
+@section head {
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jcrop.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/timepickr.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jqModal.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/MediaLibrary.css")" />
+    <script src="/fileuploads/resources/ckeditor/3.5.2/ckeditor.js" type="text/javascript"></script>
+    <script src="/fileuploads/resources/ckeditor/3.5.2/adapters/jquery.js" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/fileuploader.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/timepickr.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/jqModal.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('EncoreContentEditor');
+            window.setInterval(function () {
+                $.post('@Href("~/Edit/KeepAlive")');
+            }, 120000);
+
+            $('a.Edit').remove();
+
+            $('#mediaLibrary').jqm({
+                modal: false,
+                trigger: '.MediaLibrary',
+                onShow: function () { $('#mediaLibrary').fadeIn('fast').trigger('resizeHeaders'); }
+            });
+            $('#mediaLibrary .InsertFile').live('click', function () {
+                var currentEnvironment = $('#environmentPicker .current').attr('id'), path = $(this).parent().parent().find('.path').val();
+                if (currentEnvironment == 'Production') {
+                    CKEDITOR.instances.productionBody.insertHtml('<img alt=\x22\x22 src=\x22' + path + '\x22 />');
+                    $('#productionBodyHtml').val(CKEDITOR.instances.productionBody.getData());
+                } else if (currentEnvironment == 'Staging') {
+                    CKEDITOR.instances.stagingBody.insertHtml('<img alt=\x22\x22 src=\x22' + path + '\x22 />');
+                    $('#stagingBodyHtml').val(CKEDITOR.instances.stagingBody.getData());
+                } else {
+                    CKEDITOR.instances.submittedBody.insertHtml('<img alt=\x22\x22 src=\x22' + path + '\x22 />');
+                    $('#submittedBodyHtml').val(CKEDITOR.instances.submittedBody.getData());
+                }
+            });
+
+            $('#publishDate,#copyPublishDate,#copyApprovedPublishDate').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(), yearRange: '-10:+10' });
+            $('#publishTime,#copyPublishTime,#copyApprovedPublishTime').timepickr({ convention: 12 });
+
+            $('div.EnvironmentPicker .environment').click(function () {
+                if (!$(this).parent().hasClass('current')) {
+                    $('div.EnvironmentPicker .current').removeClass('current');
+                    $(this).parent().addClass('current');
+                    $('.EnvironmentContainer').slideUp();
+                    $('.' + $(this).attr('id').replace(/^btn/, '')).slideDown();
+                }
+            }).filter(':last').addClass('last brNNYY');
+
+            var e = getQueryStringValue('environment');
+            if (e) {
+                $('#' + e + ' a').click();
+            }
+
+            var saveContent = function (data, saveButton) {
+                var editors = $('.EnvironmentContainer:visible .editor');
+                if (editors.filter(':visible').length) {
+                    data.body = editors.filter(':visible').val();
+                } else {
+                    data.body = editors.filter(':first').val();
+                }
+                $.post('@Href("~/Edit/SaveCorporateContent")', data, function (response) {
+                    if (hideLoading)
+                        hideLoading(saveButton);
+                    if (response.result) {
+                        showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+                        if (data.status == 'Submitted')
+                            window.location.reload(true);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            },
+
+			savePhoto = function (data, saveButton) {
+			    data.coordinates = $('.EnvironmentContainer:visible .coordinates').val();
+			    data.image = $('.EnvironmentContainer:visible .image').attr('src');
+
+			    if (!data.image) {
+			        showMessage('@Html.Term("PleaseUploadAPhoto", "Please upload a photo.")', true);
+			        if (hideLoading)
+			            hideLoading(saveButton);
+			        return false;
+			    }
+
+			    $.post('@Href("~/Edit/SaveCorporatePhoto")', data, function (response) {
+			        if (hideLoading)
+			            hideLoading(saveButton);
+			        if (response.result) {
+			            showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+			            $.Jcrop['new' + status + 'Photo'](response.croppedFilePath);
+			        } else {
+			            showMessage(response.message, true);
+			        }
+			    });
+			};
+
+            $('#btnSave').click(function () {
+                var t = $(this), data = { sectionId: '@Model.Section.HtmlSectionID' };
+                if (showLoading)
+                    showLoading(t);
+                switch ($('div.EnvironmentPicker .current').attr('id')) {
+                    case 'Production':
+                        data.status = $('#chkPushProductionAsWorkingDraft').is(':checked') ? 'Submitted' : 'Production';
+                        if ($('#contentEditorType').val() == 'Photo' || $('#contentEditorType').val() == 'PhotoCropper') {
+                            return savePhoto(data, t);
+                        } else {
+                            return saveContent(data, t);
+                        }
+                        break;
+                    case 'Staging':
+                        if ($('#chkPushStagingAsWorkingDraft').is(':checked')) {
+                            data.status = 'Submitted';
+                        } else {
+                            data.status = 'Draft';
+                            data.publishDate = $('#publishDate').val();
+                            data.publishTime = $('#publishTime').val();
+                        }
+
+                        if ($('#contentEditorType').val() == 'Photo' || $('#contentEditorType').val() == 'PhotoCropper') {
+                            return savePhoto(data, t);
+                        } else {
+                            return saveContent(data, t);
+                        }
+                        break;
+                    case 'WorkingDraft':
+                        data.status = 'Submitted';
+
+                        if ($('#contentEditorType').val() == 'Photo' || $('#contentEditorType').val() == 'PhotoCropper') {
+                            return savePhoto(data, t);
+                        } else {
+                            return saveContent(data, t);
+                        }
+                        break;
+                    case 'Archive':
+                        var data = { htmlSectionId: '@Model.Section.HtmlSectionID', contentId: $('#currentArchiveId').val() };
+                        data.status = $('#copyToProduction').length ? ($('#copyToProduction').is(':checked') ? 'Production' : 'Draft') : 'Submitted';
+                        if ($('#copyToStaging').is(':checked')) {
+                            data.publishDate = $('#copyPublishDate').val();
+                            data.publishTime = $('#copyPublishTime').val();
+                        }
+                        $.post('@Href("~/Edit/CopyContent")', data, function (response) {
+                            if (hideLoading)
+                                hideLoading(t);
+                            if (response.result) {
+                                //TODO: put the content in the right CKEditor and Html Editor and remove from the archives - DES
+                                window.location.reload();
+                            } else {
+                                showMessage(response.message, true);
+                            }
+                        });
+                        break;
+                    case 'Pushed':
+                        var data = { htmlSectionId: '@Model.Section.HtmlSectionID', contentId: $('#currentPushedId').val() };
+                        data.status = $('#copyPushedToProduction').length ? ($('#copyPushedToProduction').is(':checked') ? 'Production' : 'Draft') : 'Submitted';
+                        if ($('#copyPushedToStaging').is(':checked')) {
+                            data.publishDate = $('#copyPushedPublishDate').val();
+                            data.publishTime = $('#copyPushedPublishTime').val();
+                        }
+                        $.post('@Href("~/Edit/CopyContent")', data, function (response) {
+                            if (hideLoading)
+                                hideLoading(t);
+                            if (response.result) {
+                                //TODO: put the content in the right CKEditor and Html Editor and remove from pushed - DES
+                                window.location.reload();
+                            } else {
+                                showMessage(response.message, true);
+                            }
+                        });
+                        break;
+                    case 'PendingApproval':
+                        if ($('#contentApproved').is(':checked')) {
+                            var data = { htmlSectionId: '@Model.Section.HtmlSectionID', contentId: $('#currentSubmittedId').val() };
+                            data.status = $('#copyApprovedToProduction').is(':checked') ? 'Production' : 'Draft';
+                            if ($('#copyApprovedToStaging').is(':checked')) {
+                                data.publishDate = $('#copyApprovedPublishDate').val();
+                                data.publishTime = $('#copyApprovedPublishTime').val();
+                            }
+                            $.post('@Href("~/Edit/CopyContent")', data, function (response) {
+                                if (hideLoading)
+                                    hideLoading(t);
+                                if (response.result) {
+                                    //TODO: put the content in the right CKEditor and Html Editor and remove from pending - DES
+                                    window.location.reload();
+                                } else {
+                                    showMessage(response.message, true);
+                                }
+                            });
+                        } else {
+                            $.post('@Href("~/Edit/DenyContent")', { contentId: $('#currentSubmittedId').val(), reason: $('#denyContentReason').val() }, function (response) {
+                                if (hideLoading)
+                                    hideLoading(t);
+                                if (response.result) {
+                                    window.location.reload();
+                                } else {
+                                    showMessage(response.message, true);
+                                }
+                            });
+                        }
+                        break;
+                }
+            });
+
+            //Archives
+            var previewContent = function (response) {
+                if (response.result) {
+                    var id = $('div.EnvironmentPicker .current').attr('id');
+                    if (id == 'PendingApproval')
+                        id = 'Submitted';
+
+                    $('#current' + id + 'Id,#select' + id).val(response.contentId);
+
+                    $('#btnPrevious' + id)[response.hasPrevious ? 'removeClass' : 'addClass']('Disabled');
+                    $('#btnNext' + id)[response.hasNext ? 'removeClass' : 'addClass']('Disabled');
+
+                    $('#' + id.toLowerCase() + 'ContentPreview').html(response.preview);
+                    $('#' + id.toLowerCase() + 'Title').html(response.publishedOn);
+
+                } else {
+                    showMessage(response.message, true);
+                }
+            };
+
+            $('#btnPreviousArchive,#btnPreviousPushed,#btnPreviousSubmitted').click(function () {
+                if (!$(this).hasClass('Disabled')) {
+                    $.get('@Href("~/Edit/GetPreviousContent")', { sectionId: $('#htmlSectionId').val(), currentContentId: $('#currentArchiveId').val(), status: $(this).attr('id').replace(/^btnPrevious/, '') }, previewContent);
+                }
+            });
+            $('#btnNextArchive,#btnNextPushed,#btnNextSubmitted').click(function () {
+                if (!$(this).hasClass('Disabled')) {
+                    $.get('@Href("~/Edit/GetNextContent")', { sectionId: $('#htmlSectionId').val(), currentContentId: $('#currentArchiveId').val(), status: $(this).attr('id').replace(/^btnNext/, '') }, previewContent);
+                }
+            });
+            $('#selectArchive,#selectPushed,#selectSubmitted').change(function () {
+                $.get('@Href("~/Edit/GetContentPreview")', { sectionId: $('#htmlSectionId').val(), contentId: $(this).val(), status: $(this).attr('id').replace(/^select/, '') }, previewContent);
+            });
+
+            $('#ProductionPublishingOptions input.baseSite').click(function () {
+                $(this).is(':checked') && $(this).next().fadeIn('fast') || $(this).next().fadeOut('fast');
+            });
+
+            $('#chkPushStagingAsWorkingDraft').click(function () {
+                $(this).is(':checked') && $('#stagingPublishOn').slideUp() || $('#stagingPublishOn').slideDown();
+            });
+
+            $('#PublishingOptions input[name="copyto"]').click(function () {
+                $('#copyToStaging').is(':checked') && $('#copyToStagingPublish').slideDown() || $('#copyToStagingPublish').slideUp();
+            });
+
+            $('#PublishingOptions input[name="copyPushedto"]').click(function () {
+                $('#copyPushedToStaging').is(':checked') && $('#copyPushedToStagingPublish').slideDown() || $('#copyPushedToStagingPublish').slideUp();
+            });
+
+            $('#PublishingOptions input[name="copyApprovedTo"]').click(function () {
+                $('#copyApprovedToStaging').is(':checked') && $('#copyApprovedToStagingPublish').slideDown() || $('#copyApprovedToStagingPublish').slideUp();
+            });
+
+            $('#PublishingOptions input[name="approveContent"]').click(function () {
+                if ($('#' + $(this).val()).is(':hidden')) {
+                    $('#denyContent,#approveContent').slideUp();
+                    $('#' + $(this).val()).slideDown();
+                }
+            });
+        });
+    </script>
+}
+@{
+    var returnUrl = ViewData["ReturnUrl"];
+}
+<input type="hidden" id="htmlSectionId" value="@Model.Section.HtmlSectionID" />
+<input type="hidden" id="contentEditorType" value="@((Constants.HtmlContentEditorType)Model.Section.HtmlContentEditorTypeID)" />
+<div id="EncoreCorpEditMode">
+    <p class="emBreadCrumbs">
+        @if (Model.Page != null)
+        {
+            <a href="@Model.Page.Url">
+                @Model.Page.Translations.GetByLanguageIdOrDefaultForDisplay().Title</a> <text>&gt;</text>
+        }
+        else if (returnUrl != null)
+        {
+            <a href="@returnUrl">
+                @returnUrl</a> <text>&gt;</text>
+        }
+        @SmallCollectionCache.Instance.HtmlSectionEditTypes.GetById(Model.Section.HtmlSectionEditTypeID).GetTerm()</p>
+    <div class="NS-SideColumn EditModeToolColumn">
+        @if (Model.IsEditor && Model.IsApprover)
+        {
+            <div class="emWidget EnvironmentPicker brALL">
+                <div class="emWidgetTitle  brYYNN">
+                    <span>
+                        @Html.Term("Environment")</span></div>
+                <ul id="environmentPicker" class="NS-flatUL nav brdbtmdot">
+                    <li id="Production" class="current"><a id="btnProduction" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("ProductionLIVE", "Production (LIVE)")</span></a></li>
+                    <li id="Staging"><a id="btnStaging" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("Staging")</span></a></li>
+                </ul>
+            </div>
+        }
+        <div class="emWidget EnvironmentPicker NS-brALL">
+            <div class="emWidgetTitle  NS-brYYNN">
+                <span>
+                    @Html.Term("Version")</span></div>
+            <ul id="versionPicker" class="NS-flatUL nav NS-brbtmdot">
+                @if (Model.IsEditor)
+                {
+                    <li id="WorkingDraft" class="@(Model.IsEditor && !Model.IsApprover ? "current" : "")"><a id="btnWorkingDraft" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("WorkingDraft", "Working Draft")</span></a></li>
+                    <li id="Archive"><a id="btnArchives" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("Archives")</span></a></li>
+                    if (Model.PushedContentList.Any())
+                    {
+                    <li id="Pushed"><a id="btnPushed" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("Pushed")</span></a></li>
+                    }
+                }
+                @if (Model.IsApprover && Model.SubmittedContentList.Any())
+                {
+                    <li id="PendingApproval"><a id="btnPendingApproval" href="javascript:void(0);" class="environment"><span>
+                        @Html.Term("PendingApproval", "Pending Approval")</span></a></li>
+                }
+            </ul>
+        </div>
+        <div id="PublishingOptions" class="emWidget PublishDate NS-brALL">
+            <div class="emWidgetTitle  brYYNN">
+                <span>
+                    @Html.Term("PublishingOptions", "Publishing Options")</span></div>
+            <div class="Inner">
+                @if (Model.IsEditor && Model.IsApprover)
+                {
+                    <div id="ProductionPublishingOptions" class="EnvironmentContainer Production">
+                        <p class="NS-lawyer">@Html.Term("ChangesWillReflectImmediately", "Changes will reflect immediately on the live site.")</p>
+                        <input type="checkbox" id="chkPushProductionAsWorkingDraft" /><label for="chkPushProductionAsWorkingDraft">@Html.Term("SaveAsWorkingDraftInstead", "Save as working draft instead")</label>
+                        <hr />
+                        @if (Model.IsPusher)
+                        {
+                            @:Also push this content to:
+                        foreach (var bs in Site.LoadOtherBaseSites(Model.BaseSite))
+                        {
+                            <div style="display: none;">
+                                <!-- version 2 -->
+                                <input type="checkbox" class="baseSite" id="baseSite@(bs.SiteID)" value="@bs.SiteID" /><label for="baseSite@(bs.SiteID)">@bs.Name</label>
+                                <select id="baseSiteLanguage@(bs.SiteID)" style="display:none;">
+                                    @foreach (var language in bs.Languages)
+                                    {
+                                        <option value="@language.LanguageID" @Html.Raw(language.LanguageID == NetSteps.Data.Entities.ApplicationContext.Instance.CurrentLanguageID ? "selected=\"selected\"" : !bs.Languages.Any(l => l.LanguageID == NetSteps.Data.Entities.ApplicationContext.Instance.CurrentLanguageID) && language.LanguageID == bs.DefaultLanguageID ? "selected=\"selected\"" : "")>@language.GetTerm()</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        }
+                    </div>
+                    <div class="NS-FRow EnvironmentContainer Staging" style="display: none;">
+                        <div id="stagingPublishOn">
+                            <label>
+                                @Html.Term("PublishOn", "Publish On"):</label>
+                            <div class="NS-FInput">
+                                <input type="text" id="publishDate" class="DatePicker" value="@(Model.DraftContent == null || !Model.DraftContent.PublishDate.HasValue || Model.DraftContent.PublishDate.Value == DateTime.MinValue ? DateTime.Now.ApplicationNow().ToShortDateString() : Model.DraftContent.PublishDate.Value.ToShortDateString())" /><br />
+                                <input type="text" id="publishTime" class="TimePicker" value="@(Model.DraftContent == null || !Model.DraftContent.PublishDate.HasValue || Model.DraftContent.PublishDate.Value == DateTime.MinValue ? DateTime.Now.ApplicationNow().ToShortTimeString() : Model.DraftContent.PublishDate.Value.ToShortTimeString())" />
+                            </div>
+                            <br />
+                        </div>
+                        <input type="checkbox" id="chkPushStagingAsWorkingDraft" /><label for="chkPushStagingAsWorkingDraft" style="float: none;">@Html.Term("SaveAsWorkingDraftInstead", "Save as working draft instead")</label>
+                    </div>
+                }
+                @if (Model.IsEditor)
+                {
+                    <div class="EnvironmentContainer WorkingDraft" style="@(Model.IsEditor && !Model.IsApprover ? "" : "display: none;")">
+                        @Html.Term("ChangesWillBeSubmittedForApproval", "Changes will be submitted for approval.")
+                    </div>
+                    <div class="EnvironmentContainer Archives" style="display: none;">
+                        @if (Model.IsApprover)
+                        {
+                            <h4>
+                                @Html.Term("CopyContentTo", "Copy content to"):</h4>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Production"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyToProduction" type="radio" checked="checked" name="copyto" />
+                                </div>
+                                <br />
+                            </div>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Staging"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyToStaging" type="radio" name="copyto" />
+                                    <div id="copyToStagingPublish" style="display: none;">
+                                        @Html.Term("GoLiveOn", "Go live on"):
+                                        <br />
+                                        <input id="copyPublishDate" type="text" class="DatePicker" value="@DateTime.Now.AddDays(1).ToShortDateString()" />
+                                        <input id="copyPublishTime" type="text" class="TimePicker" value="@DateTime.Now.AddDays(1).ToShortTimeString()" />
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.Term("ChangesWillBeSubmittedForApproval", "Changes will be submitted for approval.")
+                        }
+                    </div>
+                        if (Model.PushedContentList.Any())
+                        {
+                    <div class="EnvironmentContainer Pushed" style="display: none;">
+                        @if (Model.IsApprover)
+                        {
+                            <h4>
+                                @Html.Term("CopyPushedContentTo", "Copy pushed content to"):</h4>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Production"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyPushedToProduction" type="radio" checked="checked" name="copyPushedTo" />
+                                </div>
+                                <br />
+                            </div>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Staging"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyPushedToStaging" type="radio" name="copyPushedTo" />
+                                    <div id="copyPushedToStagingPublish" style="display: none;">
+                                        @Html.Term("GoLiveOn", "Go live on"):
+                                        <br />
+                                        <input id="copyPushedPublishDate" type="text" class="DatePicker" value="@DateTime.Now.AddDays(1).ToShortDateString()" />
+                                        <input id="copyPushedPublishTime" type="text" class="TimePicker" value="@DateTime.Now.AddDays(1).ToShortTimeString()" />
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.Term("ChangesWillBeSubmittedForApproval", "Changes will be submitted for approval.")
+                        }
+                    </div>
+                        }
+                }
+                @if (Model.IsApprover && Model.SubmittedContentList.Any())
+                {
+                    <div class="EnvironmentContainer PendingApproval" style="display: none;">
+                        <h4>
+                            Approve Content?</h4>
+                        <input id="contentApproved" type="radio" name="approveContent" value="approveContent" /><label for="contentApproved">Approved</label><br />
+                        <input id="contentDenied" type="radio" name="approveContent" value="denyContent" /><label for="contentDenied">Denied</label>
+                        <div id="denyContent" style="display: none;">
+                            <label for="denyContentReason" style="vertical-align: top;">
+                                Reason:</label><textarea id="denyContentReason" cols="" rows="" style="width: 215px; height: 75px; margin-left: 5px;"></textarea>
+                        </div>
+                        <div id="approveContent" style="display: none;">
+                            <h4>
+                                Push to:</h4>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Production"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyApprovedToProduction" type="radio" checked="checked" name="copyApprovedTo" />
+                                </div>
+                                <br />
+                            </div>
+                            <div class="NS-FRow">
+                                <label>
+                                    @Html.Term("Staging"):</label>
+                                <div class="NS-FInput">
+                                    <input id="copyApprovedToStaging" type="radio" name="copyApprovedTo" />
+                                    <div id="copyApprovedToStagingPublish" style="display: none;">
+                                        @Html.Term("GoLiveOn", "Go live on"):
+                                        <br />
+                                        <input id="copyApprovedPublishDate" type="text" class="DatePicker" value="@DateTime.Now.AddDays(1).ToShortDateString()" />
+                                        <input id="copyApprovedPublishTime" type="text" class="TimePicker" value="@DateTime.Now.AddDays(1).ToShortTimeString()" />
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="ContentSavingOptions NS-brNNYY">
+                <p class="">
+                    <a href="javascript:void(0);" class="emButton Primary" id="btnSave"><span>
+                        @Html.Term("Save")</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="NS-ContentColumn EditModeContentColumn">
+        @if (Model.IsEditor && Model.IsApprover)
+        {
+            <div class="ContentEditForm EnvironmentContainer Production">
+                <input type="hidden" id="productionContentId" value="@(Model.ProductionContent == null ? "" : Model.ProductionContent.HtmlContentID.ToString())" />
+                    @{ Html.GetEditor(Model.ProductionContent, Constants.HtmlContentStatus.Production, true); }
+            </div>
+            <div class="ContentEditForm EnvironmentContainer Staging" style="display: none;">
+                <input type="hidden" id="stagingContentId" value="@(Model.DraftContent == null ? "" : Model.DraftContent.HtmlContentID.ToString())" />
+                @{ Html.GetEditor(Model.DraftContent, Constants.HtmlContentStatus.Draft, true); }
+            </div>
+        }
+        @if (Model.IsEditor)
+        {
+            <div class="ContentEditForm EnvironmentContainer WorkingDraft" style="@(Model.IsEditor && !Model.IsApprover ? "" : "display: none;")">
+                <input type="hidden" id="workingModel.DraftContentId" value="@(Model.WorkingDraft == null ? "" : Model.WorkingDraft.HtmlContentID.ToString())" />
+                @{ Html.GetEditor(Model.WorkingDraft == null ? Model.ProductionContent : Model.WorkingDraft, Constants.HtmlContentStatus.Submitted, true); }
+            </div>
+            <div class="ContentEditForm EnvironmentContainer Archives" style="display: none;">
+                <h1 id="archiveTitle" class="ArchiveTitle">
+                    @{
+                   
+                   var currentArchive = Model.ArchiveContentList.FirstOrDefault();
+                   var latestContent = currentArchive;
+                    }
+                    @if (latestContent != null)
+                    {
+                        @latestContent.PublishDate.ToStringDisplay(Model.Culture)
+                    }</h1>
+                <input type="hidden" id="currentArchiveId" value="@(latestContent == null ? "" : latestContent.HtmlContentID.ToString())" />
+                <div class="GridUtility">
+                    <select id="selectArchive">
+                        @foreach (var archive in Model.ArchiveContentList)
+                        {
+                            <option value="@archive.HtmlContentID">
+                                @archive.PublishDate.ToStringDisplay(Model.Culture)</option>
+                        }
+                    </select>
+                    <div class="FR">
+                        <a id="btnPreviousArchive" href="javascript:void(0);" class="IconText Prev@(!Model.ArchiveContentList.HasPreviousItem ? "" : " Disabled")"><span>Prev</span></a> <a id="btnNextArchive" href="javascript:void(0);" class="IconText Next@(!Model.ArchiveContentList.HasNextItem ? "" : " Disabled")"><span>Next</span></a>
+                    </div>
+                    <span class="ClearAll"></span>
+                </div>
+                <div id="archiveContentPreview" class="archiveContentPreview">
+                    @Html.Raw(latestContent == null ? "" : latestContent.BuildContent())
+                </div>
+            </div>
+                        if (Model.PushedContentList.Any())
+                        {
+            <div class="EnvironmentContainer Pushed" style="display: none;">
+                <h1 id="pushedTitle" class="ArchiveTitle">
+                    @{
+                            var pushedContent = new NetSteps.Common.Base.OrderedList<HtmlContent>(Model.PushedContentList.OrderByDescending(hc => hc.PublishDate));
+                            pushedContent.CurrentItem = pushedContent.FirstOrDefault();
+                            var latestPushed = pushedContent.CurrentItem;
+                    }
+                    @if (latestPushed != null)
+                    {
+                        @(latestPushed.CreatedByUserID.HasValue ? CachedData.GetUser(latestPushed.CreatedByUserID.ToInt()).Username + " - " : Html.Term("N/A") + " - ")
+                        @latestPushed.PublishDate.ToStringDisplay(Model.Culture)
+                    }</h1>
+                <input type="hidden" id="currentPushedId" value="@(latestPushed == null ? "" : latestPushed.HtmlContentID.ToString())" />
+                <div class="GridUtility">
+                    <select id="selectPushed">
+                        @foreach (var pushed in pushedContent)
+                        {
+                            <option value="@pushed.HtmlContentID">
+                                @(pushed.CreatedByUserID.HasValue ? CachedData.GetUser(pushed.CreatedByUserID.ToInt()).Username : Html.Term("N/A"))<text>&nbsp;-&nbsp;</text>@pushed.PublishDate.ToStringDisplay(Model.Culture)</option>
+                        }
+                    </select>
+                    <div class="FR">
+                        <a id="btnPreviousPushed" href="javascript:void(0);" class="IconText Prev@(!pushedContent.HasPreviousItem ? "" : " Disabled")"><span>Prev</span></a> <a id="btnNextPushed" href="javascript:void(0);" class="IconText Next@(!pushedContent.HasNextItem ? "" : " Disabled")"><span>Next</span></a>
+                    </div>
+                    <span class="ClearAll"></span>
+                </div>
+                <div id="pushedContentPreview" class="pushedContentPreview">
+                    @Html.Raw(latestPushed == null ? "" : latestPushed.BuildContent())
+                </div>
+            </div>
+                        }
+        }
+        @if (Model.IsApprover && Model.SubmittedContentList.Any())
+        {
+            <div class="EnvironmentContainer PendingApproval" style="display: none;">
+                <h1 id="submittedTitle" class="ArchiveTitle">
+                    @{
+            var submittedContent = new NetSteps.Common.Base.OrderedList<HtmlContent>(Model.SubmittedContentList.OrderByDescending(hc => hc.PublishDate));
+            submittedContent.CurrentItem = submittedContent.FirstOrDefault();
+            var latestSubmitted = submittedContent.CurrentItem;
+                    }
+                    @if (latestSubmitted != null)
+                    {
+                    
+                        @(latestSubmitted.CreatedByUserID.HasValue ? CachedData.GetUser(latestSubmitted.CreatedByUserID.ToInt()).Username + " - " : Html.Term("N/A") + " - ")
+                        @latestSubmitted.PublishDate.ToStringDisplay(Model.Culture)
+                    
+                    }</h1>
+                <input type="hidden" id="currentSubmittedId" value="@(latestSubmitted == null ? "" : latestSubmitted.HtmlContentID.ToString())" />
+                <div class="GridUtility">
+                    <select id="selectSubmitted">
+                        @foreach (var submitted in submittedContent)
+                        {
+                            <option value="@submitted.HtmlContentID">
+                            @(submitted.CreatedByUserID.HasValue ? CachedData.GetUser(submitted.CreatedByUserID.ToInt()).Username+" - " : Html.Term("N/A")+" - ")@submitted.PublishDate.ToStringDisplay(Model.Culture)</option>
+						
+                        }
+                    </select>
+                    <div class="FR">
+                        <a id="btnPreviousSubmitted" href="javascript:void(0);" class="IconText Prev@(!submittedContent.HasPreviousItem ? "" : " Disabled")"><span>Prev</span></a> <a id="btnNextSubmitted" href="javascript:void(0);" class="IconText Next@(!submittedContent.HasNextItem ? "" : " Disabled")"><span>Next</span></a>
+                    </div>
+                    <span class="ClearAll"></span>
+                </div>
+                <div id="submittedContentPreview" class="pendingContentPreview">
+                    @Html.Raw(latestSubmitted == null ? "" : latestSubmitted.BuildContent())
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@if (Model.IsEditor)
+{
+    @Html.Partial("MediaLibrary", new MediaLibraryModel()
+{
+    SystemBaseUrl = NetSteps.Common.Configuration.ConfigurationManager.GetAbsoluteFolder("CMS"),
+    WebBaseUrl = NetSteps.Common.Configuration.ConfigurationManager.GetWebFolder("CMS"),
+    AllowImageInsert = true
+})
+}
+@Html.Partial("MessageCenter")

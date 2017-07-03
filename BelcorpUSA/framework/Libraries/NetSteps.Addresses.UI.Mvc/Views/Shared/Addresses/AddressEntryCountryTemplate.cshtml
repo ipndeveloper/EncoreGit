@@ -1,0 +1,36 @@
+﻿@model NetSteps.Addresses.UI.Common.Models.IAddressUIModel
+@using NetSteps.Addresses.UI.Mvc.Controllers;
+@using NetSteps.Addresses.UI.Common.Services;
+@using NetSteps.Encore.Core.IoC;
+@using NetSteps.Addresses.UI.Mvc.Models;
+@{    
+    IAddressesService service = Create.New<IAddressesService>();
+    ViewContext.FormContext = new FormContext();
+    var settings = service.GetCountrySettings(Model.CountryCode);
+    
+    var countrySettingCleansingMode = 
+        settings.RequiresScrubbing 
+        ? "ns.addressEditor.prototype.consts.cleansingMode.none"
+        : "ns.addressEditor.prototype.consts.cleansingMode.required";
+        
+    var countrySettingAllowPostalCodeLookup = 
+        settings.PostalCodeLookupEnabled 
+        ? "ns.addressEditor.prototype.consts.boolOverride.yes"
+        : "ns.addressEditor.prototype.consts.boolOverride.no";
+    
+}
+<script language="javascript">
+    ns.addressEditors['@ViewData["clientSideAddressObjID"]'].cleanseMode = '@countrySettingCleansingMode';
+    ns.addressEditors['@ViewData["clientSideAddressObjID"]'].allowPostalCodeLookup = '@countrySettingAllowPostalCodeLookup';
+</script>
+@Html.EditorFor( (m)=>m )
+
+<div id="@{Write(ViewData["clientSideAddressHtmlID"]);}CleanseValidation" style="display:none;">
+    
+</div>
+<div id="@{Write(ViewData["clientSideAddressHtmlID"]);}CleanseWindow" style="display:none;">
+    <table><tr>
+        <td>@Html.EditorFor((m) => m)</td>
+        <td data-bind="foreach: suggesstions">@Html.DisplayFor((m) => m)</td>
+    </tr></table>
+</div>

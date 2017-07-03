@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Default" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Condition="$(BuildToolsRoot) == ''">
+		<BuildToolsRoot>$(MSBuildThisFileDirectory).build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\.build\trunk\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\..\.build\</BuildToolsRoot>
+		<BuildToolsRoot Condition="!Exists('$(BuildToolsRoot)BuildTools.targets')">$(MSBuildThisFileDirectory)..\..\..\..\..\.build\trunk\</BuildToolsRoot>
+	</PropertyGroup>
+	<Import Condition="Exists('$(BuildToolsRoot)BuildTools.targets')" Project="$(BuildToolsRoot)BuildTools.targets" />
+	<UsingTask TaskName="TransformXml" AssemblyFile="$(BuildToolsRoot)\3rdParty\SlowCheetah\v2.5.10.2\SlowCheetah.Xdt.dll"/>
+	<UsingTask TaskName="MsDeploy" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll"/>
+	<Import Condition="Exists('$(MSBuildThisFileDirectory)Version.targets')" Project="$(MSBuildThisFileDirectory)Version.targets" />
+	<PropertyGroup>
+		<VersionMajor Condition="'$(VersionMajor)' == ''">0</VersionMajor>
+		<VersionMinor Condition="'$(VersionMinor)' == ''">1</VersionMinor>
+		<VersionBuild Condition="'$(VersionBuild)' == ''">0</VersionBuild>
+		<VersionRevision Condition="'$(VersionRevision)' == ''">0</VersionRevision>
+	</PropertyGroup>
+	<PropertyGroup>
+		<!--
+			Tools
+		-->
+		<MSDeploy>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\IIS Extensions\MSDeploy\3\@InstallPath)</MSDeploy>
+		<MSDeploy>$(MSDeploy)msdeploy.exe</MSDeploy>
+		<SqlTransmogrifier>$(BuildToolsRoot)\NetSteps\Transmogrifier\SqlTransmogrifier.exe</SqlTransmogrifier>
+		<!--
+			Configuration
+		-->
+		<Configuration Condition="$(Configuration) == ''">Debug</Configuration>
+		<Platform Condition="$(Platform) == ''">AnyCPU</Platform>
+		<ClientName Condition="$(ClientName) == ''">Encore</ClientName>
+		<BuildNumber Condition="$(BuildNumber) == ''">0.0.0.0</BuildNumber>
+		<FrameworkPath Condition="$(FrameworkPath) == ''">$(MSBuildThisFileDirectory)</FrameworkPath>
+		<BuildRoot Condition="$(BuildRoot) == ''">$(MSBuildThisFileDirectory)obj\</BuildRoot>
+		<BuildPath Condition="$(BuildPath) == ''">$(BuildRoot)</BuildPath>
+		<PublishRoot Condition="$(PublishRoot) == ''">$(MSBuildThisFileDirectory)Artifacts\</PublishRoot>
+		<PublishPath Condition="$(PublishPath) == ''">$(PublishRoot)$(Configuration)\Published\</PublishPath>
+		<PackagePath Condition="$(PackagePath) == ''">$(PublishRoot)$(Configuration)\Packaged\</PackagePath>
+	</PropertyGroup>
+	<!--
+		Default set of artifacts created as part of the Encore product suite
+	-->
+	<ItemGroup>
+		<Artifact Include="$(FrameworkPath)Sql\Deployments\*.sql">
+			<Type>Sql</Type>
+			<Name>Framework</Name>
+			<Description>Framework Database Change Scripts</Description>
+			<BuildPath>Sql\</BuildPath>
+			<PublishPath>Sql\</PublishPath>
+			<PackagePath>DatabaseScripts\</PackagePath>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)..\Sql\Deployments\*.sql">
+			<Type>Sql</Type>
+			<Name>$(ClientName)</Name>
+			<Description>$(ClientName) Database Change Scripts</Description>
+			<BuildPath>Sql\</BuildPath>
+			<PublishPath>Sql\</PublishPath>
+			<PackagePath>DatabaseScripts\</PackagePath>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)ConsoleApplications\AutoshipProcessor\AutoshipProcessor.csproj">
+			<Type>Application</Type>
+			<Name>AUT</Name>
+			<Description>Autoship Processor Agent Job</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Windows Services\QueueProcessing\NetSteps.QueueProcessing.Host\NetSteps.QueueProcessing.Host.csproj">
+			<Type>Service</Type>
+			<Name>QUE</Name>
+			<Description>Queue Processor Service</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Websites\nsCore\nsCore.csproj">
+			<Type>Website</Type>
+			<Name>GMP</Name>
+			<Description>Global Management Portal</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Websites\DistributorBackOffice\DistributorBackOffice.csproj">
+			<Type>Website</Type>
+			<Name>DWS</Name>
+			<Description>Distributor Backoffice</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Websites\nsDistributor\nsDistributor.csproj">
+			<Type>Website</Type>
+			<Name>CWS</Name>
+			<Description>Corporate Website</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Websites\nsDistributor\nsDistributor.csproj">
+			<Type>Website</Type>
+			<Name>PWS</Name>
+			<Description>Personal Website</Description>
+		</Artifact>
+		<Artifact Include="$(FrameworkPath)Websites\Encore.ApiSite\Encore.ApiSite.csproj">
+			<Type>Api</Type>
+			<Name>RST</Name>
+			<Description>Encore Restful API</Description>
+		</Artifact>
+	</ItemGroup>
+	<UsingTask TaskName="GetSvnRevision" TaskFactory="PowershellTaskFactory"  AssemblyFile="$(BuildToolsRoot)3rdParty\MSBuild Extension Pack 4.0.8.0 Binaries\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll">
+		<ParameterGroup>
+			<VersionRoot Required="true" ParameterType="System.String" />
+			<ReturnValue Output="true" />
+		</ParameterGroup>
+		<!-- $innerVR = (Join-Path -Path (Split-Path $innerVR) -ChildPath (Split-Path $innerVR -Leaf)) -->
+		<Task>
+			<![CDATA[
+				$innerVR = (Resolve-Path $versionRoot).Path
+				$log.LogMessage([Microsoft.Build.Framework.MessageImportance]"High", "VersionRoot is $innerVR")
+				$returnValue = ([xml](svn info $innerVR --xml)).info.entry.commit.revision
+				$log.LogMessage([Microsoft.Build.Framework.MessageImportance]"High", "Revision is $returnValue")
+			]]>
+		</Task>
+	</UsingTask>
+	<Target Name="SetBuildNumber" BeforeTargets="Build">
+		<GetSvnRevision Condition="'$(VersionBuild)' == '0'" VersionRoot="$(MSBuildThisFileDirectory)..\">
+			<Output TaskParameter="ReturnValue" PropertyName="VersionBuild" />
+		</GetSvnRevision>
+		<PropertyGroup>
+			<BuildNumber Condition="$(BuildNumber) == '' or $(BuildNumber) == '0.0.0.0'">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</BuildNumber>
+		</PropertyGroup>
+		<Message Text="Build Number set to $(BuildNumber)" />
+	</Target>
+	<Target Name="FilterArtifactsByName" Condition="$(Filter) != ''">
+		<ItemGroup>
+			<Artifact Remove="%(Artifact.Identity)" Condition="'%(Artifact.Name)' != '$(Filter)'"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="MapBuildArtifacts" Outputs="%(Artifact.Type)\%(Artifact.Name)" DependsOnTargets="FilterArtifactsByName">
+		<Message Text="Configuring Build for %(Artifact.Description)" Importance="High"/>
+		<ItemGroup>
+			<Artifact Condition="'%(Artifact.Name)' == '%(Artifact.Name)' and '%(Artifact.Type)' == '%(Artifact.Type)'">
+				<SourcePath Condition="'%(Artifact.SourcePath)' == ''">%(Artifact.RootDir)%(Artifact.Directory)</SourcePath>
+				<BuildPath>$(BuildPath)%(Artifact.FileName)\</BuildPath>
+				<BuildPath Condition="'%(Artifact.BuildPath)' != ''">$(BuildPath)%(Artifact.BuildPath)</BuildPath>
+				<Builder>%(Artifact.Type)</Builder>
+				<Builder Condition="'%(Artifact.Type)' == 'Service'">Application</Builder>
+				<Builder Condition="'%(Artifact.Type)' == 'Api'">Website</Builder>
+				<Builder Condition="'%(Artifact.Builder)' != ''">%(Artifact.Builder)</Builder>
+			</Artifact>
+		</ItemGroup>
+		<Message Text="Source: %(Artifact.SourcePath)"/>
+		<Message Text="Build: %(Artifact.BuildPath)"/>
+		<Message Text="Builder: %(Artifact.Builder)"/>
+		<CreateItem Include="@(Artifact)" PreserveExistingMetadata="true" Condition="'%(Artifact.Identity)' != ''">
+			<Output TaskParameter="Include" ItemName="%(Artifact.Builder)Builder"/>
+		</CreateItem>
+	</Target>
+	<Target Name="BuildSqlArtifact" Outputs="%(SqlBuilder.Name)" DependsOnTargets="MapBuildArtifacts" BeforeTargets="Build" Condition="'@(SqlBuilder->Count())' != '0'">
+		<Message Text="Building %(SqlBuilder.Type) %(SqlBuilder.Description) to %(SqlBuilder.BuildPath)" Importance="High"/>
+		<MakeDir Directories="%(SqlBuilder.BuildPath)" Condition="!Exists('%(SqlBuilder.BuildPath)')"/>
+		<ItemGroup>
+			<BuildFile Include="%(SqlBuilder.BuildPath)\*%(SqlBuilder.Name)*.sql"/>
+		</ItemGroup>
+		<Exec Command="$(SqlTransmogrifier) -s %(SqlBuilder.SourcePath) -c %(SqlBuilder.Name) -b true -t Template2 -coredb $(ClientName)Core -commdb $(ClientName)Commissions -maildb $(ClientName)Mail -td %(SqlBuilder.BuildPath)" Condition="'@(BuildFile->Count())' == '0'"/>
+		<ItemGroup>
+			<BuildFile Remove="@(BuildFile)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="BuildApplicationArtifact" Outputs="%(ApplicationBuilder.Name)" DependsOnTargets="MapBuildArtifacts" BeforeTargets="Build"  Condition="'@(ApplicationBuilder->Count())' != '0'">
+		<Message Text="Building %(ApplicationBuilder.Type) %(ApplicationBuilder.Description)" Importance="High"/>
+		<PropertyGroup>
+			<Targets>ResolveReferences;PrepareResources;CopyFilesToOutputDirectory;</Targets>
+			<Targets Condition="'%(ApplicationBuilder.Targets)' != ''">%(ApplicationBuilder.Targets)</Targets>
+			<Properties>Platform=$(Platform);Configuration=Release;CodeContractsRunCodeAnalysis=False;RunCodeAnalysis=Never;CodeContractsReferenceAssembly=DoNotBuild;GenerateManifests=false;</Properties>
+			<Properties Condition="'%(ApplicationBuilder.Properties)' != ''">%(ApplicationBuilder.Properties)</Properties>
+		</PropertyGroup>		
+		<MakeDir Directories="%(ApplicationBuilder.BuildPath)" Condition="!Exists('%(ApplicationBuilder.BuildPath)')"/>
+		<ItemGroup>
+			<BuildFile Include="%(ApplicationBuilder.BuildPath)\*.exe"/>
+		</ItemGroup>		
+		<MSBuild Projects="%(ApplicationBuilder.FullPath)" Targets="$(Targets)" BuildInParallel="true" Properties="OutDir=%(ApplicationBuilder.BuildPath);PublishDir=%(ApplicationBuilder.BuildPath);$(Properties)" Condition="'@(BuildFile->Count())' == '0'"/>
+		<ItemGroup>
+			<BuildFile Remove="@(BuildFile)"/>
+		</ItemGroup>		
+	</Target>
+	<Target Name="BuildAssemblyArtifact" Outputs="%(AssemblyBuilder.Name)" DependsOnTargets="MapBuildArtifacts" BeforeTargets="Build"  Condition="'@(AssemblyBuilder->Count())' != '0'">
+		<Message Text="Building %(AssemblyBuilderBuilder.Type) %(AssemblyBuilderBuilder.Description)" Importance="High"/>
+		<PropertyGroup>
+			<Targets>ResolveReferences;PrepareResources;CopyFilesToOutputDirectory;</Targets>
+			<Targets Condition="'%(AssemblyBuilderBuilder.Targets)' != ''">%(AssemblyBuilderBuilder.Targets)</Targets>
+			<PublishOverrides>False</PublishOverrides>
+			<PublishOverrides Condition="$(Configuration) == 'Debug'">True</PublishOverrides>
+			<!--IsOverrideProject=False; Is intentional the needed files are copied as part of the publish process-->
+			<Properties>Platform=$(Platform);Configuration=Release;CodeContractsRunCodeAnalysis=False;RunCodeAnalysis=Never;CodeContractsReferenceAssembly=DoNotBuild;IsClientOverride=False;PublishOverrides=$(PublishOverrides);NoWin32Manifest=true;UseApplicationTrust=false;BootstrapperEnabled=false;</Properties>
+			<Properties Condition="'%(AssemblyBuilderBuilder.Properties)' != ''">%(AssemblyBuilderBuilder.Properties)</Properties>
+		</PropertyGroup>
+		<MakeDir Directories="%(AssemblyBuilder.BuildPath)" Condition="!Exists('%(AssemblyBuilder.BuildPath)')"/>
+		<ItemGroup>
+			<BuildFile Include="%(AssemblyBuilder.BuildPath)\*.dll"/>
+		</ItemGroup>
+		<MSBuild Projects="%(AssemblyBuilder.FullPath)" Targets="$(Targets)" BuildInParallel="true" Properties="OutDir=%(AssemblyBuilder.BuildPath);$(Properties)" Condition="'@(BuildFile->Count())' == '0'"/>
+		<ItemGroup>
+			<BuildFile Remove="@(BuildFile)"/>
+		</ItemGroup>		
+	</Target>
+	<Target Name="BuildWebsiteArtifact" Outputs="%(WebsiteBuilder.Name)" DependsOnTargets="MapBuildArtifacts" BeforeTargets="Build" Condition="'@(WebsiteBuilder->Count())' != '0'">
+		<Message Text="Building %(WebsiteBuilder.Type) %(WebsiteBuilder.Description)" Importance="High"/>
+		<PropertyGroup>
+			<Targets Condition="'%(WebsiteBuilder.Targets)' == ''"> _WPPCopyWebApplication;ResolveReferences</Targets>
+			<Targets Condition="'%(WebsiteBuilder.Targets)' != ''">%(WebsiteBuilder.Targets)</Targets>
+			<Properties Condition="'%(WebsiteBuilder.Properties)' != ''">%(WebsiteBuilder.Properties)</Properties>
+		</PropertyGroup>
+		<MakeDir Directories="%(WebsiteBuilder.BuildPath)" Condition="!Exists('%(WebsiteBuilder.BuildPath)')"/>
+		<ItemGroup>
+			<BuildFile Include="%(WebsiteBuilder.BuildPath)\_PublishedWebsites\**\*.*"/>
+		</ItemGroup>		
+		<MSBuild Projects="%(WebsiteBuilder.FullPath)" Targets="$(Targets)" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Release;OutDir=%(WebsiteBuilder.BuildPath);$(Properties)" Condition="'@(BuildFile->Count())' == '0'"/>
+		<ItemGroup>
+			<BuildFile Remove="@(BuildFile)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="MapPublishArtifacts" DependsOnTargets="MapBuildArtifacts">
+		<Message Text="Configuring Publish for %(Artifact.Description)" Importance="High"/>
+		<ItemGroup>
+			<Artifact Condition="'%(Artifact.Name)' == '%(Artifact.Name)' and '%(Artifact.Type)' == '%(Artifact.Type)'">
+				<PublishPath>$(PublishPath)%(Artifact.Name)\</PublishPath>
+				<PublishPath Condition="'%(Artifact.PublishPath)' != ''">$(PublishPath)%(Artifact.PublishPath)</PublishPath>
+				<Publisher>%(Artifact.Type)</Publisher>
+				<Publisher Condition="'%(Artifact.Type)' == 'Service'">Application</Publisher>
+				<Publisher Condition="'%(Artifact.Type)' == 'Api'">Website</Publisher>
+				<Publisher Condition="'%(Artifact.Publisher)' != ''">%(Artifact.Publisher)</Publisher>
+			</Artifact>
+		</ItemGroup>
+		<Message Text="Publish: %(Artifact.PublishPath)"/>
+		<Message Text="Publisher: %(Artifact.Publisher)"/>
+		<CreateItem Include="@(Artifact)" PreserveExistingMetadata="true" Condition="'%(Artifact.Identity)' != ''">
+			<Output TaskParameter="Include" ItemName="%(Artifact.Publisher)Publisher"/>
+		</CreateItem>
+	</Target>
+	<Target Name="PublishSqlArtifact" Outputs="%(SqlPublisher.Name)" DependsOnTargets="MapPublishArtifacts" BeforeTargets="Publish" Condition="'@(SqlPublisher->Count())' != '0'">
+		<Message Text="Publishing %(SqlPublisher.Type) %(SqlPublisher.Description) to %(SqlPublisher.PublishPath)" Importance="High"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+			<Publish Include="%(SqlPublisher.BuildPath)\**\*.sql"/>
+		</ItemGroup>
+		<Copy SourceFiles="@(Publish)" DestinationFolder="%(SqlPublisher.PublishPath)"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="PublishApplicationArtifact" Outputs="%(ApplicationPublisher.Name)" DependsOnTargets="MapPublishArtifacts" BeforeTargets="Publish"  Condition="'@(ApplicationPublisher->Count())' != '0'">
+		<Message Text="Publishing %(ApplicationPublisher.Type) %(ApplicationPublisher.Description) to %(ApplicationPublisher.PublishPath)" Importance="High"/>
+		<PropertyGroup>
+			<ConfigurationSource Condition="'%(ApplicationPublisher.ConfigurationSource)' == ''">%(ApplicationPublisher.RootDir)%(ApplicationPublisher.Directory)app.config</ConfigurationSource>
+			<ConfigurationSource Condition="'%(ApplicationPublisher.ConfigurationSource)' != ''">%(ApplicationPublisher.RootDir)%(ApplicationPublisher.Directory)%(ApplicationPublisher.ConfigurationSource)</ConfigurationSource>
+			<ConfigurationDestination Condition="'%(ApplicationPublisher.ConfigurationDestination)' == ''">%(ApplicationPublisher.PublishPath)%(ApplicationPublisher.FileName).exe.config</ConfigurationDestination>
+			<ConfigurationDestination Condition="'%(ApplicationPublisher.ConfigurationDestination)' != ''">%(ApplicationPublisher.ConfigurationDestination)</ConfigurationDestination>
+			<ConfigurationTemplate Condition="'%(ApplicationPublisher.ConfigurationTemplate)' == ''">%(ApplicationPublisher.RootDir)%(ApplicationPublisher.Directory)app.$(Configuration).config</ConfigurationTemplate>
+			<ConfigurationTemplate Condition="'%(ApplicationPublisher.ConfigurationTemplate)' != ''">%(ApplicationPublisher.RootDir)%(ApplicationPublisher.ConfigurationTemplate)</ConfigurationTemplate>
+		</PropertyGroup>
+		<MakeDir Directories="%(ApplicationPublisher.PublishPath)"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+			<Publish Include="%(ApplicationPublisher.BuildPath)**\*.*">
+				<PublishPath>%(ApplicationPublisher.PublishPath)</PublishPath>
+			</Publish>
+			<Publish Remove="%(ApplicationPublisher.BuildPath)Application Files\**\*.*"/>
+			<Publish Remove="%(ApplicationPublisher.BuildPath)CodeContracts\**\*.*"/>
+			<Publish Condition="'%(Publish.Identity)' == '%(Publish.Identity)'">
+				<PublishPath>%(Publish.PublishPath)%(Publish.RecursiveDir)%(Publish.FileName)%(Publish.Extension)</PublishPath>
+			</Publish>
+		</ItemGroup>
+		<Message Text="Attempting to transform $(ConfigurationSource) with $(ConfigurationTemplate) as $(ConfigurationDestination)"/>
+		<TransformXml Source="$(ConfigurationSource)" Destination="$(ConfigurationDestination)" Transform="$(ConfigurationTemplate)" Condition="Exists($(ConfigurationSource)) and Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="$(ConfigurationSource)" DestinationFiles="$(ConfigurationDestination)" Condition="Exists($(ConfigurationSource)) and !Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="%(Publish.FullPath)" DestinationFiles="%(Publish.PublishPath)" Condition="!Exists('%(Publish.PublishPath)')"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="PublishAssemblyArtifact" Outputs="%(AssemblyPublisher.Name)" DependsOnTargets="MapPublishArtifacts;" BeforeTargets="Publish"  Condition="'@(AssemblyPublisher->Count())' != '0'">
+		<Message Text="Publishing %(AssemblyPublisher.Type) %(AssemblyPublisher.Description) to %(AssemblyPublisher.PublishPath)" Importance="High"/>
+		<PropertyGroup>
+			<ConfigurationSource Condition="'%(AssemblyPublisher.ConfigurationSource)' == ''">%(AssemblyPublisher.RootDir)%(AssemblyPublisher.Directory)app.config</ConfigurationSource>
+			<ConfigurationSource Condition="'%(AssemblyPublisher.ConfigurationSource)' != ''">%(AssemblyPublisher.RootDir)%(AssemblyPublisher.Directory)%(AssemblyPublisher.ConfigurationSource)</ConfigurationSource>
+			<ConfigurationTemplate Condition="'%(AssemblyPublisher.ConfigurationTemplate)' == ''">%(AssemblyPublisher.RootDir)%(AssemblyPublisher.Directory)app.$(Configuration).config</ConfigurationTemplate>
+			<ConfigurationTemplate Condition="'%(AssemblyPublisher.ConfigurationTemplate)' != ''">%(AssemblyPublisher.RootDir)%(AssemblyPublisher.Directory)%(AssemblyPublisher.ConfigurationTemplate)</ConfigurationTemplate>
+			<ConfigurationDestination Condition="'%(AssemblyPublisher.ConfigurationDestination)' == ''">%(AssemblyPublisher.PublishPath)%(AssemblyPublisher.FileName).dll.config</ConfigurationDestination>
+			<ConfigurationDestination Condition="'%(AssemblyPublisher.ConfigurationDestination)' != ''">%(AssemblyPublisher.PublishPath)%(AssemblyPublisher.ConfigurationDestination)</ConfigurationDestination>			
+		</PropertyGroup>
+		<MakeDir Directories="%(AssemblyPublisher.PublishPath)"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+			<Publish Include="%(AssemblyPublisher.BuildPath)**\*.*">
+				<PublishPath>%(AssemblyPublisher.PublishPath)</PublishPath>
+			</Publish>
+			<Publish Remove="%(AssemblyPublisher.BuildPath)Overrides\**\*.*"/>
+			<Publish Remove="%(AssemblyPublisher.BuildPath)_PublishedWebsites\**\*.*"/>
+			<Publish Remove="%(AssemblyPublisher.BuildPath)CodeContracts\**\*.*"/>
+			<Publish Condition="'%(Publish.Identity)' == '%(Publish.Identity)'">
+				<PublishPath>%(Publish.PublishPath)%(Publish.RecursiveDir)%(Publish.FileName)%(Publish.Extension)</PublishPath>
+			</Publish>
+		</ItemGroup>
+		<Message Text="Attempting to transform $(ConfigurationSource) with $(ConfigurationTemplate) as $(ConfigurationDestination)"/>
+		<TransformXml Source="$(ConfigurationSource)" Destination="$(ConfigurationDestination)" Transform="$(ConfigurationTemplate)" Condition="Exists($(ConfigurationSource)) and Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="$(ConfigurationSource)" DestinationFiles="$(ConfigurationDestination)" Condition="Exists($(ConfigurationSource)) and !Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="%(Publish.FullPath)" DestinationFiles="%(Publish.PublishPath)" Condition="!Exists('%(Publish.PublishPath)')"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+			<Publish Include="%(AssemblyPublisher.BuildPath)Overrides\**\*.*">
+				<PublishPath>$(PublishPath)%(AssemblyPublisher.Name)\</PublishPath>
+			</Publish>
+			<Publish Remove="*.config"/>
+			<Publish Condition="'%(Publish.Identity)' == '%(Publish.Identity)'">
+				<PublishPath>%(Publish.PublishPath)%(Publish.RecursiveDir)%(Publish.FileName)%(Publish.Extension)</PublishPath>
+			</Publish>
+		</ItemGroup>
+		<Copy SourceFiles="%(Publish.FullPath)" DestinationFiles="%(Publish.PublishPath)" Condition="!Exists('%(Publish.PublishPath)') and $(Configuration) == 'Debug'"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="PublishWebsiteArtifact" Outputs="%(WebsitePublisher.Name)" DependsOnTargets="MapPublishArtifacts" BeforeTargets="Publish" AfterTargets="PublishAssemblyArtifact" Condition="'@(WebsitePublisher->Count())' != '0'">
+		<Message Text="Publishing %(WebsitePublisher.Type) %(WebsitePublisher.Description)" Importance="High"/>
+		<PropertyGroup>
+			<ConfigurationSource Condition="'%(WebsitePublisher.ConfigurationSource)' == ''">%(WebsitePublisher.RootDir)%(WebsitePublisher.Directory)web.config</ConfigurationSource>
+			<ConfigurationSource Condition="'%(WebsitePublisher.ConfigurationSource)' != ''">%(WebsitePublisher.RootDir)%(WebsitePublisher.Directory)%(WebsitePublisher.ConfigurationSource)</ConfigurationSource>
+			<ConfigurationTemplate Condition="'%(WebsitePublisher.ConfigurationTemplate)' == ''">%(WebsitePublisher.RootDir)%(WebsitePublisher.Directory)web.$(Configuration).config</ConfigurationTemplate>
+			<ConfigurationTemplate Condition="'%(WebsitePublisher.ConfigurationTemplate)' != ''">%(WebsitePublisher.RootDir)%(WebsitePublisher.Directory)%(WebsitePublisher.ConfigurationTemplate)</ConfigurationTemplate>
+			<ConfigurationDestination Condition="'%(WebsitePublisher.ConfigurationDestination)' == ''">%(WebsitePublisher.PublishPath)web.config</ConfigurationDestination>
+			<ConfigurationDestination Condition="'%(WebsitePublisher.ConfigurationDestination)' != ''">%(WebsitePublisher.PublishPath)%(AssemblyPublisher.ConfigurationDestination)</ConfigurationDestination>			
+		</PropertyGroup>
+		<MakeDir Directories="%(WebsitePublisher.PublishPath)"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+			<Publish Include="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\**\*.*">
+				<PublishPath>%(WebsitePublisher.PublishPath)</PublishPath>
+			</Publish>
+			<Publish Remove="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\bin\CodeContracts\**\*.*"/>
+			<Publish Remove="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\bin\Overrides\**\*.*"/>
+			<Publish Remove="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\bin\_PublishedWebsites\**\*.*"/>
+			<Publish Remove="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\*.config"/>
+			<Publish Remove="%(WebsitePublisher.BuildPath)_PublishedWebsites\%(WebsitePublisher.FileName)\EnrollmentConfigReadme.txt"/>			
+			<Publish Condition="'%(Publish.Identity)' == '%(Publish.Identity)'">
+				<PublishPath>%(Publish.PublishPath)%(Publish.RecursiveDir)%(Publish.FileName)%(Publish.Extension)</PublishPath>
+			</Publish>		
+		</ItemGroup>
+		<Message Text="Attempting to transform $(ConfigurationSource) with $(ConfigurationTemplate) as $(ConfigurationDestination)"/>
+		<TransformXml Source="$(ConfigurationSource)" Destination="$(ConfigurationDestination)" Transform="$(ConfigurationTemplate)" Condition="Exists($(ConfigurationSource)) and Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="$(ConfigurationSource)" DestinationFiles="$(ConfigurationDestination)" Condition="Exists($(ConfigurationSource)) and !Exists($(ConfigurationTemplate)) and !Exists($(ConfigurationDestination))"/>
+		<Copy SourceFiles="%(Publish.FullPath)" DestinationFiles="%(Publish.PublishPath)" Condition="!Exists('%(Publish.PublishPath)')"/>
+		<ItemGroup>
+			<Publish Remove="@(Publish)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="MapPackageArtifacts" DependsOnTargets="MapPublishArtifacts">
+		<Message Text="Configuring Package for %(Artifact.Description)" Importance="High"/>
+		<ItemGroup>
+			<Artifact Condition="'%(Artifact.Name)' == '%(Artifact.Name)'">
+				<PackagePath>$(PackagePath)</PackagePath>
+				<PackagePath Condition="'%(Artifact.PackagePath)' != ''">$(PackagePath)%(Artifact.PackagePath)</PackagePath>
+				<Packager>MSDeploy</Packager>
+				<Packager Condition="'%(Artifact.Type)' == 'Assembly'"></Packager>
+				<Packager Condition="'%(Artifact.Type)' == 'Sql'">File</Packager>
+			</Artifact>
+		</ItemGroup>
+		<Message Text="Package: %(Artifact.PackagePath)"/>
+		<CreateItem Include="@(Artifact)" PreserveExistingMetadata="true" Condition="'%(Artifact.Packager)' != ''">
+			<Output TaskParameter="Include" ItemName="%(Artifact.Packager)Packager"/>
+		</CreateItem>
+	</Target>
+	<Target Name="PackageMSDeployArtifact" Outputs="%(MSDeployPackager.Name)" DependsOnTargets="MapPackageArtifacts" BeforeTargets="Package" Condition="'@(MSDeployPackager->Count())' != '0'">
+		<PropertyGroup>
+			<PackagePath>%(MSDeployPackager.PackagePath)%(MSDeployPackager.Name)-$(Configuration).v$(BuildNumber).zip</PackagePath>
+			<PackagePath Condition="'%(MSDeployPackager.Package)' != ''">%(MSDeployPackager.PackagePath)</PackagePath>
+		</PropertyGroup>
+		<Message Text="Package %(MSDeployPackager.Type) %(MSDeployPackager.Description) from %(File.SourcePath) to %(MSDeployPackager.PackagePath)" Importance="High"/>
+		<MakeDir Directories="%(MSDeployPackager.PackagePath)" Condition="!Exists(%(MSDeployPackager.PackagePath))"/>
+		<Exec Command="&quot;$(MSDeploy)&quot; -verb:sync -source:contentPath=&quot;%(MSDeployPackager.PublishPath)&quot; -dest:package=&quot;$(PackagePath)&quot;"/>
+	</Target>
+	<Target Name="PackageFileArtifact" Outputs="%(FilePackager.Name)" DependsOnTargets="MapPackageArtifacts" BeforeTargets="Package" Condition="'@(FilePackager->Count())' != '0'">
+		<ItemGroup>
+			<Package Include="%(FilePackager.PublishPath)**\*.*">
+				<PackagePath>%(FilePackager.PackagePath)</PackagePath>
+			</Package>
+		</ItemGroup>
+		<Copy SourceFiles="@(Package)" DestinationFolder="%(Package.PackagePath)\%(RecursiveDir)"/>
+		<ItemGroup>
+			<Package Remove="@(Package)"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="Build" DependsOnTargets="MapBuildArtifacts">
+
+	</Target>
+	<Target Name="Publish" DependsOnTargets="Build;MapPublishArtifacts">
+
+	</Target>
+	<Target Name="Package" DependsOnTargets="Publish;MapPackageArtifacts">
+		
+	</Target>
+	<Target Name="Clean">
+		<RemoveDir Directories="$(BuildRoot)" Condition="Exists($(BuildRoot))"/>
+		<RemoveDir Directories="$(PublishRoot)" Condition="Exists($(PublishRoot))"/>
+	</Target>
+	<Target Name="Development" DependsOnTargets="Clean">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Debug;"/>
+	</Target>
+	<Target Name="Testing" DependsOnTargets="Clean">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Debug;"/>
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Testing;"/>
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Staging;"/>
+	</Target>
+	<Target Name="Production" DependsOnTargets="Clean">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Debug;"/>
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Testing;"/>
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Staging;"/>
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Package" BuildInParallel="true" Properties="Platform=$(Platform);Configuration=Release;"/>
+	</Target>
+	<Target Name="Default" DependsOnTargets="Development"/>
+</Project>

@@ -1,0 +1,70 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        exportE();
+        IsValid();
+        LoadInitialMessage();
+    });
+
+    function LoadInitialMessage() {
+        var cuv = $("#cuvInputFilter").val();
+        var sapcod = $("#sapCodeInputFilter").val();
+        if (cuv == '' && sapcod == '') {
+            ShowAlert('PLEASE ENTER INFORMATION FOR SEARCHING');
+        }
+    }
+
+    function IsValid() {
+        $('div.GridFilters a.filterButton').text('Generate Report');
+        $('div.GridFilters a.filterButton').click(function () {
+            var cuv = $("#cuvInputFilter").val();
+            var sapcod = $("#sapCodeInputFilter").val();
+
+            if (cuv == '' && sapcod == '') {
+                ShowAlert('CUV OR SAP CODE MUST BE INCLUDE FOR SEARCHING');
+                return false;
+            }
+        });
+    }
+
+    function exportE() {
+        $('#exportToExcel').click(function () {
+            var cuv = $("#cuvInputFilter").val();
+            var sapcod = $("#sapCodeInputFilter").val();
+            var fIni = $("#completeDateUTCIniInputFilter").val();
+            var fFin = $("#completeDateUTCFinInputFilter").val();
+            var parameters = '?parameters=' + cuv + "*" + sapcod + "*" + fIni + "*" + fFin;
+
+            if (cuv == '' && sapcod == '') {
+                ShowAlert('CUV OR SAP CODE MUST BE INCLUDE FOR SEARCHING');
+                return false;
+            }
+            else window.location = '@Href("~/Reports/Reports/InventoryMovementsExport")' + parameters;
+        });
+    }
+
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetInventoryMovementsReport")
+        .AddInputFilter(Html.Term("CUV", "CUV"), "cuv", ViewData["CUV"])
+        .AddInputFilter(Html.Term("SAP Code", "SAP Code"), "sapCode", ViewData["SAP Code"])
+
+        .AddInputFilter(Html.Term("DateRange", "Initial Date"), "completeDateUTCIni", ViewData["CompleteDateUTCIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "completeDateUTCFin", ViewData["CompleteDateUTCFin"], true)
+        
+        .AddColumn(Html.Term("CUV Code"), "CUV Code")
+        .AddColumn(Html.Term("SAP Code"), "SAP Code")
+        .AddColumn(Html.Term("Product description"), "Description")
+        .AddColumn(Html.Term("Mov Date"), "Date")
+        .AddColumn(Html.Term("Allocated Before"), "Allocated Before")
+        .AddColumn(Html.Term("Allocated After"), "Allocated After")
+        .AddColumn(Html.Term("OnHand Before"), "OnHand Before")
+        .AddColumn(Html.Term("OnHand After"), "OnHand After")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow();
+    grid.Render(); 
+}
+

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{612A4221-3DD0-463E-8F25-B4FA5C5FB8C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OrderRules.Core</RootNamespace>
+    <AssemblyName>OrderRules.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NetSteps.Encore.Core">
+      <HintPath>..\..\..\BelcorpUSA\framework\packages\NetSteps.Encore.Core_r2_3.2.4.143\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\RuleStatus.cs" />
+    <Compile Include="Model\RuleValidationCustomerPriceTypeTotalRangesKeys.cs" />
+    <Compile Include="Model\RuleValidationProductListItems.cs" />
+    <Compile Include="Model\RuleValidationProductLists.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Rules.cs" />
+    <Compile Include="Model\RuleStatuses.cs" />
+    <Compile Include="Model\RuleValidationAccountListItems.cs" />
+    <Compile Include="Model\RuleValidationAccountLists.cs" />
+    <Compile Include="Model\RuleValidationAccountTypeListItems.cs" />
+    <Compile Include="Model\RuleValidationAccountTypeLists.cs" />
+    <Compile Include="Model\RuleValidationCustomerPriceTypeTotalRangeCurrencyAmounts.cs" />
+    <Compile Include="Model\RuleValidationCustomerPriceTypeTotalRanges.cs" />
+    <Compile Include="Model\RuleValidationCustomerSubtotalRangeCurrencyAmounts.cs" />
+    <Compile Include="Model\RuleValidationCustomerSubtotalRanges.cs" />
+    <Compile Include="Model\RuleValidationOrderTypeListItems.cs" />
+    <Compile Include="Model\RuleValidationOrderTypeLists.cs" />
+    <Compile Include="Model\RuleValidationProductTypeListItems.cs" />
+    <Compile Include="Model\RuleValidationProductTypeLists.cs" />
+    <Compile Include="Model\RuleValidations.cs" />
+    <Compile Include="Model\RuleValidationStoreFrontListItems.cs" />
+    <Compile Include="Model\RuleValidationStoreFrontLists.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cache\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

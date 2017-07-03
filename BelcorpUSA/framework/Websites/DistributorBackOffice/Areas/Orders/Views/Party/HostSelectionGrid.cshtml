@@ -1,0 +1,32 @@
+﻿@model ICollection<DistributorBackOffice.Areas.Orders.Models.Party.HostSearchResultModel>
+
+<table id="tblHostSearchResults">
+@if (Model.Count > 0)
+{
+    <tr>
+        <th class="UI-header">@Html.Term("FirstName", "First Name")</th>
+        <th class="UI-header">@Html.Term("LastName", "Last Name")</th>
+        <th class="UI-header">@Html.Term("Email", "Email")</th>
+        <th class="UI-header">@Html.Term("Location", "Location")</th>
+        <th class="UI-header"></th>
+    </tr>
+    foreach (var result in Model)
+    {
+        <tr>
+            <td>@result.FirstName</td>
+            <td>@result.LastName</td>
+            <td>@result.Email</td>
+            <td>@result.Location</td>
+            <td>
+                <a href="javascript:void(0)" class="hostSelectLink plLink" id="accountId_@(result.AccountID)">@Html.Term("ScheduleParty_StepOne_HostSearchSelectLinkText", "Select")</a>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td>@Html.Term("ScheduleParty_StepOne_HostSearchNoResultsText","No match was found. Please enter a new person.")</td>
+    </tr>
+}
+</table>

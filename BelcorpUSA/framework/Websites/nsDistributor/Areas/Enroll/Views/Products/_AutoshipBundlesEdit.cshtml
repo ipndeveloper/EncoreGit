@@ -1,0 +1,68 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.AutoshipBundlesModel
+
+<script type="text/javascript">
+    $(function () {
+        $('div.kits').click(function () {
+            $('div.kits')
+                .removeClass('selected');
+            $(this)
+                .addClass('selected')
+                .find('[type = "radio"]')
+                    .attr('checked', 'checked');
+        });
+    });
+</script>
+
+<div class="FL splitCol65 pad10">
+    <div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Products_AutoshipBundles_LeftContent"]
+    </div>
+</div>
+<div class="FR splitCol30 pad10">
+	<div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Products_AutoshipBundles_RightContent"]
+    </div>
+</div>
+<span class="ClearAll"></span>
+
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.ValidationSummary()
+
+    foreach(var bundle in Model.AutoshipBundles)
+    {
+        <div class="FL splitCol30 m5">
+            <div class="brdr brdrAll pad5 kits @(bundle.ProductID == Model.SelectedProductID ? "selected" : "")">
+                <div class="brdr brdrAll pad10">
+                    @Html.RadioButtonFor(m => m.SelectedProductID, bundle.ProductID)
+                    <h2>
+                        <span class="FL">@bundle.Name</span>
+                        <span class="FR price">@bundle.Price.ToString("C", Model.FormatProvider)</span>
+                    </h2>
+                    <h3>@bundle.Name</h3>
+                </div>
+                <div class="check"><img src="@Url.Content("~/Resource/Content/Images/Base/check.png")" /></div>
+            </div>
+        </div>
+    }
+    <span class="ClearAll"></span>
+    if (Model.Skippable)
+    {
+        <div class="kits">
+            <div class="brdr">
+                @Html.RadioButtonFor(m => m.SelectedProductID, -1)
+                <span>
+                    @Html.Term("Enrollment_Products_AutoshipBundles_OptOutLabel", "Continue without an autoship bundle")
+                </span>
+            </div>
+        </div>
+    }
+    <p class="FormSubmit">
+        <span class="FR">
+            <a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent">
+                <span>@Html.Term("Next")</span>
+            </a>
+        </span>
+    </p>
+    @Html.AntiForgeryToken()
+}

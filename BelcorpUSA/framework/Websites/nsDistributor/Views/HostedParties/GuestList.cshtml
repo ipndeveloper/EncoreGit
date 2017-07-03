@@ -1,0 +1,160 @@
+﻿@model Party
+@{
+    ViewBag.Title = "Guest List";
+}
+@section head {
+}
+
+<div class="SideColumn">
+    <div class="center partyActions">
+        @{  string buttonClass = "", buttonText = "", linkUrl = string.Empty;
+            if (Model.Order.OrderStatusID != (int)Constants.OrderStatus.Pending)
+            {
+                buttonClass = "partySendThanksBtn";
+                buttonText = Html.Term("SendThankYou", "Send Thank-You");
+                linkUrl = "~/HostedParties/SendThankYou";
+            }
+            else
+            {
+                if (Model.PartyGuests.Count > 0)
+                {
+                    buttonClass = "partyInviteMore";
+                    buttonText = Html.Term("InviteMorePeople", "Invite More People");
+                    linkUrl = "~/HostedParties/InviteGuests";
+                }
+                else
+                {
+                    buttonClass = "partyInvite";
+                    buttonText = Html.Term("InvitePeople", "Invite People!");
+                    linkUrl = "~/HostedParties/InviteGuests";
+                        
+                }
+            }
+        }
+        <a href="@Url.Resolve(linkUrl, new { partyId = Model.PartyID })" class="Button inviteBtn @buttonClass"><span>@buttonText</span></a>
+    </div>
+</div>
+<div class="ContentColumn guestList">
+    
+    <div class="pageTitle">
+        <div class="breadCrumb">
+            <a href="@Url.Resolve("~/HostedParties")">@Html.Term("MyPartiesDashboard", "My Parties Dashboard")</a>
+        </div>
+        <h1>@Model.Name</h1>
+    </div>
+    <!-- party details -->
+    <div class="partyDetails">
+        <ul class="flatList decoratedList mt10 mb10">
+            <li>
+                <label class="FL mr10">@Html.Term("Time"):</label>
+                <span class="data">@Model.StartDate.ToShortTimeString()</span> <span class="clr"></span></li>
+            <li>
+                <label class="FL mr10">@Html.Term("Date"):</label>
+                <span class="data">@Model.StartDate.ToShortDateStringDisplay(BaseController.CurrentCulture)</span> <span class="clr"></span></li>
+            <li>
+                <label class="FL mr10">@Html.Term("Location"):</label>
+                <span class="data">@Model.Address.ToDisplay(NetSteps.Data.Entities.Extensions.IAddressExtensions.AddressDisplayTypes.Web, false, false, false, false).Replace("<br />", ", ")</span> <span class="clr"></span></li>
+        </ul>
+    </div>
+    <!-- confirmed section -->
+    @{
+        var confirmed = Model.PartyRsvps.GroupBy(pr => pr.PartyGuestID).Where(pr => pr.OrderByDescending(rsvps => rsvps.ResponseDate).First().IsComing);
+        var notResponded = Model.PartyGuests.Where(pg => !Model.PartyRsvps.Any(pr => pr.PartyGuestID == pg.PartyGuestID));
+        var declined = Model.PartyRsvps.GroupBy(pr => pr.PartyGuestID).Where(pr => !pr.OrderByDescending(rsvps => rsvps.ResponseDate).First().IsComing);
+    }
+    <div class="guestListSection mt10 confirmedList partyGuestsDeclined">
+        <div class="header">
+            <h2 class="FL">@Html.Term("ConfirmedGuestList", "Confirmed Guest List")</h2>
+            <div class="FR">
+                <span>@Html.Term("XPeopleAttending", "{0} people attending", confirmed.Count())</span>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table class="DataGrid guestList">
+            <thead>
+                <tr>
+                    <th>@Html.Term("Guest")</th>
+                    <th>@Html.Term("Email")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var confirmation in confirmed)
+                {
+                    var guest = Model.PartyGuests.FirstOrDefault(pg => pg.PartyGuestID == confirmation.Key);
+                    <tr>
+                        <td class="splitCol">
+                            @Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, BaseController.CurrentCulture.Name)<span style="color:#FFF;">@guest.PartyGuestID</span>
+                        </td>
+                        <td class="splitCol">
+                            @guest.EmailAddress
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- awaiting response section -->
+    <div class="guestListSection mt10  partyGuestsPending">
+        <div class="header">
+            <h2 class="FL">@Html.Term("AwaitingResponse", "Awaiting Response")</h2>
+            <div class="FR">
+                <span>@Html.Term("XHaveNotResponded", "{0} people haven't responded", notResponded.Count())</span> <a href="@Url.Resolve("~/HostedParties/ReinviteGuests", new { partyId = Model.PartyID })" class="FR ml10 Button MinorButton reInviteBtn"><span>@Html.Term("re-invite")</span></a>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table class="DataGrid guestList">
+            <thead>
+                <tr>
+                    <th>@Html.Term("Guest")</th>
+                    <th>@Html.Term("Email")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var guest in notResponded)
+                {
+                    <tr>
+                        <td class="splitCol">
+                            @Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, BaseController.CurrentCulture.Name)<span style="color: #FFF;">@guest.PartyGuestID</span>
+                        </td>
+                        <td class="splitCol">
+                            @guest.EmailAddress
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- declined section -->
+    <div class="guestListSection mt10 partyGuestsDeclined">
+        <div class="header">
+            <h2 class="FL">@Html.Term("Declined")</h2>
+            <div class="FR">
+                <span>@Html.Term("XCanNotMakeIt", "{0} people can't make it", declined.Count())</span>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <table class="DataGrid guestList">
+            <thead>
+                <tr>
+                    <th>@Html.Term("Guest")</th>
+                    <th>@Html.Term("Email")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dec in declined)
+                {
+                    var guest = Model.PartyGuests.FirstOrDefault(pg => pg.PartyGuestID == dec.Key);
+                    <tr>
+                        <td class="splitCol">
+                            @Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, BaseController.CurrentCulture.Name)<span style="color: #FFF;">@guest.PartyGuestID</span>
+                        </td>
+                        <td class="splitCol">
+                            @guest.EmailAddress
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--/ end content column -->

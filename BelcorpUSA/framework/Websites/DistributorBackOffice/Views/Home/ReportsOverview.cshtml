@@ -1,0 +1,27 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+<!-- account widget -->
+<div class="WidgetWrap Reports">
+    <div class="Widget">
+        <div class="UI-btn txtShadowDrk WidgetTitle">
+            <span class="Txt UI-btn">
+                @Html.Term("MySavedReports", "My Saved Reports")</span> <span class="FR WidgetControls"><a href="javascript:void(0);" onclick="javascript:hideWidget(@Model.Widget.WidgetID);"
+						title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")"><span>X</span></a></span>
+        </div>
+        <div class="WidgetBody UI-linkAlt">
+            <ul class="listNav dash">
+                @{var currentAccountReports = ViewData["CurrentAccountReports"] as List<AccountReport>;}
+                @if (currentAccountReports != null)
+                {
+                    foreach (var accountReport in currentAccountReports)
+                        {
+                            var accountReportTypeEnum = (Constants.AccountReportType) accountReport.AccountReportTypeID;
+                            var accountReportTypeName = SmallCollectionCache.Instance.AccountReportTypes.GetById(accountReport.AccountReportTypeID).GetTerm();
+                            var url = string.Format("{0}?accountReportID={1}", (accountReportTypeEnum == ConstantsGenerated.AccountReportType.ContactsReport) ? Href("~/Contacts") : Href("~/Performance/FlatDownline"), accountReport.AccountReportID);
+                            <li><a href="@url"><span class="bold name clr">@accountReport.Name</span> <i>@accountReportTypeName</i> </a></li>
+                        }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<!--end widget -->

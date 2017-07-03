@@ -1,0 +1,161 @@
+﻿@model NetSteps.Data.Entities.SupportTicket
+@*@model DistributorBackOffice.Models.TicketDetailsViewModel*@
+@{
+    ViewBag.Title = "View Ticket";
+}
+@section head {
+
+
+
+  
+    <script type="text/javascript">
+
+        $(function () {
+
+            if ('@Model.SupportTicketStatusID' != '@Constants.SupportTicketStatus.Resolved.ToShort()') {
+                $('#saveReportModal').jqm({ modal: false,
+                    trigger: '#closeTicket',
+                    onShow: function (h) {
+                        h.w.css({
+                            top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                            left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                        }).fadeIn();
+                    }
+                });
+            }
+
+            $('#closeTicket').click(function () {
+
+                if ('@Model.SupportTicketStatusID' == '@Constants.SupportTicketStatus.Resolved.ToShort()') {
+                    showMessage('@Html.Term("TicketIsAlreadyResolved", "Ticket status is already resolved")', false);
+                    return;
+                }
+
+                $('#btnSaveReport').click(function () {
+                    $.post('@Href("~/Support/MarkAsResolved")', {
+                        id: '@Model.SupportTicketNumber'
+                    }, function (response) {
+
+                        if (response.result) {
+
+                            showMessage('@Html.Term("TicketResolved", "Ticket marked as resolved")', false);
+                            window.location = ('@Href("~/Support")');
+                        } else {
+                            showMessage(response.message, true);
+                        }
+
+                    });
+                });
+
+                $('#btnCancelReport').click(function () {
+                    $('#saveReportModal').jqmHide();
+                });
+            });
+
+            $('.toggleHistory').live('click', function () {
+                $(this).text($(this).text() == 'Collapse' ? 'Expand' : 'Collapse').parent().parent().find('#History').slideToggle();
+            });
+
+
+        });
+
+    </script>
+   
+}
+@section breadcrumb {
+    <a href="@Href("~/Support")">@Html.Term("Support")</a>
+}
+@section title {
+    @Model.Title
+}
+<div class="FL splitCol">
+    <h2>@Html.Term("TicketDetails", "Ticket Details"): #@Model.SupportTicketNumber</h2>
+    <div class="UI-mainBg brdrAll GridUtility contactHistoryUtility">
+        @{
+            var id = Model.SupportTicketNumber;
+            var requestAddress = "/Support/EditTicket/" + id;
+        }
+        <a rel="#EditTicket" class="UI-icon-container" href="@requestAddress"><span class="UI-icon icon-edit">
+        </span><span>@Html.Term("EditTicket", "Edit Ticket")</span> </a><a id="closeTicket"
+            rel="#CloseTicket" class="UI-icon-container" href="#"><span class="UI-icon icon-x">
+            </span><span>@Html.Term("MarkTicketAsResolved", "Mark Ticket Resolved")</span>
+        </a>
+    </div>
+    <ul class="listNav flatList infoList">
+        <li>
+            <label class="bold">
+                @Html.Term("Category"):</label>
+            <div>
+                @Html.DisplayFor(x => x.SupportTicketCategory.Name)
+            </div>
+            <br />
+        </li>
+        <li>
+            <label class="bold">
+                @Html.Term("Title"):</label>
+            <div>
+                @Html.DisplayFor(x => x.Title)
+            </div>
+            <br />
+        </li>
+        <li>
+            <label class="bold">
+                @Html.Term("Description"):</label>
+            <div>
+                @Html.DisplayFor(x => x.Description)
+            </div>
+            <br />
+        </li>
+        <li>
+            <label class="bold">
+                @Html.Term("DateSubmited", "Date Submitted"):</label>
+            <div>
+                @Html.DisplayFor(x => x.DateCreated)
+            </div>
+            <br />
+        </li>
+        <li>
+            <label class="bold">
+                @Html.Term("SupportStatus", "Status"):</label>
+            <div>
+                @Html.DisplayFor(x => x.SupportTicketStatus.Name)
+            </div>
+            <br />
+        </li>
+        @* Temporarily removed due to SQL timeouts. *@
+        @*<li>
+            <label class="bold">
+                @Html.Term("History"):</label>
+            <a class="toggleHistory FR" style="cursor: pointer">@NetSteps.Common.Globalization.Translation.GetTerm("Collapse")</a>
+            <div id="History" style="padding-left: 50px">
+                @{Html.RenderAction("_TicketHistory", new { id = Model.SupportTicketNumber });}
+            </div>
+            <br />
+        </li>*@
+    </ul>
+    <br />
+    <span class="clr"></span>
+    <div class="clr mt10 ">
+        <a class="Button MoreOptions" id="btnNext" href="@Url.Content("~/Support")"><span>@Html.Term("Return")</span></a>
+    </div>
+</div>
+<div class="FR splitCol">
+    @Html.Partial("_Notes", Model)
+</div>
+<div id="saveReportModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <div>
+            <p>
+                <label>@Html.Term("ConfirmToMarkTicketAsResolved", "This will close your ticket and mark the issue as Resolved. Do you want to close this ticket?")</label>
+            </p>
+            <p>
+                <a id="btnCancelReport" href="javascript:void(0);" class="DTL Add">
+                    @Html.Term("Cancel")</a> <a id="btnSaveReport" href="javascript:void(0);" class="DTL Add"
+                        style="padding-left: 15px;">
+                        @Html.Term("OK")</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+ 

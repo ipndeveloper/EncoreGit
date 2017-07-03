@@ -1,0 +1,194 @@
+﻿@model OrderEntryModel
+<div id="bundlePackModal" class="jqmWindow LModal ProductWin" style="margin-left: 0px;">
+    <div class="mContent" style="width: 400px; min-height: 400px;">
+        <div id="bundlePackContents">
+        </div>
+        <p>
+            <a id="btnBundleAdd" href="javascript:void(0)" class="Button BigBlue">
+                @Html.Term("AddToOrder", "Add to Order")
+            </a>@string.Format(" ")<a id="btnBundleClose" href="javascript:void(0)" class="Button jqmClose">
+                @Html.Term("Close", "Close")
+            </a><span class="ClearAll"></span>
+        </p>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(function ()
+    {
+        $('#bundlePackModal').jqm({ modal: false,
+            onShow: function (h)
+            {
+                var link = $(h.t);
+                var tr = link.closest('tr');
+                var productId = tr.find('.productId').val();
+                var orderItemGuid = tr.attr("id").replace("oi", "");
+                GetDynamicKitContents(orderItemGuid);
+                h.w.show();
+            },
+            onHide: function (h)
+            {
+                h.w.fadeOut('slow');
+                h.w.hide();
+            }, overlay: 0
+        });
+        $('.btnAddToBundle').live('click', function (e)
+        {
+            $('#bundlePackModal').jqmShow(this);
+        });
+
+        $('.CreateBundle').live('click', function ()
+        {
+            var t = $(this);
+            var div = t.closest('div')
+            var productId = div.find('.dynamicKitProductSuggestion').val();
+            $.post('@Href("~/Orders/OrderEntry/CreateDynamicBundleUpSale")', { productId: productId }, function (response)
+            {
+                if (response.result)
+                {
+                    updateCartAndTotals(response);
+                    //showMessage('Product successfully added.', false);
+
+                    if (response.message !== undefined && response.message.length > 0)
+                    {
+                        showMessage(response.message, true);
+                    }
+                    updateBundleOptions(response.BundleOptionsSpanHTML);
+
+                    $("#oi" + response.guid).find('.btnAddToBundle').click();
+                } else
+                {
+                    showMessage(response.message, true);
+                }
+            });
+
+        });
+
+        $('#btnBundleAdd').live('click', function (e)
+        {
+            var parentGuid = $('#bundlePackContents').find('input.parentOrderItemGuid').val();
+            $.post('@Href("~/" + Model.AddBundleLocation)', { bundleGuid: parentGuid }, function (response)
+            {
+
+                if (response.result)
+                {
+                    $('#hQuickAddProductId,#txtQuickAddSearch,#txtQuickAddQuantity').val('');
+                    updateCartAndTotals(response);
+                    //showMessage('Product successfully added.', false);
+
+                    if (response.message !== undefined && response.message.length > 0)
+                    {
+                        showMessage(results.message, true);
+                    }
+                    updateBundleOptions(response.BundleOptionsSpanHTML);
+
+                    $('#bundlePackModal').jqmHide();
+                }
+                else
+                {
+                    showMessage('@Html.Term("TheProductCouldNotBeAdded", "The product could not be added"): ' + response.message, true);
+                }
+            });
+        });
+
+
+        $('#bundlePackContents .Update').live('click', function (e)
+        {
+            var bundleSection = $(this).closest('.bundleSection');
+            if (bundleSection.find('input.needsBackOrderConfirmation').val() == 'true') {
+                if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                    return;
+                }
+            }
+            var dynamicKitGroupId = bundleSection.attr("id").replace("groupId", "");
+            var parentGuid = $('#bundlePackContents').find('input.parentOrderItemGuid').val();
+            var productId = bundleSection.find('input.productId').val();
+            var quantity = bundleSection.find('input.quantity').val();
+            $.post('@Href("~/" + Model.AddToDynamicKitGroupLocation)', { parentOrderItemGuid: parentGuid, dynamicKitGroupId: dynamicKitGroupId, productId: productId, quantity: quantity }, function (response)
+            {
+                if (response.result)
+                {
+                    updateCartAndTotals(response);
+                    GetDynamicKitContents(parentGuid);
+                } else
+                {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+
+
+        $('.removeFromBundle').live('click', function (e)
+        {
+            var orderItemGuid = $(this).attr("id").replace('childGuid', '');
+            var parentGuid = $('#bundlePackContents').find('input.parentOrderItemGuid').val();
+            $.post('@Href("~/" + Model.RemoveFromBundleLocation)', { orderItemGuid: orderItemGuid, parentGuid: parentGuid }, function (response)
+            {
+                if (response.result)
+                {
+                    updateCartAndTotals(response);
+                    GetDynamicKitContents(parentGuid);
+                } else
+                {
+                    showMessage('@Html.Term("ErrorRemovingProduct", "The product could not be removed"): ' + response.message, true);
+                }
+            });
+        });
+    });
+
+    function updateBundleOptions(bundleOptionsSpanHTML)
+    {
+        var spanElement = $('#BundleOptionsSpan');
+        if (bundleOptionsSpanHTML == "")
+        {
+            spanElement.closest('tr').hide();
+        } else
+        {
+            spanElement.closest('tr').show();
+        }
+        spanElement.html(bundleOptionsSpanHTML);
+    }
+
+
+    function GetDynamicKitContents(orderItemGuid)
+    {
+        $.get('@Href("~/" + Model.GetDynamicKitContentsLocation)', { orderItemGuid: orderItemGuid }, function (response)
+        {
+            if (response.result)
+            {
+                $("#bundlePackContents").html(response.bundleContentsHTML);
+                $('.quantity').numeric();
+                $('input.txtDynamicKitQuickAddSearch').jsonSuggest('@Href("~/" + Model.InPageSearchLocation)', {
+                    data: function (item)
+                    {
+                        return newData = { query: $(item).val(), kitProductId: response.kitProductId, dynamicKitGroupId: $(item).closest('.bundleSection').attr("id").replace("groupId", "") };
+                    },
+                    minCharacters: 3,
+                    ajaxResults: true,
+                    onSelect: function (item)
+                    {
+                        var div = $(this).closest('.bundleSection');
+                        var txtQuantity = div.find('input.quantity');
+                        div.find('input.productId').val(item.id);
+                        txtQuantity.val('1');
+                        if (item.isDynamicKit)
+                        {
+                            txtQuantity.attr("disabled", "disabled");
+                        } else
+                        {
+                            txtQuantity.removeAttr("disabled");
+                        }
+                        div.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+                    }
+                });
+
+            }
+            else
+            {
+                showMessage(response.message, true);
+            }
+        });
+    }
+
+
+</script>

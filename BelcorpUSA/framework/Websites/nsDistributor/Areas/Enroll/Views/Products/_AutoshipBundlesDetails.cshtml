@@ -1,0 +1,16 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.AutoshipBundlesModel
+
+@{
+    if(Model.SelectedProductID != null && Model.SelectedProductID.Value != -1)
+    {
+        var selectedBundle = Model.AutoshipBundles.FirstOrDefault(x => x.ProductID == Model.SelectedProductID);
+        if (selectedBundle != null)
+        {
+            @string.Format(Model.FormatProvider, "{0} {1:C}", selectedBundle.Name, selectedBundle.Price)
+        }
+    }
+    else
+    {
+        @Html.Term("None")
+    }
+}

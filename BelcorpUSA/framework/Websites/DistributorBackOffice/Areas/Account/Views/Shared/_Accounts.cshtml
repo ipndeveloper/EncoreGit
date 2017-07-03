@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@section head{
+    @RenderSection("head", false)
+}
+@section breadcrumb {
+    @RenderSection("breadcrumb", false)
+}
+@section title {
+    @RenderSection("title", false)
+}
+@section ActionItems {
+    @Html.ActionItem("~/Account/Edit", Html.Term("Workstation_MyAccount_EditProfileLink", "Edit My Profile"), "icon-actionComposeLetter")
+    @Html.ActionItem("~/Account/Edit/SecuritySettings", Html.Term("ChangeMySecuritySettings", "Change My Security Settings"), "icon-actionLock")
+    @Html.ActionItem("~/Account/Ledger/ProductCredit", Html.Term("ProductCredit", "Product Credit"), "icon-actionPersonalOrder icon-actionProductCredit", null, "Accounts-Product Credit Ledger")
+    @Html.ActionItem("~/Account/Ledger/IncentivePoints", Html.Term("IncentivePoints", "Incentive Points"), "icon-actionPersonalOrder icon-actionIncentivePoints", null, "Accounts-Incentive Credit Ledger")
+
+    @Html.ActionItem("~/Account/EditAdditional/Index", Html.Term("Workstation_MyAccount_EditAdditionalProfileLink", "Edit Additional"), "icon-actionComposeLetter")
+    @Html.ActionItem("~/Account/DisbursementProfiles/Index", Html.Term("Workstation_MyAccount_DisbursementProfiles", "Disbursement Profiles"), "icon-actionEarnings")
+    @Html.ActionItem("~/Account/CoApplicant/Index", Html.Term("Workstation_MyAccount_CoApplicant", "Edit CoApplicant"), "icon-actionComposeLetter")
+
+    @{ Html.RenderPartial("_AccountLinks");}
+}
+
+@section SideBarExtras {}
+
+@*@Html.ActionItem("~/Account", Html.Term("AccountOverview", "Account Overview"), ActionItems.Overview)*@
+@*@{var autoships = ViewData["Autoships"] as List<autoshiporder>;}
+							@foreach (AutoshipSchedule schedule in ViewData["Schedules"] as List<AutoshipSchedule>) 
+                            { 
+                                var autoship = autoships.FirstOrDefault(a => a.AutoshipScheduleID == schedule.AutoshipScheduleID); 
+                                var exists = autoship != default(AutoshipOrder); 
+                                ActionItems itemType; 
+                                if(schedule.AutoshipScheduleTypeID == (int)Constants.AutoshipScheduleType.Normal && (schedule.IntervalTypeID == (int)Constants.IntervalType.Monthly || schedule.IntervalTypeID == (int)Constants.IntervalType.BiMonthly)) 
+                                    itemType = ActionItems.Monthly; 
+                                else if(schedule.AutoshipScheduleTypeID == (int)Constants.AutoshipScheduleType.SiteSubscription) 
+                                    itemType = ActionItems.PWS; 
+                                else 
+                                    itemType = ActionItems.International; 
+                                @Html.ActionItem(exists ? "~/Account/Autoships/Edit/" + autoship.AutoshipOrderID : "~/Account/Autoships/Edit?autoshipScheduleId=" + schedule.AutoshipScheduleID, exists ? Html.Term("EditMyAutoship", "Edit My {0}", schedule.GetTerm()) : Html.Term("SetUpMyAutoship", "Set Up My {0}", schedule.GetTerm()), itemType)); 
+                            }*@
+@RenderBody()

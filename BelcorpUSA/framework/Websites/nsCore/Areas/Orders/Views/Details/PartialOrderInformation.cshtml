@@ -1,0 +1,115 @@
+﻿@model nsCore.Areas.Orders.Models.Details.PartialOrderInformationModel
+
+<b>
+	@Html.Term("OrderType", "Order Type"):
+</b>
+@SmallCollectionCache.Instance.OrderTypes.GetById(Model.Order.OrderTypeID).GetTerm()
+@if (Model.IsReturnOrder && (Model.Order.ParentOrderID ?? 0) != 0)
+{
+	//TODO: Make this into an Order.LoadSlim - DES
+    Order parentOrder = Order.Load(Model.Order.ParentOrderID.ToInt());
+	<a href="@(Href("~/Orders/Details/Index/") + parentOrder.OrderNumber)">(@Html.Term("Parent", "Parent")
+		    @Html.Term("Order", "Order"):
+		    @parentOrder.OrderNumber)</a>
+}
+else if (Model.IsReplacementOrder)
+{
+    Order parentOrder = Order.Load(Model.Order.ParentOrderID ?? 0);
+	<a href="@(Href("~/Orders/Details/Index/") + parentOrder.OrderNumber)">(@Html.Term("Parent", "Parent")
+		@Html.Term("Order", "Order"):
+		@parentOrder.OrderNumber)</a>
+}
+@if (Model.ActingAsChildOrder)
+{
+	<br />
+	<b>
+		@Html.Term("OrderNumber", "Order Number"):
+	</b>
+	<a href="@(Href("~/Orders/Details/Index/") + Model.Order.OrderNumber)">
+		@Model.Order.OrderNumber
+	</a>
+}
+@*
+Only show if the order can attach to a party and isn't acting as a child order.
+*@
+@if (Model.IsOrderAttachableToParty && !Model.ActingAsChildOrder)
+{
+    <br />
+    <b>
+		@Html.Term("AttachedParty", "Attached Party"):
+    </b>
+	if (!Model.IsReturnOrder && (Model.Order.ParentOrderID ?? 0) != 0)
+	{
+		Order parentOrder = Order.Load(Model.Order.ParentOrderID ?? 0);
+		<a href="@(Href("~/Orders/Details/Index/") + parentOrder.OrderNumber)">
+			@parentOrder.OrderNumber
+		</a>
+		<!--&nbsp;&nbsp;-->
+		<a href="javascript:void(0);" id="btnChangePartyId">
+			(@Html.Term("change", "change"))
+		</a>
+	}
+	else
+	{
+		@Html.Term("NA", "N/A")
+		<!--&nbsp;&nbsp;-->
+		<a href="javascript:void(0);" id="btnAttachToParty">(@Html.Term("change", "change"))</a>
+	}
+}
+<div id="changePartyOrderModal" class="jqmWindow LModal ChangeWin">
+	<div class="mContent">
+		@Html.Partial("ChangeAttachedParty")
+	</div>
+</div>
+<br />
+@Html.Partial("PartialOrderStatus", Model.Order)
+<br />
+@*
+Only show if the order isn't acting as a child order.
+*@
+@if (!Model.ActingAsChildOrder)
+{
+	<b>
+		@Html.Term("Consultant", "Consultant"):
+	</b>
+	<span class="consultant">
+		<a href="@(Href("~/Accounts/Overview/Index/") + Model.Order.ConsultantInfo.AccountNumber)">
+			@Model.Order.ConsultantInfo.FullName
+		</a>
+	</span>
+	<!--&nbsp;&nbsp;-->
+	<a href="javascript:void(0);" id="btnShowChange">
+		(@Html.Term("change", "change"))
+	</a>
+	<div id="changeCommissionConsultantModal" class="jqmWindow LModal ChangeWin">
+		<div class="mContent">
+			@{ ViewData["Function"] = "Orders-Change Commission Consultant"; }
+			@Html.Partial("Authorize")
+		</div>
+	</div>
+	<br />
+}
+<b>
+	@Html.Term("CreatedDate", "Created Date"):
+</b>
+@Model.CreatedDate
+<br />
+<b>
+	@Html.Term("CompleteDate", "Complete Date"):
+</b>
+@Model.CompletedDate
+<br />
+@*If the order has a ParentOrderID and is acting as a child order, don't allow the CommissionDate to be changed.*@
+@if (Model.Order.ParentOrderID > 0 && Model.ActingAsChildOrder)
+{
+	<b>
+		@Html.Term("CommissionDate", "Commission Date"):
+	</b>
+	<span class="commission">
+		@Model.CommissionDate
+	</span>
+}
+else
+{
+	@Html.Partial("PartialOrderCommissionDate", Model.Order)
+}

@@ -1,0 +1,155 @@
+﻿@*@model IEnumerable<NetSteps.Data.Entities.Note>*@
+@model NetSteps.Data.Entities.SupportTicket
+ 
+           
+<script type="text/javascript">
+
+    $(function () {
+        $('#noteModal').jqm({
+            modal: false,
+            trigger: '#btnAddNewNote'
+        });
+
+        $('#btnAddNewNote').click(function () {
+            $('#newNoteSubject,#newNoteText').val('');
+        });
+
+        $("#btnSaveNote").click(function () {
+            if ($('#noteModal').checkRequiredFields()) {
+                var data = {
+                    subject: $('#newNoteSubject').val(),
+                    noteText: $('#newNoteText').val(),
+                    parentID: $('#parentNoteID').val(),
+                    supportTicketNumber: '@Model.SupportTicketNumber'
+                };
+
+                var t = $(this);
+                showLoading(t, { float: "right" });
+
+                $.post('@Url.Content("~/SupportNotes/AddNewNote")', data, function (response) {
+                    if (response.result) {
+                        $('#noteModal').jqmHide();
+                        hideLoading(t);
+                        $('#newNoteSubject,#newNoteText').val('');
+                        location.reload();
+                        getNotes();
+                    }
+                    else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }
+        });
+
+        $('#btnCancelNote').click(function () {
+            $('#newNoteSubject,#newNoteText').val('').clearError();
+        });
+
+        $('#notesPanel .toggleChildNotes').live('click', function () {
+            $(this).text($(this).text() == 'Collapse' ? 'Expand' : 'Collapse').parent().parent().find('.ChildNotes').slideToggle();
+        });
+
+
+        $.post('@Href("~/SupportNotes/Get")', {
+            id: '@Model.SupportTicketID'
+        }, function (response) {
+
+            if (response.result) {
+                $('#notesPanel').html(response.notes);
+            }
+            else {
+                showMessage(response.message, true);
+            }
+
+        });
+
+    });
+
+    function getNotes() {
+        var data = {
+            id: '@Model.SupportTicketID'
+        };
+    }
+
+   
+</script>
+
+<h2>@Html.Term("Message")</h2>
+ <div class="UI-mainBg brdrAll GridUtility contactHistoryUtility">
+        <a id="btnAddNewNote" rel="#EmailWindow" class="UI-icon-container" href="javascript:void(0);">
+        <span class="UI-icon icon-email"></span><span>@Html.Term("SendNewTicketMessage", "Send a New Message")</span></a>
+
+         <div id="noteModal" class="jqmWindow LModal">
+            <div class="mContent">
+                <h2>@Html.Term("AddaNote", "Add a Note")</h2>
+                <div id="noteErrors">
+                </div>
+                <div class="FormStyle2">
+                    @Html.Term("Title"):<br />
+                    <input id="newNoteSubject" type="text" style="width: 250px;" maxlength="100" value="" class="required" /><br />
+
+                    @Html.Term("Note"):<br />
+                    <textarea id="newNoteText" style="width: 250px; height: 100px;"></textarea>
+                 </div> 
+
+                 <input type="hidden" id="parentNoteID" style="width: 250px;" value="" /><br />
+              
+                    <p>
+                        <a id="btnCancelNote" href="javascript:void(0);" style="color:Blue;" class="FL jqmClose" >
+                            @Html.Term("Cancel")
+                        </a>
+                        <a id="btnSaveNote" href="javascript:void(0);" style="color:#333333; padding:0 10px; line-height: 30px;" class="FR Button MoreOptions">
+                            @Html.Term("Save")
+                        </a>
+                    </p>
+                    <span class="ClearAll"></span>
+                </div>
+            </div>
+         
+          
+ </div>
+
+ <div class="demo">
+		<div class=" ClearAll NoteFilters" style="padding: 5px;">
+			<div class="Loading FR" id="NotesLoading">
+			</div>
+			<br />
+			<div class="ClearAll">
+			</div>
+		</div>
+		<span class="ClearAll"></span>
+		<input type="hidden" id="noteParentIdentity" value="@Model.SupportTicketID" />
+
+   
+		<div class="ModTitle" id="uxNotesDiv">
+		</div>
+		<div id="notesPanel">
+		</div>
+         @{
+                List<SupportTicketGestionBE> lstSupportTicketGestionBE=ViewData["lstSupportTicketGestionBE"] as  List<SupportTicketGestionBE>;
+          }
+         @if (lstSupportTicketGestionBE != null)
+         {  
+            @Html.Partial("_SupportTicketGestion", lstSupportTicketGestionBE); 
+         } 
+</div>
+    
+         
+ @*<h2>@Html.Term("Messages")</h2>
+    <div class="UI-mainBg brdrAll GridUtility contactHistoryUtility">
+        <a rel="#EmailWindow" class="UI-icon-container" href="#">
+        <span class="UI-icon icon-email"></span><span>@Html.Term("SendNewTicketMessage","Send a New Message")</span></a>
+   </div>
+    <div id="TicketMessageHistory">
+        <div class="pad10 ticketMessage">
+            <span class="block lawyer messageDate">From: Joe Sender, On: mm/dd/yyyy</span>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dolor odio, faucibus quis facilisis at, luctus in odio. Integer convallis pulvinar mattis.
+        </div>
+        <div class="pad10 ticketMessage Alt">
+            <span class="block lawyer messageDate">From Joe Sender, On: mm/dd/yyyy</span>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dolor odio, faucibus quis facilisis at, luctus in odio. Integer convallis pulvinar mattis.
+        </div>
+    </div>
+*@
+
+

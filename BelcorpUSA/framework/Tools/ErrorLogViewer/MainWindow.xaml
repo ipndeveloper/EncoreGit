@@ -1,0 +1,295 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:Custom="http://schemas.microsoft.com/wpf/2008/toolkit" 
+        xmlns:busy="clr-namespace:NetSteps.Wpf.Controls;assembly=NetSteps.Wpf.Controls" 
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+        mc:Ignorable="d" x:Class="ErrorLogViewer.MainWindow"
+        Title="Error Log Viewer" Height="800" Width="1000" Icon="Shield_Red.ico">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo/>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Background="#FFF3F3F3" BorderBrush="#FF8C8E94">
+        	<Border.Effect>
+        		<DropShadowEffect Opacity="0.3" Direction="265"/>
+        	</Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Connection String:" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="1" />
+                <TextBox x:Name="uxConnectionstring" Grid.ColumnSpan="1" Grid.Column="1" Height="22" Margin="0,0,10,0" TextChanged="uxConnectionstring_TextChanged" />
+                <Button Content="Update" x:Name="uxUpdateConnectionString" Click="uxUpdateConnectionString_Click" Grid.Column="3" Height="22" Margin="0,0,5,0"/>
+            </Grid>
+        </Border>
+        <TabControl Margin="10" Grid.RowSpan="1" Grid.Row="1">
+            <TabItem Header="Recent Errors">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <Grid Grid.Row="1" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="250"/>
+                        </Grid.RowDefinitions>
+
+                        <ListBox x:Name="uxRecentErrors" Margin="5,5,10,5" BorderThickness="1" BorderBrush="#FF7E7E7E" SelectionChanged="uxRecentErrors_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding LogDate}" FontWeight="Bold" Margin="0,0,10,0"/>
+                                        <TextBlock Text="{Binding Message}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <chartingToolkit:Chart x:Name="uxGraphDailySmall" Margin="5,5,10,5" Grid.Row="1">
+                            <chartingToolkit:Chart.Axes>
+                                <!-- Axis for custom labels -->
+                                <chartingToolkit:DateTimeAxis Orientation="X">
+                                    <chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                                        <Style TargetType="chartingToolkit:DateTimeAxisLabel">
+                                            <Setter Property="StringFormat" Value="{}{0:MMM d}"/>
+                                        </Style>
+                                    </chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                                </chartingToolkit:DateTimeAxis>
+                            </chartingToolkit:Chart.Axes>
+
+                            <chartingToolkit:Chart.LegendStyle>
+                                <Style TargetType="Control">
+                                    <Setter Property="Width" Value="0"/>
+                                    <Setter Property="Height" Value="0"/>
+                                </Style>
+                            </chartingToolkit:Chart.LegendStyle>
+
+                            <chartingToolkit:Chart.TitleStyle>
+                                <Style TargetType="Control">
+                                    <Setter Property="Width" Value="0"/>
+                                    <Setter Property="Height" Value="0"/>
+                                </Style>
+                            </chartingToolkit:Chart.TitleStyle>
+
+                        </chartingToolkit:Chart>
+
+                    </Grid>
+
+                    <GridSplitter Margin="0" Width="5" Grid.Row="1" Opacity="0" Panel.ZIndex="5"/>
+
+                    <Grid Grid.Column="1" Grid.Row="1">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                            <Grid x:Name="uxError" VerticalAlignment="Top">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.225*"/>
+                                    <ColumnDefinition Width="0.775*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderThickness="1" Grid.ColumnSpan="2" BorderBrush="#FF5C1A1A">
+                                    <Border.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF814747" Offset="0"/>
+                                            <GradientStop Color="#FFF32D2D" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Message}" TextWrapping="Wrap" Margin="5,0,10,0" Foreground="#FFFEFF89" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock Text="LogDate" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="1" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding LogDate}" Grid.Column="1" Grid.Row="1" />
+
+                                <TextBlock Text="Exception Type" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="2" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding ExceptionTypeName}" Grid.Column="1" Grid.Row="2" />
+
+                                <TextBlock Text="Source" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="3" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Source}" Grid.Column="1" Grid.Row="3" />
+
+
+                                <TextBlock Text="Web SessionID" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="4" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding SessionID}" Grid.Column="1" Grid.Row="4" />
+
+                                <TextBlock Text="Form" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="5" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Form}" Grid.Column="1" Grid.Row="5" />
+
+                                <TextBlock Text="Query String" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="6" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding QueryString}" Grid.Column="1" Grid.Row="6" />
+
+                                <TextBlock Text="Referer" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="7" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Referrer}" Grid.Column="1" Grid.Row="7" />
+
+                                <TextBlock Text="BrowserInfo" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="8" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding BrowserInfo}" Grid.Column="1" Grid.Row="8" />
+
+                                <TextBlock Text="UserHostAddress" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="9" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding UserHostAddress}" Grid.Column="1" Grid.Row="9" />
+
+
+                                <TextBlock Text="ApplicationID" FontWeight="Bold" Margin="0,0,10,0"  Grid.Row="10" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding ApplicationID, Converter={StaticResource IdToNameConverter}, ConverterParameter=Applications, Mode=OneWay}" Grid.Column="1" Grid.Row="10" />
+
+                                <TextBlock Text="AccountID" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="11" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding AccountID}" Grid.Column="1" Grid.Row="11" />
+
+                                <TextBlock Text="UserID" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="12" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding UserID}" Grid.Column="1" Grid.Row="12" />
+
+                                <TextBlock Text="OrderID" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="13" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding OrderID}" Grid.Column="1" Grid.Row="13" />
+
+
+                                <TextBlock Text="MachineName" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="14" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding MachineName}" Grid.Column="1" Grid.Row="14" />
+
+                                <TextBlock Text="Public Message" FontWeight="Bold" Margin="0,0,10,0"  Grid.Row="15" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding PublicMessage}" Grid.Column="1" Grid.Row="15" />
+
+                                <TextBlock Text="InternalMessage" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="16" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding InternalMessage}" Grid.Column="1" Grid.Row="16" />
+
+                                <TextBlock Text="TargetSite" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="17" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding TargetSite}" Grid.Column="1" Grid.Row="17" />
+
+                                <TextBlock Text="StackTrace" FontWeight="Bold" Margin="0,0,10,0" Grid.Row="18" />
+                                <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding StackTrace}" Grid.Column="1" Grid.Row="18" />
+
+                                <GridSplitter Margin="0" Width="5" Grid.RowSpan="25" Opacity="0"/>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+
+                        <CheckBox x:Name="uxUseLiveDatabase" Content="Use Live DB" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="Application:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <ComboBox x:Name="uxApplication" Height="22" SelectionChanged="uxApplication_SelectionChanged" Margin="0,0,5,0"/>
+
+                        <TextBlock Text="Machine:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <ComboBox x:Name="uxMachineName" Height="22" SelectionChanged="uxMachineName_SelectionChanged" Margin="0,0,5,0"/>
+
+                        <TextBlock Text="Start Date:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <Custom:DatePicker x:Name="uxStartDate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="End Date:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <Custom:DatePicker x:Name="uxEndDate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                        <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox x:Name="uxSearchData" VerticalAlignment="Center" Width="200" />
+                        <Button x:Name="uxRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="5,0,0,0" Width="75" d:LayoutOverrides="Height" VerticalAlignment="Center" 
+							BorderThickness="1" Click="uxRefresh_Click" IsDefault="True"/>
+                    </StackPanel>
+
+                    <busy:BusyControl x:Name="uxBusyControl" Margin="0" d:LayoutOverrides="Width, Height" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                </Grid>
+            </TabItem>
+
+
+            <TabItem Header="Graph">
+                <Grid>
+
+                    <chartingToolkit:Chart Title="Errors per day" x:Name="uxGraphDaily">
+                        <chartingToolkit:Chart.Axes>
+                            <!-- Axis for custom labels -->
+                            <chartingToolkit:DateTimeAxis Orientation="X">
+                                <chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                                    <Style TargetType="chartingToolkit:DateTimeAxisLabel">
+                                        <Setter Property="StringFormat" Value="{}{0:MMM d}"/>
+                                    </Style>
+                                </chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                            </chartingToolkit:DateTimeAxis>
+                        </chartingToolkit:Chart.Axes>
+                    </chartingToolkit:Chart>
+
+                </Grid>
+            </TabItem>
+
+
+            <TabItem Header="Application Usage Stats" Visibility="Visible">
+                <Grid Margin="0,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="400" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top">
+
+                        <TextBlock Text="Start Date:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <Custom:DatePicker x:Name="uxAppStatsStartDate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="End Date:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <Custom:DatePicker x:Name="uxAppStatsEndDate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                        <Button x:Name="uxRefreshApplicationUsageStats" Content="Refresh" HorizontalAlignment="Left" Margin="5,0,0,0" Width="75" d:LayoutOverrides="Height" VerticalAlignment="Center" 
+							BorderThickness="1" Click="uxRefreshApplicationUsageStats_Click"/>
+                    </StackPanel>
+
+                    <chartingToolkit:Chart Title="ApplicationUsage" x:Name="uxApplicationUsageStats" Margin="0,0,10,0" Grid.Row="1" Grid.RowSpan="3">
+                        <chartingToolkit:Chart.Axes>
+                            <!-- Axis for custom labels -->
+                            <chartingToolkit:DateTimeAxis Orientation="X">
+                                <chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                                    <Style TargetType="chartingToolkit:DateTimeAxisLabel">
+                                        <Setter Property="StringFormat" Value="{}{0:MMM d}"/>
+                                    </Style>
+                                </chartingToolkit:DateTimeAxis.AxisLabelStyle>
+                            </chartingToolkit:DateTimeAxis>
+                        </chartingToolkit:Chart.Axes>
+                    </chartingToolkit:Chart>
+
+                    <GridSplitter Width="5" Grid.Row="1" Grid.Column="0" Opacity="0" Grid.RowSpan="10" Panel.ZIndex="1000" HorizontalAlignment="Right"/>
+
+                    <chartingToolkit:Chart x:Name="uxAppPoolStats" Margin="0,0,0,5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1">
+                    </chartingToolkit:Chart>
+
+                    <chartingToolkit:Chart x:Name="uxApplicationStats" Margin="0,5,0,5" Grid.Column="1" Grid.Row="2" Grid.RowSpan="1">
+                    </chartingToolkit:Chart>
+
+                    <chartingToolkit:Chart x:Name="uxMachineNameStats" Margin="0,5,0,0" Grid.Column="1" Grid.Row="3" Grid.RowSpan="1">
+                    </chartingToolkit:Chart>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
+</Window>

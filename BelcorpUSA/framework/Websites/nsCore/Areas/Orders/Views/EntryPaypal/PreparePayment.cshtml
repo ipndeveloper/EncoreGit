@@ -1,0 +1,431 @@
+﻿<!-- Vista: Formulario para prepara los datos para el manejo de operaciones de pasarela de pago con PayPal
+    Proyecto: nscore
+    Author: Juan Morales Olivares - CSTI * Año: 2016
+-->
+<style type="text/css">
+        
+    #checkfrom {        
+        width : 300px;
+        background-color:Red;
+         
+    }
+</style>
+<!--<script src="../../../../Scripts/jquery.maskedinput.js" type="text/jscript" ></script>-->
+<div class="SectionHeader">
+    <h2>@Html.Term("Pagamento", "Pagamento")</h2>
+</div>
+<div id="paypalID">
+    <table style="height: 110px;">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td class="FLabel" style="width: 200px">
+                            <span class="requiredMarker">*</span>
+                            @Html.Term("PayPalName", "Nome impreso no Cartao")
+                        </td>
+                        <td>
+                            <input type="text" maxlength="100" id="txtName" class="required" style="width: 250px;
+                                text-transform: uppercase;" tabindex="101" />
+                            <br />
+                            <span class="ml10 FL" style='color: red; display: none' id="msgName">
+                                @Html.Term("DigiteInformacionSolicitada", "Digite la informacion solicitada")
+                            </span>
+                        </td>
+                        <td>
+                            <img  id="Aviso01"  src="../../../../FileUploads/Paypal/AvisoLlenar.png" 
+                        alt="Por favor, informe o nome completo como aparece no cartao" 
+                        title="@Html.Term("AvisoNombre", "Por favor, informe o nome completo como aparece do cartao")"/>
+                            <img id="Error01" style="display: none" src="../../../../FileUploads/Paypal/AdvertenciaError.png"
+                                alt="Revise por favor" />
+                            <img id="Correcto01" style="display: none" src="../../../../FileUploads/Paypal/CheckVerde.png"
+                                alt="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="FLabel">
+                            <span class="requiredMarker">*</span>
+                            @Html.Term("PayPalType", "CPF ou CNPJ do titular do Cartao"):
+                        </td>
+                        <td>
+                            <select id="sIdTypes">
+                                <option value="0">---</option>
+                                <option value="1" selected="selected">CPF</option>
+                                <option value="2">CNPJ</option>
+                            </select>
+                            <input type="text" maxlength="100" id="txtTypeNumber" class="required" style="width: 250px;"
+                                tabindex="102" />
+                            <br />
+                            <span class="ml10 FL" style='color: red; display: none' id="msgTypeNumber">
+                                @Html.Term("CFPInvalido", "CPF o CNPJ Invalido")
+                            </span>
+                        </td>
+                        <td>
+                            <img  id="Aviso02"  src="../../../../FileUploads/Paypal/AvisoLlenar.png" 
+                                alt="Por favor, informe o documento do propietario do cartao" 
+                                title="@Html.Term("AvisoCPF", "Por favor, informe o documento do propietario do cartao")"/>
+                            <img id="Error02" style="display: none" src="../../../../FileUploads/Paypal/AdvertenciaError.png"
+                                alt="Revise por favor" />
+                            <img id="Correcto02" style="display: none" src="../../../../FileUploads/Paypal/CheckVerde.png"
+                                alt="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="FLabel">
+                            <span class="requiredMarker">*</span>
+                            @Html.Term("PayPalEmail", "Email do titular do Cartao"):
+                        </td>
+                        <td>
+                            <input type="text" maxlength="100" id="txtEmail" style="width: 250px; text-transform: uppercase;"
+                                tabindex="103" /><br />
+                            <span class="ml10 FL" style='color: red; display: none' id="msgEmail">
+                                @Html.Term("EmailInvalido", "E-mail invalido")
+                            </span>
+                        </td>
+                        <td>
+                            <img  id="Aviso03"  src="../../../../FileUploads/Paypal/AvisoLlenar.png" 
+                         alt="Por favor, informe su e-mail" 
+                         title="@Html.Term("AvisoMail", "Por favor, informe su e-mail")" />
+                            <img id="Error03" style="display: none" src="../../../../FileUploads/Paypal/AdvertenciaError.png"
+                                alt="Revise por favor" />
+                            <img id="Correcto03" style="display: none" src="../../../../FileUploads/Paypal/CheckVerde.png"
+                                alt="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="FLabel">
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" id="btnContinuar" style="display: inline-block;" class="Button BigBlue"
+                                tabindex="104">
+                                @Html.Term("Continuar", "Continuar")</a> <a href="javascript:void(0);" id="btnCancelar"
+                                    style="display: inline-block;" class="Button BigBlue" tabindex="105">
+                                    @Html.Term("Cancelar", "Cancelar")</a>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="prepaymentWait" class="PModal WaitWin">
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+
+        $('#txtName').bind('keypress', function (e)
+        {
+            return (e.which != 8 && e.which != 0 && e.which != 32 && (e.which < 65 || e.which > 122) && (e.which != 91 && e.which != 92 && e.which != 93
+                     && e.which != 94 && e.which != 95 && e.which != 96)) ? false : true;
+        });
+
+        $('#txtTypeNumber').bind('keypress', function (e)
+        {
+            return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
+        });
+
+
+
+        $("#sIdTypes").change(function ()
+        {
+
+            $("#Aviso02").hide();
+            var value = $(this).val();
+            var TypeNumber = $('#txtTypeNumber').val();
+
+            if (TypeNumber != '') $('#txtTypeNumber').val("");
+
+            //  CPF -- ID  1; 11 carateres
+            if (value == 1)
+                $("#txtTypeNumber").mask("999.999.999-99");
+
+            //  CNPJ -- ID 2; 14 carateres
+            if (value == 2)
+                $("#txtTypeNumber").mask("99.999.999/9999-99");
+
+
+
+            if (value == 0)// && TypeNumber != '')
+            {
+                $("#msgName").show();
+                $("#Error02").show();
+                $("#Correcto02").hide();
+
+                $(this).focus()
+
+            }
+            else
+            {
+                $('#txtTypeNumber').focus();
+            }
+        });
+
+    });
+
+    $(document).ready(function ()
+    {
+        $("#txtTypeNumber").mask("999.999.999-99");
+        var valName = false;
+        var valTNumber = false;
+        var valEmail = false;
+
+        $('#btnContinuar').click(function ()
+        {
+            if (valName && valTNumber && valEmail)
+            {
+                $("#prepaymentWait").css({ 'display': "block", 'width': "870px", 'height': "165px", 'background-color': "white", 'top': "0px", 'left': "200px", 'z-index': "2", 'opacity': "0.8" });
+                $("#prepaymentWait").show();
+
+                $("#PrePayPalLoadImg").show();
+                $("#paypalForm").empty();
+                $("#paypalForm").show();
+                $("#paypalForm").load('@Url.Action("FormPayPal", "EntryPayPal")');
+            }
+        });
+
+        $('#btnContinuar').addClass("ButtonOff");
+
+        // NAME
+        $('#txtName').on('blur', function ()
+        {
+            $("#Aviso01").hide();
+
+            var control = $(this);
+            if (control.val() == '')
+            {
+                $("#msgName").show();
+                $("#Error01").show();
+                $("#Correcto01").hide();
+                valName = false;
+
+                MostrarBotonContinuar();
+            }
+
+        }).keydown(function ()
+        {
+            $("#Aviso01").hide();
+
+            var vname = $(this).val();
+
+            vname = vname.trim();
+
+            if (vname.indexOf(" ") > 0)
+            {
+                $("#msgName").hide();
+                $("#Error01").hide();
+                $("#Correcto01").show();
+                valName = true;
+            } else
+            {
+                $("#msgName").show();
+                $("#Error01").show();
+                $("#Correcto01").hide();
+                valName = false;
+            }
+            MostrarBotonContinuar();
+
+        });
+
+
+        // TYPE NUMBER
+        $('#txtTypeNumber').on('blur', function ()
+        {
+            $("#Aviso02").hide();
+
+            var stype = $("#sIdTypes").val();
+            var control = $(this);
+
+            if (control.val() == '' || stype == 0)
+            {
+
+                $("#msgTypeNumber").show();
+                $("#Error02").show();
+                $("#Correcto02").hide();
+                valTNumber = false;
+            }
+
+            if (control.val() != '' && stype != '0')
+            {
+                var numsinMask = control.val().replace('.', '').replace('.', '').replace('-', '').replace('/', '');
+
+                //  CPF -- ID  1;   11  carateres    
+                if (stype == 1 && numsinMask.length == 11)
+                {
+                    DocumentValidation(stype, numsinMask);
+                }
+                //  CNPJ  --ID 2;   14 carateres  
+                if (stype == 2 && numsinMask.length == 14)
+                {
+                    DocumentValidation(stype, numsinMask);
+                }
+            }
+            MostrarBotonContinuar();
+        }).keydown(function ()
+        {
+            $("#Aviso02").hide();
+
+            if ($('#txtTypeNumber').val() == '' || $("#sIdTypes").val() == 0)
+            {
+                $("#msgTypeNumber").show();
+                $("#Error02").show();
+                $("#Correcto02").hide();
+                valTNumber = false;
+            }
+            MostrarBotonContinuar();
+        });
+
+
+
+        //  CORREOS:
+        $('#txtEmail').on('blur', function ()
+        {
+            $("#Aviso03").hide();
+
+            if ($('#txtEmail').val() == '')
+            {
+                $("#msgEmail").show();
+                $("#Error03").show();
+                $("#Correcto03").hide();
+                valEmail = false;
+            }
+
+            EmailValidation($(this).val());
+            MostrarBotonContinuar();
+
+
+        }).keyup(function ()
+        {
+            $("#Aviso03").hide();
+
+            if ($('#txtEmail').val() == '')
+            {
+                $("#msgEmail").show();
+                $("#Error03").show();
+                $("#Correcto03").hide();
+                valEmail = false;
+            }
+            MostrarBotonContinuar();
+        });
+
+        function MostrarBotonContinuar()
+        {
+
+            if (valName && valTNumber && valEmail)
+            {
+                $('#btnContinuar').removeClass("ButtonOff");
+
+            } else
+            {
+                $('#btnContinuar').addClass("ButtonOff");
+            }
+
+        }
+
+        function EmailValidation(Email)
+        {
+            if ($('#txtEmail').val() != '')
+            {
+                var Parameters = {
+                    Email: Email
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EmailValidation", "EntryPayPal")',
+                    data: JSON.stringify(Parameters),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data)
+                    {
+                        if (data.result)
+                        {
+                            $("#msgEmail").hide();
+                            $("#Error03").hide();
+                            $("#Correcto03").show();
+                            valEmail = true;
+                        }
+                        else
+                        {
+                            $("#msgEmail").show();
+                            $("#Error03").show();
+                            $("#Correcto03").hide();
+                            valEmail = false;
+                        }
+                        MostrarBotonContinuar();
+                    }
+                });
+
+            } else
+            {
+                $("#msgEmail").show();
+                $("#Error03").show();
+                $("#Correcto03").hide();
+                valEmail = false;
+                MostrarBotonContinuar();
+            }
+
+
+        }
+
+
+        function DocumentValidation(DocumentType, DocumentValue)
+        {
+            var Parameters = {
+                DocumentType: DocumentType,
+                DocumentValue: DocumentValue
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DocumentValidation", "EntryPayPal")',
+                data: JSON.stringify(Parameters),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data)
+                {
+                    if (!data.result)
+                    {
+                        $("#msgTypeNumber").show();
+                        $("#Error02").show();
+                        $("#Correcto02").hide();
+                        valTNumber = false;
+                    } else
+                    {
+                        $("#msgTypeNumber").hide();
+                        $("#Error02").hide();
+                        $("#Correcto02").show();
+                        valTNumber = true;
+                    }
+                    MostrarBotonContinuar();
+                }
+            });
+        }
+    });
+
+    $('#btnCancelar').click(function ()
+    {
+        var sid = $("#hdid").val();
+        var sindice = $("#hdindice").val();
+        var datosCancel = { botonCancel: '1' };
+        
+        $.ajax({
+            url: '@Url.Action("CancelPay", "EntryPayPal")',
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            data: datosCancel,
+            success: function (response)
+            {
+                removePayment(sid, sindice);
+
+                $("#prepaymentWait").hide();
+                $("#paypalForm").hide();
+                $("#paymentWait").hide();
+                $('#PayPalPrePayment').jqmHide();
+            }
+        });
+        
+    });
+</script>

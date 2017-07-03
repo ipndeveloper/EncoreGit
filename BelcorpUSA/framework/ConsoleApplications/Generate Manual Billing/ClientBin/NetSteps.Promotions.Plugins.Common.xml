@@ -1,0 +1,1216 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Promotions.Plugins.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Promotions.Plugins.Common.ModuleWireup">
+      <summary>
+            Wireup command called at bootstrap time by the wireup coordinator.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.ModuleWireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+      <summary>
+            Wires this module.
+            </summary>
+      <param name="coordinator">the coordinator</param>
+      <seealso cref="T:NetSteps.Encore.Core.Wireup.IWireupCoordinator" />
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountTitle(System.Int32,System.Int32)">
+      <summary>
+            Adds the account title ID.
+            </summary>
+      <param name="accountTitleID">The account title ID.</param>
+      <param name="titleTypeID">The title type ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountTitleID &gt; 0" vb="accountTitleID &gt; 0">accountTitleID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTitleID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountTitle(System.Int32,System.Int32)">
+      <summary>
+            Deletes the account title ID.
+            </summary>
+      <param name="accountTitleID">The account title ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountTitleID &gt; 0" vb="accountTitleID &gt; 0">accountTitleID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTitleID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddOrderTypeID(System.Int32)">
+      <summary>
+            Adds the order type ID.
+            </summary>
+      <param name="orderTypeID">The order type ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="orderTypeID &gt; 0" vb="orderTypeID &gt; 0">orderTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">orderTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteOrderTypeID(System.Int32)">
+      <summary>
+            Deletes the order type ID.
+            </summary>
+      <param name="orderTypeID">The order type ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="orderTypeID &gt; 0" vb="orderTypeID &gt; 0">orderTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">orderTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountTypeID(System.Int16)">
+      <summary>
+            Adds the account type ID.
+            </summary>
+      <param name="accountTypeID">The account type ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountTypeID &gt; 0" vb="accountTypeID &gt; 0">accountTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountTypeID(System.Int16)">
+      <summary>
+            Deletes the account type ID.
+            </summary>
+      <param name="accountTypeID">The account type ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountTypeID &gt; 0" vb="accountTypeID &gt; 0">accountTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountID(System.Int32)">
+      <summary>
+            Adds the account  ID.
+            </summary>
+      <param name="accountID">The account  ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountID &gt; 0" vb="accountID &gt; 0">accountID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountID(System.Int32)">
+      <summary>
+            Deletes the account ID.
+            </summary>
+      <param name="accountID">The account  ID.</param>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="accountID &gt; 0" vb="accountID &gt; 0">accountID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountID &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.RequiresPromotionCode">
+      <summary>
+            Gets a value indicating whether the promotion requires entry of a promotion code.
+            </summary>
+      <value>
+        <c>true</c> if the promotion requires a promotion code; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.PromotionCode">
+      <summary>
+            Gets or sets the promotion code.
+            </summary>
+      <value>The promotion code.</value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.OneTimeUse">
+      <summary>
+            Gets or sets a value indicating whether an account may only use this promotion once..
+            </summary>
+      <value>
+        <c>true</c> if the promotion is restricted to a single use; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.FirstOrdersOnly">
+      <summary>
+            Gets or sets a value indicating whether an account may only use this promotion once..
+            </summary>
+      <value>
+        <c>true</c> if the promotion is restricted to a single use on first orders only; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.RestrictedToAccountTitlesOrTypes">
+      <summary>
+            Gets the restricted to account titles or types.
+            </summary>
+      <value>The restricted to account titles or types.</value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AccountTitles">
+      <summary>
+            Gets the account title ids allowed when the promotion is restricted by account ID; empty if not restricted
+            </summary>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AccountTypeIDs">
+      <summary>
+            Gets the account type IDs.
+            </summary>
+      <value>The account type IDs.</value>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AccountIDs">
+      <summary>
+            Gets the account IDs.
+            </summary>
+      <value>The account IDs.</value>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.RestrictedToOrderTypes">
+      <summary>
+            Gets a value indicating whether this promotion is restricted to specific order types.
+            </summary>
+      <value>
+        <c>true</c> if the promotion is restricted by order type; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.OrderTypes">
+      <summary>
+            Specifies which order types are allowed when it is restricted; empty if not restricted.
+            </summary>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.MarketIDs">
+      <summary>
+            Gets the market IDs.
+            </summary>
+      <value>The market IDs.</value>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.ISingleMarketStandardQualificationPromotion.MarketID">
+      <summary>
+            Gets or sets the market ID.
+            </summary>
+      <value>The market ID.</value>
+      <setter>
+        <requires exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotedPriceTypesForProductID(System.Int32)">
+      <summary>
+            Gets the promoted price types for product ID.
+            </summary>
+      <param name="productID">The product ID.</param>
+      <returns />
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)">
+      <summary>
+            Gets the promotion adjustment amount.
+            </summary>
+      <param name="productID">The product ID.</param>
+      <param name="marketID">The market ID.</param>
+      <param name="originalPrice">The original price.</param>
+      <param name="productPriceType">Type of the product price.</param>
+      <returns />
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="originalPrice &gt;= new decimal(0)" vb="originalPrice &gt;= New Decimal(0) ">originalPrice &gt;= new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!originalPrice &gt;= new decimal(0)</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="productPriceType != null" vb="productPriceType &lt;&gt; Nothing">productPriceType != null</requires>
+      <exception cref="T:System.ArgumentNullException">productPriceType == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.PromotedProductIDs">
+      <summary>
+            Gets the promoted product IDs.
+            </summary>
+      <value>The promoted product IDs.</value>
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.GetAdjustedValue(System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)">
+      <summary>
+            Gets the adjusted value for a product based upon its current value, market ID and price type.
+            </summary>
+      <param name="productID">The product ID.</param>
+      <param name="initialAmount">The initial pre-adjustment amount.</param>
+      <param name="priceType">The price type.</param>
+      <returns />
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustedValue(System.Int32,System.Decimal,System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <summary>
+            Gets the adjusted value for a product based upon its current value, market ID and price type.
+            </summary>
+      <param name="productID">The product ID.</param>
+      <param name="initialAmount">The initial pre-adjustment amount.</param>
+      <param name="marketID">The market ID.</param>
+      <param name="priceType">The price type.</param>
+      <returns />
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DefaultMarketID">
+      <summary>
+            Gets or sets the default market ID.
+            </summary>
+      <value>The default market ID.</value>
+      <setter>
+        <requires exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderHasMinimumProductSelectionsQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderHasMinimumProductSelectionsQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderHasMinimumProductSelectionsQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderTypeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderTypeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderTypeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountTypeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountTypeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountTypeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderSubtotalRangeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderSubtotalRangeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderSubtotalRangeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.UseCountQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.UseCountQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.UseCountQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.MarketListQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.MarketListQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.MarketListQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountHasTitleQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountHasTitleQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountHasTitleQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountListQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountListQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.AccountListQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerSubtotalRangeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerSubtotalRangeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerSubtotalRangeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderPriceTypeTotalRangeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderPriceTypeTotalRangeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.OrderPriceTypeTotalRangeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerIsHostQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerIsHostQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerIsHostQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.PromotionCodeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.PromotionCodeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.PromotionCodeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerPriceTypeTotalRangeQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerPriceTypeTotalRangeQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.CustomerPriceTypeTotalRangeQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.ProductInOrderQualification.ValidFor``1(System.String,``0)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.ValidFor``1(System.String,``0)" inheritedFromTypeName="IPromotionQualificationExtension" exception="T:System.ArgumentNullException" csharp="!IsNullOrEmpty(propertyName)" vb="Not IsNullOrEmpty(propertyName)">!string.IsNullOrEmpty(propertyName)</requires>
+      <exception cref="T:System.ArgumentNullException">string.IsNullOrEmpty(propertyName)</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.ProductInOrderQualification.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionQualificationExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Qualifications.Concrete.ProductInOrderQualification.AssociatedPropertyNames">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionQualificationExtension.get_AssociatedPropertyNames" inheritedFromTypeName="IPromotionQualificationExtension" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Decimal)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.DeleteProductAdjustments(System.Int32)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.GetCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.GetOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.GetCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.GetOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveRequiredProductOption(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRequiredProductOption(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &lt;= 0" vb="productID &lt;= 0">productID &lt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &gt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RemoveRewardProduct(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRewardProduct(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt;= 0" vb="productID &gt;= 0">productID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.PromotionKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionKind" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.RequiredProductOptions">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_RequiredProductOptions" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.ProductsAddedAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductsAddedAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.ProductSelectionsMaximumCount">
+      <setter>
+        <requires description="Maximum product selections count cannot be 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.set_ProductSelectionsMaximumCount(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.OrderPromotionDefaultCartRewards.ProductSelectionsAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductSelectionsAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetAdjustedValue(System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.GetAdjustedValue(System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionFlatDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Decimal)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Decimal)" inheritedFromTypeName="IProductPromotionFlatDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionFlatDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.DeleteProductAdjustments(System.Int32)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.DeleteProductAdjustments(System.Int32)" inheritedFromTypeName="IProductPromotionFlatDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionFlatDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionFlatDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetPromotedPriceTypesForProductID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotedPriceTypesForProductID(System.Int32)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotedPriceTypesForProductID(System.Int32)" inheritedFromTypeName="IProductPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="originalPrice &gt;= new decimal(0)" vb="originalPrice &gt;= New Decimal(0) ">originalPrice &gt;= new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!originalPrice &gt;= new decimal(0)</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentNullException" csharp="productPriceType != null" vb="productPriceType &lt;&gt; Nothing">productPriceType != null</requires>
+      <exception cref="T:System.ArgumentNullException">productPriceType == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.GetOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveRequiredProductOption(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRequiredProductOption(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &lt;= 0" vb="productID &lt;= 0">productID &lt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &gt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RemoveRewardProduct(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRewardProduct(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt;= 0" vb="productID &gt;= 0">productID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.PromotionKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionKind" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.PromotedProductIDs">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.get_PromotedProductIDs" inheritedFromTypeName="IProductPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.RequiredProductOptions">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_RequiredProductOptions" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.ProductsAddedAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductsAddedAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.ProductSelectionsMaximumCount">
+      <setter>
+        <requires description="Maximum product selections count cannot be 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.set_ProductSelectionsMaximumCount(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionFlatDiscount.ProductSelectionsAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductSelectionsAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.SingleMarketStandardQualificationPromotion.MarketID">
+      <setter>
+        <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.ISingleMarketStandardQualificationPromotion.set_MarketID(System.Int32)" inheritedFromTypeName="ISingleMarketStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.MultipleMarketStandardQualificationPromotion.AddMarketID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.AddMarketID(System.Int32)" inheritedFromTypeName="IMultipleMarketStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.MultipleMarketStandardQualificationPromotion.DeleteMarketID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.DeleteMarketID(System.Int32)" inheritedFromTypeName="IMultipleMarketStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.MultipleMarketStandardQualificationPromotion.MarketIDs">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.get_MarketIDs" inheritedFromTypeName="IMultipleMarketStandardQualificationPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.DeleteAccountTitle(System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountTitle(System.Int32,System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountTitleID &gt; 0" vb="accountTitleID &gt; 0">accountTitleID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTitleID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AddAccountTitle(System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountTitle(System.Int32,System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountTitleID &gt; 0" vb="accountTitleID &gt; 0">accountTitleID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTitleID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.DeleteAccountTypeID(System.Int16)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountTypeID(System.Int16)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountTypeID &gt; 0" vb="accountTypeID &gt; 0">accountTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AddAccountTypeID(System.Int16)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountTypeID(System.Int16)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountTypeID &gt; 0" vb="accountTypeID &gt; 0">accountTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.DeleteOrderTypeID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteOrderTypeID(System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="orderTypeID &gt; 0" vb="orderTypeID &gt; 0">orderTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">orderTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AddOrderTypeID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddOrderTypeID(System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="orderTypeID &gt; 0" vb="orderTypeID &gt; 0">orderTypeID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">orderTypeID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AddAccountID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.AddAccountID(System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountID &gt; 0" vb="accountID &gt; 0">accountID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.DeleteAccountID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.DeleteAccountID(System.Int32)" inheritedFromTypeName="IStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="accountID &gt; 0" vb="accountID &gt; 0">accountID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">accountID &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AccountTitles">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.get_AccountTitles" inheritedFromTypeName="IStandardQualificationPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AccountTypeIDs">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.get_AccountTypeIDs" inheritedFromTypeName="IStandardQualificationPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.OrderTypes">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.get_OrderTypes" inheritedFromTypeName="IStandardQualificationPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.StandardQualificationPromotion.AccountIDs">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IStandardQualificationPromotion.get_AccountIDs" inheritedFromTypeName="IStandardQualificationPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetAdjustedValue(System.Int32,System.Decimal,System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustedValue(System.Int32,System.Decimal,System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustedValue(System.Int32,System.Decimal,System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32,System.Decimal)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32,System.Decimal)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32,System.Decimal)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.DeleteProductAdjustments(System.Int32)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustments(System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetMarketsForProductIDAndPriceType(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetMarketsForProductIDAndPriceType(System.Int32,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)">
+      <requires description="Product ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetPromotedPriceTypesForProductID(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotedPriceTypesForProductID(System.Int32)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotedPriceTypesForProductID(System.Int32)" inheritedFromTypeName="IProductPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="originalPrice &gt;= new decimal(0)" vb="originalPrice &gt;= New Decimal(0) ">originalPrice &gt;= new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!originalPrice &gt;= new decimal(0)</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.GetPromotionAdjustmentAmount(System.Int32,System.Int32,System.Decimal,NetSteps.Data.Common.Entities.IPriceType)" inheritedFromTypeName="IProductPromotion" exception="T:System.ArgumentNullException" csharp="productPriceType != null" vb="productPriceType &lt;&gt; Nothing">productPriceType != null</requires>
+      <exception cref="T:System.ArgumentNullException">productPriceType == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetCustomerSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetOrderSubtotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderSubtotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetCustomerPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.GetOrderPriceTypeTotalRange(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderPriceTypeTotalRange(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveRequiredProductOption(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRequiredProductOption(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &lt;= 0" vb="productID &lt;= 0">productID &lt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &gt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RemoveRewardProduct(System.Int32)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRewardProduct(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt;= 0" vb="productID &gt;= 0">productID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.PromotionKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotion.get_PromotionKind" inheritedFromTypeName="IPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.DefaultMarketID">
+      <setter>
+        <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.set_DefaultMarketID(System.Int32)" inheritedFromTypeName="IProductPromotionPercentDiscount" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.PromotedProductIDs">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IProductPromotion.get_PromotedProductIDs" inheritedFromTypeName="IProductPromotion" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.RequiredProductOptions">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_RequiredProductOptions" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.ProductsAddedAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductsAddedAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.ProductSelectionsMaximumCount">
+      <setter>
+        <requires description="Maximum product selections count cannot be 0." inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.set_ProductSelectionsMaximumCount(System.Int32)" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.ProductSelectionsAsReward">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.get_ProductSelectionsAsReward" inheritedFromTypeName="IOrderPromotionDefaultCartRewards" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.Concrete.ProductPromotionPercentDiscount.MarketID">
+      <setter>
+        <requires inheritedFrom="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.ISingleMarketStandardQualificationPromotion.set_MarketID(System.Int32)" inheritedFromTypeName="ISingleMarketStandardQualificationPromotion" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.AddProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32,System.Decimal)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustment(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.DeleteProductAdjustments(System.Int32)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetMarketsForProductIDAndPriceType(System.Int32,NetSteps.Data.Common.Entities.IPriceType)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IProductPromotionPercentDiscount.GetAdjustmentAmount(System.Int32,NetSteps.Data.Common.Entities.IPriceType,System.Int32)">
+      <requires description="Product ID must be greater than 0." exception="T:System.ArgumentException" csharp="productID &gt; 0" vb="productID &gt; 0">productID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">productID &lt;= 0</exception>
+      <requires description="Market ID must be greater than 0." exception="T:System.ArgumentException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.AddMarketID(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.Base.IMultipleMarketStandardQualificationPromotion.DeleteMarketID(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="marketID &gt; 0" vb="marketID &gt; 0">marketID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">marketID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerSubtotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerSubtotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetCustomerPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveCustomerPriceTypeTotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetCustomerPriceTypeTotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderSubtotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderSubtotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderSubtotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.SetOrderPriceTypeTotalRange(System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="minimumValue.HasValue ⇒ minimumValue.Value &gt; new decimal(0)" vb="minimumValue.HasValue Implies minimumValue.Value &gt; New Decimal(0) ">!minimumValue.HasValue || minimumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">minimumValue.HasValue ? !minimumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="maximumValue.HasValue ⇒ maximumValue.Value &gt; new decimal(0)" vb="maximumValue.HasValue Implies maximumValue.Value &gt; New Decimal(0) ">!maximumValue.HasValue || maximumValue.Value &gt; new decimal(0)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">maximumValue.HasValue ? !maximumValue.Value &gt; new decimal(0) : !true</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="priceTypeID &gt;= 0" vb="priceTypeID &gt;= 0">priceTypeID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">priceTypeID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveOrderPriceTypeTotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.GetOrderPriceTypeTotalRange(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="currencyID &gt; 0" vb="currencyID &gt; 0">currencyID &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">currencyID &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRequiredProductOption(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRequiredProductOption(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="productID &lt;= 0" vb="productID &lt;= 0">productID &lt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &gt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProduct(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RemoveRewardProduct(System.Int32)">
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="productID &gt;= 0" vb="productID &gt;= 0">productID &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">productID &lt; 0</exception>
+    </member>
+    <member name="M:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.AddRewardProductSelection(NetSteps.Promotions.Plugins.Common.Helpers.IProductOption)">
+      <requires exception="T:System.ArgumentNullException" csharp="option != null" vb="option &lt;&gt; Nothing">option != null</requires>
+      <exception cref="T:System.ArgumentNullException">option == null</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.RequiredProductOptions">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.ProductsAddedAsReward">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.ProductSelectionsAsReward">
+      <getter>
+        <ensures csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.PromotionKinds.IOrderPromotionDefaultCartRewards.ProductSelectionsMaximumCount">
+      <setter>
+        <requires description="Maximum product selections count cannot be 0." exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Effects.Concrete.SelectItemsInProductIDSetEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Effects.Concrete.UserProductSelectionRewardEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.SelectFreeItemsFromListReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.SelectFreeItemsFromListReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.OrderShippingTotalReductionReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.OrderShippingTotalReductionReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.ProductPromotionReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.ProductPromotionReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.OrderSubtotalReductionReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.OrderSubtotalReductionReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.SimpleProductAdditionReward.OrderOfApplication">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_OrderOfApplication" inheritedFromTypeName="IPromotionReward" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Common.Rewards.Concrete.SimpleProductAdditionReward.PromotionRewardKind">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionReward.get_PromotionRewardKind" inheritedFromTypeName="IPromotionReward" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.ReduceOrderItemPropertyValueEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.ReduceOrderPropertyValueEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.SelectAllItemsEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.SelectItemWithProductIDEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.AddItemByFactorInOrderEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Promotions.Plugins.Rewards.Effects.Concrete.AddItemEffect.ExtensionProviderKey">
+      <getter>
+        <ensures inheritedFrom="M:NetSteps.Promotions.Common.Model.IPromotionRewardEffectExtension.get_ExtensionProviderKey" inheritedFromTypeName="IPromotionRewardEffectExtension" csharp="!IsNullOrEmpty(result)" vb="Not IsNullOrEmpty(result)">!string.IsNullOrEmpty(result)</ensures>
+      </getter>
+    </member>
+  </members>
+</doc>

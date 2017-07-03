@@ -1,0 +1,216 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.ShippingModel
+<script src="@Url.Content("~/Scripts/address-validation.js")"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#chkIsSameShippingAddressTrue, #chkIsSameShippingAddressFalse').click(function () {
+
+        if($("#chkIsSameShippingAddressFalse").is(':checked'))
+        {
+        $("#ShippingAddress_PostalCode1").val("");
+        $("#ShippingAddress_PostalCode2").val("");
+        
+
+            $("#ShippingAddress_StateProvinceID").val("");
+            $("#ShippingAddress_StateProvinceID").attr('readonly', true);
+            $("#ShippingAddress_StateProvinceID").css('background-color', '#DEDEDE');
+
+            $("#ShippingAddress_City").val("");
+            $("#ShippingAddress_City").attr('readonly', true);
+            $("#ShippingAddress_City").css('background-color', '#DEDEDE');
+
+            $("#ShippingAddress_County").val("");
+            $("#ShippingAddress_County").attr('readonly', true);
+            $("#ShippingAddress_County").css('background-color', '#DEDEDE');
+
+            $("#ShippingAddress_Street").val("");
+            $("#ShippingAddress_Street").attr('readonly', true);
+            $("#ShippingAddress_Street").css('background-color', '#DEDEDE');
+
+            $("#ShippingAddress_Address1").val("");
+            $("#ShippingAddress_Address2").val("");
+            $("#ShippingAddress_Address3").val("");
+          }
+            var showShippingAddress = $('#chkIsSameShippingAddressFalse').is(':checked');
+            $('#ShippingAddress').toggle(showShippingAddress);
+            $('#ShippingAddress_IsVisible').val(showShippingAddress);
+        });
+		$('#btnSubmit').unbind("click");
+
+		$('#btnSubmit').click(function () {
+			ValidateAddress();
+		});
+	});
+
+    $(document).ready(function () {
+	  var textarea = $("<textarea></textarea>").attr({
+            class: $('#ShippingAddress_Street').prop("class"),
+            id: $('#ShippingAddress_Street').prop("id"),
+            name: $('#ShippingAddress_Street').prop("name"),
+            type: $('#ShippingAddress_Street').prop("type"),
+            readonly: 'readonly',
+            style: "background-color: rgb(222, 222, 222)",
+            rows: "2"
+        });
+        textarea.attr('data-val', true);
+        textarea.attr('data-val-required', 'Rua &amp;#233; necess&amp;#225;ria.')
+
+        $('.FInput #ShippingAddress_Street').replaceWith(textarea);
+
+        textarea = $("<textarea></textarea>").attr({
+            class: $('#ShippingAddress_County').prop("class"),
+            id: $('#ShippingAddress_County').prop("id"),
+            name: $('#ShippingAddress_County').prop("name"),
+            type: $('#ShippingAddress_County').prop("type"),
+            readonly: 'readonly',
+            style: "background-color: rgb(222, 222, 222)",
+            rows: "2"
+        });
+        textarea.attr('data-val', true);
+        textarea.attr('data-val-required', 'County &#233; necess&#225;ria.')
+
+        $('.FInput #ShippingAddress_County').replaceWith(textarea);
+        $('#ShippingAddress_PostalCode1').width(59);
+        $('#ShippingAddress_PostalCode2').width(59);
+    });
+
+   function shippingEditFormSubmit(e) {
+        showLoading($('[data-click-submit]', e));
+        @(Html.HtmlFieldPrefix())ShippingAddress_geocodeAddress(function () {
+            e.submit();
+            });
+    }
+
+
+    function ValidateAddress() {
+        // address validation
+        var city = "";
+        var postalcode = "";
+        @{
+//            if (Model.ShippingAddress.CountryID == 1)
+//            {
+//                <text>
+//                    city = $("#ShippingAddress_City :selected").text();
+//                    postalcode =  $('#ShippingAddress_PostalCode1').val();
+//                </text>
+//            }
+//            else
+//            {
+//                <text>
+//                    city = $('#ShippingAddress_City').val();
+//                    postalcode = $('#ShippingAddress_PostalCode').val();
+//                </text>
+//            }
+
+              <text>
+                  city = $("#ShippingAddress_City :selected").text();
+                  postalcode =  $('#ShippingAddress_PostalCode1').val();
+              </text>
+        }
+        var validation = abstractAddressValidation({
+            address1: $('#ShippingAddress_Address1').val(),
+            address2: $('#ShippingAddress_Address2').val(),
+            address3: $('#ShippingAddress_Address3').val(),
+            //county: $("#ShippingAddress_County").val(),
+            //street: $("#ShippingAddress_Street").val(),
+            //city: $("#ShippingAddress_City :selected").val(),
+            city: $("#ShippingAddress_City").val(),
+            //state: $('#ShippingAddress_StateProvinceID :selected').text(),
+            state: $('#ShippingAddress_StateProvinceID').val(),
+            postalCode: postalcode,
+            country: $('#ShippingAddress_CountryCode').val()
+        });
+
+        validation.init();
+
+        $(document).bind("validAddressFound", function (event, address) {
+        
+
+            $('#ShippingAddress_Address1').val(address.address1);
+            $('#ShippingAddress_Address2').val(address.address2);
+            //$('#ShippingAddress_City :selected').text(address.city);
+            $('#ShippingAddress_City').val(address.city);
+            
+//            if(address.county.toString() == "")
+//                address.county = $('#ShippingAddress_County').val();
+//            else
+//                $('#ShippingAddress_County').val(address.county);
+
+//            if(address.street.toString() == "")
+//                address.county = $('#ShippingAddress_Street').val();
+//            else
+//                $('#ShippingAddress_Street').val(address.street);
+
+            //$('#ShippingAddress_StateProvinceID :selected').text(address.state);
+            $('#ShippingAddress_StateProvinceID').val(address.state);
+
+
+            @{
+//                if (Model.ShippingAddress.CountryID == 1)
+//                {
+//                    @Html.Raw("$('#ShippingAddress_PostalCode1').val(address.postalCode.substring(0, 5));");
+//                    @Html.Raw("$('#ShippingAddress_PostalCode2').val(address.postalCode.substring(5, address.postalCode.length));");
+//                }
+//                else
+//                {
+//                    @Html.Raw("$('#ShippingAddress_PostalCode').val(address.postalCode);");
+//                }
+                @Html.Raw("$('#ShippingAddress_PostalCode').val(address.postalCode);");
+            }
+
+            //alert("validAddressFound_validAddressFound");
+
+            var formId = $('#btnSubmit').attr('data-click-submit');
+            if ((formId !== undefined) && (formId.length !== 0)) {
+                if (formId.toLowerCase() == 'parent') {
+                    $('#btnSubmit').closest('form').submit();
+                } else {
+                    $(formId).submit();
+                }
+            }
+        });
+    }
+</script>
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_function = "shippingEditFormSubmit" }))
+{
+	@Html.ValidationSummary(true)
+	<div class="FormContainer splitCol pad5 FL">
+		<h2>@Html.Term("Enrollment_AccountInfo_Shipping_ShippingAddressTitle", "Shipping Address")</h2>
+		<div>
+			@Html.RadioButtonFor(m => m.IsSameShippingAddress, true, new { id = "chkIsSameShippingAddressTrue" })
+			<label for="chkIsSameShippingAddressTrue">@Html.Term("SameAsMainAddress", "Same as Main Address")</label>
+			<div class="mb10">
+				<label for="chkIsSameShippingAddressTrue">@Model.MainAddressHtml</label>
+			</div>
+			@Html.RadioButtonFor(m => m.IsSameShippingAddress, false, new { id = "chkIsSameShippingAddressFalse" })
+			<label for="chkIsSameShippingAddressFalse">@Html.Term("OtherAddress", "Other Address")</label>
+		</div>
+	</div>
+    
+	<div id="ShippingAddress" class="FormContainer splitCol pad5 FR" style="@(Model.ShippingAddress.IsVisible ? "" : "display:none")">
+		<input type="hidden" id="ShippingAddress_CountryCode" value="@SmallCollectionCache.Instance.Countries.GetById(Model.ShippingAddress.CountryID).CountryCode" />
+		@Html.EditorFor(m => m.ShippingAddress)
+	</div>
+	<span class="ClearAll"></span>
+    
+    <table>
+        <tr>
+            <td style="float:left">
+                <p class="FormSubmit">
+                @*<span class="FR"><a class="Button" href="javascript:history.back(1)"><span>@Html.Term("Previous")</span> </a></span>*@
+                @*<span class="FR"><a class="Button" href="javascript:history.go(-1)"><span>@Html.Term("Previous")</span> </a></span>*@
+                <span class="FR"><a class="Button" href="javascript:history.back()"><span>@Html.Term("Previous")</span> </a></span>
+	            </p>
+            </td>
+            <td>
+                <p class="FormSubmit">
+		            <span class="FR"><a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent"><span>@Html.Term("Next")</span> </a></span>
+	            </p>
+            </td>
+        </tr>
+    </table>
+    
+    
+	
+	@Html.AntiForgeryToken()
+}
+@Html.Partial("_AddressValidation")

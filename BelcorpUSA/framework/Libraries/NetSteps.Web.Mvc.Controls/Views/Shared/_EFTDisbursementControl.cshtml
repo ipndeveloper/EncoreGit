@@ -1,0 +1,24 @@
+﻿@model EFTDisbursementViewModel
+@{
+	object eftMarketViewData = ViewData["EftMarketID"];
+	int eftMarketID = eftMarketViewData == null ? 1 : (int) eftMarketViewData;
+}
+
+<div id="eft">
+    <h3 class="UI-mainBg pad5">
+        @Html.Term("EFTProfile", "EFT Profile")
+    </h3>
+    <div class="pad10">
+    <div class="disbursementCheckbox"><input id="chkHardRelease" type="checkbox" @Html.Raw(Model.EFTProfiles.Any(p => p.EnrollmentFormReceived) ? "checked=\"checked\"" : "")/><label for="chkHardRelease">@Html.Term("HardReleaseAgreementOnFile", "Hard Release/Agreement On-File")</label></div>
+    
+    @{ var i = 1;}
+    @foreach (var profile in Model.EFTProfiles)
+    {
+        <div class="FL mt10 mr10" @(i == 1 ? "" : "id=divAccount2")>
+            @Html.Partial("EFTAccountInfo", new EFTAccountInfoViewModel(profile, i, profile.IsEnabled, Model.PostalCodeLookupURL.ResolveUrl(), eftMarketID))
+        </div>
+        i++;
+    }
+    <span class="ClearAll"></span>
+    </div>
+</div>

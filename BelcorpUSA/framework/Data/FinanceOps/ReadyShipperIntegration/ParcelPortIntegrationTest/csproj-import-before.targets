@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Imported before the projects's csproj file.
+	
+  Establishes the project's root, and delegates to the targets file therein.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<PropertyGroup>
+		<IsProjectBuild>true</IsProjectBuild>
+		<SolutionDirOffset></SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDirOffset Condition="!Exists('$(MSBuildProjectDirectory)\$(SolutionDirOffset)SolutionRoot.targets')">..\..\..\..\..\..\..\..\..\..\..\</SolutionDirOffset>
+		<SolutionDir>$(MSBuildProjectDirectory)\$(SolutionDirOffset)</SolutionDir>
+	</PropertyGroup>
+	
+	<Import Project="$(SolutionDir)SolutionRoot.targets"/>
+	
+	<!-- 
+		Project specific imports...
+	-->
+	<Import Project="$(BuildTargetsRoot)EnableSvnVersioning.targets"/>	
+	<Import Project="$(BuildTargetsRoot)EstablishVersionRoot.targets"/>	
+	<Import Project="$(BuildTargetsRoot)CMTransform.targets"/>
+	<Import Project="$(BuildTargetsRoot)CMTransformWeb.targets"/>
+</Project>

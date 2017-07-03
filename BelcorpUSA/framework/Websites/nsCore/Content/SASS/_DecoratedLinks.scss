@@ -1,0 +1,627 @@
+﻿
+$Icon-size:22; //Px
+
+@import "_Base";
+
+div.GridUtility {
+	background-image:none;
+}
+.DTL
+{
+    cursor: pointer;
+    width:auto;
+	vertical-align:middle; //fix for Chrome and Safari to make icon clickable link
+}
+
+a.CreateLang
+{
+    background: url(../Images/icons/bubbleAdd-trans.png) no-repeat left center;
+    padding: 4px 0px 4px 25px;
+}
+a.AddNote
+{
+    display: block;
+    background: url(../Images/icons/addnote-trans.png) no-repeat left center;
+    padding: 3px 0px 3px 26px;
+    margin: 5px 0px 5px 5px;
+
+	&:hover
+	{
+		background-color: #EBF4F9;
+		color: #333;
+	}
+}
+.BtnDelete span.Delete {
+	padding:0;
+	width:16px;
+	height:16px;
+	display:inline-block;
+}
+
+
+a.CustomExitIcon
+{
+    z-index: 999;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    padding: 5px 2px 0px 0px;
+}
+
+a.Next
+{
+    background: url(../Images/icons/nextWhite-trans.png) no-repeat right center;
+    padding-right: 22px;
+}
+a.DatePick
+{
+    width: 16px;
+    height: 16px;
+    background: url(../Images/icons/datepick-trans.png) no-repeat;
+}
+
+
+
+
+li.TabSearch a
+{
+    display: none;
+}
+
+.FormButtons
+{
+    margin: em(10 0);
+    padding: em(10);
+}
+
+
+.ButtonOff
+{
+    opacity: 0.25;
+    filter: alpha(opacity=25);
+    cursor: default;
+}
+
+.LandingPageLinks a
+{
+    display: block;
+    padding: em(5);
+    border-bottom: em(1) solid #efefef;
+}
+.LandingPageLinks a:hover
+{
+    background: #FFFFEF;
+}
+.Toggle, .ToggleActive
+{
+    display: block;
+    width: 63px;
+    height: 20px;
+    background: url(../Images/buttons/OnOffToggle.gif) no-repeat -73px 0px;
+    overflow: hidden;
+}
+.ToggleActive
+{
+    background: url(../Images/buttons/ActiveInactiveToggle.gif) no-repeat;
+    width: 82px;
+    background-position: -117px 0px;
+}
+.ToggleInactive
+{
+    background-position: 0px;
+}
+.ToggleOff
+{
+    background-position: 0px 0px;
+}
+.Toggle span
+{
+    display: block;
+    margin-top: -30px;
+}
+
+.IconLink
+{
+    //background: url(../Images/Icons/nscore.png) no-repeat left -17px;
+    //display: block;
+    //height: em($Icon-size);
+    //width: em($Icon-size);
+}
+.SortColumn
+{
+    width: em(20);
+}
+.SortDescend
+{
+    //background-position: left top;
+}
+
+
+.IconOnly
+{
+    padding: 0;
+    display: inline-block;
+    overflow: hidden;
+
+	span
+	{
+		display: block;
+		margin-top: -100em;
+	}
+}
+
+a.deleteKeyword {
+	float:right;
+	margin-top:-2.091em;
+}
+body.IE a.deleteKeyword {margin-right:em(5);}
+body.IE7 a.deleteKeyword {margin-right:em(10);}
+
+a.btnEditCampaignAction  {
+	display:block;
+	word-wrap: break-word;
+	width:13.636em;
+	overflow:hidden;
+}
+
+.qq-upload-button {
+	padding-left:em(10);
+	padding-right:em(10);
+	margin:0;
+	width:auto;
+
+	&:hover {
+		background:#006AA8;
+	}
+}
+body.IE7 .qq-upload-container .qq-upload-button {width:em(100);}
+
+@font-face {
+	font-family: 'encoreGmpIcons';
+	src:url('../Fonts/encore-gmp-icons.eot');
+	src:url('../Fonts/encore-gmp-icons.eot?#iefix') format('embedded-opentype'),
+		url('../Fonts/encore-gmp-icons.svg#icomoon') format('svg'),
+		url('../Fonts/encore-gmp-icons.woff') format('woff'),
+		url('../Fonts/encore-gmp-icons.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@mixin font-icons {
+	font-family: 'encoreGmpIcons';
+	font-style: normal;
+	speak: none;
+	line-height:1;
+	font-weight: normal;
+	font-size:em($Icon-size);
+	-webkit-font-smoothing: antialiased;
+	color:#4d4d4f;
+	vertical-align:em(-5, $Icon-size);
+	@include transition(color, $transition_time / 2);
+}
+@mixin square-icon {
+	width:em(17);
+	height:em(17);
+	display:inline-block;
+	&:hover:before, &:hover .ie7Icon {
+		color:$white_color;
+	}
+}
+@mixin square-icon-bg {
+	@include square-icon;
+	@include Gradient(#006aa6, (#006aa6 10%) (#90c2b4 100%), -45deg);
+	color:$white_color;
+	font-size: em(11);
+	border:em(1) solid #006aa6;
+	text-align:center;
+}
+
+/************************************************************************************
+* Font Icon Setup
+************************************************************************************/
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon] {
+	&:before {
+		@include font-icons;
+		margin-right:em(2, $Icon-size);
+		content: attr(data-icon);
+	}
+}
+/* Use the following CSS code if you want to have a class per icon */
+[class^="icon-"]:not([data-icon]), [class*=" icon-"]:not([data-icon]) {
+	&:before, .ie7Icon {
+		@include font-icons;
+		margin-right:em(2, $Icon-size);
+	}
+}
+a {
+	[class^="icon-"], [class*=" icon-"], &[data-icon], [data-icon] {
+		&:hover:before, &:hover .ie7Icon {
+			color:#86C440;
+		}
+	}
+}
+a.UI-icon:hover:before {
+	color:#86C440;
+}
+.DTL, a.SearchIcon, .IconOnly.Delete, #SubNav li.selected > a {
+	&:before, .ie7Icon {
+		@include font-icons;
+		//vertical-align:em(-2, $Icon-size);
+		line-height:em(11, $Icon-size);
+	}
+	&:hover:before, &:hover .ie7Icon {
+		color:#86C440;
+	}
+}
+.GridUtility .UI-icon-container {
+	[class^="icon-"], [class*=" icon-"] {
+		&:before, & .ie7Icon {
+			color:#aaacaf;
+		}
+	}
+	&:hover [class^="icon-"]:before, &:hover [class*=" icon-"]:before, &:hover .ie7Icon {
+		color:$white_color;
+	}
+}
+
+/************************************************************************************
+* Currently used icons that exist in the generated font files
+************************************************************************************/
+a.Add, .icon-plus, .icon-addCampaignActionLink {
+	&:before, .ie7Icon {
+		content: "\271a";
+	}
+}
+.icon-arrowDown-circle {
+	&:before, .ie7Icon {
+		content: "\25bc";
+	}
+}
+.icon-arrowNext-circle{
+	&:before, .ie7Icon {
+		content: "\25b6";
+	}
+}
+.icon-arrowPrev-circle{
+	&:before, .ie7Icon {
+		content: "\25c4";
+	}
+}
+.icon-arrowUp-circle{
+	&:before, .ie7Icon {
+		content: "\25b2";
+	}
+}
+.icon-ArrowDown {
+	&:before, .ie7Icon {
+		content: "\25bd";
+		@include square-icon-bg;
+	}
+}
+.icon-ArrowNext {
+	&:before, .ie7Icon {
+		content: "\25b7";
+		@include square-icon-bg;
+	}
+}
+.icon-ArrowPrev {
+	&:before{
+		content: "\25c1";
+		@include square-icon-bg;
+	}
+}
+.icon-ArrowPrev-grey {
+	&:before {
+		@extend .icon-ArrowPrev:before;
+		background:#aaa;
+		filter:none;
+	}
+}
+.icon-ArrowUp {
+	&:before, .ie7Icon {
+		content: "\25b3";
+		@include square-icon-bg;
+	}
+}
+#SubNav li.selected > a:before {
+	content: "\25be";
+	color:$white_color;
+	bottom:em(3);
+	left:50%;
+	margin:auto auto auto em(-4);
+	position:absolute;
+}
+a.Attach {
+	&:before, .ie7Icon {
+		content: "\21d5";
+	}
+}
+.icon-cancelled {
+	&:before, .ie7Icon {
+		content: "\2717";
+	}
+}
+.icon-check, a.SetDefault {
+	&:before, .ie7Icon {
+		content: "\2714";
+	}
+}
+.icon-deactive, .icon-x {
+	&:before, .ie7Icon {
+		content: "\2612";
+	}
+}
+.IconOnly.Delete {
+	&:before, .ie7Icon {
+		content: "\2718";
+	}
+}
+.icon-deleteItem {
+	&:before, .ie7Icon {
+		content: "\2715";
+		color:$white_color;
+		padding:.4em;
+		background: darken($main_contrast_color, 30%);
+		border-radius: 1em;
+		font-size:.87em;
+	}
+}
+.icon-deleteSelected, a.Remove {
+	&:before, .ie7Icon {
+		content: "\2613";
+	}
+}
+.icon-edit {
+	&:before, .ie7Icon {
+		content: "\270f";
+	}
+}
+a.EditSite {
+	&:before, .ie7Icon {
+		content: "\25e7";
+	}
+}
+.icon-exclamation{
+	&:before, .ie7Icon {
+		content: "\27b2";
+		color:$error_color;
+	}
+}
+.icon-goBack {
+	&:before, .ie7Icon {
+		content: "\21e6";
+	}
+}
+.icon-goForward {
+	&:before, .ie7Icon {
+		content: "\21e8";
+	}
+}
+.icon-lock{
+	&:before, .ie7Icon {
+		content: "\e000";
+	}
+}
+.icon-plusAlt {
+	&:before, .ie7Icon {
+		content: "\2719";
+		color:#A9DD6E;
+		font-size:em(15);
+		font-weight:bold;
+		text-shadow:1px 1px 0 #53930B;
+		vertical-align:em(-.5);
+	}
+}
+.icon-print {
+	&:before, .ie7Icon {
+		content: "\2338";
+	}
+}
+.icon-refresh {
+	&:before, .ie7Icon {
+		content: "\21ba";
+	}
+}
+.icon-reporting {
+	&:before, .ie7Icon {
+		content: "\2633";
+		padding: em(2 1);
+		@include BoxShadow(0 0 5px rgba(0,0,0,.2));
+		font-size:em(100);
+		line-height:1.6em;
+	}
+}
+.icon-search, a.SearchIcon {
+	&:before, .ie7Icon {
+		content: "\260c";
+	}
+}
+.icon-upload {
+	&:before, .ie7Icon {
+		content: "\e001";
+	}
+}
+
+/************************************************************************************
+* Special Case rules
+************************************************************************************/
+a.Update {
+	&:before, .ie7Icon {
+		@extend .icon-refresh:before;
+		font-size:1.182em;
+		line-height:1em;
+		background:#e0e0e0;
+		padding:.077em 0.154em 0.154em;
+		vertical-align:-.077em;
+		@include BoxShadow(0 0 .231em rgba(0,0,0,.5), inset);
+		@include BorderRadius(1.846em);
+		//color:#777;
+	}
+
+	&:hover:before {
+		color:#777;
+	}
+}
+
+.moveArrow {
+	.icon-ArrowUp, .icon-ArrowNext, .icon-ArrowDown, .icon-ArrowPrev, .icon-ArrowPrev-grey {
+		@include square-icon;
+		line-height:em(17);
+		vertical-align:em(2);
+		margin:em(0);
+		display: inline;
+		&:hover {
+			&:before, .ie7Icon {
+				background:#32829d;
+				color: $white_color;
+			}
+		}
+	}
+
+}
+
+.listValues {
+	li {
+		padding-top: .25em;
+		padding-bottom: .25em;
+	}
+	input {
+		margin-right: .25em;
+		padding: .25em;
+	}
+}
+
+.icon-deleteItem:hover {
+	&:before, .ie7Icon {
+		color: darken($white_color, 10%);
+	}
+}
+.DefaultProfile .icon-check {
+	text-align:right;
+	padding-top:em(8);
+}
+.DefaultProfile .icon-check {
+	&:before, .ie7Icon {
+		color:#CBDFC1;
+		font-size:em(22);
+	}
+}
+.icon-check.messageCenterIcon {
+	&:before, .ie7Icon {
+		color: #6EB43F;
+  }
+}
+.message .UI-icon {
+	&:before, .ie7Icon {
+		color:#385E0F;
+	}
+}
+.sort {
+    a {
+        float:left;
+        max-width:75%;
+    }
+	&:before, .ie7Icon {
+        @include font-icons;
+		color:#999;
+		font-size:em(28);
+        content: "\e027";
+        width:em($Icon-size, 28);
+        max-width:20%;
+        float:right;
+        margin-right:3px;
+	}
+	&.currentSort {
+        &:before, .ie7Icon {
+		    content: "\e028";
+		    color:#fff;
+	    }
+    }
+	&.Descending {
+        &:before, .ie7Icon {
+		    content: "\25be";
+        }
+	}
+}
+
+/************************************************************************************
+* Fixes
+************************************************************************************/
+body.IE9, body.IE10 {
+	.icon-deleteItem:before, a.Update:before, .icon-ArrowNext, .icon-ArrowUp, .icon-ArrowPrev, .icon-ArrowPrev-grey, .icon-ArrowDown {
+		font-size:.5em;
+		line-height: 3.5em;
+		
+	}
+	.SortColumn:before {
+		font-size:.5em;
+	}
+}
+body.IE7 {
+	.ie7Icon {
+		margin-right:em(2);
+	}
+	a.UI-icon-container, a#btnAddRelation, a.addRule {
+		cursor:pointer;
+	}
+	.icon-deleteItem .ie7Icon {
+		padding:.3em .3em .4em .3em;
+		background: darken($main_contrast_color, 30%);
+		font-size:.8em;
+		color:$white_color;
+	}
+	.DTL, .UI-icon {
+		line-height:2em;
+	}
+
+	.listValues {
+		.UI-icon {
+			line-height:em(17);
+		}
+	}
+
+}
+a.SearchIcon:before {
+	line-height:em(25, 30);
+}
+
+/************************************************************************************
+* Currently NOT used icons that exist in the generated font files
+************************************************************************************/
+/*
+.icon-file:before {
+	content: "\2630";
+}
+.icon-fileAudio:before {
+	content: "\e002";
+}
+.icon-fileFlash:before {
+	content: "\e003";
+}
+.icon-fileImage:before {
+	content: "\e004";
+}
+.icon-filePdf:before {
+	content: "\e005";
+}
+.icon-filePowerpoint:before {
+	content: "\e006";
+}
+.icon-fileVideo:before {
+	content: "\e007";
+}
+*/
+
+.NS-dateTime:before {
+  font-family: encoreGmpIcons;
+}
+#flashBrowser .NS-dateTime:before {
+  content: "\e032";
+}
+#videosBrowser .NS-dateTime:before {
+  content: "\e030";
+}
+#documentsBrowser .NS-dateTime:before {
+  content: "\e031";
+}

@@ -1,0 +1,157 @@
+﻿//Compass Imports
+@import "compass/css3";
+@import "compass/css3/opacity";
+@import "compass/css3/images";
+@import "compass/utilities";
+
+//Viewport breakpoints
+$break-large:	1024px;
+$break-med:		640px;
+$break-small:	320px;
+$min-desktop: 960px;
+
+/*Base Font Settings*/
+$FontFamily:"Lucida Sans Unicode","Lucida Grande",sans-serif;
+$BaseFontSize: 11px;
+/*Site Color Settings*/
+$DarkBg: #555;
+$SecBg: #bebebe;
+$LightBg: #efefef;
+$MainBg: #000;
+$copy: #444;
+
+$WhiteBg: #fff;
+$PageBg: $WhiteBg;
+/*Site Text Color Settings*/
+$BodyText: #000;
+$DarkBgText: #fff;
+$SecBgText: #333;
+$LightBgText: #5e5e5e;
+$MainBgText: #fff;
+/*Site Link Color Settings*/
+$BodyLink: #777;
+$BodyLinkHover: #000;
+$NavLink: $DarkBgText;
+$DarkBgLink: $LightBg;
+$SecBgLink: $NavLink;
+$LightBgLink: $DarkBg;
+$MainBgLink: $DarkBg;
+$AltLink: $SecBgText;
+
+$NuetralMessage: #fffde7;
+$WarningMessage: #c4124c;
+$SuccessMessage: #6EB43F;
+
+$MainButton: #64A63A;
+
+/*BorderSettings*/
+$BorderColor:#d1d3d4;
+$BorderSize: 1px;
+$BorderRadius: 5px !default; //Set to 0 for no rounded corners on elements
+
+/*Alerts*/
+$Notification: $NuetralMessage; //Alert Background color
+$Error: $WarningMessage; //Color for errors or notifications of high importance
+$Success: $SuccessMessage; //Color for available or success notifications
+
+/***********************************************/
+$IconSize: 2em;
+
+$ButtonRadius: $BorderRadius; //Button border radius size
+$HeaderFontFamily: $FontFamily; //H1
+$HeaderText: $MainBg; //H1
+$Border: $BorderColor $BorderSize solid;
+
+$transition_time: 400ms;
+
+
+/**********************************************************
+* Mixins
+**********************************************************/
+@mixin library-typography {
+	font-size:$BaseFontSize;
+	line-height:150%;
+	font-family:$FontFamily;
+	color:$copy;
+}
+
+@mixin BorderRadius($brdrs: all, $rSize: $BorderRadius) {
+	$r: $rSize $rSize $rSize $rSize;
+	@if ($brdrs == top) {
+		$r: $rSize $rSize 0 0;
+	}
+	@else if ($brdrs == bottom) {
+		$r: 0 0 $rSize $rSize;
+	}
+	-moz-border-radius:$r;
+	-webkit-border-radius:$r;
+	border-radius:$r;
+}
+@mixin BoxShadow($size: 5px, $rgba: rgba(0,0,0,.4)) {
+	-moz-box-shadow: 0 0 $size $rgba;
+	-webkit-box-shadow: 0 0 $size $rgba;
+	box-shadow: 0 0 $size $rgba;
+}
+@mixin BoxShadow2($values, $type: standard) {
+	@if $type == inset {
+		-moz-box-shadow:inset unquote($values);
+		-webkit-box-shadow:inset unquote($values);
+		box-shadow:inset unquote($values);
+	} @else {
+		-moz-box-shadow:unquote($values);
+		-webkit-box-shadow:unquote($values);
+		box-shadow:unquote($values);
+	}
+}
+
+@mixin DottedLine {
+	border-bottom:1px dotted lighten($BorderColor, 10%);
+}
+
+@mixin base-button-rules {
+	@include border-radius(10px);
+	padding:.5em 1em;
+	font-weight:bold;
+}
+@mixin main-button-style {
+	@include base-button-rules;
+	background:tint($MainButton,25%);
+	@include background(linear-gradient(tint($MainButton,25%),$MainButton));
+	color:tint($MainButton,90%);
+	@include text-shadow(rgba(0,0,0,.25)-1px -1px 0);
+	@include transition-property(color);
+}
+@mixin main-button-hover {
+	background:$MainButton;
+	color:#fff;
+}
+
+@mixin minor-button-style {
+	@include base-button-rules;
+	background:tint($DarkBg,75%);
+	@include background(linear-gradient(tint($DarkBg,75%),tint($DarkBg,25%)));
+	color:#fff;
+}
+
+@mixin minor-button-hover {
+	background: tint($DarkBg,25%);
+}
+
+@mixin button-inactive {
+	@include base-button-rules;
+	@include ButtonGradient(tint($SecBg,25%),$SecBg);
+	color:#fff;
+	@include opacity(.50);
+	cursor:default;
+}
+
+@mixin transition ($p: background-color, $time: $transition_time) {
+	-moz-transition-property: $p;
+	-moz-transition-duration: $time; 
+	-webkit-transition-property: $p;
+	-webkit-transition-duration: $time; 
+	-o-transition-property: $p;
+	-o-transition-duration: $time; 
+	transition-property: $p;
+	transition-duration: $time;
+}

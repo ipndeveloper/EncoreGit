@@ -1,0 +1,290 @@
+@using DistributorBackOffice.Models.Performance
+@model NetSteps.Data.Entities.ReportResults
+@{
+    AccountReport currentAccountReport = ViewData["CurrentAccountReport"] as AccountReport;
+    var currentReportParameters = ViewData["CurrentReportParameters"] as DownlineReportParameters;
+}
+@section head {
+
+    <script type="text/javascript">
+        $(function () {
+            $('.SavedReports .@ViewData["SelectedReport"] a').addClass("current");
+            $('.PageTitle h1').html($('.SavedReports .@ViewData["SelectedReport"] a').text() || '@Html.Term("DownlineManagement", "Downline Management")');
+
+            $('#exportToExcel').click(function () {
+                window.location = '@Href("~/Performance/ExportExcel")?periodId=' + $('#periodIdSelectFilter').val();
+            });
+
+
+            $('#groupByAccount').click(function () {
+                $('#groupBySponsorTreeInputFilter').val('true');
+                $('#currentTopOfTreeAccountIdInputFilter').val('');
+                $('div.RunFilter a.filterButton').click();
+            });
+
+            $('#paginatedGrid tr:nth-child(1) th.sort').click(function () {
+                $('#groupBySponsorTreeInputFilter').val('');
+                $('#currentTopOfTreeAccountIdInputFilter').val('');
+            });
+
+            $('#paginatedGrid').delegate('.groupByCurrentAccount', 'click', function () {
+                var accountID = $(this).closest('tr').attr('data-id');
+                $('#currentTopOfTreeAccountIdInputFilter').val(accountID);
+                $('div.RunFilter a.filterButton').click();
+            });
+
+            $('#emailLink').click(function () {
+                var data = {}, i = 0;
+                $('input[name="downlineAccount"]').each(function () {
+                    if ($(this).is(':checked')) {
+                        data['accountIDs[' + i + ']'] = $(this).attr("id");
+                        ++i;
+                    }
+                });
+
+                $.post('@Href("~/Performance/DownlineEmail")', data, function (response) {
+                    //hideLoading(p);
+                    if (response.result) {
+                        //showMessage('@Html.Term("EmailsUndeletedSuccessfully", "Email(s) undeleted successfully!")', false);
+                        window.location = '@Href("~/Communication/Email/DownlineEmail")';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            $('#emailAllLink').click(function () {
+                $.post('@Href("~/Performance/DownlineEmailAll")', null, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Communication/Email/DownlineEmail")?downlineAllEmail=true';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#saveReportModal').jqm({ modal: false,
+                trigger: '#saveReportLink',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }
+            });
+
+            $('#btnSaveReport').click(function () {
+                if (!$('#saveReportModal').checkRequiredFields()) {
+                    return false;
+                }
+
+                var sortableColumns = $('#paginatedGrid th.sort');
+                var data = {
+                    page: 0,
+                    pageSize: $('#paginatedGridPagination .pageSize').val(),
+                    reportName: $('#txtReportName').val()
+                };
+                if (sortableColumns.length) {
+                    var currentSort = sortableColumns.filter('.currentSort');
+                    data.orderBy = currentSort.attr('id');
+                    data.orderByDirection = currentSort.attr('class').split(' ')[2];
+                }
+
+                if ($('#paginatedGridExtraData').length) {
+                    $('#paginatedGridExtraData input.Data').each(function () {
+                        var t = $(this);
+                        data[t.attr('id').replace(/Data$/, '')] = t.val();
+                    });
+                }
+
+                $('#paginatedGridFilters .Filter').each(function () {
+                    var t = $(this), val = t.val(), key = t.attr('id').replace(/(Select|Input)?Filter$/, '');
+                    if (t.attr('multiple')) {
+                        val = t.multiselect('getChecked').map(function () {
+                            return this.value;
+                        }).get();
+                        var i = 0;
+                        for (i; i < val.length; i++) {
+                            data[key + '[' + i + ']'] = val[i];
+                        }
+                    } else {
+                        data[key] = val;
+                    }
+                });
+
+                $.post('@Href("~/Performance/SaveReportData")', data, function (response) {
+                    if (response.result) {
+                        showMessage('@Html.Term("ReportSaved", "Report saved successfully")', false);
+                        $('#saveReportModal').jqmHide();
+                        window.location = '@Href("~/Performance/DownlineManagement")?accountReportID=' + response.accountReportID;
+                    }
+                    else
+                        showMessage(response.message, true);
+                });
+            });
+
+            $('#deleteReportLink').click(function () {
+                if (confirm('@Html.Term("AreYouSureYouWantToDeleteThisReport", "Are you sure you want to delete this report?")')) {
+                    $.post('@Href("~/Performance/DeleteReport")', { accountReportID: $('#accountReportID').val() }, function (response) {
+                        if (response.result) {
+                            showMessage('@Html.Term("ReportDeleted", "Report deleted successfully")', false);
+                            $('#saveReportModal').jqmHide();
+                            window.location = '@Href("~/Performance/DownlineManagement")?accountReportID=0';
+                        }
+                        else
+                            showMessage(response.message, true);
+                    });
+                }
+            });
+
+            $('#txtReportName').keyup(function (e) {
+                if (e.keyCode == 13)
+                    $('#btnSaveReport').click();
+            });
+
+
+            $('#selectColumnModal').jqm({ modal: false,
+                trigger: '#chooseVisibleColumns',
+                onShow: function (h) {
+                    h.w.css({
+                        top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                        left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+                    }).fadeIn();
+                }
+            });
+
+            $('#btnUpdateVisibleColumns').click(function () {
+                var data = {};
+
+                $('#visibleColumns .reportColumn:checked').each(function (i) {
+                    data['visibleColumns[' + i + ']'] = $(this).val();
+                });
+
+                $.post('@Href("~/Performance/SaveVisibleColumns")', data, function (response) {
+                    if (response.result) {
+                        showMessage('@Html.Term("SetColumnsSuccessfully", "Set columns successfully!")', false);
+                        $('#selectColumnModal').jqmHide();
+                        $('#visibleColumns .reportColumn').each(function (i) {
+                            var id = parseInt($(this).attr('name').replace(/\D/g, ''), 10) + 1;
+                            $('#paginatedGrid td:nth-child(' + id + '), #paginatedGrid th:nth-child(' + id + ')')[$(this).is(':checked') ? 'show' : 'hide']();
+                        });
+                    }
+                    else
+                        showMessage(response.message, true);
+                });
+            });
+
+            $('#showMyTeamInputFilter').click(function () {
+                if ($('#showMyTeamInputFilter').is(':checked')) {
+                    $('#showMyTeamInputFilter').val(true);
+                    $('#txtsponsorIdInputFilter').val('');
+                    $('#txtsponsorIdInputFilter').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#showMyTeamInputFilter').val(false);
+                    $('#txtsponsorIdInputFilter').removeAttr('disabled');
+                    $('#sponsorIdInputFilter').val('');
+                    $('#txtsponsorIdInputFilter').val('');
+                }
+            });
+            //Search for sponsor
+            $('#txtsponsorIdInputFilter').jsonSuggest('@Href("~/Performance/SponsorSearch")', { onSelect: function (item) {
+                $('#sponsorIdInputFilter').val(item.id);
+                var text = item.text,
+					r = /^(.+)\s\(#(.+)\)$/,
+					accountNumber = r.exec(text)[2],
+					name = r.exec(text)[1];
+                $('#txtsponsorIdInputFilter').val(String.format('{0} - {1}', accountNumber, name));
+            }, minCharacters: 3, source: $('#txtsponsorIdInputFilter'), width: 250, ajaxResults: true
+            });
+
+            $('#txtsponsorIdInputFilter').keyup(function () {
+                if ($('#txtsponsorIdInputFilter').val() == "") {
+                    $('#sponsorIdInputFilter').val('');
+                }
+            });
+
+            // Hide Column for custom saved reports. - JHE
+            $('#visibleColumns .reportColumn:not(:checked)').each(function (i) {
+                var id = $(this).attr('name').replace(/\D/g, '');
+                $('#paginatedGrid td:nth-child(' + id + '), #paginatedGrid th:nth-child(' + id + ')').hide();
+            });
+
+            if (parseBool('@(currentAccountReport != null && currentAccountReport.AccountID == CoreContext.CurrentAccount.AccountID)')) {
+                $('#deleteReportLink').show();
+            } else {
+                $('#deleteReportLink').hide();
+            }
+
+            if (parseBool('@(currentReportParameters != null && currentReportParameters.ShowMyTeam)')) {
+                $('#showMyTeamInputFilter').attr('checked', 'checked')
+                $('#txtsponsorIdInputFilter').attr('disabled', 'disabled');
+            }
+
+
+            $('#paginatedGrid th:first').css({ width: '20px' });
+        });	
+    </script>
+
+}
+@section breadcrumb{
+}
+@section title {
+    @Html.Term("DownlineManagement", "Downline Management")
+}
+<input type="hidden" id="accountReportID" value="@((currentAccountReport != null) ? currentAccountReport.AccountReportID : 0)" />
+
+
+@Html.Partial("PartialDownlineToolGrid", new PartialDownlineToolGridModel())
+
+<div id="gridFooterInfo">
+    @Html.Term("LastUpdated", "Last Updated"):
+    @((ViewData["LastUpdated"] as DateTime?).ToDateTime().ToString(CoreContext.CurrentCultureInfo))
+</div>
+<div id="saveReportModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <div>
+            @Html.Term("ReportName", "Report Name"):
+            <input type="text" id="txtReportName" value="@(ViewData["SelectedReportName"])" class="required" name="@Html.Term("ReportNameRequired", "Report Name is required")" style="width: 250px;" />
+            <a id="btnSaveReport" href="javascript:void(0);" class="FR Button"><span>
+                @Html.Term("Save")</span></a> <span class="clr"></span>
+        </div>
+    </div>
+</div>
+<div id="selectColumnModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <div id="visibleColumns">
+            @Html.Term("SelectColumns", "Select Columns"):<br />
+            @{int count = 1;} 
+            @foreach (var header in ViewData["ColumnHeaders"] as Dictionary<string, string>)
+            {
+                if (header.Key != "State")
+                {
+                    count++;
+                <input type="checkbox" class="reportColumn" id="column@(count)" name="column@(count)" value="@header.Key" @Html.Raw(currentReportParameters.VisibleColumns.Any(vc => header.Key == vc) ? "checked=\"checked\"" : "")/>
+                <label for="column@(count)">
+                  @NetSteps.Common.Globalization.Translation.GetTerm(header.Key, header.Value) </label><br />
+                }
+            }
+            <a id="btnUpdateVisibleColumns" href="javascript:void(0);" class="FR Button"><span>
+                @Html.Term("Save")</span></a> <span class="clr"></span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.clearFiltersButton').unbind('click').click(function () {
+            window.location = '@Href("~/Performance/NewDownlineManagementReport")';
+        });
+
+        $('#selectedHeader').click(function () {
+            $('#paginatedGrid input[name="downlineAccount"]').attr('checked', $('#selectedHeader').is(':checked'));
+        });
+
+        var periodId = '@ViewData["PeriodID"]';
+        if (periodId) {
+            $('#periodIdSelectFilter').val(periodId);
+        }
+    });
+</script>
+

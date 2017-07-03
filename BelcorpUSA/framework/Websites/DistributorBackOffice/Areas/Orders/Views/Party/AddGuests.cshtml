@@ -1,0 +1,190 @@
+﻿@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = Html.Term("AddGuests", "Add Guests");
+    
+    OrderCustomer host = null;
+    if (Model != null && Model.Order != null && Model.Order.OrderCustomers != null) { 
+        host = Model.Order.GetHostess();
+    }
+
+}
+@section rail{
+    <div id="Follow">
+        @Html.Partial("PartySummary", Model)
+        <div class="center pad10">
+            <a href="javascript:void(0);" id="btnContinue" class="Button Primary waitOnPendingSave"><span>@Html.Term("DWSPartySaveAndContinueButton","Save and Continue")</span></a>
+        </div>
+    </div>
+}
+@section head{
+@Html.Partial("PartyScripts")
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('#txtNumberOfGuests').click(function (e) { e.stopImmediatePropagation(); }).numeric({ allowDecimal: false, allowNegative: false });
+            $('#btnAddXGuests').click(function () {
+                $.get('@Href("~/Orders/Party/GuestForm")', { guestCount: $('#txtNumberOfGuests').val() }, function (response) {
+                    if (/Login/i.test(response)) {
+                        showMessage('@Html.Term("YourSessionHasTimedOutPleaseRefreshthePage", "Your session has timed out.  Please refresh the page.")', true);
+                    } else {
+                        $('#guests').append(response);
+                    }
+                });
+            });
+
+            $('#btnAddGuest').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.ajax({
+                    cache: false,
+                    type: 'GET',
+                    url: '@Href("~/Orders/Party/GuestForm")',
+                    data: { guestCount: 1 },
+                    success: function (response) {
+                        if (/Login/i.test(response)) {
+                            showMessage('@Html.Term("YourSessionHasTimedOutPleaseRefreshthePage", "Your session has timed out.  Please refresh the page.")', true);
+                        } else {
+                            $('#guests').append(response);
+                        }
+                    }
+                })
+                .fail(function () {
+                    showMessage('@Html.Term("ErrorProcessingRequest", "There was a fatal error while processing your request.  If this persists, please contact support.")', true);
+                })
+                .always(function () {
+                    hideLoading(t);
+                });
+            });
+
+            $('#guests .collapse, #guests h3 > a.GuestFormHeader').live('click', function () {
+                var parent = $(this).parent();
+                parent.find('span.collapse').toggleClass('ui-icon-triangle-1-s ui-icon-triangle-1-e');
+                parent.next().slideToggle('fast', function () { parent.toggleClass('ui-corner-bottom'); });
+            });
+
+            $('#guests span.DeleteGuest').live('click', function () {
+                if ($('.guestId', this).length) {
+                    var guestId = $('.guestId', this).val();
+                    $('#invitedGuests li:has(input.guestId[value="' + guestId + '"])').show();
+                }
+                $(this).closest('div.GuestForm').remove();
+            });
+
+            $('#guests input.FirstName,#guests input.LastName').live('keyup', function () {
+                var guestForm = $(this).closest('div.GuestForm');
+                $('a.GuestFormHeader span.GuestName', guestForm).text($('input.FirstName', guestForm).val() + ' ' + $('input.LastName', guestForm).val());
+            });
+
+            $('#btnSave').click(function () {
+                if (!$('#guests').checkRequiredFields()) {
+                    return false;
+                }
+                var data = {}, t = $(this);
+                showLoading(t, { float: 'left' });
+                $('#guests div.GuestForm').each(function (i) {
+                    var firstName = $('.FirstName', this), lastName = $('.LastName', this), email = $('.Email', this);
+                    data['guests[' + i + '].FirstName'] = firstName.val();
+                    data['guests[' + i + '].LastName'] = lastName.val();
+                    data['guests[' + i + '].Email'] = email.val();
+                    if ($('.directShip', this).is(':checked')) {
+                        data['guests[' + i + '].Attention'] = $('.Attention', this).val();
+                        data['guests[' + i + '].Address1'] = $('.Address1', this).val();
+                        data['guests[' + i + '].Address2'] = $('.Address2', this).val();
+                        data['guests[' + i + '].Address3'] = $('.Address3', this).val();
+                        data['guests[' + i + '].PostalCode'] = $('.PostalCode', this).fullVal();
+                        data['guests[' + i + '].City'] = $('.City', this).val();
+                        data['guests[' + i + '].County'] = $('.County', this).val();
+                        data['guests[' + i + '].State'] = $('.State', this).val();
+                        data['guests[' + i + '].CountryID'] = $('.Country', this).val();
+                    }
+                });
+
+                $.post('@Href("~/Orders/Party/SaveGuests")', data, function (response) {
+                    if (response.result) {
+                        save('@Href("~/Orders/Party/Cart")')
+                        //window.location = '@Href("~/Orders/Party/Cart")';
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('input.directShip').live('click', function () {
+                var form = $(this).closest('.GuestForm');
+                $('div.DirectShipAddress', form)[$(this).is(':checked') ? 'slideDown' : 'slideUp']();
+            });
+
+            $('#myGroups .AddGroup').click(function () {
+                $.get('@Href("~/Orders/Party/GuestForm")', { groupId: $('.groupId', this).val() }, function (response) {
+                    if (/Login/i.test(response)) {
+                        showMessage('@Html.Term("YourSessionHasTimedOutPleaseRefreshthePage", "Your session has timed out.  Please refresh the page.")', true);
+                    } else {
+                        $('#guests').append(response);
+                    }
+                    if (!$('#guests div.GuestForm:first .FirstName').val()) {
+                        $('#guests div.GuestForm:first').remove();
+                    }
+                });
+            });
+
+            $('#invitedGuests .AddGuest').click(function () {
+                var t = $(this);
+                $.get('@Href("~/Orders/Party/GuestForm")', { guestId: $('.guestId', this).val() }, function (response) {
+                    if (/Login/i.test(response)) {
+                        showMessage('@Html.Term("YourSessionHasTimedOutPleaseRefreshthePage", "Your session has timed out.  Please refresh the page.")', true);
+                    } else {
+                        $('#guests').append(response);
+                        t.parent().hide();
+                    }
+                    if (!$('#guests div.GuestForm:first .FirstName').val()) {
+                        $('#guests div.GuestForm:first').remove();
+                    }
+                });
+            });
+        });
+		//]]>
+    </script>
+
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Party")">@Html.Term("Party", "Party")</a> &gt; <a href="@Href("~/Orders/Party/Cart")">@Html.Term("Cart")</a> &gt; @Html.Term("AddGuests", "Add Guests")
+}
+@section title {
+    @Html.Term("AddGuests", "Add Guests")
+}
+
+<div class="splitGroup split-40-60">
+    <div class="col">
+        <div class="menu-full">
+                @Html.Partial("_AddGuestsWidgets")
+        </div>
+        <div class="menu-small menu-hidden">
+            <div class="menu-trig" data-menu="groups">
+                <span class="menu-label">My Groups</span>
+            </div>
+            <div class="UI-mainBg menu-panel listNav" id="groups">
+                @Html.Partial("_AddGuestsWidgets")
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="UI-mainBg brdrAll GridUtility">
+            <a href="javascript:void(0);" class="IconText Add" id="btnAddXGuests"><span>
+                @Html.Raw(Html.Term("AddXGuests", "Add {0} Guest(s)", "<input type=\"text\" id=\"txtNumberOfGuests\" value=\"1\" style=\"width:30px;\" />"))</span></a> <span class="clr"></span>
+        </div>
+        <div id="guests">
+            <input type="hidden" id="accountId" value="@(host == null ? "" : host.AccountID.ToString())" />
+            @{ViewBag.GuestCount = 1; Html.RenderPartial("GuestForm", new List<AccountSlimSearchData>());}
+        </div>
+        <div class="UI-lightBg pad5 brdrAll addAnotherGuest">
+            <a href="javascript:void(0);" class="IconText Add UI-icon-container" id="btnAddGuest">
+            <span class="UI-icon icon-plus">@Html.Term("AddAnotherGuest", "Add Another Guest")</span></a>
+        </div>
+        <div class="mt10 clr">
+            <a href="javascript:void(0);" class="Button FormSubmit FL" id="btnSave"><span>@Html.Term("Save")</span></a> 
+            <a href="@Href("~/Orders/Party/Cart")" class="Cancel FL ml10"><span>@Html.Term("Cancel")</span></a>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+@{
+	var page = ViewData["CurrentPage"] as NetSteps.Data.Entities.Page;
+	var centerContent = ViewData["CenterContent"] as HtmlSection;
+}
+@centerContent.ToDisplay(page.PageID)

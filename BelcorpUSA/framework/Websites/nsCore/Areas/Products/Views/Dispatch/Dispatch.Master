@@ -1,0 +1,115 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage<dynamic>" MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script type="text/javascript">
+/*
+	    //a couple of functions used by most/all promotion types. 
+	    function getProductInfo(productId, showLoading, success) {
+	        var options = {
+	            url: '<%= ResolveUrl("~/Products/ProductPromotions/QuickAddProduct") %>',
+	            showLoading: showLoading,
+	            data: { productId: productId },
+	            success: success
+	        };
+	        NS.post(options);
+	    }
+
+	    jQuery.fn.refreshTable = function () {
+	        $(this).find('tr:odd').addClass('Alt');
+	        $(this).find('tr:even').removeClass('Alt');
+	        return $(this);
+	    }
+
+	    function wireupOptionsPanel() {
+	        $('div.hasPanel').each(function () {
+	            var trig = $(this).attr('rel'),
+							yPan = $('div.hiddenPanel', this).attr('id');
+	            $('input[type=radio]', this).change(function () {
+	                var YN = $($(this)).val(),
+								rWrap = $(this).parents('span'),
+								radioClass = $(this).attr('class');
+
+	                if (trig == 'isYes' && (!radioClass || radioClass.indexOf('disablePanel') == -1)) {
+
+	                    // "yes" triggers the panel
+	                    if (YN == 'yes') {
+	                        $('#' + yPan).slideDown('fast');
+	                        $(rWrap).addClass('UI-lightBg');
+	                    } else if (YN == 'no') {
+	                        $('#' + yPan).slideUp('fast');
+	                        $('div.hasPanel span').removeClass('UI-lightBg');
+	                    }
+	                } else if (trig == 'isNo' && (!radioClass || radioClass.indexOf('disablePanel') == -1)) {
+
+	                    // "no" triggers the panel
+	                    if (YN == 'no') {
+	                        $('#' + yPan).slideDown('fast');
+	                        $(rWrap).addClass('UI-lightBg');
+	                    } else {
+	                        $('#' + yPan).slideUp('fast');
+	                        $('div.hasPanel span').removeClass('UI-lightBg');
+	                    }
+	                }
+	            });
+	        });
+	    }
+
+	    $(document).ready(function () {
+	        wireupOptionsPanel();
+
+	        //setup review click
+	        $('a.viewHideOptions').live('click', function () {
+	            var optionsPanel = $('#PromoOptions'),
+                    reviewLink = $('#reviewOptions');
+	            if (optionsPanel.is(':visible')) {
+	                optionsPanel.slideUp('fast');
+	                reviewLink.text('<%= Html.Term("PromotionOptions_ReviewOptionsLink", "Review Options") %>');
+	            } else {
+	                optionsPanel.slideDown('fast');
+	                reviewLink.text('<%= Html.Term("PromotionOptions_MinimizeOptions", "Minimize Options") %>');
+	            }
+	        });
+
+	        $('.qty, .numeric').numeric();
+
+	        //Added ability to click help icon and view information about the Adjustment types.
+	        $('#AdjustemntDescHelp').click(function () {
+	            $('#sType option:selected').each(function () {
+	                var desc = $(this).attr('rel');
+	                if (desc !== undefined) {
+	                    $('div#' + desc).fadeIn();
+	                } else {
+	                    $('#adjAll').fadeIn();
+	                }
+	            });
+	        });
+
+	        $('.hideDesc').click(function () {
+	            $(this).closest('div.desc').fadeOut('fast');
+	        });
+	    });
+        */
+	</script>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="YellowWidget" runat="server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="LeftNav" runat="server">
+    <div class="SectionNav">
+		<ul class="SectionLinks">
+			<%= Html.SelectedLink("~/Products/Dispatch/", Html.Term("BrowseDispatch", "Browse Dispatch"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+		    <%= Html.SelectedLink("~/Products/Dispatch/Create", Html.Term("CreateDispatch", "Create Dispatch"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+		    <%= Html.SelectedLink("~/Products/DispatchLists/Index", Html.Term("BrowseDispatchLists", "Browse DispatchLists"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+            <%= Html.SelectedLink("~/Products/DispatchLists/Create", Html.Term("CreateDispatchList", "Create Dispatch List"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+		</ul>
+	</div>
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+

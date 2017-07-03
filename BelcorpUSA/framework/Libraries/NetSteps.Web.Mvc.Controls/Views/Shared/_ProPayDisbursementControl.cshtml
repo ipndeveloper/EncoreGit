@@ -1,0 +1,38 @@
+﻿@model ProPayDisbursementViewModel
+
+<h3 class="UI-mainBg pad5">
+    @Html.Term("ProPayProfile", "ProPay Profile")
+</h3>
+<div class="pad10">
+    @if (Model.PropayAccountNumber != null)
+    {
+        <div>
+            <b>@Html.Term("YourPropayAccountNumber", "Your Propay account number is"):</b> @Model.PropayAccountNumber
+        </div>
+    }
+    <div class="mt5 mb10">
+        <div>
+            @Html.Term("PropayAccountNumber", "Propay Account Number"):
+        </div>
+        <div class="FL mr10 pad2 propayAcctNumber">
+            @Html.TextBox("txtPropayAccount", Model.PropayAccountNumber, new { @class = "pad5" })
+        </div>
+        <div>
+            <a id="btnCheckPropayAccount" href="javascript:void(0);" class="Button BigBlue"><span>
+                @Html.Term("CheckPropayAccount", "Find Propay Account")</span></a>
+        </div>
+    </div>
+
+<div id="ProPayAddress" style="display:none;">
+    <div>
+        @Html.Term("CorrectPropayAccount", "The propay account you entered returned the following address. If this is correct, please hit Save")
+        <h4>
+            Address</h4>
+        <p>
+            <span id="ppAddress"></span>
+            <br />
+            <span id="ppCity"></span> <span id="ppState"> </span><span id="ppPostalCode"></span>
+        </p>
+    </div>
+</div>
+</div>

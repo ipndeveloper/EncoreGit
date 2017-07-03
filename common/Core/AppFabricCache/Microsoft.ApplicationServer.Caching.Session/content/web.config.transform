@@ -1,0 +1,19 @@
+<configuration>
+	<configSections>
+		<section name="dataCacheClients" type="Microsoft.ApplicationServer.Caching.DataCacheClientsSection, Microsoft.ApplicationServer.Caching.Core" allowLocation="true" allowDefinition="Everywhere" />
+	</configSections>
+	<dataCacheClients>
+		<dataCacheClient name="default">
+			<hosts>
+				<host name="localhost" cachePort="22233" />
+			</hosts>
+		</dataCacheClient>
+	</dataCacheClients>
+	<system.web>
+		<sessionState mode="Custom" customProvider="DistributedSessionProvider" timeout="120" cookieless="UseCookies" compressionEnabled="false">
+			<providers>
+				<add name="DistributedSessionProvider" type="Microsoft.Web.DistributedCache.DistributedCacheSessionStateStoreProvider, Microsoft.Web.DistributedCache" cacheName="session" applicationName="MyWebApplication" useBlobMode="true" />
+			</providers>
+		</sessionState>
+	</system.web>
+</configuration>

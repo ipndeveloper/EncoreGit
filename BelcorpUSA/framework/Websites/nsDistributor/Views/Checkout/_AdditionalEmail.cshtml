@@ -1,0 +1,19 @@
+﻿@model NetSteps.Data.Entities.Address
+@{
+    NetSteps.Data.Entities.AddressProperty prop = null;
+    if(Model != null)
+    {
+        prop = Model.AddressProperties.Where<NetSteps.Data.Entities.AddressProperty>((x) => x.AddressPropertyTypeID == Convert.ToInt32(Constants.AddressPropertyType.EmailAddress)).FirstOrDefault();
+    }
+}
+
+<div id="AdditionalEmail" class="mb20 mt20 pad5 UI-secBg brdrAll ccEmailOption">
+    <p class="ml10 additionalEmailText">
+        <span class="FL">@Html.Term("EmailCopiesOfShippingNotifications", "Please email a copy of all Shipping Notifications to:")</span>
+        <span class="FR mr10 bold optional"><em><small>* @Html.Term("OptionalTerm", "Optional")</small></em></span>
+        <span class="clr"></span>
+    </p>
+    <p class="ml10 emailInput">
+        @Html.TextBox("shippingProfileEmail", prop == null ? "" : prop.PropertyValue)
+    </p>
+</div>

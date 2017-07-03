@@ -1,0 +1,672 @@
+﻿@model NetSteps.Data.Entities.Party
+@{
+    ViewBag.Title = "Payments";
+}
+@section head{
+    <script type="text/javascript" src='@Href("~/Scripts/Shared/PromotionFunctions/Utility.js")'></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#customer').click(function () {
+                $('#rbCustomerPayment').click();
+            });
+            $('input[name="payment"]').click(function () {
+                var type = $(this).val();
+
+                $('div.paymentType').each(function () {
+                    var t = $(this);
+                    t[t.find('input.' + type).length ? 'show' : 'hide']();
+                });
+                if (!$('input[name="paymentType"]:checked').is(':visible')) {
+                    $('#rbCreditCard').click();
+                }
+            }).filter(':first').trigger('click');
+
+            $('#rbCustomerPayment').click(function () {
+                $('.partyGuestLabel').fadeOut(50, function () { $('#customer').fadeIn(); });
+            });
+
+            $('input[name="paymentType"]').click(function () {
+                $('div.PaymentEntry').hide();
+                $('div.paymentType.bold').removeClass('bold UI-lightBg');
+                $(this).closest('div.paymentType').addClass('bold UI-lightBg');
+                var id = $(this).attr('id').replace(/^rb/, '');
+                $('#' + id.substr(0, 1).toLowerCase() + id.substr(1) + 'Entry').show();
+            });
+            //$('div.paymentType').hover(function () { $(this).toggleClass('paymentType-hovered') });
+            $('#txtAmount').numeric();
+
+            $('#consultantProfiles .paymentMethod').click(function () {
+                $('#consultantProfiles .paymentMethod.defaultProfile').removeClass('defaultProfile');
+                $(this).addClass('defaultProfile');
+                $('#paymentMethodPreview').html($(this).next().html());
+            });
+
+            $('#btnApplyPayment').click(function () {
+                var t = $(this), complete = true, paymentType = $('input[name="paymentType"]:checked');
+
+                $('#applyPaymentColumn input').clearError();
+
+                var data = {
+                    orderCustomerId: $('#rbPartyPayment').is(':checked') ? undefined : $('#customer').val(),
+                    paymentType: paymentType.val(),
+                    amount: $('#txtAmount').val().replace(/,/g, '')
+                };
+                if (!data.amount) {
+                    complete = false;
+                    $('#txtAmount').showError('@Html.JavascriptTerm("PleaseEnterAnAmount", "Please enter an amount.")');
+                }
+
+                switch (paymentType.attr('id')) {
+                    case 'rbProductCredit':
+                        if (data.amount > parseFloat('@ViewBag.ProductCreditBalance')) {
+                            complete = false;
+                            $('#txtAmount').showError('@Html.JavascriptTerm("NotEnoughProductCredit", "Not enough product credit.")');
+                        }
+                        break;
+                    case 'rbGiftCert': data.accountNumber = $('#txtGiftCertNumber').val();
+                        if (!data.accountNumber) {
+                            complete = false;
+                            $('#txtGiftCertNumber').showError('@Html.JavascriptTerm("PleaseEnterGiftCertificateNumber", "Please enter the gift certificate number.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        break;
+                    case 'rbProfile': data.paymentMethodId = $('#consultantProfiles .paymentMethod.defaultProfile').attr('id').replace(/\D/g, ''); break;
+                    case 'rbEFT':
+
+                        data.bankName = $('#txtBankName').val();
+                        if (!data.bankName) {
+                            complete = false;
+                            $('#txtBankName').showError('@Html.JavascriptTerm("PleaseEnterBankName", "Please enter Bank Name.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+
+                        data.nameOnAccount = $('#txtNameOnAccount').val();
+                        if (!data.nameOnAccount) {
+                            complete = false;
+                            $('#txtNameOnAccount').showError('@Html.JavascriptTerm("PleaseEnterNameOnAccount", "Please enter the name on the Account.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        data.bankAccountNumber = $('#txtAccountNumber').val();
+                        if (!data.bankAccountNumber) {
+                            complete = false;
+                            $('#txtAccountNumber').showError('@Html.JavascriptTerm("InvalidAccountNumber", "Invalid Account number.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        var verifyAccountNumber = $('#txtVerifyAccountNumber').val();
+                        if (!verifyAccountNumber || !(verifyAccountNumber > 0)) {
+                            complete = false;
+                            $('#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("InvalidVerifyAccountNumber", "Invalid Verify Account number.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        data.routingNumber = $('#txtRoutingNumber').val();
+                        if (!data.routingNumber) {
+                            complete = false;
+                            $('#txtRoutingNumber').showError('@Html.JavascriptTerm("InvalidRoutingNumber", "Invalid Routing number")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        var verifyRoutingNumber = $('#txtVerifyRoutingNumber').val();
+                        if (!verifyRoutingNumber || !(verifyRoutingNumber > 0)) {
+                            complete = false;
+                            $('#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("InvalidVerifyRoutingNumber", "Invalid Verify Routing number.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+
+                        data.bankAccountTypeID = $('#accountType').val();
+                        if (data.bankAccountTypeID == '@Html.Term("-ChooseAccountType-", "-Choose Account Type-")') {
+                            complete = false;
+                            $('#accountType').showError('@Html.JavascriptTerm("PleaseChooseAccountType", "Please choose an account type.")').change(function () {
+                                if ($('#accountType').val() != '-Choose Account Type-') {
+                                    $('#accountType').clearError().unbind('change');
+                                }
+                            });
+                        }
+
+                        if ($('#txtAccountNumber').val() != $('#txtVerifyAccountNumber').val()) {
+                            $('#txtAccountNumber,#txtVerifyAccountNumber').showError('@Html.JavascriptTerm("AccountNumbersDoNotMatch", "Account Numbers do not match")').keyup(function () {
+                                if ($('#txtAccountNumber').val() == $('#txtVerifyAccountNumber').val())
+                                    $('#txtAccountNumber,#txtVerifyAccountNumber').clearError();
+                            });
+                            $('#txtAccountNumber').focus();
+                            complete = false;
+                            return false;
+                        }
+
+                        if ($('#txtRoutingNumber').val() != $('#txtVerifyRoutingNumber').val()) {
+                            $('#txtRoutingNumber,#txtVerifyRoutingNumber').showError('@Html.JavascriptTerm("RoutingNumbersDoNotMatch", "Routing Numbers do not match") ').keyup(function () {
+                                if ($('#txtRoutingNumber').val() == $('#txtVerifyRoutingNumber').val())
+                                    $('#txtRoutingNumber,#txtVerifyRoutingNumber').clearError();
+                            });
+                            $('#txtRoutingNumber').focus();
+
+                            complete = false;
+                            return false;
+                        }
+
+                        break;
+                    case 'rbCreditCard':
+                        data.nameOnCard = $('#txtNameOnCard').val();
+                        if (!data.nameOnCard) {
+                            complete = false;
+                            $('#txtNameOnCard').showError('@Html.JavascriptTerm("PleaseEnterNameOnCard", "Please enter the name on the card.")').keyup(function () {
+                                if ($(this).val())
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        data.accountNumber = $('#txtCCN').val();
+                        if (!data.accountNumber || !CreditCard.validate(data.accountNumber).isValid) {
+                            complete = false;
+                            $('#txtCCN').showError('@Html.JavascriptTerm("InvalidCCN", "Invalid credit card number.")').keyup(function () {
+                                if ($(this).val() && CreditCard.validate($(this).val()).isValid)
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        data.cvv = $('#txtCVV').val();
+                        if (!data.cvv || data.cvv.length < 3) {
+                            complete = false;
+                            $('#txtCVV').showError('@Html.JavascriptTerm("InvalidCVV", "Invalid CVV.")').keyup(function () {
+                                if ($(this).val() && $(this).val().length >= 3)
+                                    $(this).clearError().unbind('keyup');
+                            });
+                        }
+                        data.expirationDate = $('#expMonth').val() + '/1/' + $('#expYear').val();
+                        if (!data.expirationDate || data.expirationDate < new Date()) {
+                            complete = false;
+                            $('#expMonth').showError();
+                            $('#expYear').showError('@Html.JavascriptTerm("InvalidExpirationDate", "Invalid expiration date.")');
+                            $('#expMonth,#expYear').change(function () {
+                                if (new Date($('#expMonth').val() + '/1/' + $('#expYear').val()) > new Date())
+                                    $('#expMonth,#expYear').clearError().unbind('change');
+                            });
+                        }
+                        data.billingZipcode = $('#billZipcode').val();
+                        if (!verifyPostalCode(data.billingZipcode)) {
+                            complete = false;
+                            $('#billZipcode').showError('@Html.JavascriptTerm("InvalidZipcode", "Invalid zipcode.")');
+                            $('#billZipcode').keyup(function () {
+                                if (verifyPostalCode($(this).val())) {
+                                    $(this).clearError().unbind('keyup');
+                                }
+                            });
+                        }
+                        break;
+                }
+
+                if (complete) {
+
+                    if (paymentType.attr('id') == "rbEFT" && !$('#BankAccountCertCheckbox').is(':checked')) {
+                        showMessage('@Html.Term("AccountCertCheckbox", "Account Certify Checkbox should be checked")', true);
+                        $('#BankAccountCertCheckbox').focus();
+                        return false;
+                    }
+                    else {
+                        showLoading(t);
+                        $.post('@Href("~/Orders/Fundraisers/ApplyPayment")', data, function (response) {
+                            hideLoading(t);
+                            if (response.result) {
+                                $('#txtGiftCertNumber,#txtNameOnCard,#txtCCN,#txtCVV,#txtAmount,#billZipcode,#txtNameOnAccount,#txtAccountNumber,#txtRoutingNumber,#accountType,#txtBankName,#txtVerifyAccountNumber,#txtVerifyRoutingNumber').val('');
+                                $('#GiftCardBalance').html('-');
+                                updateTotals(response);
+                                $('#paymentsGrid').html(response.paymentsGrid);
+                            } else {
+                                showMessage(response.message, true);
+                            }
+                        });
+                    }
+
+                }
+
+            });
+
+            $('a.removePayment').live('click', function () {
+                var t = $(this), customer = t.closest('.Customer'), container = t.closest('div.content');
+                showLoading(t);
+                $.post('@Href("~/Orders/Fundraisers/RemovePayment")', {
+                    paymentId: $('.paymentId', this).val(),
+                    orderCustomerId: customer.length ? customer.find('input.orderCustomerId').val() : undefined
+                }, function (response) {
+                    if (response.result) {
+                        t.parent().remove();
+                        if (customer.length && !customer.find('.Payment').length) {
+                            customer.remove();
+                        }
+                        if (!container.find('div').length) {
+                            container.find('p.lawyer').show();
+                        }
+                        updateTotals(response);
+
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#btnNext').click(function () {
+                var t = $(this);
+                t.hide();
+                $('.loadingWrap').show();
+                $.post('@Href("~/Orders/Fundraisers/Submit")', {}, function (response) {
+                    if (!response.result) {
+                        t.show();
+                        $('.loadingWrap').hide();
+                        showMessage(response.message, true);
+                        $('#paymentsGrid').html(response.paymentsGrid);
+                    }
+                    else {
+                        window.location = '@Href("~/Orders/Fundraisers/Receipt?orderId=" + Model.Order.OrderID)';
+                    }
+                });
+            });
+
+            $('#txtGiftCertNumber').change(lookupGiftCardBalance);
+            $('#btnLookupGC').click(lookupGiftCardBalance);
+        });
+
+        function updateTotals(response) {
+            $('#balanceDue').text(response.totals.partyBalanceDue);
+            $('#productCreditBalance').text(response.productCreditBalance);
+
+            //if the balance due begins with '(' 
+            //then it is a negative balance meaning they have overpaid for the order
+            //replace the '(' with a '-'
+            var partyBalanceDue = response.totals.partyBalanceDue.replace(/^[\(]/, '-');
+            if (parseFloat(partyBalanceDue.replace(/[^\d\.\-]/g, '')) <= 0) {
+                $('div.BalanceDueContainer').addClass('BalanceCovered');
+                $('#btnNext').parent().show();
+            }
+            else {
+                $('div.BalanceDueContainer').removeClass('BalanceCovered');
+                $('#btnNext').parent().hide();
+            }
+        }
+
+        function lookupGiftCardBalance() {
+            $('#gcLoader').show();
+            $('#btnLookupGC').hide();
+            $.post('@Href("~/Orders/Fundraisers/LookupGiftCardBalance")', { giftCardCode: $('#txtGiftCertNumber').val() }, function (results) {
+                hideMessage();
+                $('#gcLoader').hide();
+                $('#btnLookupGC').show();
+                if (results.result && results.balance) {
+                    $('#GiftCardBalance').html(results.balance);
+                    $('#txtAmount').val(results.amountToApply);
+                }
+                else {
+                    $('#GiftCardBalance').html('-');
+                    if (results.message) {
+                        showMessage(results.message, true);
+                    }
+                }
+            });
+        }
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Fundraisers")">@Html.Term("Fundraiser", "Fundraiser")</a>
+    &gt; <a href="@Href("~/Orders/Fundraisers/Cart")">@Html.Term("Cart")</a> @*&gt; <a href="@Href("~/Orders/Fundraisers/HostRewards")">@Html.Term("HostRewards", "Host Rewards")</a>*@
+    &gt; <a href="@Href("~/Orders/Fundraisers/ShippingMethod")">@Html.Term("ShippingMethod", "Shipping Method")</a>
+    &gt; @Html.Term("Payments")
+}
+@section rail{
+    @Html.Partial("PartySummary")
+}
+@section title{
+    @Html.Term("Payments")
+}
+@{   
+    var nonProfilePaymentMethods = CoreContext.CurrentAccount.GetNonProfilePaymentTypes(CoreContext.CurrentAccount.AccountTypeID, Model.Order.OrderTypeID,
+        Model.Order.OrderShipments != null && Model.Order.OrderShipments.Any() ? Model.Order.OrderShipments.First().CountryID : 0);
+}
+<div class="brdr1 brdrAll mb10 paymentSection-ApplyTo">
+    <div class="UI-secBg brdrYYNN sectionHeader">
+        <div class="pad10">
+            @Html.Term("ApplyPaymentTo", "Apply Payment To:")
+        </div>
+    </div>
+    <div class="pad2">
+        <div class="pad10 UI-lightBg applyPaymentSelection">
+            <p class="FL mr10">
+                <input type="radio" name="payment" value="Party" id="rbPartyPayment" checked="checked" /><label
+                    for="rbPartyPayment" class="bold partyLabel">@Html.Term("TheFundraiser", "The Fundraiser")</label>
+            </p>
+            <p class="FL">
+                <input type="radio" name="payment" value="Customer" id="rbCustomerPayment" />
+                <label for="rbCustomerPayment" class="bold partyGuestLabel">@Html.Term("AFundraiserGuest", "A Fundraiser Guest")</label>
+                <select id="customer" style="display: none;">
+                    @foreach (var customer in Model.Order.OrderCustomers)
+                    {
+                        <option value="@customer.Guid.ToString("N")">@customer.FullName</option>
+                    }
+                </select>
+            </p>
+            <span class="clr"></span>
+        </div>
+    </div>
+</div>
+@{
+    var canDoEFT = CoreContext.CurrentAccount.HasFunction(SmallCollectionCache.Instance.PaymentTypes.Where(p => p.PaymentTypeID == (int)Constants.PaymentType.EFT).FirstOrDefault().FunctionName);
+}
+<div id="applyPaymentColumn" class="FL splitCol40 mr10 brdrAll brdr1 paymentSection-Type">
+    <div class="UI-mainBg brdrYYNN sectionHeader">
+        <div class="pad10">@Html.Term("SelectPaymentType", "Select a Payment Type")</div>
+    </div>
+    @*<input type="radio" name="paymentType" class="Customer" id="rbCash" /><label for="rbCash">@Html.Term("Cash")</label><br />
+    <input type="radio" name="paymentType" class="Customer" id="rbCheck" /><label for="rbCash">@Html.Term("Check")</label><br />*@
+    <ul class="flatList listNav paymentTypeList">
+        @{ if (nonProfilePaymentMethods.Any(pt => pt.PaymentTypeID == Constants.PaymentType.ProductCredit.ToInt()))
+           {
+            <li>
+                <div class="paymentType">
+                    <label for="rbProductCredit" class="pad5 block">
+                        <input type="radio" name="paymentType" class="Party" id="rbProductCredit" value="ProductCredit" />@Html.Term("ProductCredit", "Product Credit")</label>
+                </div>
+            </li>
+           }
+           if (nonProfilePaymentMethods.Any(pt => pt.PaymentTypeID == Constants.PaymentType.GiftCard.ToInt()))
+           {
+            <li>
+                <div class="paymentType">
+                    <label for="rbGiftCert" class="pad5 block">
+                        <input type="radio" name="paymentType" class="Party" id="rbGiftCert" value="GiftCard" />@Html.Term("GiftCard", "Gift Card")</label>
+                </div>
+            </li>
+           }}
+        <li>
+            <div class="paymentType">
+                <label for="rbProfile" class="pad5 block">
+                    <input type="radio" name="paymentType" class="Party" id="rbProfile" value="CreditCard" />@Html.Term("MyProfiles", "My Profiles")</label>
+            </div>
+        </li>
+        @{if (canDoEFT)
+          {
+            <li>
+                <div class="paymentType">
+                    <label for="rbEFT" class="pad5 block">
+                        <input type="radio" name="paymentType" class="Party Customer" id="rbEFT" value="EFT" />@Html.Term("BankAccount", "Bank Account")</label>
+                </div>
+            </li>
+          }
+        }
+        <li>
+            <div class="paymentType bold UI-lightBg">
+                <label for="rbCreditCard" class="pad5 block">
+                    <input type="radio" name="paymentType" class="Party Customer" id="rbCreditCard" value="CreditCard"
+                        checked="checked" />@Html.Term("CreditCard", "Credit Card")</label>
+            </div>
+        </li>
+    </ul>
+    @*<div id="checkEntry">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtCheckNumber">@Html.Term("CheckNumber", "Check #"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtCheckNumber" />
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>*@
+    <div id="productCreditEntry" class="pad10 PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label>@Html.Term("ProductCreditBalance", "Product Credit Balance"):</label>
+                </div>
+                <div id="productCreditBalance" class="FInput">
+                    @(((decimal)ViewBag.ProductCreditBalance).ToString(Model.Order.CurrencyID))
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div id="giftCertEntry" class="pad10 PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label>@Html.Term("GiftCardBalance", "Gift Card Balance"):</label>
+                </div>
+                <div class="FInput" id="GiftCardBalance">
+                    -
+                </div>
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtGiftCertNumber">@Html.Term("GiftCardNumber", "Gift Card #"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtGiftCertNumber" />
+                    <img id="btnLookupGC" src="@Href("~/Resource/Content/Images/Icons/search.png")" alt="@Html.Term("Lookup Gift Card Balance")" title="@Html.Term("Lookup Gift Card Balance")" style="height: 18px;" />
+                    <img id="gcLoader" src="@Href("~/Resource/Content/Images/loader_20x20.gif")" style="display: none;" alt="loading" />
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div id="profileEntry" class="pad10 PaymentEntry" style="display: none;">
+        @{
+            var paymentMethods = CoreContext.CurrentAccount.AccountPaymentMethods;
+            var defaultPaymentMethod = paymentMethods.Any(pm => pm.IsDefault) ? paymentMethods.FirstOrDefault(pm => pm.IsDefault) : paymentMethods.FirstOrDefault();
+        }
+        <div id="PartyShipConsultant" class="PartyShip">
+            <div class="splitpanel" style="width: auto;">
+                <div class="FL DefaultProfile pad5 UI-lightBg brdrAll bold mr10">
+                    <p id="paymentMethodPreview">
+                        @Html.Raw(((IPayment)defaultPaymentMethod).ToDisplay(false, false, true))
+                    </p>
+                </div>
+                <div class="FL ProfilesList ml10">
+                    @Html.Term("MyProfiles", "My profiles"):
+                    <div id="consultantProfiles" class="">
+                        @foreach (var paymentMethod in paymentMethods.OrderBy(pm => pm.IsDefault).ThenBy(pm => pm.AccountPaymentMethodID))
+                        {
+                            string profileName = paymentMethod.ProfileName + (paymentMethod.IsDefault ? " (" + Html.Term("default") + ")" : "");
+                            if (string.IsNullOrEmpty(profileName))
+                            {
+                                profileName = SmallCollectionCache.Instance.PaymentTypes.GetById(paymentMethod.PaymentTypeID).GetTerm();
+                            }
+                            
+                            <a href="javascript:void(0);" id="paymentMethod@(paymentMethod.AccountPaymentMethodID)" class="paymentMethod overlay@(paymentMethod.AccountPaymentMethodID == defaultPaymentMethod.AccountPaymentMethodID ? " defaultProfile" : "")" title="@paymentMethod.MaskedAccountNumber">
+                                @profileName</a> <span class="address" style="display: none;">
+                                    @Html.Raw(((IPayment)paymentMethod).ToDisplay(false, false, true))
+                                </span>
+                            <br />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div id="creditCardEntry" class="pad10 PaymentEntry">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtNameOnCard">@Html.Term("NameOnCard", "Name On Card"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtNameOnCard" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="txtNameOnCard">@Html.Term("CreditCardNumber", "Credit Card #"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtCCN" maxlength="16" class="pad2 ccInput" />
+                    </div>
+                </div>
+                <div class="FL splitCol30">
+                    <div class="FLabel">
+                        <label for="txtNameOnCard">@Html.Term("CVV"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtCVV" maxlength="4" class="pad2 ccvInput" />
+                    </div>
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="expMonth">@Html.Term("ExpirationDate", "ExpirationDate"):</label>
+                    </div>
+                    <div class="FInput">
+                        <select id="expMonth" name="@Html.Term("ExpMonthIsRequired", "Exp Month is required.")" class="required">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" @Html.Raw(i == DateTime.Now.Month ? "selected=\"selected\"" : "")>
+                                    @i - @i.GetMonthName(CoreContext.CurrentCultureInfo)</option>
+                            }
+                        </select>
+                        &nbsp;/&nbsp;
+                        <select id="expYear" name="@Html.Term("ExpYearIsRequired", "Exp Year is required.")" class="required">
+                            @for (int i = DateTime.Today.Year; i <= DateTime.Today.Year + 10; i++)
+                            {
+                                <option value="@i">
+                                    @i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="FL splitCol30">
+                    <div class="FLabel">
+                        <label for="billZipcode">@Html.Term("BillingZipcode", "Billing Zipcode"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="billZipcode" maxlength="6" />
+                    </div>
+                </div>
+                <span class="clr"></span>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div id="eFTEntry" class="pad10 PaymentEntry" style="display: none;">
+        <div class="FormContainer">
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtBankName">@Html.Term("BankName", "Bank Name"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtBankName" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FLabel">
+                    <label for="txtNameOnCard">@Html.Term("NameOnAccount", "Name On Account"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtNameOnAccount" class="pad2 fullWidth" />
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="txtNameOnCard">@Html.Term("BankAccount#", "Bank Account #")</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtAccountNumber" maxlength="30" class="pad2 ccInput" />
+                    </div>
+                </div>
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="txtVerifyAccountNumber">@Html.Term("VerifyAccount#", " Verify Account Number #")</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtVerifyAccountNumber" maxlength="30" class="pad2 ccInput" />
+                    </div>
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow mb10 mt10">
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="txtRoutingNumber">@Html.Term("RoutingNumber#", "Routing Number #")</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtRoutingNumber" maxlength="30" class="pad2 ccInput" />
+                    </div>
+                </div>
+                <div class="FL mr10 splitCol70">
+                    <div class="FLabel">
+                        <label for="txtVerifyRoutingNumber">@Html.Term("VerifyRoutingNumber#", "Verify Routing Number #")</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtVerifyRoutingNumber" maxlength="30" class="pad2 ccInput" />
+                    </div>
+                </div>
+                <span class="clr"></span>
+            </div>
+            <div class="FRow">
+                <div class="FL splitCol70">
+                    <label for="accountType">@Html.Term("Account Type"):</label>
+                    <select id="accountType" class="required" name="@Html.Term("BankAccountTypeIsRequired", "Bank Account Type is required")">
+                        <option>
+                            @Html.Term("-ChooseAccountType", "-Choose Account Type-")
+                        </option>
+                        @foreach (var bankType in Enum.GetValues(typeof(Constants.BankAccountTypeEnum)).Cast<Constants.BankAccountTypeEnum>())
+                        {
+                            <option value="@(bankType.ToShort())">@Html.Term("BankAccountType_" + bankType.ToString(), bankType.ToString())</option>
+                        }
+                    </select>
+                </div>
+                <br />
+                <br />
+            </div>
+            <div class="FRow">
+                <input type="checkbox" id="BankAccountCertCheckbox" />
+                <label for="BankAccountCert">@Html.Term("BankAccountCert", "I certify that I am the owner of the account")</label>
+            </div>
+            <br />
+        </div>
+    </div>
+    <div class="UI-bg pad10 FormContainer applyPaymentBox">
+        <div class="FRow">
+            <div class="FLabel">
+                <label for="txtAmount">@Html.Term("AmountToApply", "Amount to Apply"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtAmount" class="pad5 fullWidth" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <p class="mt10">
+            <a href="javascript:void(0);" id="btnApplyPayment" class="Button applyPaymentBtn"><span>@Html.Term("ApplyPayment", "Apply Payment")</span></a>
+        </p>
+    </div>
+</div>
+<div class="FR brdr1 splitCol60" id="paymentsGrid">
+    @Html.Partial("PaymentsGrid", Model)
+</div>
+<span class="clr"></span>
+<div class="clr UI-Alert mt10 brdrAll BalanceDueContainer @(Model.Order.Balance.HasValue && Model.Order.Balance > 0 ? "" : "BalanceCovered")">
+    <div class="BalanceDue">
+        @Html.Term("BalanceDue", "Balance Due:") <span id="balanceDue">@Model.Order.Balance.AsymmetricRoundedNumber().ToString(Model.Order.CurrencyID)</span>
+    </div>
+</div>
+<div class="clr pad10 center PageSaveButtons" style="@(Model.Order.Balance.HasValue && Model.Order.Balance <= 0 ? "" : "display: none;")">
+    <a href="javascript:void(0);" id="btnNext" class="Button"><span>@Html.Term("Submit")></span></a>
+    <span class="loadingWrap" style="display: none;">
+        <img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="loading..." class="loadingIcon" /></span>
+    <span class="clr"></span>
+</div>

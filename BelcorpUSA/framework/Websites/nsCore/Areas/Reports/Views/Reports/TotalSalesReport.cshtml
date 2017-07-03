@@ -1,0 +1,37 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/TotalSalesExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetTotalSalesReport")
+
+        //.AddSelectFilter(Html.Term("Status"), "status", new Dictionary<string, string>() { { "", Html.Term("SelectaStatus", "Select a Status...") } }.AddRange(SmallCollectionCache.Instance.OrderStatuses.ToDictionary(pt => pt.GetTerm(), pt => pt.GetTerm())))
+
+        //.AddSelectFilter(Html.Term("State"), "state", new Dictionary<string, string>() { { "", Html.Term("SelectaState", "Select a State...") } }.AddRange(SmallCollectionCache.Instance.StateProvinces.ToDictionary(pt => pt.GetTerm, pt => pt.GetTerm())))
+        .AddInputFilter(Html.Term("State", "State"), "state", ViewData["State"])
+        
+        .AddInputFilter(Html.Term("Month", "Month"), "month", ViewData["Month"])
+
+        .AddInputFilter(Html.Term("SubtotalIni5", "Sub Total --> Min"), "subtotalIni", ViewData["SubtotalIni"])
+        .AddInputFilter(Html.Term("SubtotalFin5", "--> Max"), "subtotalFin", ViewData["SubtotalFin"])
+
+        .AddInputFilter(Html.Term("GrossIni1", "Gross --> Min"), "grossIni", ViewData["GrossIni"])
+        .AddInputFilter(Html.Term("GrossFin1", "--> Max"), "grossFin", ViewData["GrossFin"])
+        
+        .AddColumn(Html.Term("Month"), "Month")
+        .AddColumn(Html.Term("Net Sales"), "Subtotal")
+        .AddColumn(Html.Term("Gross Sales"), "Gross")
+        .AddColumn(Html.Term("State"), "State")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}
+

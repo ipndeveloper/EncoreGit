@@ -1,0 +1,112 @@
+﻿/***********************************
+Last Update 12/18/2012 11:15AM Kirstina
+***********************************/
+//@import "compass/css3";
+@import "_css3";
+
+/***********************************
+Layout Structure Options Start Here
+***********************************/
+$base_font_size: 11;
+$top_pane_height: 14.545em;
+$nav_height:3.091em;
+$sub_nav_height: 4.182em;
+$sub_nav_tab_top_space: .4em;
+
+/***********************************
+Color Options Start Here
+***********************************/
+$body_bg_color: #95BBD5;
+$font_family: Arial, Geneva, Helvetica, sans-serif;
+$main_color: #0072b2;
+$main_contrast_color: #c0c0c0;
+$white_color: #ffffff;
+$contentWrap_color: #71a4c6;
+$main_nav_text_inactive: #585858;
+$main_nav_text_active: #ffffff;
+$transition_time: 500ms;
+$main_btn_color: #6CB33E;
+$secondary_btn_color: #efefef;
+$btn_corners: 2.273em;
+$default_bgColor_SubNav: $main_color;
+$subNav_hover_color: darken($main_color, 16%);
+$error_color: #d90000;
+$warning_color: yellow;
+
+/*** Txt Links ***/
+$link_color: #0078BA;
+$link_hover_color: #4793CF;
+
+/*** Borders ***/
+$border_radius: .455em;
+$main_contrast_border_dark: darken($main_contrast_color,40%);
+$dotted_line_color: $main_contrast_color;
+$brdr_color: lighten($dotted_line_color, 10%);
+
+@mixin subheading-double-border {
+	border-bottom:4px double $main_contrast_border_dark;
+	margin-bottom:.273em;
+}
+
+/*** Buttons ***/
+@mixin btn-rules {
+	padding: .636em 1.364em;
+    text-transform: uppercase;
+	white-space: nowrap;
+	/*line-height:2.454em;*/ //this was to fix if buttons drop to multiple lines, they were overlapping and also not having proper spacing everywhere but it broke a few other buttons
+	line-height:1em;
+    @include BorderRadius($btn_corners);
+	@include transition;
+}
+@mixin plain-btn {
+	border: .1em solid #efefef;
+	background:$white_color;
+}
+@mixin save-btn {
+	@include Gradient(lighten($main_btn_color, 10%), (rgba($main_btn_color,0) 0%) (rgba(darken($main_btn_color, 10%),1) 90%));
+	@include transition(background-color, $transition_time);
+    color: lighten($main_btn_color, 100);
+	border:none;
+}
+
+/*** Sub Nav Color Calculated from main_color ***/
+$gradient_colors_SubNav: ($default_bgColor_SubNav 0%) (darken($default_bgColor_SubNav, 5.5%) 50%) (darken($default_bgColor_SubNav, 10%) 51%) (darken($default_bgColor_SubNav, 10) 100%);
+
+@mixin top-rounded {
+	@include BorderRadius($border_radius $border_radius 0 0);
+}
+@mixin bottom-rounded {
+	@include BorderRadius(0 0 $border_radius $border_radius);
+}
+@mixin border-none {
+	@include BorderRadius(0 0 0 0);
+}
+@mixin dotted-line ($pos: bottom, $col: $dotted_line_color) {
+	@if ($pos == top) {
+		border-top: .1em dotted $col;
+	}
+	@else if ($pos == left) {
+		border-left: .1em dotted $col;
+	}
+	@else if ($pos == right) {
+		border-right: .1em dotted $col;
+	}
+	@else {
+		border-bottom: .1em dotted $col;
+	}
+}
+
+@function em($pxSet, $pxParent: $base_font_size) {
+	$p: (1 / $pxParent);
+	$list: ();
+	@each $values in $pxSet {
+		$v: $p * $values;
+		@if $v > 0 and $v < .1 {
+			$list: append($list, #{.1}em);
+		}
+		@else {
+			$list: append($list, #{$p * $values}em);
+		}
+	}
+	@return $list;
+}

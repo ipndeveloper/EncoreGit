@@ -1,0 +1,266 @@
+﻿@{string baseUrl = Href("~/") + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";}
+@{
+	 var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();    
+	ViewBag.Title = Html.Term("BundlePackItems", "Bundle Pack Items");
+    NetSteps.Data.Entities.TrackableCollection<OrderItem> items = ViewBag.OrderItem != null ? ViewBag.OrderItem.ChildOrderItems : new NetSteps.Data.Entities.TrackableCollection<OrderItem>();
+    bool isParty = baseUrl.Contains("Party") ? true : false;
+    bool isHostReward = Request.UrlReferrer != null && Request.UrlReferrer.LocalPath.Contains("HostRewards");
+    Product kitProduct = ViewBag.OrderItem != null ? inventory.GetProduct(ViewBag.OrderItem.ProductID) : null;
+    string productName = kitProduct == null ? "" : ViewBag.OrderItem.SKU + " - " + kitProduct.Translations.Name();
+    int? productId = kitProduct == null ? null : (int?)kitProduct.ProductID;
+}
+@section head{
+    <script type="text/javascript">
+        $(function () {
+
+            $('input.quantity').numeric();
+            $('input.productLookUp').jsonSuggest('@Href("~/Orders/OrderEntry/InPageSearch")', {
+                data: function (item) {
+                    return newData = {query: $(item).val(), kitProductId: '@(productId)', dynamicKitGroupId: $(item).parent().find('input.groupId').val()};
+                },
+                minCharacters: 3,
+                ajaxResults: true,
+                onSelect: function (item) {
+                    var p = $(this).parent();
+                    p.find('input.productId').val(item.id);
+                    p.find('input.quantity').val('1');
+                    p.find('input.needsBackOrderConfirmation').val(item.needsBackOrderConfirmation);
+                    $(this).clearError();
+                }
+            });
+
+            $('#btnCancel').click(function () {
+                var returnUrl = '@Url.Content(baseUrl)'
+                var data =
+                    {
+                        orderItemGuid: '@(ViewBag.BundleGuid)'
+                    };
+                @if (isParty)
+                {
+                    @:data['orderCustomerId'] = '@(ViewBag.OrderCustomerId)';
+                    @:returnUrl += 'Cart';
+                }
+                $.post('@Url.Content(baseUrl + "RemoveFromCart")', data, function (response) {
+                    if (response.result) {
+                        window.location.href = returnUrl;
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('a.addToCart').click(function () {
+                var t = $(this);
+
+                showLoading(t);
+                var div = t.closest('.CartTools');
+                var productElement = div.find('.productId');
+                var quantityElement = div.find('.quantity');
+                var productLookupElement = div.find('.productLookUp');
+                var productId = productElement.val();
+                var quantity = quantityElement.val();
+                var groupId = div.find('.groupId').val();
+                if(productId==0)
+                {
+                    productLookupElement.showError('@Html.JavascriptTerm("PleaseSelectAProduct", "Please select a product")');
+                    hideLoading(t);
+                    return false;
+                }
+
+                if (div.find('input.needsBackOrderConfirmation').val()=="true") {
+                    if (!confirm('@Html.Term("ItemIsOnBackOrder", "The item is on backorder are you sure you wish to continue?")')) {
+                        hideLoading(t);
+                        return false;
+                    }
+                }
+
+                var data =
+                    {
+                        productId: productId, quantity: quantity, parentGuid: '@(ViewBag.BundleGuid)', dynamicKitGroupId: groupId
+                    };
+                @if (isParty)
+                {
+                    @:data['orderCustomerId'] = '@(ViewBag.OrderCustomerId)';
+                }
+
+                $.post('@Url.Content(baseUrl + "AddToCart")', data, function (response) {
+                    if (response.result) {
+                        productElement.val('');
+                        quantityElement.val('1');
+                        productLookupElement.val('');
+                        $("#" + groupId).html(response.groupItemsHtml);
+                        prepareGroupRemoveItem(groupId);
+                        showHideBundleGroupProductSelector(response.isBundleGroupComplete, div);
+                        hideLoading(t);
+                    } else {
+                        showMessage(response.message, true);
+                        hideLoading(t);
+                    }
+                });
+            });
+
+            $('#btnSave').click(function () {
+                var t = $(this);
+                showLoading(t);
+                var returnUrl = '@Url.Content(baseUrl)';
+                var data =
+                    {
+                        bundleGuid: '@(ViewBag.BundleGuid)'
+                    };
+                @if (isHostReward)
+                {
+                    @:data['orderCustomerId'] = '@(ViewBag.OrderCustomerId)';
+                    @:returnUrl += 'HostRewards';
+                }
+                else if (isParty)
+                {
+                    @:data['orderCustomerId'] = '@(ViewBag.OrderCustomerId)';
+                    @:returnUrl += 'Cart';
+                }
+                $.post('@Url.Content(baseUrl + "SaveBundle")', data, function (response) {
+                    if (response.result) {
+                        window.location.href = returnUrl;
+                    } else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            prepareRemoveItem();
+
+        });
+
+        function showHideBundleGroupProductSelector(boolBundleComplete, cartToolsDiv){
+            if (boolBundleComplete) {
+                cartToolsDiv.hide();
+                cartToolsDiv.parent().find('h2').removeClass("UI-Warning").find('span').removeClass("icon-exclamation");
+                cartToolsDiv.parent().find('h2').addClass("UI-Complete").find('span').addClass("icon-check");
+            } else {
+                cartToolsDiv.show();
+                cartToolsDiv.parent().find('h2').addClass("UI-Warning").find('span').removeClass("icon-check");
+                cartToolsDiv.parent().find('h2').removeClass("UI-Complete").find('span').addClass("icon-exclamation");
+            }
+        }
+
+        function prepareRemoveItem() {
+            $('.RemoveItem').click(function () {
+                removeItem($(this));
+            });
+        }
+
+        function prepareGroupRemoveItem(groupId) {
+            $('#' + groupId + ' .RemoveItem').click(function () {
+                removeItem($(this));
+            });
+        }
+
+        function removeItem(obj) {
+            showLoading(obj);
+            var span = obj.parent();
+            var div = span.parent();
+            var groupId = div.attr("id");
+            var orderItemGuid = span.find('.orderItemGuid').val();
+            var data =
+                    {
+                        orderItemGuid: orderItemGuid, parentGuid: '@(ViewBag.BundleGuid)', quantity: 1
+                    };
+                @if (isParty)
+                {
+                    @:data['orderCustomerId'] = '@(ViewBag.OrderCustomerId)';
+                }
+            $.post('@Url.Content(baseUrl + "RemoveFromCart")', data, function (response) {
+                if (response.result) {
+                    $("#" + groupId).html(response.groupItemsHtml);
+                    prepareGroupRemoveItem(groupId);
+                    showHideBundleGroupProductSelector(response.isBundleGroupComplete, div.siblings('.CartTools'));
+                    hideLoading(obj);
+                } else {
+                    showMessage(response.message, true);
+                    hideLoading(obj);
+                }
+            });
+
+        }
+
+    </script>
+}
+@section breadcrumb {
+    @if (isParty)
+    {
+        @:<a href="@Href("~/Orders/Party")">@Html.Term("Party", "Party")</a> &gt; <a href="@Href("~/Orders/Party/Cart")">@Html.Term("Cart")</a> &gt; @productName &gt; @Html.Term("BundlePackItems", "Bundle Pack Items")
+    }
+    else
+    {
+        @:<a href="@Href("~/Orders/OrderEntry")">@Html.Term("OrderEntry", "Order Entry")</a> &gt; @productName &gt; @Html.Term("BundlePackItems", "Bundle Pack Items")
+    }
+    
+}
+
+@section title{
+     @Html.Term("Bundle Items")
+}
+
+
+
+@{ int counter = 0; }
+<table id="BundlePackItems">
+    <tr>
+    @for (int i = 0; i < ViewBag.DynamicKitGroups.Count; i++)
+    {
+        DynamicKitGroup group = ViewBag.DynamicKitGroups[i];
+        var groupItems = items.Where(index => index.DynamicKitGroupID == group.DynamicKitGroupID);
+        var bundleComplete = groupItems.Sum(gi => gi.Quantity) == group.MinimumProductCount;
+        <td>
+                <h2 class="@(bundleComplete ? "UI-Complete" : "UI-Warning")">
+                    <span class="UI-bundle UI-icon @(bundleComplete ? "icon-check" : "icon-exclamation")">
+                        @group.Translations.Name() (@Html.Term("SelectBundleItems", "Select {0} items", @group.MinimumProductCount))
+                    </span>
+                </h2>
+                <div class="groupDescription"><span>@group.Translations.ShortDescription()</span></div>
+                <div class="brdrAll pad5 icon-24 GridFilters CartTools" style="@(groupItems.Sum(gi => gi.Quantity) == group.MinimumProductCount ? "display:none;" : "")">
+                    <div class="FL">
+                        <b>@Html.Term("Item")</b>:
+                        <input type="text" value="" class="TextInput productLookUp" data-groupid="@(group.DynamicKitGroupID)" />
+                        <input type="hidden" value="" class="productId" />
+                        <input type="hidden" value="" class="needsBackOrderConfirmation" />
+                        <input type="hidden" value="@(group.DynamicKitGroupID)" class="groupId" />
+                    </div>
+                    <div class="FL">
+                        <b>@Html.Term("Quantity")</b>:
+                        <input type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" id="quantity" />
+                    </div>
+                    <a class="FL UI-icon-container TextLink Add addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")"><span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+                </div>
+                <div id="@(group.DynamicKitGroupID)" class="mt10 ml10 removeProduct">
+                    @foreach (var item in groupItems)
+                    {
+                        Product childProduct = inventory.GetProduct(item.ProductID.Value);
+                        for (int q = 0; q < item.Quantity; q++)
+                        {
+                            <span class="block">
+                                <input type="hidden" value="@(item.Guid.ToString("N"))" class="orderItemGuid" />
+                                <a href="javascript:void(0)" class="UI-icon icon-x RemoveItem"></a>&nbsp;@(childProduct.SKU + " " + childProduct.Translations.Name())
+                            </span>
+                        }
+                    }
+                </div>
+            </td>
+                    if (i == ViewBag.DynamicKitGroups.Count - 1)
+                    {
+            @:<tr>
+        }
+                    else if (counter % 2 != 0)
+                    { 
+            @:</tr><tr>
+        }
+                    counter++;
+    }
+</table>
+<div class="FR pad10 ButtonPane">
+    <a href="#" id="btnCancel" class="Cancel FR"><span>@Html.Term("Cancel")</span></a>
+    <a href="#" id="btnSave" class="Button Primary FR mr10">
+        <span>@Html.Term("Save Bundle")</span>
+    </a>
+</div>
+<span class="clrall"></span>

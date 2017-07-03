@@ -1,0 +1,389 @@
+@model NetSteps.Web.Mvc.Controls.Models.HtmlSectionEditModel
+@{
+    ViewBag.Title = "Edit " + SmallCollectionCache.Instance.HtmlSectionEditTypes.GetById(Model.Section.HtmlSectionEditTypeID).GetTerm() + " Section";
+    var site = NetSteps.Web.Mvc.Controls.Controllers.EditController.CurrentSite;
+    var baseSite = site.IsBase ? site : SiteCache.GetSiteByID(site.BaseSiteID.ToInt());
+    var productionContent = Model.Section.ProductionContentForDisplay(baseSite);
+    //var choices = baseSite.GetAllSectionChoices(Model.HtmlSectionID);
+    var page = ViewData["Page"] as NetSteps.Data.Entities.Page;
+    var returnUrl = ViewData["ReturnUrl"];
+}
+@section head {
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jcrop.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/timepickr.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jqModal.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/scrollable.css")" />
+    <script src="/fileuploads/resources/ckeditor/3.5.2/ckeditor.js" type="text/javascript"></script>
+    <script src="/fileuploads/resources/ckeditor/3.5.2/adapters/jquery.js" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/fileuploader.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/timepickr.js")" type="text/javascript"></script>
+    <script src="@Href("~/Resource/Scripts/jqModal.js")" type="text/javascript"></script>   
+    <script src="@Url.Content("~/Resource/Scripts/jquery.tools.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('body').addClass('EncoreContentEditor');
+            window.setInterval(function () {
+                $.post('@Href("~/Edit/KeepAlive")');
+            }, 120000);
+
+            $('a.Edit').remove();
+
+            $('#mediaLibrary').jqm({
+                trigger: '.MediaLibrary',
+                onShow: function () { $('#mediaLibrary').fadeIn('fast').trigger('resizeHeaders'); }
+            });
+            $('#mediaLibrary .InsertFile').live('click', function () {
+                CKEDITOR.instances.productionBody.insertHtml('<img alt=\x22\x22 src=\x22' + $(this).parent().parent().find('.path').val() + '\x22 />');
+                $('#productionBodyHtml').val(CKEDITOR.instances.productionBody.getData());
+            });
+
+            $('#publishDate').datepicker({ changeMonth: true, changeYear: true, minDate: new Date(), yearRange: '-10:+10' });
+            $('#publishTime').timepickr({ convention: 12 });
+
+            $('#name').watermark('@Html.JavascriptTerm("EnterATitle", "Enter a title...")');
+
+            $('#publishNow').click(function () {
+                if ($(this).is(':checked')) {
+                    $('#publishDate,#publishTime').attr('disabled', 'disabled');
+                } else {
+                    $('#publishDate,#publishTime').removeAttr('disabled');
+                }
+            });
+
+            var saveContent = function (status, data, saveButton) {
+                var editors = $('div.EnvironmentContainer:visible .editor');
+                if (editors.filter(':visible').length) {
+                    data.body = editors.filter(':visible').val();
+                } else {
+                    data.body = editors.filter(':first').val();
+                }
+                data.name = $('#name').val();
+                if (data.name && data.name != $('#name').data('watermark')) {
+                    $.post('@Href("~/Edit/SaveCorporateContent")', data, function (response) {
+                        if (hideLoading)
+                            hideLoading(saveButton);
+                        if (response.result) {
+                            $('#contentId').val(response.contentId);
+                            showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+                            if (data.defaultChoice) {
+                                $('#choices .default').removeClass('default');
+                                $('#corporateContent' + response.contentId).addClass('default');
+                                $('#btnDelete').hide();
+                                $('#productionContentId').val(response.contentId);
+                            }
+                            reattachScrollable(response.choices);
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                } else {
+                    $('#name').showError('@Html.JavascriptTerm("TitleIsRequired", "Title is required")').keyup(function () {
+                        if ($(this).val()) {
+                            $(this).clearError();
+                        } else {
+                            $(this).showError('@Html.JavascriptTerm("TitleIsRequired", "Title is required")');
+                        }
+                    });
+                    if (hideLoading)
+                        hideLoading(saveButton);
+                }
+            },
+
+			savePhoto = function (status, data, saveButton) {
+			    data.coordinates = $('.coordinates').val();
+			    data.image = $('.image').attr('src');
+
+			    if (!data.image) {
+			        showMessage('@Html.Term("PleaseUploadAPhoto", "Please upload a photo.")', true);
+			        if (hideLoading)
+			            hideLoading(saveButton);
+			        return false;
+			    }
+
+			    $.post('@Href("~/Edit/SaveCorporatePhoto")', data, function (response) {
+			        if (hideLoading)
+			            hideLoading(saveButton);
+			        if (response.result) {
+			            $('#contentId').val(response.contentId);
+			            showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+			            if (data.defaultChoice) {
+			                $('#choices .default').removeClass('default');
+			                $('#corporateContent' + response.contentId).addClass('default');
+			                $('#btnDelete').hide();
+			                $('#productionContentId').val(response.contentId);
+			            }
+			            reattachScrollable(response.choices);
+			        } else {
+			            showMessage(response.message, true);
+			        }
+			    });
+			};
+
+            $('#btnSave').click(function () {
+                var t = $(this), data = {
+                    sectionId: '@Model.Section.HtmlSectionID',
+                    contentId: $('#contentId').val(),
+                    status: 'Production',
+                    defaultChoice: $('#defaultChoice').is(':checked')
+                };
+                if (showLoading)
+                    showLoading(t);
+                if (!$('#publishNow').is(':checked')) {
+                    data.publishDate = $('#publishDate').val();
+                    data.publishTime = $('#publishTime').val();
+                }
+                if ($('#contentEditorType').val() == 'Photo' || $('#contentEditorType').val() == 'PhotoCropper') {
+                    return savePhoto('Production', data, t);
+                } else {
+                    return saveContent('Production', data, t);
+                }
+            });
+
+            $('#btnDelete').click(function () {
+                $.post('@Href("~/Edit/DeleteChoice")', { sectionId: '@Model.Section.HtmlSectionID', choiceId: $('#choices .active').parent().find('.choiceId').val() }, function (response) {
+                    if (response.result) {
+                        showMessage('@Html.Term("DeletedSuccessfully", "Deleted successfully!")', false);
+                        reattachScrollable(response.choices);
+                        $('#productionContainer').hide();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            //Choices
+            $('#choices .item').live('click', function () {
+                var contentId = $(this).attr('id').replace(/\D/g, '');
+                $('#choices .active').removeClass('active');
+                $(this).find('img,span.titlecontent').addClass('active');
+                $('#publishNow').removeAttr('checked');
+                $('#publishDate').removeAttr('disabled').val($('.publishDate', this).val());
+                $('#publishTime').removeAttr('disabled').val($('.publishTime', this).val());
+                $('#contentId').val(contentId);
+                if (contentId == $('#productionContentId').val()) {
+                    $('#defaultChoice').attr('checked', 'checked');
+                    $('#btnDelete').hide();
+                }
+                else {
+                    $('#defaultChoice').removeAttr('checked');
+                    $('#btnDelete').show();
+                }
+                if ($('img', this).length) {
+                    $('#productionContainer').show();
+                    var src = $('img', this).attr('src');
+                    $("#productionPreviewImage").attr('src', src);
+                } else {
+                    $('#name').val($('.titlecontent', this).text().trim()).parent().removeClass('Active');
+                    $.get('@Href("~/Edit/GetContent")', { contentId: contentId }, function (response) {
+                        if (response.result) {
+                            $('#productionBody,#productionBodyHtml').val(response.body);
+                        } else {
+                            showMessage(response.message, true);
+                        }
+                    });
+                }
+            });
+
+            $('#btnNewChoice').click(function () {
+                $('#defaultChoice').removeAttr('checked');
+                $('#publishNow').attr('checked', 'checked');
+                var now = new Date();
+                $('#publishDate').attr('disabled', 'disabled').val((now.getMonth() + 1) + '/' + now.getDay() + '/' + now.getFullYear());
+                $('#publishTime').attr('disabled', 'disabled').val(now.toLocaleTimeString());
+                $('#contentId').val('');
+                $('#choices .active').removeClass('active');
+                $('#choices').data('scrollable').seekTo(0);
+
+                $('#btnDelete').hide();
+
+                if ($('#productionContainer').length)
+                    $('#productionContainer').hide();
+
+                if ($('#contentEditorType').val() == 'PhotoCropper')
+                    window.location = '@Href("~/Edit/PhotoEdit")?sectionId=' + $('#htmlSectionId').val() + '&contentId=null';
+                else if ($('#contentEditorType').val() == 'Photo')
+                    $('#productionPreviewImage').attr('src', '');
+                else {
+                    $('#productionBody,#productionBodyHtml,#name').val('');
+                    $('#name').focus().parent().addClass('Active');
+                }
+            });
+
+            $('#sortChoicesModal').jqm({
+                modal: false,
+                trigger: '#btnSortChoices',
+                target: '.mContent',
+                ajax: '@Href("~/Edit/ChoicesSort")?sectionId=@Model.Section.HtmlSectionID',
+                ajaxText: '<img src="@Href("~/Resource/Content/Images/loading.gif")" alt="@Html.Term("Loading", "loading...")" />',
+                onLoad: function () {
+                    $('#choicesSortable').sortable().disableSelection();
+                }
+            });
+
+            $('#btnSaveChoicesSort').live('click', function () {
+                var t = $(this), data = { sectionId: $('#htmlSectionId').val() };
+                $('#choicesSortable div.item').each(function (i) {
+                    data['choices[' + i + ']'] = $(this).attr('id').replace(/\D/g, '');
+                });
+
+                if (showLoading)
+                    showLoading(t);
+
+                $.post('@Href("~/Edit/SaveChoicesSort")', data, function (response) {
+                    if (hideLoading)
+                        hideLoading(t);
+                    if (response.result) {
+                        showMessage('@Html.Term("SavedSuccessfully", "Saved successfully!")', false);
+                        reattachScrollable(response.choices);
+                        $('#sortChoicesModal').jqmHide();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            function reattachScrollable(choices) {
+                $('.browse').unbind();
+                $('#choices').html(choices);
+                groupItems();
+                $('#choices').removeData('scrollable').scrollable();
+                scrollToSelectedChoice();
+            }
+
+            function scrollToSelectedChoice() {
+                $('#choices .active').removeClass('active');
+                if ($('#contentId').val() && $('#contentId').val() > 0) {
+                    var selectedContent = $('#corporateContent' + $('#contentId').val());
+                    selectedContent.find('img,span.titlecontent').addClass('active');
+
+                    $('#choices').data('scrollable').seekTo(selectedContent.parent().index());
+                }
+            }
+
+            function groupItems() {
+                var width = $('#choicesContainer').width(),
+					itemWidth = $('#choices .item:first').find('img,span.titlecontent').outerWidth(true),
+					numOfItems = Math.floor(width / itemWidth);
+
+                    if(itemWidth != null)
+                    {
+                        while ($('#choices > .items > .item').length) 
+                        {
+                            $('#choices > .items > .item:lt(' + numOfItems + ')').wrapAll('<div class="itemGroup"></div>');
+                        }
+                    }
+            }
+
+            groupItems();
+            $('#choices').scrollable();
+            scrollToSelectedChoice();
+        });
+    </script>
+}
+<input type="hidden" id="htmlSectionId" value="@Model.Section.HtmlSectionID" />
+<input type="hidden" id="productionContentId" value="@(productionContent == null ? "" : productionContent.HtmlContentID.ToString())" />
+<input type="hidden" id="contentEditorType" value="@((Constants.HtmlContentEditorType)Model.Section.HtmlContentEditorTypeID)" />
+<input type="hidden" id="contentId" value="@(productionContent == null ? "" : productionContent.HtmlContentID.ToString())" />
+<div id="EncoreCorpEditMode">
+    <p class="emBreadCrumbs">
+        @if (page != null)
+        {
+            <a href="@page.Url">
+                @page.Translations.GetByLanguageIdOrDefaultForDisplay().Title</a> <text>&gt;</text>
+        }
+        else if (returnUrl != null)
+        {
+            <a href="@returnUrl">
+                @returnUrl</a> <text>&gt;</text>
+        }
+        @SmallCollectionCache.Instance.HtmlSectionEditTypes.GetById(Model.Section.HtmlSectionEditTypeID).GetTerm()</p>
+    <div class="contentContainer emWidget ChoicesSlider NS-brALL" id="corporateEditor">
+        <div class="emWidgetTitle NS-brYYNN">
+            <span class="NS-FL">
+                @Html.Term("ContentChoicesLibrary", "Content Choices Library")</span>
+            <div class="NS-FR">
+                <a href="javascript:void(0);" id="btnSortChoices" class="FL OpenSort"><span>
+                    @Html.Term("SortChoices", "Sort Choices")</span></a> <a href="@(Model.Section.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.RichText || Model.Section.HtmlContentEditorTypeID == (int)Constants.HtmlContentEditorType.PlainText ? "#name" : "javascript:void(0);")" id="btnNewChoice" class="FL CreateChoice"><span>+
+                        @Html.Term("CreateNewChoice", "Create new choice")</span></a></div>
+            <span class="NS-clr"></span>
+        </div>
+        <div class="NS-FL SlideControl Left">
+            <a class="prev browse left disabled"></a>
+        </div>
+        <div id="choicesContainer" class="NS-FL Inner">
+            <div class="EditContainer">
+                <div class="scrollable" id="choices">
+                    @Html.Partial("ChoicesList", Model.Section)
+                </div>
+            </div>
+        </div>
+        <div class="NS-FR SlideControl Right">
+            <a class="next browse right"></a>
+        </div>
+        <span class="NS-clr"></span>
+    </div>
+    <span class="NS-clr"></span>
+    <div class="NS-SideColumn EditModeToolColumn">
+        <div class="emWidget PublishDate NS-brALL">
+            <div class="emWidgetTitle  NS-brYYNN">
+                <span>
+                    @Html.Term("PublishingOptions", "Publishing Options")</span></div>
+            <div class="Inner">
+                <div class="NS-FRow">
+                    <label for="chkPublishNow">
+                        @Html.Term("DefaultChoice", "Default Choice"):</label>
+                    <div class="NS-FInput">
+                        <input type="checkbox" id="defaultChoice" checked="checked" />
+                    </div>
+                    <br />
+                </div>
+                <div class="NS-FRow">
+                    <label for="chkPublishNow">
+                        @Html.Term("PublishNow", "Publish Now"):</label>
+                    <div class="NS-FInput">
+                        <input type="checkbox" id="publishNow" />
+                    </div>
+                    <br />
+                </div>
+                <div class="NS-FRow">
+                    <label>
+                        @Html.Term("PublishOn", "Publish On"):</label>
+                    <div class="NS-FInput">
+                        <input type="text" value="11/5/2010" class="DatePicker hasDatepicker" id="publishDate" /><br />
+                        <input type="text" value="2:57 PM" class="TimePicker" id="publishTime" />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="ContentSavingOptions NS-brNNYY">
+                <p class="NS-FL">
+                    <a href="javascript:void(0);" class="emButton Primary" id="btnSave"><span>
+                        @Html.Term("Save")</span></a>
+                </p>
+                <p class="NS-FR">
+                    <a href="javascript:void(0);" class="emButton DeleteChoice" id="btnDelete" style="display: none;"><span>
+                        @Html.Term("Delete")</span></a>
+                </p>
+                <span class="NS-clr"></span>
+            </div>
+        </div>
+    </div>
+    <div class="NS-ContentColumn EditModeContentColumn">
+        <div class="ContentEditForm EnvironmentContainer Production">
+        @{ Html.GetCorporateEditor(productionContent, Constants.HtmlContentStatus.Production, true); }
+        </div>
+    </div>
+    @Html.Partial("MediaLibrary", new MediaLibraryModel()
+{
+    SystemBaseUrl = NetSteps.Common.Configuration.ConfigurationManager.GetAbsoluteFolder("CMS"),
+    WebBaseUrl = NetSteps.Common.Configuration.ConfigurationManager.GetWebFolder("CMS"),
+    AllowImageInsert = true
+})
+    @Html.Partial("MessageCenter")
+    <div id="sortChoicesModal" class="jqmWindow LModal">
+        <div class="mContent">
+        </div>
+    </div>
+</div>

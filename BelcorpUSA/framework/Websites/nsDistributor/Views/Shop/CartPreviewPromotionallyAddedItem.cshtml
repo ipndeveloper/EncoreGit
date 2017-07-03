@@ -1,0 +1,22 @@
+﻿<!-- ko foreach: Selections -->
+<tr class="promoGiftLineItem">
+	<td>
+		<img width="25" alt="" data-bind="attr: { src: ImageUrl }" />
+	</td>
+	<td>
+		<span class="FL promoItemSku" data-bind="text: SKU" />
+	</td>
+	<td class="promoItemName">
+		<!-- ko text: ProductName -->
+		<!-- /ko -->
+		<br />
+		<span class="promoName" data-bind="text: $parent.Description"></span>
+	</td>
+	<td>
+		<span class="FL UI-icon icon-star"></span>
+		<span>@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+	</td>
+	<td data-bind="text: Quantity"></td>
+	<td></td>
+</tr>
+<!-- /ko -->

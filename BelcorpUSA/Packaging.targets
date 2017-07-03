@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTarget="Default" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)framework\Packaging.targets"/>
+	<PropertyGroup>
+		<!--
+			Configuration
+		-->
+		<ClientName>BelcorpUSA</ClientName>
+		<BuildRoot>$(MSBuildThisFileDirectory)obj\</BuildRoot>
+		<BuildPath>$(BuildRoot)</BuildPath>
+		<PublishRoot>$(MSBuildThisFileDirectory)Artifacts\</PublishRoot>
+		<PublishPath>$(PublishRoot)$(Configuration)\Published\</PublishPath>
+		<PackagePath>$(PublishRoot)$(Configuration)\Packaged\</PackagePath>
+	</PropertyGroup>
+	<ItemGroup>
+		<!--
+		Custom and override artifacts specific to a client's deployment
+		Artifact - Identifies the targets to be published and packaged - Required
+		Artifact/@Include - A file or file pattern used to include a file set that represents the artifact source - Required
+		Artifact/Type - The type of artifact package - Required (Website,Api,Application,Service) 
+		Artifact/Description - Detailed artifact description - Required
+		-->
+		<Artifact Include=".\BelcorpUSA.nsCore\BelcorpUSA.nsCore.csproj">
+			<Type>Assembly</Type>
+			<Name>GMP</Name>
+			<Description>BelcorpUSA Global Management Portal</Description>
+			<PublishPath>%(Name)\bin\</PublishPath>
+		</Artifact>
+		<Artifact Include=".\BelcorpUSA.DistributorBackOffice\BelcorpUSA.DistributorBackOffice.csproj">
+			<Type>Assembly</Type>
+			<Name>DWS</Name>
+			<Description>BelcorpUSA Distributor Website</Description>
+			<PublishPath>%(Name)\bin\</PublishPath>
+		</Artifact>
+		<Artifact Include=".\BelcorpUSA.nsDistributor\BelcorpUSA.nsDistributor.csproj">
+			<Type>Assembly</Type>
+			<Name>PWS</Name>
+			<Description>BelcorpUSA Personal Website</Description>
+			<PublishPath>%(Name)\bin\</PublishPath>
+		</Artifact>
+		<Artifact Include=".\BelcorpUSA.nsDistributor\BelcorpUSA.nsDistributor.csproj">
+			<Type>Assembly</Type>
+			<Name>CWS</Name>
+			<Description>BelcorpUSA Corporate Website</Description>
+			<PublishPath>%(Name)\bin\</PublishPath>
+		</Artifact>
+		<Artifact Include=".\Websites\WCFAPI\WCFAPI.csproj">
+			<Type>API</Type>
+			<Name>WCF</Name>
+			<Description>BelcorpUSA Fulfillment API</Description>
+		</Artifact>
+		<Artifact Include=".\BelcorpUSA.Edi.ServiceHost\BelcorpUSA.Edi.ServiceHost.csproj">
+			<Type>Service</Type>
+			<Name>EDI</Name>
+			<Description>BelcorpUSA EDI Service Host</Description>
+		</Artifact>
+	</ItemGroup>
+</Project>

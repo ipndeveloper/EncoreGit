@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('<div></div>').prependTo('body').attr('id', 'OverlayPolicy');
+            $('#OverlayPolicy').css({ 'height': ($('#fixed_nav').height() + $('#TopPane').height()), 'width': $(document).width() });
+
+            $('#btnNext').click(function () {
+                var t = $(this);
+                showLoading(t);
+                $.ajax({
+                        url: '@Href("~/Welcome/Continue")',
+                        async: false,
+                        data: { pAccountID: @CoreContext.CurrentAccount.AccountID },
+                        type: 'POST',
+                        success: function (response) {
+                            if (response.result) {
+                                hideLoading(t);
+                                window.location = response.returnUrl || '/Login';
+                            } else {
+                                alert(response.message);
+                                window.location = '/Login';
+                            }
+                        },
+                        error: function (xhr, status, error)
+                        {
+                            hideLoading(t);
+                            alert(xhr.responseText);
+                            window.location = '/Login';
+                        }
+                });
+            });
+        });
+		//]]>
+    </script>
+}
+<div class="PolicyNote">
+    <div class="PolicyNoteBlock">
+        @Html.Term("WelcomeHeaderPolicy", "Welcome!")
+        <br />
+        <br />
+        @Html.Term("WelcomePolicy", "Dear Beauty Advisor, you can continue with your activities as independent beauty consultant with L''Bel is required to accept the new terms and conditions below.")
+    </div>
+    <div class="PolicyNoteButton">
+        <a id="btnNext" href="javascript:void(0);" class="Button btnContinue">
+		    <span>@Html.Term("Continue")</span></a>
+    </div>
+</div>

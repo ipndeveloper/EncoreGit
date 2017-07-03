@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="FrameworkAg.RichTextEditorToolbar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+    d:DesignHeight="25" d:DesignWidth="400">
+    
+    <Grid x:Name="LayoutRoot">
+        <toolkit:WrapPanel x:Name="uxToolBar" Margin="0">
+            <toolkit:WrapPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFDFDFD"/>
+                    <GradientStop Color="#FFEEEEEE" Offset="1"/>
+                </LinearGradientBrush>
+            </toolkit:WrapPanel.Background>
+           
+            <Button x:Name="applyCut" Click="applyCut_Click" Content="/Images/cut.png" Margin="0,2,0,2" ToolTipService.ToolTip="Cut" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+
+            <Button x:Name="applyCopy" Click="applyCopy_Click" Content="/Images/copy.png" Margin="0,2,0,2" ToolTipService.ToolTip="Copy" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+
+            <Button x:Name="applyPaste" Click="applyPaste_Click" Content="/Images/paste.png" Margin="0,2,0,2" ToolTipService.ToolTip="Paste" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+
+            <Button x:Name="undo" Margin="0,2,0,2" Click="undo_Click" Content="/Images/undo.png" ToolTipService.ToolTip="Undo" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+            <Button x:Name="redo" Margin="0,2,0,2" Click="redo_Click" Content="/Images/redo.png" ToolTipService.ToolTip="Redo" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+
+            <Button x:Name="makeBold" Width="24" Height="23" Click="makeBold_Click" Margin="0,2,0,2" ToolTipService.ToolTip="Bold" Style="{StaticResource ToolBarContentButtonWithHover}">
+                <TextBlock x:Name="boldText" Text="B" FontFamily="Arial" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
+            <Button x:Name="makeItalic" Width="24" Height="23" Click="makeItalic_Click" Margin="0,2,0,2" ToolTipService.ToolTip="Italic" Style="{StaticResource ToolBarContentButtonWithHover}">
+                <TextBlock x:Name="italicText" Text="I" FontFamily="Arial" FontSize="14" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
+            <Button x:Name="makeUnderline" Width="24" Height="23" Click="makeUnderline_Click" Margin="0,2,5,2" ToolTipService.ToolTip="Underline" Style="{StaticResource ToolBarContentButtonWithHover}">
+                <TextBlock x:Name="underlineText" Text="U" FontFamily="Arial" FontSize="14" TextDecorations="Underline" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
+
+            
+            <Button x:Name="image" Click="image_Click" Content="/Images/copy.png" Margin="0,2,0,2" ToolTipService.ToolTip="Copy" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+            <Button x:Name="hyperlink" Click="hyperlink_Click" Content="/Images/copy.png" Margin="0,2,0,2" ToolTipService.ToolTip="Copy" Style="{StaticResource ImageButtonStyleWithHoverBackground}"/>
+            
+
+
+        </toolkit:WrapPanel>
+    </Grid>
+</UserControl>

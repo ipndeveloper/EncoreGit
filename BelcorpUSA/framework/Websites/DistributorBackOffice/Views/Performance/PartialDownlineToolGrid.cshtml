@@ -1,0 +1,81 @@
+﻿@model DistributorBackOffice.Models.Performance.PartialDownlineToolGridModel
+@{
+    var currentAccountReport = ViewData["CurrentAccountReport"] as AccountReport;
+    var currentReportParameters = ViewData["CurrentReportParameters"] as DownlineReportParameters;
+    
+    var grid = Html.PaginatedGrid("~/Performance/GetFlat", pageSizeOptions: Model.ExtraPageSizeOptions) 
+        .AddData("accountId", Model.CurrentAccount.AccountID)
+        .AddColumn("<input type=\"checkbox\" id=\"selectedHeader\"/>", string.Empty, false);
+
+    var columnHeadersWithSelect = new Dictionary<string, string> { 
+        { "Select", "Select" } 
+    };
+	
+    foreach (var header in ViewData["ColumnHeaders"] as Dictionary<string, string>)
+    {
+        columnHeadersWithSelect.Add(header.Key, header.Value);
+    }
+        
+    bool first = false;
+    int fila = 0;
+    foreach (var column in columnHeadersWithSelect)
+    {
+        
+        bool sortable = !String.Equals(column.Key, "Select");
+
+        if ((DistributorBackOffice.Controllers.PerformanceController.FlatColumns.ContainsKey(column.Key) || column.Key == "Select") && column.Key != "State")
+        {
+            if (column.Key == "Name" || fila == 10 || fila == 9)
+            {
+                grid.AddColumn(NetSteps.Common.Globalization.Translation.GetTerm(column.Key, column.Value), column.Key, sortable, first, NetSteps.Common.Constants.SortDirection.Ascending);
+            }
+            else
+            {
+                grid.AddColumn(NetSteps.Common.Globalization.Translation.GetTerm(column.Key, column.Value), column.Key, sortable, first, NetSteps.Common.Constants.SortDirection.Ascending);
+            }
+        }
+        fila++;
+        first = false;
+    }
+
+	string defaultPeriod = currentReportParameters.PeriodID.ToString();
+	var periods = Model.CurrentAndPastPeriods;
+	if (currentReportParameters.PeriodID == 0)
+	{ 
+		var firstPeriod = periods.FirstOrDefault();
+		defaultPeriod = (firstPeriod != null) ? firstPeriod.PeriodId.ToString() : string.Empty;
+	}
+    grid.AddSelectFilter(Html.Term("Period"), "periodId", new Dictionary<string, string>().AddRange(periods.ToDictionary(os => os.PeriodId.ToString(), os => os.Description)), defaultPeriod)
+        .AddInputFilter(Html.Term("Search"), "searchValue", currentReportParameters.SearchValue.ToCleanString())
+        .AddAdvancedInputFilter(Html.Term("EnrollmentDate", "Enrollment Date"), "startDate", currentReportParameters.StartDate.ToStringDisplay(CoreContext.CurrentCultureInfo), true)
+        .AddAdvancedInputFilter(Html.Term("To"), "endDate", currentReportParameters.EndDate.ToStringDisplay(CoreContext.CurrentCultureInfo), true, true)
+        .AddAdvancedInputFilter(Html.Term("PV"), "pvFrom", currentReportParameters.PVFrom)
+        .AddAdvancedInputFilter(Html.Term("To"), "pvTo", currentReportParameters.PVTo, addBreak: true)
+        .AddAdvancedInputFilter(Html.Term("GV"), "gvFrom", currentReportParameters.GVFrom)
+        .AddAdvancedInputFilter(Html.Term("To"), "gvTo", currentReportParameters.GVTo, addBreak: true)
+        .AddAdvancedCheckboxFilter(Html.Term("MyTeam", "My Team"), "showMyTeam", currentReportParameters.ShowMyTeam)
+        .AddAdvancedInputFilter(Html.Term("Sponsor"), "txtsponsorId", "", addBreak: true)
+        .AddInputFilter("SponsorId", "sponsorId", currentReportParameters.SponsorID, isHidden: true)
+        .AddInputFilter("groupBySponsorTree", "groupBySponsorTree", currentReportParameters.GroupBySponsorTree, isHidden: true)
+        .AddAdvancedInputFilter(Html.Term("TopOfTree", "Top Of Tree"), "currentTopOfTreeAccountId", currentReportParameters.CurrentTopOfTreeAccountID, addBreak: true)
+        .AddAdvancedInputFilter(Html.Term("Level"), "LevelFrom", currentReportParameters.LevelFrom)
+        .AddAdvancedInputFilter(Html.Term("To"), "LevelTo", currentReportParameters.LevelTo, addBreak: true)
+        .AddAdvancedInputFilter(Html.Term("Gen"), "GeneracionFrom", currentReportParameters.GenFrom)
+        .AddAdvancedInputFilter(Html.Term("To"), "GeneracionTo", currentReportParameters.GenTo, addBreak: true)
+        .AddAdvancedInputFilter(Html.Term("VO"), "DVFrom", currentReportParameters.DVFrom)
+        .AddAdvancedInputFilter(Html.Term("To"), "DVTo", currentReportParameters.DVTo)
+        //.AddAdvancedInputFilter(Html.Term("MonthsInactivity", "Months of Inactivity"), "monthsInactive", currentReportParameters.MonthsInactive, addBreak: true)
+		.AddAdvancedSelectFilter(Html.Term("Title"), "titles", Model.Titles.ToDictionary(t => t.TitleId, t => NetSteps.Common.Globalization.Translation.GetTerm(t.TermName)), currentReportParameters.Titles, true, true, false)
+        .AddAdvancedSelectFilter(Html.Term("AccountType"), "accountTypes", SmallCollectionCache.Instance.AccountTypes.Where(at => at.Active && ((at.AccountTypeID == Constants.AccountType.Distributor.ToShort()) || (at.AccountTypeID == Constants.AccountType.PreferredCustomer.ToShort()))).ToDictionary(at => at.AccountTypeID, at => Html.Term(at.TermName)), currentReportParameters.AccountTypes, true, true, false)
+        .AddAdvancedSelectFilter(Html.Term("States"), "states", Model.ActiveStateProvinces.ToDictionary(s => s.StateProvinceID, s => SmallCollectionCache.Instance.Countries.GetById(s.CountryID).CountryCode + " - " + s.StateAbbreviation), currentReportParameters.States, true, true, false)
+		.AddInputFilter("OrderByDirection", "orderByDirection", currentReportParameters.OrderByDirection)
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .AddOption("chooseVisibleColumns", Html.Term("ChooseVisibleColumns", "Choose Visible Columns"))
+        .AddOption("groupByAccount", Html.Term("GroupByAccount", "Group By Account"))
+        .AddOption("saveReportLink", Html.Term("SaveReport", "Save Report"))
+        .AddOption("deleteReportLink", Html.Term("DeleteReport", "Delete Report"))
+		.AddOption("emailLink", Html.Term("EmailChecked", "Email Checked"))
+		.AddOption("emailAllLink", Html.Term("EmailAll", "Email All"))
+        .SetDefaultSort(currentReportParameters.OrderBy, currentReportParameters.OrderByDirection)
+        .Render();
+}

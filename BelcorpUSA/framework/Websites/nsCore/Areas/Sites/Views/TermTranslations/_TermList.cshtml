@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Term>
+@{
+	bool alt = true;
+}
+@foreach (var term in Model)
+{
+	<tr class="GridRow @((alt = !alt) ? "Alt" : "")">
+		<td>
+		@if (term.LocalTerm.IsNullOrEmpty())
+		{
+			<img src="/Content/Images/Icons/notranslation.gif" alt="@Html.Term("Terms_UntranslatedAlt", "Untranslated")" title="@Html.Term("Terms_Untranslated", "This term has not been translated into this language yet.")" />
+		}
+		@if (term.IsOutOfDate)
+		{
+			<img src="/Content/Images/Icons/expired.gif" alt="@Html.Term("Terms_OutOfDateAlt", "Out of date")" title="@Html.Term("Terms_OutOfDate", "This term is out of date.")" />
+		}
+		</td>
+		<td class="termName" style="width: 15.909em;">
+			<input type="hidden" id="termid_@term.TermId.GetValueOrDefault()_@term.TermName" value="@term.TermId" />
+			<input type="hidden" id="termname_@term.TermId.GetValueOrDefault()_@term.TermName" value="@term.TermName" />
+			@term.TermName
+		</td>
+		<td style="width: 15.909em;">
+			@term.EnglishTerm
+		</td>
+		<td>
+			<textarea class="localTerm" style="width: 99%; height: 1.5em; min-width: 6.667em;">@term.LocalTerm</textarea>
+		</td>
+	</tr>   
+}

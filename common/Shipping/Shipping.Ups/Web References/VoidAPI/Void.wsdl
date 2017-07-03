@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:void="http://www.ups.com/XMLSchema/XOLTWS/Void/v1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:upss="http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0" xmlns:tns="http://www.ups.com/WSDL/XOLTWS/Void/v1.1" xmlns:error="http://www.ups.com/XMLSchema/XOLTWS/Error/v1.1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" targetNamespace="http://www.ups.com/WSDL/XOLTWS/Void/v1.1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import schemaLocation="UPSSecurity.xsd" namespace="http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0" />
+      <xsd:import schemaLocation="Error1.1.xsd" namespace="http://www.ups.com/XMLSchema/XOLTWS/Error/v1.1" />
+      <xsd:import schemaLocation="VoidWebServiceSchema.xsd" namespace="http://www.ups.com/XMLSchema/XOLTWS/Void/v1.1" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="VoidRequestMessage">
+    <wsdl:part name="Body" element="void:VoidShipmentRequest" />
+    <wsdl:part name="UPSSecurity" element="upss:UPSSecurity" />
+  </wsdl:message>
+  <wsdl:message name="VoidResponseMessage">
+    <wsdl:part name="Body" element="void:VoidShipmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="VoidErrorMessage">
+    <wsdl:part name="VoidError" element="error:Errors" />
+  </wsdl:message>
+  <wsdl:portType name="VoidPortType">
+    <wsdl:operation name="ProcessVoid">
+      <wsdl:input name="VoidShipmentRequest" message="tns:VoidRequestMessage" />
+      <wsdl:output name="VoidShipmentResponse" message="tns:VoidResponseMessage" />
+      <wsdl:fault name="VoidError" message="tns:VoidErrorMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="VoidBinding" type="tns:VoidPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ProcessVoid">
+      <soap:operation soapAction="http://onlinetools.ups.com/webservices/VoidBinding/v1.1" style="document" />
+      <wsdl:input name="VoidShipmentRequest">
+        <soap:body use="literal" parts="Body" />
+        <soap:header message="tns:VoidRequestMessage" part="UPSSecurity" use="literal">
+          <soap:headerfault message="tns:VoidErrorMessage" part="VoidError" use="literal" />
+        </soap:header>
+      </wsdl:input>
+      <wsdl:output name="VoidShipmentResponse">
+        <soap:body use="literal" parts="Body" />
+      </wsdl:output>
+      <wsdl:fault name="VoidError">
+        <soap:fault use="literal" name="VoidError" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="VoidService">
+    <wsdl:port name="VoidPort" binding="tns:VoidBinding">
+      <soap:address location="https://wwwcie.ups.com/webservices/Void" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

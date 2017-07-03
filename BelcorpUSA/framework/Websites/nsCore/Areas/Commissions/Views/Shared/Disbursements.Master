@@ -1,0 +1,46 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Commissions/Views/Shared/Commissions.Master" %>
+
+
+<%--
+/// <summary>
+/// author           : mescobar
+/// company         : CSTI - Peru
+/// create        : 12/18/2015
+/// reason          : a new master only for menu Disbursements
+/// modified    : 
+/// reason  
+--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="LeftNav" runat="server">
+    <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+        <div class = "SectionNav"> 
+            <ul class = "SectionLinks">
+                <%= Html.SelectedLink("~/Commissions/Minimums/Index", Html.Term("Minimums"),
+                    LinkSelectionType.ActualPage, CoreContext.CurrentUser,"") %>
+                <%= Html.SelectedLink("~/Commissions/Fees/Index", Html.Term("Fees"),
+                    LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Commissions/Managment/Index", Html.Term("ManagementDisbursements"),
+                    LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Commissions/ManagmentLedger/Index", Html.Term("ManagmentLedger"),
+                    LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+                <%= Html.SelectedLink("~/Commissions/DisbursementReport/Index", Html.Term("DisbursementReport"),
+                    LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>
+            </ul>
+        </div>
+    </asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="YellowWidget" runat="server">
+    <asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	</asp:ContentPlaceHolder>
+</asp:Content>

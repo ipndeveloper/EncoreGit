@@ -1,0 +1,101 @@
+@model dynamic
+<script type="text/javascript" src="@Href("~/Resource/Scripts/cookie.js")"></script>
+
+<script type="text/javascript">
+    if (!window.jQuery.jqm) {
+        document.write(unescape('%3Cscript src="@Href("~/Resource/Scripts/jqModal.js")" type="text/javascript"%3E%3C/script%3E%3Clink rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jqModal.css")" /%3E'));
+    }
+    $(function () {
+        if ($.cookie('showEMNotification') != undefined && !/\s*true\s*/i.test($.cookie('showEMNotification')))
+            $('#emNoticeContainer').hide();
+        $('#toggleEMNotification').click(function () {
+            $('#emNoticeContainer').slideToggle(function () {
+                var visible = $(this).is(':visible');
+                $('#toggleEMNotification span').text(visible ? '@Html.Term("HideEditModeNotice", "Hide")' : '@Html.Term("ShowEditModeNotice", "Show")');
+                $.cookie('showEMNotification', visible);
+            });
+        }).find('span').text($('#emNoticeContainer').is(':visible') ? '@Html.Term("HideEditModeNotice", "Hide")' : '@Html.Term("ShowEditModeNotice", "Show")');
+
+        $('#stagingContentDatePicker').datepicker({ changeMonth: true, changeYear: true, yearRange: '-10:+10', beforeShow: function (input) {
+            setTimeout(function () {
+                $('#ui-datepicker-div').css({ top: '', bottom: '70px' });
+            }, 1);
+        },
+            onSelect: function () {
+                $.post('@Href("~/Edit/SetContentDate")', { date: $(this).val() }, function (response) {
+                    if (response.result)
+                        window.location.reload();
+                    else
+                        showMessage(response.message, true);
+                });
+            }
+        });
+
+        $('#cmsMessageModal').jqm({
+            modal: false,
+            trigger: '#btnShowCMSMessages'
+        });
+    });
+</script>
+
+<div id="editmode" class="editmode">
+    <span class="NS-FL emNoticeTitle">@Html.Term("YouAreInEditMmode", "You are in edit mode.")</span>
+    <ul class="NS-inlineNav NS-FR editModeControls">
+        
+        @*Head Content Link -- Just in case the DB doesn't have the fields*@
+        @if (ViewBag.SiteDesignContent != null)
+        { 
+            <li>
+                <a href="/Edit/CorporateEdit?sectionId=@(((HtmlSection)ViewBag.SiteDesignContent).HtmlSectionID)"><span>@Html.Term("EditMode_HeadContentLink", "Head Content")</span></a>
+            </li>
+        }
+        <li>
+            @{ var messageCount = ViewBag.MessageCount;}
+            @if (messageCount > 0)
+            {
+                    <a href="javascript:void(0);" id="btnShowCMSMessages" class="MessageNotification">@Html.Term("YouHaveXMessagesWaiting", "You have {0} message(s) waiting...", new object[]{ messageCount })</a>  
+            }
+           
+                @{string url;}
+                @if (ViewData["ReturnUrl"] != null)
+                {
+                    url = ViewData["ReturnUrl"].ToString();
+                }
+                else
+                {
+                    url = Request.Url.AbsoluteUri.Contains("/Edit/") && Request.UrlReferrer != null ? Request.UrlReferrer.PathAndQuery : Request.Url.PathAndQuery;
+                }
+        </li>
+        <li><a href="@url.AppendOrReplaceQueryStringValue("PageMode", "Production")" class="EditMode swirtEMlive"><span>@Html.Term("SwitchToLiveMode", "Switch to Live Mode")</span></a></li>
+        <li>
+         @{var adminUrl = NetSteps.Common.Configuration.ConfigurationManager.GetAppSetting<string>("AdminUrl", "");}
+            @if (!string.IsNullOrEmpty(adminUrl))
+            {
+                <a href="@adminUrl">
+                    @Html.Term("ClickHereToReturnTonsCORE", "Click here to return to nsCORE.")</a>
+            }
+        </li>
+       @* <li><a id="toggleEMNotification" href="javascript:void(0);" class="FR HideEMNotice"><span>@Html.Term("HideEditModeNotice", "Hide")</span></a></li>*@
+    </ul>
+    <div class="clr" id="editmodelinks">
+        <div id="emNoticeContainer">            
+                @Html.Term("ViewContentFor", "View content for")
+                <input id="stagingContentDatePicker" type="text" class="DatePicker NS-DatePicker" value="@DateTime.Now.ApplicationNow().ToShortDateString()" />           
+        </div>
+    </div>
+</div>
+@if (messageCount > 0)
+{
+    <div id="cmsMessageModal" class="LModal jqmWindow" style="z-index:10000">
+        <div class="mContent">
+            @{
+    Html.PaginatedGrid("~/Edit/GetCMSMessages")
+        .AddColumn(Html.Term("From"), "FromUserID", false, false)
+        .AddColumn(Html.Term("Date"), "Date", true, true, Constants.SortDirection.Descending)
+        .AddColumn(Html.Term("Message"), "Message", false, false)
+        .AddColumn(Html.Term("View"), "", false, false)
+        .Render();
+            }
+        </div>
+    </div>
+}

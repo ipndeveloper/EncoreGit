@@ -1,0 +1,23 @@
+﻿@model nsDistributor.Models.Shared.SubstringModel
+
+@{
+    if(Model.HtmlAttributes.ContainsKey("data-val-requireany"))
+    {
+        Model.HtmlAttributes["data-val-requireany"] = ((string)Model.HtmlAttributes["data-val-requireany"]).Replace("{0}", ViewBag.DisplayName);
+    }
+    if (Model.HtmlAttributes.ContainsKey("data-val-requireany-group"))
+    {
+        Model.HtmlAttributes["data-val-requireany-group"] = ((string)Model.HtmlAttributes["data-val-requireany-group"]).Replace("{0}", ViewBag.PropertyName);
+    }
+    
+    if(ViewBag.AddErrorClass == true)
+    {
+        string elementClass = Model.HtmlAttributes.ContainsKey("class") ? Model.HtmlAttributes["class"] as string : "";
+        elementClass += " input-validation-error";
+        Model.HtmlAttributes["class"] = elementClass;
+    }
+}
+
+@Model.BeforeHtml
+@Html.TextBoxFor(m => m.Text, Model.HtmlAttributes)
+@Model.AfterHtml

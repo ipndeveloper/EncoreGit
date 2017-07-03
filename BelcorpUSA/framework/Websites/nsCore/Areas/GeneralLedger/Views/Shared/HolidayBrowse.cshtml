@@ -1,0 +1,23 @@
+﻿@model NetSteps.Data.Entities.Business.Holiday
+
+@using nsCore.Areas.GeneralLedger.Models
+@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+@{
+    Html.PaginatedGrid<HolidayBrowse>("~/GeneralLedger/Holiday/Get")
+        .AutoGenerateColumns()
+        //codigo en duro
+        .AddSelectFilter("Country", "countryID", new Dictionary<string, string>() { { "", "Select a Country..." }, { "73", "Brazil" } })
+        .AddSelectFilter("State", "stateID", new Dictionary<string, string>() { { "", "Select a State..." } }.AddRange(StateProvince.LoadStatesByCountry(73).ToDictionary(pt => pt.StateProvinceID.ToString(), pt => pt.Name)))
+       
+        // comentado para resolver problema de formato de fecha => 11052017
+        //.AddInputFilter("Date", "dateHoliday", "Select a Date", true)
+        
+        // agregado para resolver problema de formato de fecha => 11052017
+        .AddInputFilter("Date","dateHoliday", "Select a Date", true, true)
+        .CanChangeStatus(true, true, "~/GeneralLedger/Holiday/ChangeStatus")
+        .CanDelete("~/GeneralLedger/Holiday/Delete")
+        .ClickEntireRow()
+        .Render();
+}

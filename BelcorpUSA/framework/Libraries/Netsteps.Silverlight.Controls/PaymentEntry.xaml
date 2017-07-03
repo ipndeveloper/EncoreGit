@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="NetSteps.Silverlight.Controls.PaymentEntry"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Name="paymentEntryUserControl">
+    <Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" MinWidth="130"/>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" MinWidth="130"/>
+		</Grid.ColumnDefinitions>
+		
+		<TextBlock Text="First Name" Grid.Row="0" Grid.Column="0" />
+		<TextBox Text="{Binding Path=FirstName, Mode=TwoWay, ValidatesOnExceptions=True}" Grid.Row="0" Grid.Column="1" />
+		
+		<TextBlock Text="Last Name" Grid.Row="0" Grid.Column="2" />
+		<TextBox Text="{Binding Path=LastName, Mode=TwoWay, ValidatesOnExceptions=True}" Grid.Row="0" Grid.Column="3" />
+		
+		<TextBlock Text="Address" Grid.Row="1" Grid.Column="0" />
+		
+		<TextBlock Text="Line 1" Grid.Row="2" Grid.Column="0" Margin="15 0 0 0" />
+		<TextBox Text="{Binding Path=AddressLine1, Mode=TwoWay, ValidatesOnExceptions=True}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" />
+		
+		<TextBlock Text="Line 2" Grid.Row="3" Grid.Column="0" Margin="15 0 0 0" />
+		<TextBox Text="{Binding Path=AddressLine2, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" />
+		
+		<TextBlock Text="Country" Grid.Row="4" Grid.Column="0" Margin="15 0 0 0" />
+		<ComboBox Name="cmbCountry" Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Countries}" DisplayMemberPath="CountryName" SelectedItem="{Binding Path=SelectedCountry, Mode=TwoWay}" />
+		
+		<TextBlock Text="Postal Code" Grid.Row="4" Grid.Column="2" />
+		<!--<TextBox Name="txtPostalCode" Text="{Binding Path=PostalCode, Mode=TwoWay}" KeyUp="txtPostalCode_KeyUp" Grid.Row="4" Grid.Column="3" />-->
+		<ContentControl Content="{Binding SelectedCountry.PostalCodeControl}" KeyUp="PostalCodeControl_KeyUp" Grid.Row="4" Grid.Column="3" />
+
+		<TextBlock Text="City" Grid.Row="5" Grid.Column="0" Margin="15 0 0 0" />
+		<ContentControl Content="{Binding SelectedCountry.CityControl}" Grid.Row="5" Grid.Column="1" />
+
+		<TextBlock Text="State" Grid.Row="5" Grid.Column="2" />
+		<ContentControl Content="{Binding SelectedCountry.StateControl}" Grid.Row="5" Grid.Column="3" />
+
+		<TextBlock Text="Credit Card Number" Grid.Row="6" Grid.Column="0" />
+		<TextBox Name="uxTxtCreditCardNumber" Text="{Binding Path=CreditCardNumber, Mode=TwoWay, ValidatesOnExceptions=True}" Grid.Row="6" Grid.Column="1" />
+
+		<TextBlock Text="Security Code (CVV2)" Grid.Row="6" Grid.Column="2" />
+		<TextBox Text="{Binding Path=CVV2, Mode=TwoWay, ValidatesOnExceptions=True}" Grid.Row="6" Grid.Column="3" />
+
+		<TextBlock Text="Expiration Month" Grid.Row="7" Grid.Column="0" />
+		<!--<TextBox Text="{Binding Path=ExpirationMonth, Mode=TwoWay}" Grid.Row="7" Grid.Column="1" />-->
+        <ComboBox x:Name="uxMonths" Grid.Row="7" Grid.Column="1" DisplayMemberPath="Value"/>
+
+        <TextBlock Text="Expiration Year" Grid.Row="7" Grid.Column="2" />
+		<!--<TextBox Text="{Binding Path=ExpirationYear, Mode=TwoWay}" Grid.Row="7" Grid.Column="3" />-->
+        <ComboBox x:Name="uxYears" Grid.Row="7" Grid.Column="3" />
+    </Grid>
+</UserControl>

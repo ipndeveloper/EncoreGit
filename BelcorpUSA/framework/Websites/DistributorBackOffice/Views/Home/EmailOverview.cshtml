@@ -1,0 +1,41 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+<!-- Messages module -->
+
+<script type="text/javascript">
+    $(function () {
+        showLoading($('#newEmailContainer'));
+        var data = {
+            page: 0,
+            pageSize: 5,
+            orderBy: 'DateAddedUTC',
+            orderByDirection: 'Descending',
+            folder: 'Inbox'
+        };
+        $.get('@Href("~/Communication/Email/GetOverview")', data, function (response) {
+            if (response.result) {
+                $('#newEmailContainer').html(response.data);
+                $("div.Emails ul li:odd").addClass("Alt");
+                hideLoading($('#newEmailContainer'));
+            } else {
+                //showMessage(response.message, true);
+                hideLoading($('#newEmailContainer'));
+            }
+        });
+    });
+</script>
+
+<div class="WidgetWrap Emails" style="display: block;">
+    <div class="Widget">
+        <div class="UI-btn txtShadowDrk WidgetTitle">
+            <span class="Txt UI-btn">@Html.Term("Message Inbox", "Message Inbox")</span> <span class="FR WidgetControls"><a href="javascript:void(0);"
+				onclick="javascript:hideWidget(@Model.Widget.WidgetID);" title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")"><span>X</span></a></span>
+        </div>
+        <div class="WidgetBody" id="newEmailContainer">
+        </div>
+    </div>
+</div>
+<div class="UI-lightBg brdrAll pad5 center widgetDrillLinks">
+    <a href="@Href("~/Communication/Email/Mailbox?folder=Inbox")" class="UI-icon-container"><span>@Html.Term("Go to my Inbox", "Go to my Inbox")</span></a> 
+    <span class="clr"></span>
+</div>
+<!--/ end widget -->

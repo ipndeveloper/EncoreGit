@@ -1,0 +1,22 @@
+﻿@model NetSteps.Web.Mvc.Controls.Models.Shared.ShippingMethods.ShippingMethodModel
+@using ShippingMethod = NetSteps.Web.Mvc.Controls.Models.Shared.ShippingMethods.ShippingMethod
+
+<div id="ShippingMethodsSelect">
+<h5>Shipping Methods:</h5>
+    <div id="shippingMethods">
+        @if (!Model.ShippingMethodList.Any())
+        { 
+            <span>No shipping methods currently available.</span>
+        }
+        
+        @foreach (ShippingMethod method in Model.ShippingMethodList)
+        { 
+            <span>
+                <label>
+                    @Html.RadioButtonFor(model=>model.SelectedShippingMethod.ShippingMethodID, method.ShippingMethodID)
+                    @method.Name : @method.ShippingAmount    
+                </label><br />
+            </span>
+        }
+    </div>
+</div>

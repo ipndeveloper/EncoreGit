@@ -1,0 +1,21 @@
+@model dynamic
+<div id="treeViewNodeWrapper" class="TreeNodeDetails UI-whiteBg brdrYYNN brdr1 infoCardWindow">
+    <div class="UI-secBg pad2 bold brdrYYNN titleBar">
+        <a title="Minimize window" class="block center" href="javascript:void(0);" id="minimizeInfoCard"><span id="nodeDetailName">Name of Person Selected</span></a>
+    </div>
+    <div class="Inner pad5">
+        
+        <div class="UI-mainBg icon-24 brdrAll brdr1 GridSelectOptions GridUtility">
+            @if (NetSteps.Data.Entities.ApplicationContext.Instance.SupportEmailFunctionality)
+            {
+                <a href="#" class="UI-icon-container Email icon-24" id="uxEmailAccountLink"><span class="UI-icon icon-email"></span><span>
+                    @Html.Term("Email")</span></a>
+            }
+            <span class="clr"></span>
+        </div>
+        <div id="treeViewNodeDetails" class="FormTable">
+           @Html.Term("PerformanceTreeView_NodeWaitingText", " Selected node details displays here.")
+
+        </div>
+    </div>
+</div>

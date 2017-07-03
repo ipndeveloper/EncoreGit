@@ -1,0 +1,498 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Belcorp.Policies.Core.Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="BelcorpPoliciesCoreModelStoreContainer">
+          <EntitySet Name="AccountPolicies" EntityType="Belcorp.Policies.Core.Model.Store.AccountPolicies" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AccountPolicyDetails" EntityType="Belcorp.Policies.Core.Model.Store.AccountPolicyDetails" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Accounts" EntityType="Belcorp.Policies.Core.Model.Store.Accounts" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Policies" EntityType="Belcorp.Policies.Core.Model.Store.Policies" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_AccountPolicies_Accounts" Association="Belcorp.Policies.Core.Model.Store.FK_AccountPolicies_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountPolicies_Policies" Association="Belcorp.Policies.Core.Model.Store.FK_AccountPolicies_Policies">
+            <End Role="Policies" EntitySet="Policies" />
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountPolicyDetails_AccountPolicy" Association="Belcorp.Policies.Core.Model.Store.FK_AccountPolicyDetails_AccountPolicy">
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+            <End Role="AccountPolicyDetails" EntitySet="AccountPolicyDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Accounts" Association="Belcorp.Policies.Core.Model.Store.FK_Accounts_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="Accounts1" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Accounts1" Association="Belcorp.Policies.Core.Model.Store.FK_Accounts_Accounts1">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="Accounts1" EntitySet="Accounts" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountPolicies">
+          <Key>
+            <PropertyRef Name="AccountPolicyID" />
+          </Key>
+          <Property Name="AccountPolicyID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="PolicyID" Type="int" Nullable="false" />
+          <Property Name="DateAcceptedUTC" Type="datetime" />
+          <Property Name="ModifiedByUserID" Type="int" />
+        </EntityType>
+        <EntityType Name="AccountPolicyDetails">
+          <Key>
+            <PropertyRef Name="AccountPolicyDetailID" />
+          </Key>
+          <Property Name="AccountPolicyDetailID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountPolicyID" Type="int" Nullable="false" />
+          <Property Name="UserIPAddress" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="Accounts">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="100" />
+          <Property Name="AccountTypeID" Type="smallint" Nullable="false" />
+          <Property Name="AccountStatusID" Type="smallint" Nullable="false" />
+          <Property Name="PreferedContactMethodID" Type="int" />
+          <Property Name="DefaultLanguageID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CoApplicant" Type="nvarchar" MaxLength="50" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="320" />
+          <Property Name="SponsorID" Type="int" />
+          <Property Name="EnrollerID" Type="int" />
+          <Property Name="EnrollmentDateUTC" Type="datetime" />
+          <Property Name="IsTaxExempt" Type="bit" />
+          <Property Name="TaxNumber" Type="nvarchar" MaxLength="60" />
+          <Property Name="IsEntity" Type="bit" Nullable="false" />
+          <Property Name="EntityName" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountStatusChangeReasonID" Type="smallint" />
+          <Property Name="LastRenewalUTC" Type="datetime" />
+          <Property Name="NextRenewalUTC" Type="datetime" />
+          <Property Name="ReceivedApplication" Type="bit" Nullable="false" />
+          <Property Name="IsTaxExemptVerified" Type="bit" Nullable="false" />
+          <Property Name="DateApplicationReceivedUTC" Type="datetime" />
+          <Property Name="BirthdayUTC" Type="datetime" />
+          <Property Name="GenderID" Type="smallint" />
+          <Property Name="DataVersion" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedByUserID" Type="int" />
+          <Property Name="DateCreatedUTC" Type="datetime" Nullable="false" />
+          <Property Name="CreatedByUserID" Type="int" />
+          <Property Name="AccountSourceID" Type="smallint" />
+          <Property Name="DateLastModifiedUTC" Type="datetime" />
+          <Property Name="TerminatedDateUTC" Type="datetime2" />
+          <Property Name="TaxGeocode" Type="nvarchar" MaxLength="50" />
+          <Property Name="MarketID" Type="int" Nullable="false" />
+          <Property Name="ETLNaturalKey" Type="nvarchar" MaxLength="256" />
+          <Property Name="ETLHash" Type="nvarchar" MaxLength="50" />
+          <Property Name="ETLPhase" Type="nvarchar" MaxLength="50" />
+          <Property Name="ETLDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Policies">
+          <Key>
+            <PropertyRef Name="PolicyID" />
+          </Key>
+          <Property Name="PolicyID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="VersionNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateReleasedUTC" Type="datetime" />
+          <Property Name="FilePath" Type="nvarchar" MaxLength="400" />
+          <Property Name="IsAcceptanceRequired" Type="bit" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="HtmlSectionID" Type="int" />
+          <Property Name="AccountTypeID" Type="smallint" />
+          <Property Name="TermName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_AccountPolicies_Accounts">
+          <End Role="Accounts" Type="Belcorp.Policies.Core.Model.Store.Accounts" Multiplicity="1" />
+          <End Role="AccountPolicies" Type="Belcorp.Policies.Core.Model.Store.AccountPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="AccountPolicies">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountPolicies_Policies">
+          <End Role="Policies" Type="Belcorp.Policies.Core.Model.Store.Policies" Multiplicity="1" />
+          <End Role="AccountPolicies" Type="Belcorp.Policies.Core.Model.Store.AccountPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policies">
+              <PropertyRef Name="PolicyID" />
+            </Principal>
+            <Dependent Role="AccountPolicies">
+              <PropertyRef Name="PolicyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountPolicyDetails_AccountPolicy">
+          <End Role="AccountPolicies" Type="Belcorp.Policies.Core.Model.Store.AccountPolicies" Multiplicity="1" />
+          <End Role="AccountPolicyDetails" Type="Belcorp.Policies.Core.Model.Store.AccountPolicyDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountPolicies">
+              <PropertyRef Name="AccountPolicyID" />
+            </Principal>
+            <Dependent Role="AccountPolicyDetails">
+              <PropertyRef Name="AccountPolicyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Accounts">
+          <End Role="Accounts" Type="Belcorp.Policies.Core.Model.Store.Accounts" Multiplicity="0..1" />
+          <End Role="Accounts1" Type="Belcorp.Policies.Core.Model.Store.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Accounts1">
+              <PropertyRef Name="SponsorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Accounts1">
+          <End Role="Accounts" Type="Belcorp.Policies.Core.Model.Store.Accounts" Multiplicity="0..1" />
+          <End Role="Accounts1" Type="Belcorp.Policies.Core.Model.Store.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Accounts1">
+              <PropertyRef Name="EnrollerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Belcorp.Policies.Core.Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CoreEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountPolicies" EntityType="Belcorp.Policies.Core.Model.AccountPolicies" />
+          <EntitySet Name="AccountPolicyDetails" EntityType="Belcorp.Policies.Core.Model.AccountPolicyDetails" />
+          <EntitySet Name="Policies" EntityType="Belcorp.Policies.Core.Model.Policies" />
+          <AssociationSet Name="FK_AccountPolicies_Policies" Association="Belcorp.Policies.Core.Model.FK_AccountPolicies_Policies">
+            <End Role="Policies" EntitySet="Policies" />
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AccountPolicyDetails_AccountPolicy" Association="Belcorp.Policies.Core.Model.FK_AccountPolicyDetails_AccountPolicy">
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+            <End Role="AccountPolicyDetails" EntitySet="AccountPolicyDetails" />
+          </AssociationSet>
+          <EntitySet Name="Accounts" EntityType="Belcorp.Policies.Core.Model.Accounts" />
+          <AssociationSet Name="FK_AccountPolicies_Accounts" Association="Belcorp.Policies.Core.Model.FK_AccountPolicies_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="AccountPolicies" EntitySet="AccountPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Accounts" Association="Belcorp.Policies.Core.Model.FK_Accounts_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="Accounts1" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Accounts1" Association="Belcorp.Policies.Core.Model.FK_Accounts_Accounts1">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="Accounts1" EntitySet="Accounts" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountPolicies">
+          <Key>
+            <PropertyRef Name="AccountPolicyID" />
+          </Key>
+          <Property Name="AccountPolicyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountID" Type="Int32" Nullable="false" />
+          <Property Name="PolicyID" Type="Int32" Nullable="false" />
+          <Property Name="DateAcceptedUTC" Type="DateTime" />
+          <Property Name="ModifiedByUserID" Type="Int32" />
+          <NavigationProperty Name="Policies" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicies_Policies" FromRole="AccountPolicies" ToRole="Policies" />
+          <NavigationProperty Name="AccountPolicyDetails" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicyDetails_AccountPolicy" FromRole="AccountPolicies" ToRole="AccountPolicyDetails" />
+          <NavigationProperty Name="Accounts" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicies_Accounts" FromRole="AccountPolicies" ToRole="Accounts" />
+        </EntityType>
+        <EntityType Name="AccountPolicyDetails">
+          <Key>
+            <PropertyRef Name="AccountPolicyDetailID" />
+          </Key>
+          <Property Name="AccountPolicyDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountPolicyID" Type="Int32" Nullable="false" />
+          <Property Name="UserIPAddress" Type="String" MaxLength="15" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="AccountPolicies" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicyDetails_AccountPolicy" FromRole="AccountPolicyDetails" ToRole="AccountPolicies" />
+        </EntityType>
+        <EntityType Name="Policies">
+          <Key>
+            <PropertyRef Name="PolicyID" />
+          </Key>
+          <Property Name="PolicyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="VersionNumber" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="DateReleasedUTC" Type="DateTime" />
+          <Property Name="FilePath" Type="String" MaxLength="400" Unicode="true" FixedLength="false" />
+          <Property Name="IsAcceptanceRequired" Type="Boolean" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="HtmlSectionID" Type="Int32" />
+          <Property Name="AccountTypeID" Type="Int16" />
+          <Property Name="TermName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="AccountPolicies" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicies_Policies" FromRole="Policies" ToRole="AccountPolicies" />
+        </EntityType>
+        <Association Name="FK_AccountPolicies_Policies">
+          <End Role="Policies" Type="Belcorp.Policies.Core.Model.Policies" Multiplicity="1" />
+          <End Role="AccountPolicies" Type="Belcorp.Policies.Core.Model.AccountPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policies">
+              <PropertyRef Name="PolicyID" />
+            </Principal>
+            <Dependent Role="AccountPolicies">
+              <PropertyRef Name="PolicyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AccountPolicyDetails_AccountPolicy">
+          <End Role="AccountPolicies" Type="Belcorp.Policies.Core.Model.AccountPolicies" Multiplicity="1" />
+          <End Role="AccountPolicyDetails" Type="Belcorp.Policies.Core.Model.AccountPolicyDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountPolicies">
+              <PropertyRef Name="AccountPolicyID" />
+            </Principal>
+            <Dependent Role="AccountPolicyDetails">
+              <PropertyRef Name="AccountPolicyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Accounts">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Type="Int32" Name="AccountID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="AccountNumber" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="AccountTypeID" Nullable="false" />
+          <Property Type="Int16" Name="AccountStatusID" Nullable="false" />
+          <Property Type="Int32" Name="PreferedContactMethodID" />
+          <Property Type="Int32" Name="DefaultLanguageID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" />
+          <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MiddleName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NickName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CoApplicant" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmailAddress" MaxLength="320" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SponsorID" />
+          <Property Type="Int32" Name="EnrollerID" />
+          <Property Type="DateTime" Name="EnrollmentDateUTC" />
+          <Property Type="Boolean" Name="IsTaxExempt" />
+          <Property Type="String" Name="TaxNumber" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsEntity" Nullable="false" />
+          <Property Type="String" Name="EntityName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="AccountStatusChangeReasonID" />
+          <Property Type="DateTime" Name="LastRenewalUTC" />
+          <Property Type="DateTime" Name="NextRenewalUTC" />
+          <Property Type="Boolean" Name="ReceivedApplication" Nullable="false" />
+          <Property Type="Boolean" Name="IsTaxExemptVerified" Nullable="false" />
+          <Property Type="DateTime" Name="DateApplicationReceivedUTC" />
+          <Property Type="DateTime" Name="BirthdayUTC" />
+          <Property Type="Int16" Name="GenderID" />
+          <Property Type="Binary" Name="DataVersion" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Int32" Name="ModifiedByUserID" />
+          <Property Type="DateTime" Name="DateCreatedUTC" Nullable="false" />
+          <Property Type="Int32" Name="CreatedByUserID" />
+          <Property Type="Int16" Name="AccountSourceID" />
+          <Property Type="DateTime" Name="DateLastModifiedUTC" />
+          <Property Type="DateTime" Name="TerminatedDateUTC" />
+          <Property Type="String" Name="TaxGeocode" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="MarketID" Nullable="false" />
+          <Property Type="String" Name="ETLNaturalKey" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ETLHash" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ETLPhase" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ETLDate" />
+          <NavigationProperty Name="AccountPolicies" Relationship="Belcorp.Policies.Core.Model.FK_AccountPolicies_Accounts" FromRole="Accounts" ToRole="AccountPolicies" />
+          <NavigationProperty Name="Accounts1" Relationship="Belcorp.Policies.Core.Model.FK_Accounts_Accounts" FromRole="Accounts" ToRole="Accounts1" />
+          <NavigationProperty Name="Accounts2" Relationship="Belcorp.Policies.Core.Model.FK_Accounts_Accounts" FromRole="Accounts1" ToRole="Accounts" />
+          <NavigationProperty Name="Accounts11" Relationship="Belcorp.Policies.Core.Model.FK_Accounts_Accounts1" FromRole="Accounts" ToRole="Accounts1" />
+          <NavigationProperty Name="Accounts3" Relationship="Belcorp.Policies.Core.Model.FK_Accounts_Accounts1" FromRole="Accounts1" ToRole="Accounts" />
+        </EntityType>
+        <Association Name="FK_AccountPolicies_Accounts">
+          <End Type="Belcorp.Policies.Core.Model.Accounts" Role="Accounts" Multiplicity="1" />
+          <End Type="Belcorp.Policies.Core.Model.AccountPolicies" Role="AccountPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="AccountPolicies">
+              <PropertyRef Name="AccountID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Accounts">
+          <End Type="Belcorp.Policies.Core.Model.Accounts" Role="Accounts" Multiplicity="0..1" />
+          <End Type="Belcorp.Policies.Core.Model.Accounts" Role="Accounts1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Accounts1">
+              <PropertyRef Name="SponsorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Accounts1">
+          <End Type="Belcorp.Policies.Core.Model.Accounts" Role="Accounts" Multiplicity="0..1" />
+          <End Type="Belcorp.Policies.Core.Model.Accounts" Role="Accounts1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="Accounts1">
+              <PropertyRef Name="EnrollerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BelcorpPoliciesCoreModelStoreContainer" CdmEntityContainer="CoreEntities">
+          <EntitySetMapping Name="AccountPolicies">
+            <EntityTypeMapping TypeName="Belcorp.Policies.Core.Model.AccountPolicies">
+              <MappingFragment StoreEntitySet="AccountPolicies">
+                <ScalarProperty Name="AccountPolicyID" ColumnName="AccountPolicyID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="PolicyID" ColumnName="PolicyID" />
+                <ScalarProperty Name="DateAcceptedUTC" ColumnName="DateAcceptedUTC" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountPolicyDetails">
+            <EntityTypeMapping TypeName="Belcorp.Policies.Core.Model.AccountPolicyDetails">
+              <MappingFragment StoreEntitySet="AccountPolicyDetails">
+                <ScalarProperty Name="AccountPolicyDetailID" ColumnName="AccountPolicyDetailID" />
+                <ScalarProperty Name="AccountPolicyID" ColumnName="AccountPolicyID" />
+                <ScalarProperty Name="UserIPAddress" ColumnName="UserIPAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policies">
+            <EntityTypeMapping TypeName="Belcorp.Policies.Core.Model.Policies">
+              <MappingFragment StoreEntitySet="Policies">
+                <ScalarProperty Name="PolicyID" ColumnName="PolicyID" />
+                <ScalarProperty Name="LanguageID" ColumnName="LanguageID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="VersionNumber" ColumnName="VersionNumber" />
+                <ScalarProperty Name="DateReleasedUTC" ColumnName="DateReleasedUTC" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="IsAcceptanceRequired" ColumnName="IsAcceptanceRequired" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="HtmlSectionID" ColumnName="HtmlSectionID" />
+                <ScalarProperty Name="AccountTypeID" ColumnName="AccountTypeID" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="Belcorp.Policies.Core.Model.Accounts">
+              <MappingFragment StoreEntitySet="Accounts">
+                <ScalarProperty Name="ETLDate" ColumnName="ETLDate" />
+                <ScalarProperty Name="ETLPhase" ColumnName="ETLPhase" />
+                <ScalarProperty Name="ETLHash" ColumnName="ETLHash" />
+                <ScalarProperty Name="ETLNaturalKey" ColumnName="ETLNaturalKey" />
+                <ScalarProperty Name="MarketID" ColumnName="MarketID" />
+                <ScalarProperty Name="TaxGeocode" ColumnName="TaxGeocode" />
+                <ScalarProperty Name="TerminatedDateUTC" ColumnName="TerminatedDateUTC" />
+                <ScalarProperty Name="DateLastModifiedUTC" ColumnName="DateLastModifiedUTC" />
+                <ScalarProperty Name="AccountSourceID" ColumnName="AccountSourceID" />
+                <ScalarProperty Name="CreatedByUserID" ColumnName="CreatedByUserID" />
+                <ScalarProperty Name="DateCreatedUTC" ColumnName="DateCreatedUTC" />
+                <ScalarProperty Name="ModifiedByUserID" ColumnName="ModifiedByUserID" />
+                <ScalarProperty Name="DataVersion" ColumnName="DataVersion" />
+                <ScalarProperty Name="GenderID" ColumnName="GenderID" />
+                <ScalarProperty Name="BirthdayUTC" ColumnName="BirthdayUTC" />
+                <ScalarProperty Name="DateApplicationReceivedUTC" ColumnName="DateApplicationReceivedUTC" />
+                <ScalarProperty Name="IsTaxExemptVerified" ColumnName="IsTaxExemptVerified" />
+                <ScalarProperty Name="ReceivedApplication" ColumnName="ReceivedApplication" />
+                <ScalarProperty Name="NextRenewalUTC" ColumnName="NextRenewalUTC" />
+                <ScalarProperty Name="LastRenewalUTC" ColumnName="LastRenewalUTC" />
+                <ScalarProperty Name="AccountStatusChangeReasonID" ColumnName="AccountStatusChangeReasonID" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="IsEntity" ColumnName="IsEntity" />
+                <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
+                <ScalarProperty Name="IsTaxExempt" ColumnName="IsTaxExempt" />
+                <ScalarProperty Name="EnrollmentDateUTC" ColumnName="EnrollmentDateUTC" />
+                <ScalarProperty Name="EnrollerID" ColumnName="EnrollerID" />
+                <ScalarProperty Name="SponsorID" ColumnName="SponsorID" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="CoApplicant" ColumnName="CoApplicant" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DefaultLanguageID" ColumnName="DefaultLanguageID" />
+                <ScalarProperty Name="PreferedContactMethodID" ColumnName="PreferedContactMethodID" />
+                <ScalarProperty Name="AccountStatusID" ColumnName="AccountStatusID" />
+                <ScalarProperty Name="AccountTypeID" ColumnName="AccountTypeID" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="PoliciesEntities">
+        <EntityTypeShape EntityType="Belcorp.Policies.Core.Model.AccountPolicies" Width="1.5" PointX="3" PointY="1.5" Height="2.3648893229166656" IsExpanded="true" />
+        <EntityTypeShape EntityType="Belcorp.Policies.Core.Model.AccountPolicyDetails" Width="1.5" PointX="5.25" PointY="1.75" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="Belcorp.Policies.Core.Model.Policies" Width="1.5" PointX="0.75" PointY="1" Height="3.3263964843749996" IsExpanded="true" />
+        <AssociationConnector Association="Belcorp.Policies.Core.Model.FK_AccountPolicies_Policies" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.7785953776041663" />
+          <ConnectorPoint PointX="3" PointY="2.7785953776041663" />
+        </AssociationConnector>
+        <AssociationConnector Association="Belcorp.Policies.Core.Model.FK_AccountPolicyDetails_AccountPolicy" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.5" PointY="2.6439925130208337" />
+          <ConnectorPoint PointX="5.25" PointY="2.6439925130208337" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Belcorp.Policies.Core.Model.Accounts" Width="1.5" PointX="0.75" PointY="6.375" Height="9.8646451822916674" />
+        <AssociationConnector Association="Belcorp.Policies.Core.Model.FK_AccountPolicies_Accounts" >
+          <ConnectorPoint PointX="2.25" PointY="11.307322591145834" />
+          <ConnectorPoint PointX="3.75" PointY="11.307322591145834" />
+          <ConnectorPoint PointX="3.75" PointY="4.0571907552083326" />
+        </AssociationConnector>
+        <AssociationConnector Association="Belcorp.Policies.Core.Model.FK_Accounts_Accounts" >
+          <ConnectorPoint PointX="1.2819230769230767" PointY="16.239645182291667" />
+          <ConnectorPoint PointX="1.2819230769230767" PointY="16.489645182291667" />
+          <ConnectorPoint PointX="1.7284615384615383" PointY="16.489645182291667" />
+          <ConnectorPoint PointX="1.7284615384615383" PointY="16.239645182291667" />
+        </AssociationConnector>
+        <AssociationConnector Association="Belcorp.Policies.Core.Model.FK_Accounts_Accounts1" >
+          <ConnectorPoint PointX="1.2819230769230767" PointY="6.375" />
+          <ConnectorPoint PointX="1.2819230769230767" PointY="6.125" />
+          <ConnectorPoint PointX="1.7284615384615383" PointY="6.125" />
+          <ConnectorPoint PointX="1.7284615384615383" PointY="6.375" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

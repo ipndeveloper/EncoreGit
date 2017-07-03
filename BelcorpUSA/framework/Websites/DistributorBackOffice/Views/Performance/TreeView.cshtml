@@ -1,0 +1,204 @@
+@model DistributorBackOffice.Models.Performance.ITreeViewModel
+
+@using NetSteps.Web.Mvc.Models;
+@section head {
+	<link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jstree.css")" />
+	<style>
+		@*This belongs in a css file somewhere.*@
+		ul.DataGrid li:nth-child(odd) { background: #f6f6f6; }
+	</style>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.easing.1.3.js")"></script>
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/cookie.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.hotkeys.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.jstree.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.scrollTo.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.scrollfollow.js")"></script>
+	<script type="text/javascript">
+
+		function changeColors() {
+		    var attribute = 'data-' + $('input[name="reportIconType"]:radio').filter(':checked').val();
+		    $('a[' + attribute + ']').each(function () {
+		        $(this).children().addClass($(this).attr(attribute));
+		    });
+		}
+
+		$(function () {
+
+//		    var $treeview = $("#treeContainer");
+//		            $treeview
+//            .on('loaded.jstree', function () {
+//                $treeview.jstree('open_all');
+//            });
+
+		    $('#DownlineKeys').css('display', 'block');
+		    $('input[name="reportIconType"]:radio').click(function () {
+		        $("ins").removeClass('Qualified Pending UnQualified Distributor PreferredCustomer RetailCustomer PresidentialBeautyExecutive SeniorExecutiveBeautyVicePresident ExecutiveBeautyVicePresident SeniorBeautyVicePresident BeautyVicePresident SeniorBeautyDirector BeautyDirector BeautyManager BeautyAdvisor4 BeautyAdvisor3 BeautyAdvisor2 BeautyAdvisor1 BeautyAdvisor');
+		        changeColors();
+
+		        if ($(this).attr('id') == 'rdo-CommissionQualified') {
+		            $("#KeyQual_TabContent").css('display', 'block');
+		            $("#KeyAcct_TabContent").css('display', 'none');
+
+		            $("#li_KeyQual_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg last current');
+		            $("#li_KeyAcct_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg first');
+		        }
+		        else if ($(this).attr('id') == 'rdo-CustomerTypes') {
+		            $("#KeyAcct_TabContent").css('display', 'block');
+		            $("#KeyQual_TabContent").css('display', 'none');
+
+		            $("#li_KeyQual_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg last');
+		            $("#li_KeyAcct_TabContent").removeClass(function () { return $(this).attr('class'); }).addClass('UI-lightBg current first');
+		        }
+		    });
+
+//		    $("#btnTest").click(function () {
+//		        alert('Paid as Title : ' + $("#li_KeyAcct_TabContent").attr('class'));
+//		        alert('Qualification : ' + $("#li_KeyQual_TabContent").attr('class'));
+//		    });
+
+		    $("#rootNodeHtml").ajaxComplete(function (e, xhr, settings) {
+		        changeColors();
+		    });
+
+		    $("#treeContainer").jstree({
+		        'ui': {
+		            'select_limit': 2,
+		            'select_multiple_modifier': 'alt',
+		            'selected_parent_close': 'select_parent',
+		            'initially_select': ['@CoreContext.CurrentAccount.AccountID']
+		        },
+		        'html_data': {
+		            'data': $('#rootNodeHtml').html(),
+		            'ajax': {
+		                'url': '@Href("~/Performance/GetTreeNodes")',
+		                'data': function (n) {
+		                    return { nodeId: n.attr ? n.attr('id') : '' };
+		                }
+		            }
+		        },
+		        'search': {
+		            'case_insensitive': true,
+		            'ajax': {
+		                'url': '@Href("~/Performance/SearchTreeNodes")'
+		            }
+		        },
+		        'plugins': ['themes', 'html_data', 'ui', 'json_data', 'search']
+		    }).bind('select_node.jstree', function (e, data) {
+		        try {
+		            downlineInfoCardModel.load(parseInt(data.rslt.obj.attr('id')));
+		        } catch (e) {
+		        }
+		    }).bind("search.jstree", function (e, data) {
+		        if (data.rslt.nodes.length > 0) {
+		            $.scrollTo(data.rslt.nodes[0]);
+		            data.rslt.nodes[0].click();
+		        }
+		    });
+
+		    $('#searchButton').click(function () {
+		        if ($('#accountId').val()) {
+		            $('#treeContainer').jstree('search', $('#accountId').val());
+		            $('#searchText').val('');
+		            $('#accountId').val('');
+		        } else {
+		            $('#searchText').showError('@Html.JavascriptTerm("PleaseSelectAnAccount", "Please select an account.")');
+		        }
+		    });
+
+		    $('#searchText').jsonSuggest('@Href("~/Performance/SearchDownline")',
+				{
+				    minCharacters: 3,
+				    ajaxResults: true,
+				    source: $('#searchText'),
+				    onSelect:
+						function (item) {
+						    $('#searchText').clearError();
+						    $('#accountId').val(item.id);
+						    $('#searchText').focus();
+						}
+				});
+
+		    $('#searchText').keyup(function (e) {
+		        if (e.keyCode == 13)
+		            $('#searchButton').click();
+		    });
+		    changeColors();
+		});
+	</script>
+}
+@section breadcrumb{}
+@section title {@Html.Term("TreeView", "Tree View")}
+<div>
+    <div class="UI-lightBg brdrAll GridFilters">
+        <div class="FL FilterSet">
+            <div class="FL">
+                <label>@Html.Term("Search"):</label>
+                <input type="hidden" name="accountId" id="accountId" />
+                <input id="searchText" type="text" class="TextInput" style="width: 200px;" value="" />
+            </div>
+            <div class="FL RunFilter">
+                <a id="searchButton" href="javascript:void(0);" class="Button"><span>
+                    @Html.Term("Search")</span></a>
+            </div>
+            <div class="FL">
+                <div id="searchResultsText">
+                </div>
+            </div>
+            <div class="clr filterRadios">
+                <label>@Html.Term("Display")</label>
+                @*<input id="btnTest" type="button" value="Test" />*@
+				@if (ApplicationContext.Instance.UsesEncoreCommissions)
+				{
+					<div class="FL">
+						<label for="rdo-CommissionQualified">@Html.Term("ShowQualifiedIcons", "Show Qualified Icons"):</label><input id="rdo-CommissionQualified" type="radio" name="reportIconType" value="CommissionQualified" />
+					</div>
+				}
+                <div class="FL">
+                    <label for="rdo-CustomerTypes">@Html.Term("ShowAccountsPerPaidAsTitle", "Show accounts per Paid as Title"):</label><input id="rdo-CustomerTypes" type="radio" name="reportIconType" value="CustomerType" checked="checked" />
+                </div>
+                <span class="clr"></span>
+            </div>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div id="treeViewNodeWrapper" class="TreeNodeDetails UI-whiteBg brdrYYNN brdr1 infoCardWindow" style="width:55%" data-bind="visible: true">
+		@Html.Partial("_DownlineInfoCard")
+	</div>
+    <!-- the tree container (notice NOT an UL node) -->
+    <div class="Widget FlatTree">
+        <div id="treeContainer" class="brdrAll pad10">
+        </div>
+    </div>
+    <div id="rootNodeHtml" style="display: none">
+	   @* Professor Lundy's code *@
+		@*@if(Model.RootNode != null)
+		{
+			@Html.Partial("_TreeNode", Model.RootNode)
+		}*@
+		@if (Html.ViewData["RootNodeHtml"].ToString() != string.Empty)
+		{ 
+			@Html.Raw(ViewData["RootNodeHtml"].ToString())
+		}
+		else
+		{
+			<li id="0">
+				@Html.Term("NoDataAvailableForThisUser", "No data available for this user!") 
+			</li>
+		}        
+    </div>
+    <span class="clr"></span>
+</div>
+<img src="@Href("~/Resource/Content/Images/jstree/themes/default/throbber.gif")" alt="" style="visibility:hidden;position:absolute;left:-1000px;top:-1000px;" />
+@section bodyFooter
+{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Performance/DownlineInfoCardModel.js")"></script>
+	<script type="text/javascript">
+		var downlineInfoCardModel;
+		$(function () {
+			var downlineInfoCardOptions = @Model.DownlineInfoCard.OptionsJson();
+			var downlineInfoCardData = @Model.DownlineInfoCard.DataJson();
+			downlineInfoCardModel = new DownlineInfoCardModel(downlineInfoCardOptions, downlineInfoCardData);
+			ko.applyBindings(downlineInfoCardModel, document.getElementById('treeViewNodeWrapper'));
+		});
+	</script>
+}

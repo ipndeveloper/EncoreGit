@@ -1,0 +1,81 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Products.BillingModel
+<script type="text/javascript">
+	$(function () {
+		$('.BillingAddressSelect').click(function () {
+			var showBillingAddress = $('#chkBillingAddressSourceBilling').is(':checked');
+			$('#BillingAddress').toggle(showBillingAddress);
+			$('#BillingAddress_IsVisible').val(showBillingAddress);
+		});
+		$('div.BillingInfo .FRow').each(function () {
+			var requiredChk = ($(this).html());
+			if (requiredChk.indexOf('is required') >= 0) {
+				$('label', this).parent().prepend('<span class="requiredMarker">*</span> \n');
+			}
+		});
+	});
+</script>
+@if (Model.HideBillingAddress)
+{
+	<script type="text/javascript">
+		function billingEditFormSubmit(e) {
+			showLoading($('[data-click-submit]', e));
+			e.submit();
+		}
+	</script>
+}
+else
+{
+	<script type="text/javascript">
+		 function billingEditFormSubmit(e) {
+			 showLoading($('[data-click-submit]', e));
+			 @(Html.HtmlFieldPrefix())BillingAddress_geocodeAddress(function() {
+				 e.submit();
+			 });
+		 }
+	</script>
+}
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_function = "billingEditFormSubmit" }))
+{
+	@Html.ValidationSummary(true)
+	@Html.ValidationMessageFor(m => m.PaymentMethod.CreditCardExpirationDate)
+
+	<div class="FormContainer splitCol pad5 FL BillingProfile">
+		@Html.Partial("_BillingEditHeader")
+		<h2>@Html.Term("Enrollment_AccountInfo_Billing_BillingInformationTitle", "Billing Information")</h2>
+		<div class="mb10 BillingInfo">
+			@Html.EditorFor(m => m.PaymentMethod)
+		</div>
+		@if (!Model.HideBillingAddress)
+  { 
+			<h2>@Html.Term("Enrollment_AccountInfo_Billing_BillingAddressTitle", "Billing Address")</h2>
+			<div>
+				@Html.RadioButtonFor(m => m.BillingAddressSourceTypeID, (int)Constants.AddressType.Main, new { id = "chkBillingAddressSourceMain", @class = "BillingAddressSelect" })
+				<label for="chkBillingAddressSourceMain">@Html.Term("SameAsMainAddress", "Same as Main Address")</label>
+				<div class="mb10">
+					<label for="chkBillingAddressSourceMain">@Model.MainAddressHtml</label>
+				</div>
+				@Html.RadioButtonFor(m => m.BillingAddressSourceTypeID, (int)Constants.AddressType.Shipping, new { id = "chkBillingAddressSourceShipping", @class = "BillingAddressSelect" })
+				<label for="chkBillingAddressSourceShipping">@Html.Term("SameAsShippingAddress", "Same as Shipping Address")</label>
+				<div class="mb10">
+					<label for="chkBillingAddressSourceShipping">@Model.ShippingAddressHtml</label>
+				</div>
+				@Html.RadioButtonFor(m => m.BillingAddressSourceTypeID, (int)Constants.AddressType.Billing, new { id = "chkBillingAddressSourceBilling", @class = "BillingAddressSelect" })
+				<label for="chkBillingAddressSourceBilling">@Html.Term("OtherAddress", "Other Address")</label>
+			</div>
+  }
+	</div>
+	
+  if (!Model.HideBillingAddress)
+  { 
+	<div id="BillingAddress" class="FormContainer splitCol FR" style="@(Model.BillingAddress.IsVisible ? "" : "display:none")">
+		<h2>@Html.Term("Enrollment_AccountInfo_Billing_BillingAddressTitle", "Billing Address")</h2>
+		@Html.EditorFor(m => m.BillingAddress)
+	</div>
+  }
+	<span class="ClearAll"></span>
+	
+	<p class="FormSubmit enrollSectionBtns">
+		<a id="btnSubmit" class="Button" href="javascript:void(0);" data-click-submit="parent"><span>@Html.Term("Next")</span> </a>
+	</p>
+	@Html.AntiForgeryToken()
+}

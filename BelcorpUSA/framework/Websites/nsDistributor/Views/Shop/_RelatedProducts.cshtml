@@ -1,0 +1,25 @@
+﻿@model NetSteps.Data.Entities.Product
+@{
+    var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+    var relatedProducts = Model.ChildProductRelations.Where(r => r.ProductRelationsTypeID == (int)Constants.ProductRelationsType.RelatedItem).Select(r => inventory.GetProduct(r.ChildProductID)).Where(p => p.Active) ;
+}
+@if (relatedProducts.Count() > 0)
+{      
+    <div class="brdrAll CategoryGroup upsaleListing">
+        <div class="UI-mainBg brdrAll pad5 upsaleHeader">
+            <span>@Html.Term("YouMightAlsoBeInterestedIn", "You might also be interested in...")</span>
+        </div>
+        <div class="ProductThumbRows">
+            @for (int i = 0; i < Math.Ceiling(relatedProducts.Count() / (double)5); i++)
+            {
+                <div class="row">
+                    @foreach (Product relatedProduct in relatedProducts.Skip(i * 5).Take(5))
+                    {
+                        Html.RenderPartial("ProductListing", relatedProduct);
+                    }
+                </div>   
+            }
+        </div>
+    </div>
+         
+}

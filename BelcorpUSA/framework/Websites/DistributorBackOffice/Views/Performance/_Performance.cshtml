@@ -1,0 +1,168 @@
+﻿@using DistributorBackOffice.Controllers
+@{
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+}
+@section head{
+	@RenderSection("head", false)
+}
+@section breadcrumb {
+	@RenderSection("breadcrumb", false)
+}
+@section title {
+	@RenderSection("title", false)
+}
+@section ActionItems {
+	@{DownlineReportParameters downlineReportParams = ViewData["CurrentReportParameters"] as DownlineReportParameters;}
+	@*@Html.ActionItem("~/Performance", Html.Term("PerformanceDashboard", "Performance Dashboard"), "performance")*@
+	@Html.ActionItem("~/Performance/FlatDownline", Html.Term("FlatDownline", "Flat Downline"), "icon-actionFlatReport", function: PerformanceController.Functions.PerformanceFlatDownline)
+	@Html.ActionItem("~/Performance/TreeView", Html.Term("TreeView", "Tree View"), "icon-actionTreeView", function: PerformanceController.Functions.PerformanceTreeView)
+	@Html.ActionItem("~/Performance/GraphicalDownline", Html.Term("GraphicalDownline", "Graphical Downline"), "icon-actionTreeView", function: PerformanceController.Functions.PerformanceGraphicalDownline)
+
+    @{
+    
+        @*CS.03MAY2016.Inicio.Muestra Nuevo Relatorio*@
+        string MuestraMenuOpcionNuevoRelatorio = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "MNR");
+        if (MuestraMenuOpcionNuevoRelatorio == "S")
+        {
+	        @Html.ActionItem("~/Performance/NewFlatDownlineReport", Html.Term("StartaNewReport", "Start a new report"), "icon-actionReport", function: PerformanceController.Functions.PerformanceFlatDownline)
+        }
+     }
+        
+    @{
+        @*CS.03MAY2016.Inicio.Muestra Grupo Directo*@
+        string MuestraMenuOpcionGrupoDirecto = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "MGD");
+        if (MuestraMenuOpcionGrupoDirecto == "S")
+        {
+            @Html.ActionItem("~/Contacts", Html.Term("DWS_SiteMenu_Contacts", "Contacts"), "icon-actionReport", function: PerformanceController.Functions.PerformanceFlatDownline)
+        }
+     }
+	@if (downlineReportParams != null)
+ { 
+		@Html.ActionItem(String.Format("~/Earnings/{0}", downlineReportParams.PeriodID), Html.Term("Earnings", "Earnings"), "icon-actionEarnings")
+ }
+ else
+ {
+		@Html.ActionItem("~/Earnings", Html.Term("Earnings", "Earnings"), "icon-actionEarnings")
+ }
+}
+@section SideBarExtras 
+{
+	@if (ApplicationContext.Instance.UsesEncoreCommissions)
+ {
+
+     if (ViewData["CorporateAccountReports"] != null)
+     {
+         @*
+		<div class="SavedReports">
+			<div class="WidgetTitle UI-btn">
+				<span class="Title  UI-btn">@Html.Term("CorporateReports", "Corporate Reports")</span>
+			</div>
+			<div class="listBody">
+				
+                <ul class="listNav">
+					@{
+                     AccountReport currentCorporateReport = ViewData["CorporateAccountReport"] as AccountReport;
+                     List<AccountReport> currentCorporateReports = ViewData["CorporateAccountReports"] as List<AccountReport>;
+                     foreach (var accountReport in currentCorporateReports)
+                     {
+						<li class="@accountReport.AccountReportID"><a href="@Href("~/Performance/FlatDownline")?accountReportID=@accountReport.AccountReportID"><span>
+							@accountReport.Name</span></a></li>
+                     }
+					}
+				</ul>
+                
+			</div>
+		</div>
+        *@
+     }
+		@*
+        <div class="SavedReports">
+			<div class="WidgetTitle UI-btn">
+				<span class="Title  UI-btn">@Html.Term("SavedReports", "My Saved Reports")</span>
+			</div>
+			<div class="listBody">
+				<ul class="listNav">
+					@{
+                     AccountReport currentAccountReport = ViewData["CurrentAccountReport"] as AccountReport;
+                     List<AccountReport> currentAccountReports = ViewData["CurrentAccountReports"] as List<AccountReport>;
+                     foreach (var accountReport in currentAccountReports)
+                     {
+						<li class="@accountReport.AccountReportID"><a href="@Href("~/Performance/FlatDownline")?accountReportID=@accountReport.AccountReportID"><span>
+							@accountReport.Name</span></a></li>
+                     }
+					}
+				</ul>
+			</div>
+		</div>
+        *@
+ }
+	<div class="SavedReports downlineColorKeys" id="DownlineKeys" style="display: none;">
+		<div class="WidgetTitle UI-btn">
+			<span class="Title  UI-btn">@Html.Term("DownlineColorKey", "Downline Color Key")</span>
+		</div>
+		<div class="Tabber widgetTabs">
+			<ul class="inlineNav" id="TabColorKey">
+                <li id="li_KeyAcct_TabContent" rel="KeyAcct_TabContent" class="UI-lightBg current">
+                 <!--R2594 CGI(DT-JCT;JICM) -->
+                @if (@ViewBag.View == "tv" || @ViewBag.View == "gv")
+                {
+                        <a href="javascript:void();"><span>@Html.Term("PaidAsTitle", "Account Type")</span></a>
+                }
+                else
+                {
+                        <a href="javascript:void();"><span>@Html.Term("AccountType", "Account Type")</span></a>
+                }
+                </li>
+				@if (ApplicationContext.Instance.UsesEncoreCommissions)
+    {
+					<li id="li_KeyQual_TabContent" rel="KeyQual_TabContent" class="UI-lightBg">
+                        <a href="javascript:void();"><span>@Html.Term("Qualification")</span></a>
+                    </li>
+    }
+			</ul>
+		</div>
+		<div class="listBody TabberBody TabColorKey" id="KeyAcct_TabContent" style="width:200px">
+			<!-- account types -->
+			<ul class="flatList accountList">
+             <!--R2594 CGI(DT-JCT;JICM) -->
+            @if (@ViewBag.View == "tv" || @ViewBag.View == "gv")
+            { 
+                @Html.Raw(ViewBag.HtmlOutput) 
+            }
+            else
+            {
+                if (SmallCollectionCache.Instance.AccountTypes.Any(x => x.TermName == "PreferredCustomer" && x.Active))
+                {
+					<li class="keyBlock acct9">@Html.Term("PreferredCustomer", "Preferred Customer")</li>
+                }
+                if (SmallCollectionCache.Instance.AccountTypes.Any(x => x.TermName == "Distributor" && x.Active))
+                {
+					<li class="keyBlock acct10">@Html.Term("Distributor", "Distributor")</li>
+                }
+                if (SmallCollectionCache.Instance.AccountTypes.Any(x => x.TermName == "Prospect" && x.Active))
+                {
+					<li class="keyBlock acct11">@Html.Term("Prospect", "Prospect")</li>
+                }
+                if (SmallCollectionCache.Instance.AccountTypes.Any(x => x.TermName == "RetailCustomer" && x.Active))
+                {
+					<li class="keyBlock acct12">@Html.Term("RetailCustomer", "Retail Customer")</li>
+                }
+            }
+				
+			</ul>
+		</div>
+		<div class="listBody TabberBody TabColorKey" id="KeyQual_TabContent" style="display: none;">
+			<!-- qualifications -->
+			<ul class="flatList qualificationList">
+				<li class="keyBlock qual1">@Html.Term("Unqualified")</li>
+				<li class="keyBlock qual2">@Html.Term("PendingQualification", "Pending Qualification")</li>
+				<li class="keyBlock qual3">@Html.Term("Qualified")</li>
+			</ul>
+		</div>
+	</div>
+}
+@RenderBody()
+@section bodyFooter
+{
+	@RenderSection("bodyFooter", false)
+}

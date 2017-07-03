@@ -1,0 +1,85 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            Export();
+        });
+
+        $('#completeDateUTCIniInputFilter').val('@ViewBag.Yesterday')
+    });
+
+    function Export() {
+        var AccountName = $('#nameInputFilter').val();
+        var AccountNumber = $('#accountNumberInputFilter').val();
+        var OrderNumber = $('#orderNumberInputFilter').val();
+        var CompleteDateStart = $('#completeDateUTCIniInputFilter').val() == '' ? null : $('#completeDateUTCIniInputFilter').val();
+        var CompleteDateEnd = $('#completeDateUTCFinInputFilter').val() == '' ? null : $('#completeDateUTCFinInputFilter').val();
+        var SubTotalMin = $('#subtotalIniInputFilter').val() == '' ? null : $('#subtotalIniInputFilter').val();
+        var SubTotalMax = $('#subtotalFinInputFilter').val() == '' ? null : $('#subtotalFinInputFilter').val();
+        var GrandTotalMin = $('#grandTotalIniInputFilter').val() == '' ? null : $('#grandTotalIniInputFilter').val();
+        var GrandTotalMax = $('#grandTotalFinInputFilter').val() == '' ? null : $('#grandTotalFinInputFilter').val();
+
+        var url = '@Href("~/Reports/Reports/DailyOrdersExport")' + '?';
+        url += 'AccountName=' + AccountName;
+        url += '&' + 'AccountNumber=' + AccountNumber;
+        url += '&' + 'OrderNumber=' + OrderNumber;
+        url += '&' + 'CompleteDateStart=' + CompleteDateStart;
+        url += '&' + 'CompleteDateEnd=' + CompleteDateEnd;
+        url += '&' + 'SubTotalMin=' + SubTotalMin;
+        url += '&' + 'SubTotalMax=' + SubTotalMax;
+        url += '&' + 'GrandTotalMin=' + GrandTotalMin;
+        url += '&' + 'GrandTotalMax=' + GrandTotalMax;
+
+        window.location = url;
+    }
+</script>
+@{
+    var grid = Html.PaginatedGrid<NetSteps.Data.Entities.Business.DailyOrderSearchData>("~/Reports/Reports/GetDailyOrdersReport")
+        .AutoGenerateColumns()
+        .AddInputFilter(Html.Term("AccountNumber20", "Account  Number"), "accountNumber", ViewData["AccountNumber"])
+        .AddInputFilter(Html.Term("Name", "Name"), "name", ViewData["Name"])
+        .AddInputFilter(Html.Term("OrderNumber", "N° Orden"), "orderNumber", ViewData["OrderNumber"])
+
+        //.AddInputFilter(Html.Term("CompleteDateUTCIni", "Complete Date Ini"), "completeDateUTCIni", ViewData["CompleteDateUTCIni"])
+        //.AddInputFilter(Html.Term("CompleteDateUTCFin", "Complete Date Fin"), "completeDateUTCFin", ViewData["CompleteDateUTCFin"])
+
+        .AddInputFilter(Html.Term("DateRange15", "Complete Date"), "completeDateUTCIni", (ViewData["CompleteDateUTCIni"].IsNull())?"Start Date":ViewData["CompleteDateUTCIni"], true)
+        .AddInputFilter(Html.Term("To", "To"), "completeDateUTCFin", (ViewData["CompleteDateUTCFin"].IsNull())?"End Date":ViewData["CompleteDateUTCFin"], true, true)
+
+        .AddInputFilter(Html.Term("subtotalIni3", "Sub Total --> Min"), "subtotalIni", ViewData["subtotalIni"])
+        .AddInputFilter(Html.Term("subtotalFin3", "--> Max"), "subtotalFin", ViewData["subtotalFin"])
+
+        .AddInputFilter(Html.Term("grandTotalIni3", "Grand Total --> Min"), "grandTotalIni", ViewData["grandTotalIni"])
+        .AddInputFilter(Html.Term("grandTotalFin3", "--> Max"), "grandTotalFin", ViewData["grandTotalFin"])
+        //.AddColumn(Html.Term("Order#"), "OrderNumber", true, false, null, 1, 65)
+        //.AddColumn(Html.Term("RepNumber", "Rep Number"), "RepNumber", true, false, null, 1, 60)
+        //.AddColumn(Html.Term("RepName", "Rep Name"), "RepName", true, false, null, 1, 300)
+        //.AddColumn(Html.Term("CustomerNumber", "Customer Number"), "CustomerNumber", true, false, null, 1, 60)
+        //.AddColumn(Html.Term("CustomerName", "Customer Name"), "CustomerName", true, false, null, 1, 150)
+        //.AddColumn(Html.Term("Customertype", "Customer Type"), "CustomerType", true, false, null, 1, 80)
+        //.AddColumn(Html.Term("Sponsor#"), "Sponsor", true, false, null, 1, 80)
+        //.AddColumn(Html.Term("Shipment ID"), "OrderShipmentID", true, false, null, 1, 80)
+        //.AddColumn(Html.Term("Shipment Date"), "DateShipped", true, false, null, 1, 140)
+        //.AddColumn(Html.Term("Order Complete Date"), "CompleteDate", true, false, null, 1, 140)
+        //.AddColumn(Html.Term("Created Date"), "DateCreated", true, false, null, 1, 140)
+        //.AddColumn(Html.Term("Order type"), "OrderType", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Order staus"), "status", true, false, null, 1, 180)
+        //.AddColumn(Html.Term("QV"), "QV", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("CV"), "CV", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Price"), "Price", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("State"), "State", true, false, null, 1, 60)
+        //.AddColumn(Html.Term("SubTotal"), "subtotal", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Shipping"), "ShippingTotal", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Handling"), "HandlingTotal", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Tax"), "TaxAmountTotal", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("Total"), "grandTotal", true, false, null, 1, 90)
+        //.AddColumn(Html.Term("HasStarterKit","Has Starter Kit"), "HasStarterKit")
+        //.AddColumn(Html.Term("StarterKitPrice", "Starter Kit Price"), "StarterKitPrice", true, false, null, 1, 80)
+        //.AddColumn(Html.Term("City"), "City", true, false, null, 1, 180)
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow();
+    grid.Render(); 
+}

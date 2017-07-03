@@ -1,0 +1,143 @@
+﻿
+--================================================
+--Author:Nick S.
+--Description:  This sproc finds an accountid of a newly enrolled account for R+F test.
+--
+--===============================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name= 'usp_account_get_WatiNtestAccount' AND type = 'P')
+DROP PROCEDURE usp_account_get_WatiNtestAccount
+GO
+CREATE PROCEDURE [dbo].[usp_account_get_WatiNtestAccount]
+	-- Add the parameters for the stored procedure here
+	@userName Varchar(50), 
+	@userLastName varchar(50),
+	@AccountID int OUTPUT
+AS
+BEGIN
+	Select @AccountID = AccountID from accounts
+	Where FirstName = @UserName and
+		  LastName = @UserLastName
+END
+GO
+--================================================
+--Author:Nick S.
+--Description:  This sproc deletes all records that are created during an enrollment
+--and is automated.
+--===============================================
+
+IF EXISTS(SELECT name FROM sysobjects WHERE name = 'usp_orders_delete_WatiNtestRecords' AND type ='P')
+DROP PROCEDURE usp_orders_delete_WatiNtestRecords
+GO
+CREATE PROCEDURE [dbo].[usp_orders_delete_WatiNtestRecords]
+	-- Add the parameters for the stored procedure here
+	@AccountId int
+AS
+BEGIN
+--this is to delete pws in sites table by accountID
+   Declare @SiteID int
+	Set @SiteID = (Select SiteID from Sites where DistributorID = @AccountId)
+	Delete SiteUrls where SiteId = @siteID
+	Delete SiteNavigation where SiteId = @siteID
+	Delete Sites where SiteID =  @SiteID
+
+	Delete OrderCustomers where accountId = @AccountId
+	Delete AccountLog where accountId = @AccountId
+	Delete AutoshipOrders where accountId = @AccountId
+	Delete AccountPaymentMethods where accountId = @AccountId
+	Delete AccountAddresses where accountId = @AccountId
+	Delete AccountPhones where accountid = @AccountId
+	Delete AccountLanguages where accountid = @AccountId
+	Delete AccountSecurity where accountId = @AccountId
+	Delete AccountPolicy where AccountId = @AccountId
+	Delete AlertTrigger where AccountID = @AccountId
+	Delete MailAccount where AccountID = @AccountId
+	Delete AccountRole where AccountID = @AccountId
+	
+	Declare @OrderId int 
+    Set @OrderId = (Select OrderCustomerID From OrderCustomers Where AccountID = @AccountId)
+      
+	Delete OrderPaymentResults where OrderID  = @OrderId
+	Delete OrderPaymentResults where OrderID = @OrderId
+	Delete AutoshipOrders where TemplateOrderID = @OrderId
+	Delete Orders where DistributorID = @AccountId
+	Delete AlertTrigger  where AccountID = @AccountId
+	Delete Accounts where AccountID = @AccountId
+	
+END
+GO
+-- =============================================
+-- Author:		Nick San Juan
+-- Create date: 09-2009
+-- Description:	This sproc is used for return orders automation testing and it searches for 
+-- an order with status Submitted.
+-- =============================================
+
+IF EXISTS(SELECT name FROM sysobjects WHERE name = 'usp_Order_select_status_submitted' AND type='P')
+DROP PROCEDURE usp_Order_select_status_submitted
+GO
+CREATE PROCEDURE [DBO].[usp_Order_select_status_submitted]
+@OrderId int output
+AS
+	BEGIN
+	Select @OrderId =(Select TOP(1) OrderId From Orders
+	Where OrderStatusID = 4)
+	END
+GO
+
+-- =============================================
+-- Author:		Nick San Juan
+-- Create date: 09-2009
+-- Description:	This sproc is used for return orders automation testing and it searches for 
+-- an order with status pending.
+-- =============================================
+IF EXISTS(SELECT name FROM sysobjects WHERE name = 'usp_Order_select_status_pending' AND type='P')
+DROP PROCEDURE usp_Order_select_status_pending
+GO
+CREATE PROCEDURE [DBO].[usp_Order_select_status_pending]
+@OrderId int output
+AS
+	BEGIN
+	Select @OrderId =(Select TOP(1) OrderId From Orders
+	Where OrderStatusID = 1)
+	END
+GO
+-- =============================================
+-- Author:		Nick San Juan
+-- Create date: 09-2009
+-- Description:	This sproc is used for return orders automation testing and it searches for 
+-- an account that is inactive with an order
+-- =============================================
+IF EXISTS(SELECT name FROM sysobjects WHERE name = 'usp_Order_select_account_inactive' AND type= 'P')
+DROP PROCEDURE usp_Order_select_account_inactive
+GO
+CREATE PROCEDURE [dbo].[usp_Order_select_account_inactive]
+@OrderId int output
+AS
+	BEGIN
+	Select @OrderId = (SELECT Top(1) O.OrderID
+		FROM Accounts A 
+		Join Orders O on 
+		O.DistributorID = A.AccountID
+		WHERE A.Active = 0)
+	END
+GO
+
+	--===================================================
+	--The following script can be used for canceling a PC autoship when a testing alerts.
+	Declare @AccountId int
+Declare @OrderId int
+
+
+SET @AccountId = 533287 -- you need to know the accountId
+set @OrderId = (SELECT TemplateOrderID from AutoshipOrders where AccountID = @AccountId)
+
+--set the Autoship order to status cancel
+UPDATE Orders
+SET OrderStatusID = 5
+Where OrderID = @OrderId
+
+--set the end date too in autoship order status
+Update AutoshipOrders
+set EndDate = GETDATE()
+where AccountID = @AccountId

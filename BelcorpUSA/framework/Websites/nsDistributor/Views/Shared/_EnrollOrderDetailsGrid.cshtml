@@ -1,0 +1,174 @@
+﻿
+<div id="Textopromotion"></div>
+
+
+<div id="promotionHeader"></div>
+@*<div class="UI-mainBg m1 pad5" id="promotionHeader" data-bind="visible: ApplicablePromotions().length > 0">
+    <div class="UI-mainBg pad5 brdrYYNN">
+        @Html.Term("Promotions_OrderQualifiedForPromotionNotification", "This order qualified for the following promotions: ")
+    </div>
+    <div id="promotionList" data-bind="foreach: ApplicablePromotions">
+        <div data-bind="if: PromotionOutOfStock" class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification promoNotAvailable">
+            <span class="UI-icon FL icon-star"></span><span class="UI-mainBg pad5 brdrYYNN" data-bind="text: Description">
+            </span><span class="bold promoItemAvailability" title="@Html.Term("FreeItemsOutOfStock", "The free item(s) for this promotion are currently Out Of Stock")">@Html.Term("Unavailable", "Unavailable")</span>
+        </div>
+        <div data-bind="ifnot: PromotionOutOfStock" class="UI-lightBg UI-icon-container FL mr5 brdrAll promoNotification">
+            <span class="UI-icon FL icon-star"></span><span class="UI-mainBg pad5 brdrYYNN" data-bind="text: Description">
+            </span><a href="javascript:void(0);" class="bold selectGift" data-bind="if: StepID, attr: { 'stepId': StepID }">@Html.Term("Cart_SelectFreeGiftLinkText", "Select Free Gift >")</a>
+        </div>
+    </div>
+    <span class="clr"></span>
+</div>*@
+
+<table id="products" width="100%" class="DataGrid editableGrid responsive" style="display: block" data-bind="visible: true">
+    <thead>
+        <tr class="GridColHead UI-bg UI-header">
+            <th class="GridCheckBox">
+            </th>
+            <th>
+                @Html.Term("Product")
+            </th>
+            <th>
+                @Html.Term("Product")
+            </th>
+            <th>
+                @Html.Term("Retail", "Retail")
+            </th>
+            <th>
+                @Html.Term("PricePerItem", "Price Per Item")
+            </th>
+
+            @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+            <th>
+                @Html.Term("CommissionablePrice", "Commissionable Price")
+            </th>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+            <th style="width: 100px;">
+                @Html.Term("Quantity")
+            </th>
+            @*CGI(CMR)-29/10/2014-Inicio*@
+            <th>
+                @Html.Term("QV")
+            </th>
+            @*CGI(CMR)-29/10/2014-Fin*@
+            <th>
+                @Html.Term("Price")
+            </th>
+        </tr>
+    </thead>
+
+   @* @Html.Partial("_EnrollOrderItem")*@
+
+    <tbody id="CartItems" data-bind="foreach: OrderItems">
+           @Html.Partial("_EnrollOrderItem")
+    </tbody>
+
+        @{
+        // wv: 20160618 Se incluye el proceso de Dispatch para el Site NSDistributor
+
+            int Q0 = 0;
+            Session.Remove("listDispatChEnRoll");
+            var order = (Order)Session["order"];
+            var NumOrder = order.OrderID;
+            List<NetSteps.Data.Entities.Business.HelperObjects.SearchData.DispatchProducts> itemsProductsDispatch = new List<NetSteps.Data.Entities.Business.HelperObjects.SearchData.DispatchProducts>();
+            itemsProductsDispatch = NetSteps.Data.Entities.Order.getDispatchProducts(Convert.ToInt32(Session["AccountID"]), NumOrder, 1, Convert.ToInt32(Session["WareHouseId"]), Convert.ToInt32(Session["PreOrder"]), 1, 22, false, true, false);
+            if (itemsProductsDispatch.Count > 0)
+            {
+                Session["listDispatChEnRoll"] = itemsProductsDispatch;
+                foreach (var item in itemsProductsDispatch)
+                {
+                    <tr class="UI-lightBg specialPromotionItem">
+                    <td></td>
+                    <td colspan = "6">
+                        <b><span>@item.NameType</span></b>
+			        </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+        <tr class="promoGiftLineItem">
+        <td></td>
+        <td class = "FL pad5 promoItemSku">
+                @item.SKU
+            </td>
+            <td  colspan = "2" class="promoItemName">
+                @item.Name
+            </td>
+            <td></td>
+            <td style="text-align: center;">
+              @item.Quantity 
+              <span class="freeItemPrice">
+                 <@Html.Term("Cart_FREE", "FREE")</span>
+              </td>
+        </tr>}
+            }
+        }
+   
+    <tbody  data-bind="foreach: FreeGiftModels">
+    
+        <tbody id="CartFooter">
+            <tr id="productTotalBar" class="GridTotalBar">
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                @*<td></td><td></td><td></td>*@ @*CGI(CMR)-07/04/2015-Comentado*@
+                <td style="text-align: right;">
+                @*CS-21AB2016.Inicio:Comentado*@
+                   @* <a id="btnUpdateCart" href="javascript:void(0);" class="DTL Update OverrideDisable">
+                        @Html.Term("Update")
+                    </a>*@
+                    @*CS-21AB2016.Fin*@
+                </td>
+                @*CGI(CMR)-07/04/2015-Inicio*@
+                <td>
+                </td>
+
+                @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                if (valorSCV == "S")
+                                {
+                <td>
+                    <b>
+                    @*<span data-bind="text: OriginalCommissionableTotal_Sum, css: { strikethrough: isSubtotalCVModifiedNew }"></span>
+                    <span data-bind="text: AdjustedCommissionableTotal_Sum, visible: isSubtotalCVModifiedNew"></span>*@
+                    <span data-bind="text: OriginalCommissionableTotal_Sum, css: { strikethrough: AdjustedCommissionableTotal_Sum() != OriginalCommissionableTotal_Sum() }"></span>
+                    <span data-bind="text: AdjustedCommissionableTotal_Sum, visible: AdjustedCommissionableTotal_Sum() != OriginalCommissionableTotal_Sum()"></span>(@Html.Term("CV.T", "CV.T")) 
+                    </b>
+                </td>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+                <td style="text-align: center;">
+                    <b><span data-bind="text: CountItems"></span></b>
+                </td>
+                @*CGI(CMR)-07/04/2015-Fin*@ @*CGI(CMR)-29/10/2014-Inicio*@
+                <td>
+                    <b><span data-bind="text: TotalQV_Sum"></span>(@Html.Term("QV.T", "QV.T")) </b>
+                </td>
+                <td>
+                    <b>
+                    <span data-bind="text: OriginalTotal_Texto, css: { strikethrough: AdjustedTotal_Sum() != OriginalTotal_Sum() }"></span>
+                        <br />
+                        @*<span data-bind="text: AdjustedTotal_Texto, visible: isSubtotalModifiedNew"></span>*@
+                        <span id="txtAdjustableTotalGrid" data-bind="text: AdjustedTotal_Texto, visible: AdjustedTotal_Sum()!= OriginalTotal_Sum()"></span>
+                    </b>
+                </td>
+                @*CGI(CMR)-07/04/2015-Fin*@
+            </tr>
+        </tbody>
+    </tbody>
+</table>

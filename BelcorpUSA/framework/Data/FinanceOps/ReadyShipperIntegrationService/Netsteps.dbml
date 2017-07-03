@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ItWorksCore" Class="NetstepsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=APPSERVER3;Initial Catalog=ItWorksCore;Integrated Security=True" SettingsObjectName="ReadyShipperIntegrationService.Properties.Settings" SettingsPropertyName="ItWorksCoreConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.LogisticsCommunication" Member="LogisticsCommunications">
+    <Type Name="LogisticsCommunication">
+      <Column Name="LogisticsCommunicationID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Message" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VwLogisticsProviderImport" Member="VwLogisticsProviderImports">
+    <Type Name="VwLogisticsProviderImport" Id="ID1">
+      <Column Name="DistributorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PrimaryID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BillAddress1" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="BillAddress2" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="BillCity" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Billcountry" Type="System.String" DbType="NVarChar(6)" CanBeNull="true" />
+      <Column Name="BillFirst" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="BillLast" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="BillCompany" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="BillZip" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="BillState" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="BillPhone" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="BillEmail" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="ShipAddress1" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="ShipAddress2" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="ShipCity" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="ShipCountry" Type="System.String" DbType="NVarChar(6)" CanBeNull="true" />
+      <Column Name="ShipFirst" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="ShipLast" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="ShipCompany" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="ShipZip" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="ShipState" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="ShipPhone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ShipEmail" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="ShipType" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ShipVia" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="BilledShipping" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="Tax" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="DeclaredValue" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="TotalSale" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="DateofSale" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MESSAGE" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="Product" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Weight" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="MerchandiseDescription" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Price" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentMethod" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="AutoShip" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Residential" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="CommodityCode" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="PerkPoints" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
+      <Column Name="CountryOfOrigin" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="DeliveryConfirmation" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="Warehouse" Type="System.String" DbType="VarChar(12) NOT NULL" CanBeNull="false" />
+      <Column Name="URL" Type="System.String" DbType="VarChar(32) NOT NULL" CanBeNull="false" />
+      <Column Name="OrderItemID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Function Name="dbo.UspErrorLogsInsert" Method="UspErrorLogsInsert">
+    <Parameter Name="LogDateUTC" Parameter="logDateUTC" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="ExceptionTypeName" Parameter="exceptionTypeName" Type="System.String" DbType="VarChar(255)" />
+    <Parameter Name="Source" Parameter="source" Type="System.String" DbType="VarChar(500)" />
+    <Parameter Name="Message" Parameter="message" Type="System.String" DbType="VarChar(5000)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UspLogisticsCommunicationInsert" Method="UspLogisticsCommunicationInsert">
+    <Parameter Name="Message" Parameter="message" Type="System.String" DbType="NVarChar(MAX)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UspLogisticsCommunicationUpdate" Method="UspLogisticsCommunicationUpdate">
+    <Parameter Name="Message" Parameter="message" Type="System.String" DbType="NVarChar(MAX)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UspSelectLogisticsProviderOrderItems" Method="UspSelectLogisticsProviderOrderItems">
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.UspSelectVwLogisticsProviderOrderItemsByOrderID" Method="UspSelectVwLogisticsProviderOrderItemsByOrderID">
+    <Parameter Name="OrderID" Parameter="orderID" Type="System.Int32" DbType="Int" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.UspSelectVwLogisticsProviderOrderHeader" Method="UspSelectVwLogisticsProviderOrderHeader">
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.UspUpdateOrderShipments" Method="UspUpdateOrderShipments">
+    <Parameter Name="ModifiedByUserID" Parameter="modifiedByUserID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="OrderID" Parameter="orderID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Values" Parameter="values" Type="System.String" DbType="VarChar(MAX)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.uspLogisticsRecordTrackingNumberByOrderID" Method="uspLogisticsRecordTrackingNumberByOrderID">
+    <Parameter Name="OrderID" Parameter="orderID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="TrackingNumber" Parameter="trackingNumber" Type="System.String" DbType="NVarChar(1000)" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>

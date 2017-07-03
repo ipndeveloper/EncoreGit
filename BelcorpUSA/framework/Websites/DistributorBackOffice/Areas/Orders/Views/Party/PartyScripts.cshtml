@@ -1,0 +1,227 @@
+﻿@using Microsoft.Ajax.Utilities
+<!-- PARTY SCRIPT PARTIAL -->
+<script type="text/javascript">
+	var partyPendingChanges = false;
+	var partyIsBeingSaved = false;
+	var ignorePartyState = false;
+	var interruptedBtn = null;
+	var waitSaveAttempts = 0;
+	
+	window.onbeforeunload = function () {
+		if (partyPendingChanges && !ignorePartyState) {
+			return '@Html.JavascriptTerm("DWSPartyChangesLeaveConfirmation", "Your party has unsaved changes.  Are you sure you wish to proceed?")';
+		}
+	};
+
+	function successfulSaveCallback() {
+		partyHasChanges(false);
+		updatePartySaveState('saved');
+		resetIgnorePartyState();
+	}
+
+	function failureSaveCallback(response) {
+		//hideLoading(t);
+		showMessage(response.message, true);
+	}
+	
+	function save(successRedirectUrl, successCallback, failureCallback) {
+		if(partyIsBeingSaved) {
+			return;
+		}
+
+		partyIsBeingSaved = true;
+		showLoading($('a#savePartyButton'));
+		updatePartySaveState('saving');
+
+		$.post('@Href("~/Orders/Party/Save")', function(response) {
+			if (response.result) {
+				resetSavingState();
+				if (successCallback != undefined && successCallback != null) {
+					successCallback(response);
+				}
+				if (successRedirectUrl != undefined) {
+					window.location.href = successRedirectUrl;
+				}
+			} else {
+				resetSavingState();
+				if (failureCallback != undefined && failureCallback != null) {
+					failureCallback(response);
+				}
+			}
+		});
+	}
+
+	function resetSavingState() {
+		partyIsBeingSaved = false;
+		hideLoading($('a#savePartyButton'));
+	}
+
+	function removePartyPendingClassFromAllOrderItems() {
+		$(".partyPendingItem").removeClass("partyPendingItem");
+	}
+
+	function partyAutoSave() {
+		if (!partyIsBeingSaved) {
+			save(null, successfulSaveCallback, failureSaveCallback);
+		}
+		scheduleAutoSave();
+	}
+	
+	function scheduleAutoSave() {
+		window.setTimeout(partyAutoSave, 360000);
+	}
+
+	var partySaveMessage = new Array(
+		'@Html.JavascriptTerm("DWS_Party_NoPendingChanges","No pending changes.")', 
+		'@Html.JavascriptTerm("DWS_Party_PendingChangesMessage","Your party has pending changes.")', 
+		'@Html.JavascriptTerm("DWSPartySavingChangesMessage","Saving party changes...")'
+	);
+
+	function partyHasChanges(changes) {
+		partyPendingChanges = changes;
+		if (changes) {
+			updatePartySaveState('pending');
+		} else {
+			updatePartySaveState('saved');
+		}
+	}
+	
+	function updatePartySaveState(state) {
+		$('div#partyChangesMessage').removeClass();
+		switch (state) {
+		case 'saved':
+			$('div#partyChangesMessage').text(partySaveMessage[0]);
+			$('div#partyChangesMessage').addClass('saveGood');
+			removePartyPendingClassFromAllOrderItems();
+			$(document).trigger('successful');
+			$('a#savePartyButton').hide();
+			break;
+		case 'pending':
+			$('div#partyChangesMessage').text(partySaveMessage[1]);
+			$('div#partyChangesMessage').addClass('pendingChanges');
+			$('a#savePartyButton').show();
+			break;
+		case 'saving':
+			$('div#partyChangesMessage').text(partySaveMessage[2]);
+			$('div#partyChangesMessage').addClass('saveInProgress');
+			break;                
+		}
+	}
+		
+	function handleGlobalClickEvent(event, button) {
+		if(!(button instanceof jQuery)) {
+			button = $(button);
+		}
+		
+		// Ignore any button that has these classes, or is in the cart model container div.
+		if(button.hasClass('willSaveOrder') 
+			|| button.hasClass('waitOnPendingSave')
+			|| button.parents('div#cartModelContainer').length) {
+			
+			return;
+		}
+		else if ((partyPendingChanges || partyIsBeingSaved) && !ignorePartyState) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+
+			handleUnsavedChangesModalClick(button);
+		}
+	}
+	
+	function resetIgnorePartyState() {
+		ignorePartyState = false;
+	}
+		
+	function handleUnsavedChangesModalClick(button) {
+
+		switch (button.attr('id')) {
+		case 'btnStayOnParty':
+			$('#unsavedChangesModal').jqmHide();
+			interruptedBtn = null;
+			break;
+		case 'btnSaveParty':
+			$('#unsavedChangesModal').jqmHide();
+			save(undefined, successfulModalSave, function (response) { showMessage(response.message, true); });
+			break;
+		case 'btnLeaveParty':
+			$('#unsavedChangesModal').jqmHide();
+			ignorePartyState = true;
+					
+			if(interruptedBtn.attr('href')) {
+				window.location = interruptedBtn.attr('href');
+			}
+
+			interruptedBtn.click();
+			interruptedBtn = null;
+					
+			break;
+		default :
+			interruptedBtn = button;
+			$('#unsavedChangesModal').jqmShow();
+			break;
+		}
+	}
+		
+	function successfulModalSave(){
+		successfulSaveCallback();
+		ignorePartyState = true;
+			
+		if(interruptedBtn.attr('href')) {
+			window.location = interruptedBtn.attr('href');
+		}
+
+		interruptedBtn.click();
+		interruptedBtn = null;
+	}
+
+	$(function () {
+		@{ var partyHasChanges = (ViewBag.PartyHasChanges != null && (bool)ViewBag.PartyHasChanges) ? "true" : "false"; }
+		partyHasChanges(@partyHasChanges);
+		
+		$('a.UI-icon-container').addClass('waitOnPendingSave');
+		$('a.RemoveOrderItem').addClass('waitOnPendingSave');
+		$('a#btnContinue').addClass('waitOnPendingSave');
+		$('a.updateCart').addClass('waitOnPendingSave');
+		$('div.Crumbs a').addClass('waitOnPendingSave');
+		$('a.directShip').addClass('waitOnPendingSave');
+		$('a.removeGuest').addClass('waitOnPendingSave');
+		$('a.partyBooking').addClass('waitOnPendingSave');
+		
+		$('a#btnContinue').addClass('willSaveOrder');
+		$('a#savePartyButton').addClass('willSaveOrder');
+
+		$('a#savePartyButton').click(function () {
+			save(undefined, successfulSaveCallback, failureSaveCallback);
+		});
+		
+		$('.waitOnPendingSave').live('click', function () {
+			var $this = $(this);
+			if (partyIsBeingSaved) {
+				$(document).delegate('body','successful', function () {
+					$this.trigger('click');
+				});
+				
+				return false;
+			} else {
+				return true;
+			}
+		});
+
+		scheduleAutoSave();
+		
+		$('#unsavedChangesModal').jqm({ modal: false,
+			onShow: function (h) {
+				h.w.css({
+					top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+					left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+				}).fadeIn();
+			},
+			onHide: function (h) {
+				h.w.fadeOut(function() {
+					h.o.remove();
+				});
+			}
+		});
+	});
+
+</script>

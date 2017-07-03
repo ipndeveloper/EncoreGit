@@ -1,0 +1,2451 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Core.Cache</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Core.Cache.ICacheStatsCollector">
+      <summary>
+            Collects a cache's statistics.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementEvictions">
+      <summary>
+            Increments evicitons.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementEvictions(System.Int32)">
+      <summary>
+            Increments evicitons by <paramref name="count" />.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementEvictionWorkers">
+      <summary>
+            Increments eviciton workers.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.DecrementEvictionWorkers">
+      <summary>
+            Decrements eviction workers.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementExpired">
+      <summary>
+            Increments expirations.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementHits">
+      <summary>
+            Increments hits (for hit ratio).
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementReadAttempts">
+      <summary>
+            Increments read attempts. This is the base of various ratios.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementRemoves">
+      <summary>
+            Increments removals.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheStatsCollector.IncrementWrites">
+      <summary>
+            Increments writes.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.IActiveCacheStatsCollector">
+      <summary>
+            Collects an active cache's statistics.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.IActiveCacheStatsCollector.IncrementResolves">
+      <summary>
+            Increments the number of items resolved.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2">
+      <summary>
+            Local memory cache implementation that keeps only the most recently used
+            items in memory and actively resolves missing items.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.MruLocalMemoryCache`2">
+      <summary>
+            Local memory cache implementation that keeps only the most recently used
+            items in memory.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICache`2">
+      <summary>
+            Interface for cache objects.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.TryAdd(`0,`1)">
+      <summary>
+            Tries to add an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item's representation</param>
+      <returns>true if added; otherwise false.</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.TryUpdate(`0,`1,`1)">
+      <summary>
+            Tries to update an expected item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item</param>
+      <param name="expected">the expected value used for comparison</param>
+      <returns>true if the item was equal to the expected value and replaced; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.TryRemove(`0,`1@)">
+      <summary>
+            Tries to remove an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="removed">variable where the removed item will be returned upon success</param>
+      <returns>true if the item was removed; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.TryGet(`0,`1@)">
+      <summary>
+            Tries to get an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item was retrieved; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.FlushAll">
+      <summary>
+            Flushes all items from the cache.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.CreateAxis``1(System.String,NetSteps.Encore.Core.Representation.IRepresentation{`1,``0})">
+      <summary>
+            Creates a cache axis.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <param name="transform">a transform for getting axis keys from representations</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.GetAxis``1(System.String)">
+      <summary>
+            Gets a cache axis by name.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICache`2.TryGetOnAxis``1(System.String,``0,`1@)">
+      <summary>
+            Tries to get an item by an axis key.
+            </summary>
+      <typeparam name="AK">axis key type AK</typeparam>
+      <param name="axisName">the name of the axis</param>
+      <param name="axisKey">the axis key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item is present in the cache; otherwise false</returns>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICache`2.Name">
+      <summary>
+            The Cache's name. Names must be unique within a process in order 
+            to differentiate the performance counters that provide performance metrics.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheMany`2">
+      <summary>
+            Interface for cache objects.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryAddMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{`0}@)">
+      <summary>
+            Tries to add items.
+            </summary>
+      <param name="values">The items</param>
+      <param name="failedKeys">the keys of items that were not added</param>
+      <returns>true if all added; otherwise false.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryAddAny(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+      <summary>
+            Tries to add items.
+            </summary>
+      <param name="values">The items</param>
+      <returns>true if any added; otherwise false.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryUpdateMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+      <summary>
+            Tries to update the expected items.
+            </summary>
+      <param name="values">the items</param>
+      <param name="expected">the expected values used for comparison</param>
+      <returns>true if all of the items were equal to the expected values and replaced; otherwise false</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+      <requires exception="T:System.InvalidOperationException" csharp="Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(expected) == Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Count(expected) = Count(values)">System.Linq.Enumerable.Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(expected) == System.Linq.Enumerable.Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.InvalidOperationException">!(expected.Count() == values.Count())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryRemoveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Tries to remove an item.
+            </summary>
+      <param name="keys">the item's keys</param>
+      <param name="removed">variable where the removed items will be returned upon success</param>
+      <returns>true if the items were removed; otherwise false</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryGetMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Tries to get items.
+            </summary>
+      <param name="keys">the item's keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>true if the items were retrieved; otherwise false</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheMany`2.TryGetAny(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Tries to get any of the items.
+            </summary>
+      <param name="keys">the item's keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>true if any of the items were retrieved; otherwise false</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String)">
+      <summary>
+            Creates a new instance using the default cache options.
+            </summary>
+      <param name="name">the cache's name</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance using the default cache options.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="evictionManager">eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="evictionManager != null" vb="evictionManager &lt;&gt; Nothing">evictionManager != null</requires>
+      <exception cref="T:System.ArgumentNullException">evictionManager == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <param name="evictionManager">eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="evictionManager != null" vb="evictionManager &lt;&gt; Nothing">evictionManager != null</requires>
+      <exception cref="T:System.ArgumentNullException">evictionManager == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.ICacheStatsCollector)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="stats">statistics collector</param>
+      <param name="options">options</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.ICacheStatsCollector,NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="stats">statistics collector</param>
+      <param name="options">options</param>
+      <param name="evictionManager">eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryAdd(`0,`1)">
+      <summary>
+            Tries to add an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item's representation</param>
+      <returns>true if added; otherwise false.</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryUpdate(`0,`1,`1)">
+      <summary>
+            Tries to update an expected item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item</param>
+      <param name="expected">the expected value used for comparison</param>
+      <returns>true if the item was equal to the expected value and replaced; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryRemove(`0,`1@)">
+      <summary>
+            Tries to remove an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="removed">variable where the removed item will be returned upon success</param>
+      <returns>true if the item was removed; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.InternalTryRemove(`0,`1@)">
+      <summary>
+            Removes the item without incrementing the remove counter.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryGet(`0,`1@)">
+      <summary>
+            Tries to get an item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item was retrieved; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.UpdateResolveCounters(NetSteps.Core.Cache.ICacheStatsCollector,NetSteps.Core.Cache.ResolutionKind)">
+      <summary>
+            Updates statistics when items are resolved.
+            </summary>
+      <param name="stats">statistics collector</param>
+      <param name="kind">kind of resolution</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.UpdateResolveManyCounters(NetSteps.Core.Cache.ICacheStatsCollector,NetSteps.Core.Cache.ResolutionManyKind,System.Int32)">
+      <summary>
+            Updates statistics when items are resolved.
+            </summary>
+      <param name="stats">statistics collector</param>
+      <param name="kind">kind of resolution</param>
+      <param name="increment">The number of resolved or failed items</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryResolveMissingItem(`0,`1@)">
+      <summary>
+            Provides subclasses the ability to resolve missing items.
+            Default behavior does nothing and returns false.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>ResolutionKind.Created or ResolutionKind.Resolved if the item was resolved; otherwise ResolutionKind.None</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryResolveManyMissingItems(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Provides subclasses the ability to resolve a group of missing items.
+            Default behavior does nothing and returns false.
+            </summary>
+      <param name="keys">the item's keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>ResolutionKind.Created or ResolutionKind.Resolved if the item was resolved; otherwise ResolutionKind.None</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.FlushAll">
+      <summary>
+            Flushes all items from the cache.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.EvictionReactorCallback(NetSteps.Encore.Core.Parallel.Reactor{`0},`0)">
+      <summary>
+            Invoked by the framework when eviction notifications arrive.
+            </summary>
+      <param name="reactor">the reactor</param>
+      <param name="key">the key to be evicted</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.PerformDispose(System.Boolean)">
+      <summary>
+            Performs dispose logic.
+            </summary>
+      <param name="disposing">whether called from Dispose method</param>
+      <returns>true if disposed as a result of this call</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.CreateAxis``1(System.String,NetSteps.Encore.Core.Representation.IRepresentation{`1,``0})">
+      <summary>
+            Creates a cache axis.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <param name="transform">a transform for getting axis keys from representations</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.GetAxis``1(System.String)">
+      <summary>
+            Gets a cache axis by name.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryGetOnAxis``1(System.String,``0,`1@)">
+      <summary>
+            Tries to get an item by an axis key.
+            </summary>
+      <typeparam name="AK">axis key type AK</typeparam>
+      <param name="axisName">the name of the axis</param>
+      <param name="axisKey">the axis key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item is present in the cache; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryAddMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{`0}@)">
+      <summary>
+            Tries to add items.
+            </summary>
+      <param name="values">the items representations</param>
+      <param name="failedKeys">the items keys that we unable to be added</param>
+      <returns>true if added; otherwise false.</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryAddMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{`0}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryAddMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{`0}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryAddAny(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+      <summary>
+            Tries to add items.
+            </summary>
+      <param name="values">the items representations</param>
+      <returns>true if added; otherwise false.</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryAddAny(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryAddAny(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryUpdateMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+      <summary>
+            Tries to add items.
+            </summary>
+      <param name="values">the items representations</param>
+      <param name="expected">the expected values used for comparison</param>
+      <returns>true if all updated; otherwise false.</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryUpdateMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="values != null" vb="values &lt;&gt; Nothing">values != null</requires>
+      <exception cref="T:System.ArgumentNullException">values == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryUpdateMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Any(values)">System.Linq.Enumerable.Any&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(values.Any())</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryUpdateMany(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})" inheritedFromTypeName="ICacheMany" exception="T:System.InvalidOperationException" csharp="Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(expected) == Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)" vb="Count(expected) = Count(values)">System.Linq.Enumerable.Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(expected) == System.Linq.Enumerable.Count&lt;System.Collections.Generic.KeyValuePair&lt;K, R&gt;&gt;(values)</requires>
+      <exception cref="T:System.InvalidOperationException">!(expected.Count() == values.Count())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryRemoveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Removes items from the cache
+            </summary>
+      <param name="keys">the items keys</param>
+      <param name="removed">the items removed</param>
+      <returns>true if the items were removed; otherwise false</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryRemoveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryRemoveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryGetMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Tries to get items.
+            </summary>
+      <param name="keys">the items keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>true if all of the items were retrieved; otherwise false</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryGetMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryGetMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.TryGetAny(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)">
+      <summary>
+            Tries to get any of the items.
+            </summary>
+      <param name="keys">the item's keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>true if any of the items were retrieved; otherwise false</returns>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryGetAny(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheMany`2.TryGetAny(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1}@)" inheritedFromTypeName="ICacheMany" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.InternalCache">
+      <summary>
+            The internal cache.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.InitializationTimeStamp">
+      <summary>
+            A timestamp indicating when the Cache was initialized.  Useful for internal housekeeping.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.Name">
+      <summary>
+            The cache's name. Must be unique within the process.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.CacheDepth">
+      <summary>
+            Gets the cache's depth.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.Count">
+      <summary>
+            Gets the number of items in the cache.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.CacheEvictions">
+      <summary>
+            Gets the number of items evicted from the cache.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.CacheHits">
+      <summary>
+            Gets the number of cache hits.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.CacheMisses">
+      <summary>
+            Gets the number of cache misses.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.EvictionThreshold">
+      <summary>
+            Gets the threshold at which concurrent eviction threads are 
+            launched.
+            </summary>
+      <remarks>
+            When the threshold is exceeded (cach count)
+            concurrent eviction workers will be started to remove the
+            least-recently-used items from the cache.
+            </remarks>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.SynchronizedEvictionThreshold">
+      <summary>
+            Gets the threshold at which the caller's thread will be borrowed
+            to process evictions.
+            </summary>
+      <remarks>
+            When the threshold is exceeded the caller's thread will be borrowed 
+            to process evictions. This threshold prevents the cache from growing
+            when it encounters heavy writes of unique items greatly exceeding
+            the eviction threshold. It limits the cache's growth when there are 
+            more writer threads than eviction workers.
+            </remarks>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.EvictionsPerSynchronizedWorker">
+      <summary>
+            Number of evictions processed per synchronized eviction event.
+            </summary>
+      <remarks>
+            If the synchronization threshold is exceeded then a calling
+            thread is borrowed to process evictions. This setting 
+            indicates the max number of evictions the borrowed thread
+            should process before returning the thread to the caller.
+            </remarks>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruLocalMemoryCache`2.Options">
+      <summary>
+            The Options governing the behavior of this Cache.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.MruLocalMemoryCache`2.Item">
+      <summary>
+            Class representing a cached item.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.Item.#ctor(`0,`1,System.Int32,System.TimeSpan)">
+      <summary>
+            Constructs a new Cache Item.
+            </summary>
+      <param name="key">The cache key.</param>
+      <param name="value">The cached value.</param>
+      <param name="revision">Cache item revision.</param>
+      <param name="lifespan">The TTL of the cached item.</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.ICacheItemResolver{`0,`1})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.ICacheItemResolver{`0,`1},NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <param name="manager">a cache eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.ICacheItemResolver{`0,`1})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.ICacheItemResolver{`0,`1},NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <param name="manager">a cache eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.IActiveCacheStatsCollector,NetSteps.Core.Cache.ICacheItemResolver{`0,`1})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <param name="stats">statistics collector</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="stats != null" vb="stats &lt;&gt; Nothing">stats != null</requires>
+      <exception cref="T:System.ArgumentNullException">stats == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.#ctor(System.String,NetSteps.Core.Cache.MruCacheOptions,NetSteps.Core.Cache.IActiveCacheStatsCollector,NetSteps.Core.Cache.ICacheItemResolver{`0,`1},NetSteps.Core.Cache.ICacheEvictionManager)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="name">the cache's name</param>
+      <param name="options">options</param>
+      <param name="stats">statistics collector</param>
+      <param name="resolver">a cache item resolver used to resolve missing
+            items.</param>
+      <param name="manager">a cache eviction manager</param>
+      <requires exception="T:System.ArgumentNullException" csharp="name != null" vb="name &lt;&gt; Nothing">name != null</requires>
+      <exception cref="T:System.ArgumentNullException">name == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="name.Length &gt; 0" vb="name.Length &gt; 0">name.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">name.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="stats != null" vb="stats &lt;&gt; Nothing">stats != null</requires>
+      <exception cref="T:System.ArgumentNullException">stats == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="resolver != null" vb="resolver &lt;&gt; Nothing">resolver != null</requires>
+      <exception cref="T:System.ArgumentNullException">resolver == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.TryResolveMissingItem(`0,`1@)">
+      <summary>
+            Tries to resolve a missing item from the cache by delegating to the
+            resolver.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>ResolutionKind.Created or ResolutionKind.Resolved if the item was resolved; otherwise ResolutionKind.None</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.TryResolveManyMissingItems(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Tries to resolve missing items from the cache by delegating to the resolver.
+            </summary>
+      <param name="keys">the items keys</param>
+      <param name="values">variable where the items will be returned upon success</param>
+      <returns>ResolutionManyKind.Created or ResolutionManyKind.Resolved if all of the items were resolved or ResolutionManyKind.PartiallyResolved if some of the items were resolved; otherwise ResolutionManyKind.None</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.UpdateResolveCounters(NetSteps.Core.Cache.ICacheStatsCollector,NetSteps.Core.Cache.ResolutionKind)">
+      <summary>
+            Updates statistics when items are resolved.
+            </summary>
+      <param name="stats">statistics collector</param>
+      <param name="kind">kind of resolution</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveMruLocalMemoryCache`2.PerformDispose(System.Boolean)">
+      <summary>
+            Overridden to cleanup the bound events of the internal timer if required.
+            </summary>
+      <param name="disposing" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheItemIdentifier`2">
+      <summary>
+            Abstract base class implementation of ICacheItemIdentifier&lt;I,K&gt;
+            </summary>
+      <typeparam name="I">item type I</typeparam>
+      <typeparam name="K">key type K</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheItemIdentifier`2">
+      <summary>
+            Gets an identity key from a cache item. An identity key
+            uniquely identifies an item among items of the same type.
+            </summary>
+      <typeparam name="I">item type I</typeparam>
+      <typeparam name="K">key type K</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheItemIdentifier`2.GetIdentityKey(`0)">
+      <summary>
+            Gets an item's identity key.
+            </summary>
+      <param name="item">the item</param>
+      <returns>the item's key</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemIdentifier`2.GetIdentityKey(`0)">
+      <summary>
+            Gets an item's identity key.
+            </summary>
+      <param name="item">the item</param>
+      <returns>the item's key</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemIdentifier`2.PeformGetIdentityKey(`0)">
+      <summary>
+            Overriden by subclasses to get an item's identity key.
+            </summary>
+      <param name="item">the item</param>
+      <returns>the item's key</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.IdentifiableCacheItemIdentifier`2">
+      <summary>
+            Gets the identity key from identifiable items.
+            </summary>
+      <typeparam name="I">item type I</typeparam>
+      <typeparam name="IK">key type K</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.IdentifiableCacheItemIdentifier`2.PeformGetIdentityKey(`0)">
+      <summary>
+            Gets the identifiable item's identity key.
+            </summary>
+      <param name="item">the item</param>
+      <returns>the item's key</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheItemResolver`2">
+      <summary>
+            Abstract base class implementation of ICacheItemResolver&lt;K,R&gt;
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheItemResolver`2">
+      <summary>
+            Interface for objects that resolve items that are missing from the cache.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheItemResolver`2.TryResolve(`0,`1@)">
+      <summary>
+            Tries to resolve an item that is missing from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+      <requires exception="T:System.ArgumentNullException" csharp="(object)key != null" vb="((Object)key) &lt;&gt; Nothing">(object)key != null</requires>
+      <exception cref="T:System.ArgumentNullException">key == null</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheItemResolver`2.AttemptCount">
+      <summary>
+            Gets the number of items attempted.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheItemResolver`2.ResolveCount">
+      <summary>
+            Gets the number of items resolved.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.TryResolve(`0,`1@)">
+      <summary>
+            Tries to resolve an item that is missing from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheItemResolver`2.TryResolve(`0,`1@)" inheritedFromTypeName="ICacheItemResolver" exception="T:System.ArgumentNullException" csharp="(object)key != null" vb="((Object)key) &lt;&gt; Nothing">(object)key != null</requires>
+      <exception cref="T:System.ArgumentNullException">key == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.IncrementResolveSuccessCounter">
+      <summary>
+            Increments the counter tracking successful resolve attempts.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.IncrementResolveSuccessCounter(System.Int32)">
+      <summary>
+            Increments the counter tracking successful resolve attempts.
+            </summary>
+      <param name="increment" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.IncrementResolveAttemptCounter">
+      <summary>
+            Increments the counter tracking resolve attempts.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.IncrementResolveAttemptCounter(System.Int32)">
+      <summary>
+            Increments the counter tracking resolve attempts.
+            </summary>
+      <param name="increment" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheItemResolver`2.PerformTryResolve(`0,`1@)">
+      <summary>
+            Overriden by subclasses to try and resolve the item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item's value upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheItemResolver`2.AttemptCount">
+      <summary>
+            Gets the number of items attempted.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheItemResolver`2.ResolveCount">
+      <summary>
+            Gets the number of items resolved.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.DemuxCacheItemResolver`2">
+      <summary>
+            Implementation of the ICacheItemResolver interface that demultiplexes
+            resolution requests.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheItemResolver`2.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheItemResolver`2.PerformTryResolve(`0,`1@)">
+      <summary>
+            Overridden to demultiplex resolve attempts by multiple threads.
+            If requests are received for the same key within a request period,
+            all requests wait for the first caller to succeed and get the result
+            multiplexed back to each concurrent caller.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheItemResolver`2.DemultiplexedTryResolve(`0,`1@)">
+      <summary>
+            Tries to resolve an item's representation.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item's value upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheItemResolverDelegate`2">
+      <summary>
+            A delegate for resolving cache items.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="key">the key</param>
+      <param name="value">a reference to a variable that will receive the value upon success.</param>
+      <returns>
+        <em>true</em> if successful; otherwise <em>false</em>.</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.DelegatedDemuxCacheItemResolver`2">
+      <summary>
+            Cache item resolver that delegates the resolve to a delegate.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DelegatedDemuxCacheItemResolver`2.#ctor(NetSteps.Core.Cache.CacheItemResolverDelegate{`0,`1})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="dlg">a resolver delegate</param>
+      <requires exception="T:System.ArgumentNullException" csharp="dlg != null" vb="dlg &lt;&gt; Nothing">dlg != null</requires>
+      <exception cref="T:System.ArgumentNullException">dlg == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DelegatedDemuxCacheItemResolver`2.DemultiplexedTryResolve(`0,`1@)">
+      <summary>
+            Performs the resolve.
+            </summary>
+      <param name="key" />
+      <param name="value" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheManyItemResolver`2">
+      <summary>
+            Abstract base class implementation of ICacheItemManyResolver&lt;K,R&gt;
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheManyItemResolver`2">
+      <summary>
+            Interface for objects that resolve many items that are missing from the cache.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheManyItemResolver`2.TryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Tries to resolve many items that are missing from the cache.
+            </summary>
+      <param name="keys">the item's key</param>
+      <param name="values">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+      <requires exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheManyItemResolver`2.TryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Tries to resolve items that are missing from the cache.
+            </summary>
+      <param name="keys">the item's key</param>
+      <param name="values">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionManyKind" />
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheManyItemResolver`2.TryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)" inheritedFromTypeName="ICacheManyItemResolver" exception="T:System.ArgumentNullException" csharp="keys != null" vb="keys &lt;&gt; Nothing">keys != null</requires>
+      <exception cref="T:System.ArgumentNullException">keys == null</exception>
+      <requires inheritedFrom="M:NetSteps.Core.Cache.ICacheManyItemResolver`2.TryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)" inheritedFromTypeName="ICacheManyItemResolver" exception="T:System.ArgumentOutOfRangeException" csharp="Any&lt;K&gt;(keys)" vb="Any(keys)">System.Linq.Enumerable.Any&lt;K&gt;(keys)</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">!(keys.Any())</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheManyItemResolver`2.PerformTryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Overriden by subclasses to try and resolve the item.
+            </summary>
+      <param name="keys">the items keys</param>
+      <param name="values">variable to hold the items vales upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetEndianness">
+      <summary>
+            Indicates the Byte Order of values in a CacheNet packet
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetEndianness.BigEndian">
+      <summary>
+            The Byte Order is Big Endian
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetEndianness.LittleEndian">
+      <summary>
+            The Byte Order is Little Endian
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetMessage">
+      <summary>
+            Base class for CacheNet messages.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessage.#ctor(NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader)">
+      <summary>
+            Creates a new instance, with header information.
+            </summary>
+      <param name="header">the header</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessage.WriteToBuffer(NetSteps.Encore.Core.Buffers.IBufferWriter,System.Byte[],System.Int32@)">
+      <summary>
+            Writes the instance into the target buffer.
+            </summary>
+      <param name="writer">a writer</param>
+      <param name="target">the target buffer</param>
+      <param name="offset">offset where writing begins</param>
+      <returns>number of bytes written</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessage.ReadFromBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Reads the instance from the source buffer.
+            </summary>
+      <param name="reader">a reader</param>
+      <param name="source">a source buffeer</param>
+      <param name="offset">offset where reading begins</param>
+      <returns>number of bytes read</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessage.PerformReadFromBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Used by subclasses to read their own data from a source buffer.
+            </summary>
+      <param name="reader" />
+      <param name="source" />
+      <param name="offset" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessage.PerformWriteToBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Used by subclasses to write their own data to a target buffer.
+            </summary>
+      <param name="reader" />
+      <param name="target" />
+      <param name="offset" />
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetMessage.Header">
+      <summary>
+            Gets the message's header.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetMessage.ContextKeys">
+      <summary>
+            Gets the message's context keys.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader">
+      <summary>
+            Describes header information about a CacheNet Message
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.#ctor(NetSteps.Core.Cache.CacheNet.CacheNetEndianness,NetSteps.Core.Cache.CacheNet.CacheNetMessageKind,System.UInt32)">
+      <summary>
+            Constructs a new CacheNet message
+            </summary>
+      <param name="endianness">Indicates the endianess of the bytes when this message is written to a buffer</param>
+      <param name="messageKind">The kind of the underlying message payload.</param>
+      <param name="checksum">The checksum of the messge payload.</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.ReadFromBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Populates the CacheNetMessageHeader instance with data recieved on the buffer
+            </summary>
+      <param name="reader">The <see cref="T:NetSteps.Encore.Core.Buffers.IBufferReader" /> providing the correct endianess capabilties to read the message from the buffer</param>
+      <param name="source">The buffer containing the message data</param>
+      <param name="offset">The poition in the buffer to begin reading from.  This header type has a special purpose and expects this offset to be 8, the byte position following the Preamble check, which is generally performed by the Protocol.</param>
+      <returns>The number of bytes read from the buffer</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="reader != null" vb="reader &lt;&gt; Nothing">reader != null</requires>
+      <exception cref="T:System.ArgumentNullException">reader == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="source != null" vb="source &lt;&gt; Nothing">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="source.Length &gt; 0" vb="source.Length &gt; 0">source.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">source.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="offset &gt;= 0" vb="offset &gt;= 0">offset &gt;= 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">offset &lt; 0</exception>
+      <requires description="CacheNetMessageHeader expects to be the first reader of the buffer following the Preamble Check." exception="T:System.ArgumentOutOfRangeException" csharp="offset == 8" vb="offset = 8">offset == 8</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">offset != 8</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.WriteToBuffer(NetSteps.Encore.Core.Buffers.IBufferWriter,System.Byte[],System.Int32@)">
+      <summary>
+            Writes the message to the given buffer
+            </summary>
+      <param name="writer">The <see cref="T:NetSteps.Encore.Core.Buffers.IBufferWriter" /> providing the correct endianess capabilties to read the message from the buffer</param>
+      <param name="target">The buffer to write to</param>
+      <param name="offset">The position in the buffer to begin writting</param>
+      <returns>The number of bytes written</returns>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.MessageKind">
+      <summary>
+            The Kind of the underlying Message
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.Endianness">
+      <summary>
+            The Endianess that the Message follows when written or read from a buffer
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader.Checksum">
+      <summary>
+            The checksum value of the Message payload.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetProtocol">
+      <summary>
+            The Protocol for handling CacheNetMessags
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.Preamble">
+      <summary>
+            THe Preamble value for network messages communicating over this protocol
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.#ctor(NetSteps.Core.Cache.CacheEvictionManager)">
+      <summary>
+            Creates a new CacheNetProtocol
+            </summary>
+      <param name="evictionManager">The evictionManager to use when recieving eviction notifications</param>
+      <requires exception="T:System.ArgumentNullException" csharp="evictionManager != null" vb="evictionManager &lt;&gt; Nothing">evictionManager != null</requires>
+      <exception cref="T:System.ArgumentNullException">evictionManager == null</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.Initialize(NetSteps.Encore.Core.Net.INetEndpoint)">
+      <summary>
+            initialize this protocol using the given endpoint
+            </summary>
+      <param name="endpoint" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.TryDecodeMessage(System.Net.IPEndPoint,System.Byte[],System.Int32,System.Int32)">
+      <summary>
+            Attempts to decode a datagram recived as a byte array into a CacheNetMessage
+            </summary>
+      <param name="endpoint">The endpoint the message was recieved from</param>
+      <param name="buffer">The buffer containing the data</param>
+      <param name="offset">The offset to begin consuming the buffer from</param>
+      <param name="length">The amount of data to consume from the buffer</param>
+      <returns>A DecodedMessageResult indicating the success of the decode and if applicable, the decoded message</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.EncodeMessage(NetSteps.Core.Cache.CacheNet.CacheNetMessage)">
+      <summary>
+            Encodes the given message into a transmittable byte array
+            </summary>
+      <param name="message">The message to encode</param>
+      <returns>The encoded message</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.EncodeMessage(NetSteps.Core.Cache.CacheNet.CacheNetMessage,NetSteps.Core.Cache.CacheNet.CacheNetEndianness)">
+      <summary>
+            Encodes the given message into a transmittable byte array
+            </summary>
+      <param name="message">The message to encode</param>
+      <param name="endianness">The endianness with which to encode the given message</param>
+      <returns>The encoded message</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.HandleEndpointMessage(System.Net.IPEndPoint,System.DateTime,NetSteps.Core.Cache.CacheNet.CacheNetMessage)">
+      <summary>
+            Performs the required action against a received message.
+            </summary>
+      <param name="endpoint">The endpoint on which the message was received.</param>
+      <param name="timestamp">A timestamp indicating when the message was recieved</param>
+      <param name="message">The message recieved</param>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.IsFullDuplex">
+      <summary>
+            Indicates if the protocol is duplex; always true
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.CacheNetProtocol.IsThreadSafe">
+      <summary>
+            Indicates if this protocol is threadsafe; always true
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetMessageKind">
+      <summary>
+            Indicates CacheNet message kinds
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetMessageKind.None">
+      <summary>
+            None.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetMessageKind.ExpirationById">
+      <summary>
+            Indicates the message contains expiration(s) by ID.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetMessageKind.Heartbeat">
+      <summary>
+            Heartbeat sent by cache-net nodes periodically.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetMessageKind.Gossip">
+      <summary>
+            Reply to heartbeat; communicates known cache-net nodes
+            and their liveliness.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.CacheNetIdentityKind">
+      <summary>
+            Indicates identity kinds used in CacheNet
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetIdentityKind.Int32">
+      <summary>
+            Indicates the identity kind is Int32
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetIdentityKind.Int64">
+      <summary>
+            Indicates the identity kind is Int64
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetIdentityKind.String">
+      <summary>
+            Indicates the identity kind is String
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheNet.CacheNetIdentityKind.Guid">
+      <summary>
+            Indicates the identity kind is Guid
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage">
+      <summary>
+            CachNet message indicating cache expirations originating elsewhere on the 
+            network.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.#ctor(NetSteps.Core.Cache.CacheNet.CacheNetMessageHeader)">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <requires exception="T:System.InvalidOperationException" csharp="header.MessageKind == (NetSteps.Core.Cache.CacheNet.CacheNetMessageKind)1" vb="header.MessageKind = ((NetSteps.Core.Cache.CacheNet.CacheNetMessageKind)1)">header.MessageKind == (NetSteps.Core.Cache.CacheNet.CacheNetMessageKind)1</requires>
+      <exception cref="T:System.InvalidOperationException">header.MessageKind != CacheNetMessageKind.ExpirationById</exception>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.PerformReadFromBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Reads the message from the source buffer given.
+            </summary>
+      <param name="reader" />
+      <param name="source" />
+      <param name="offset" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.PerformWriteToBuffer(NetSteps.Encore.Core.Buffers.IBufferReader,System.Byte[],System.Int32@)">
+      <summary>
+            Writes the expirations to the target buffer.
+            </summary>
+      <param name="reader" />
+      <param name="target" />
+      <param name="offset" />
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.IdentityKind">
+      <summary>
+            Gets the expiration's identity kind.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.Int32Identities">
+      <summary>
+            Gets the expired identities (corresponding to CacheNetIdentityKind.Int32)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.Int64Identities">
+      <summary>
+            Gets the expired identities (corresponding to CacheNetIdentityKind.Int64)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.StringIdentities">
+      <summary>
+            Gets the expired identities (corresponding to CacheNetIdentityKind.String)
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.ExpirationByIdMessage.GuidIdentities">
+      <summary>
+            Gets the expired identities (corresponding to CacheNetIdentityKind.Guid)
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheNet.IKnownEndpoint">
+      <summary>
+            DTO for tracking known endpoints.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.IKnownEndpoint.IPAddress">
+      <summary>
+            Gets and sets the endpoint's ip address.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CacheNet.IKnownEndpoint.Port">
+      <summary>
+            Gets and sets the endpoint's port.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheStatsInstaller">
+      <summary>
+            Installs cache statistics performance counters
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheStatsInstaller.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheStatsInstaller.Install(System.Collections.IDictionary)">
+      <summary>
+            Performs the install
+            </summary>
+      <param name="stateSaver" />
+    </member>
+    <member name="F:NetSteps.Core.Cache.CacheStatsInstaller.components">
+      <summary>
+            Required designer variable.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheStatsInstaller.Dispose(System.Boolean)">
+      <summary> 
+            Clean up any resources being used.
+            </summary>
+      <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheStatsInstaller.InitializeComponent">
+      <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.Config.CacheConfigSection">
+      <summary>
+            Configuration section for cache settings.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.CDefaultMaxEvictionWorker">
+      <summary>
+            Default value for max concurrent eviction workers if not set in config.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.CDefaultListenForNetworkEvictions">
+      <summary>
+            Default value determining whether to listen for network evictions.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.PropertyName_maxEvictionWorkers">
+      <summary>
+            Property name for max concurrent eviction workers.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.PropertyName_listenForNetworkEvictions">
+      <summary>
+            Property name for listen-for network evictions.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.PropertyName_cacheNetInterfaces">
+      <summary>
+            Property name for cache net interfaces.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.PropertyName_namedCaches">
+      <summary>
+            Property name for named caches.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.CacheConfigSection.SectionName">
+      <summary>
+            Configuration section name for cache settings
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.Config.CacheConfigSection.NamedOrDefaultOptions``1(System.String)">
+      <summary>
+            Gets either the named set of options or the default options if named options don't exist.
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.CacheConfigSection.MaxEvictionWorkers">
+      <summary>
+            Indicates the maximum number of concurrent eviction workers the eviction manager
+            should schedule.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.CacheConfigSection.NamedCaches">
+      <summary>
+            Configurations for named caches.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.CacheConfigSection.Current">
+      <summary>
+            Gets the current configuration section.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.Config.NamedCacheConfigElement">
+      <summary>
+            Contains configuration for a named cache.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultConcurrentEvictionFactor">
+      <summary>
+            Default concurrent eviction factor.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultSynchronizedEvictionFactor">
+      <summary>
+            Default synchronized eviction factor.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultConcurrentEvictionWorkers">
+      <summary>
+            Default concurrent eviction workers.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultEvictionsPerSynchronizedWorker">
+      <summary>
+            Default evictions per synchronized worker.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultCacheItemLifespan">
+      <summary>
+            Default lifespan of cache items. Afterwhich items are evicted.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultCacheDepth">
+      <summary>
+            Default cache depth.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CDefaultFullActive">
+      <summary>
+            Default FullActive setting
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.Name">
+      <summary>
+            The cache's name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.ConcurrentEvictionFactor">
+      <summary>
+            Factor that determines when concurrent eviction threads are 
+            launched.
+            </summary>
+      <remarks>
+            This factor is combined with a cache's depth in order to
+            determine the cache threshold. When the threshold is exceeded
+            concurrent eviction workers will be started to remove the
+            least-recently-used items from the cache.
+            </remarks>
+      <setter>
+        <requires description="Eviction factor must be 1.0 or greater" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1.0" vb="value &gt;= 1">value &gt;= 1.0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1.0</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.SynchronizedEvictionFactor">
+      <summary>
+            Factor that determines when evictions become synchronous.
+            </summary>
+      <remarks>
+            This factor is combined with a cache's depth in order to
+            determine the cache synchronization threshold. When the 
+            threshold is exceeded the caller's thread will be borrowed 
+            to process evictions.
+            </remarks>
+      <setter>
+        <requires description="Eviction factor must be 1.0 or greater" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1.0" vb="value &gt;= 1">value &gt;= 1.0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1.0</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.EvictionsPerSynchronizedWorker">
+      <summary>
+            Number of evictions processed per synchronized eviction event.
+            </summary>
+      <remarks>
+            If the synchronization threshold is exceeded then a calling
+            thread is borrowed to process evictions. This setting 
+            indicates the max number of evictions the borrowed thread
+            should process before returning the thread to the caller.
+            </remarks>
+      <setter>
+        <requires description="Evictions per synchronized worker must be 1 or more" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1" vb="value &gt;= 1">value &gt;= 1</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CacheItemLifespan">
+      <summary>
+            Gets a cache item's lifespan.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.CacheDepth">
+      <summary>
+            Gets the cache's depth; after which evictions will be scheduled/processed.
+            </summary>
+      <setter>
+        <requires description="Cache depth must be greater than zero" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt; 0" vb="value &gt; 0">value &gt; 0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt;= 0</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.ContextKeys">
+      <summary>
+            Gets the cache's context keys.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Config.NamedCacheConfigElement.FullActive">
+      <summary>
+            Indicates if the Cache should be in Full Active mode, meaning should actively monitor and reload expiring cache items.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.Config.NamedCacheConfigElementCollection">
+      <summary>
+            Contains collection of NamedCacheConfigElements
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.Config.NamedCacheConfigElementCollection.PerformGetElementKey(NetSteps.Core.Cache.Config.NamedCacheConfigElement)">
+      <summary>
+            Gets an element's key; the Name property.
+            </summary>
+      <param name="element" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Core.Cache.DelegatedDemuxCacheManyItemResolver`2">
+      <summary>
+            Cache item resolver that delegates the resolve to a delegate.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="T:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2">
+      <summary>
+            Implementation of the ICacheManyItemResolver interface that demultiplexes
+            resolution requests.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2.PerformTryResolve(`0,`1@)">
+      <summary>
+            Overridden to demultiplex resolve attempts by multiple threads.
+            If requests are received for the same key within a request period,
+            all requests wait for the first caller to succeed and get the result
+            multiplexed back to each concurrent caller.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2.DemultiplexedTryResolve(`0,`1@)">
+      <summary>
+            Tries to resolve an item's representation.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item's value upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2.PerformTryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Overridden to demultiplex resolve attempts by multiple threads.
+            If requests are received for the same key within a request period,
+            all requests wait for the first caller to succeed and get the result
+            multiplexed back to each concurrent caller.
+            </summary>
+      <param name="keys">the item's key</param>
+      <param name="values">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionManyKind" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.DemuxCacheManyItemResolver`2.DemultiplexedTryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Tries to resolve many items representation.
+            </summary>
+      <param name="keys">the items keys</param>
+      <param name="values">variable to hold the item values upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DelegatedDemuxCacheManyItemResolver`2.#ctor(NetSteps.Core.Cache.CacheItemResolverDelegate{`0,`1},NetSteps.Core.Cache.CacheItemResolverDelegate{System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="dlg">a resolver delegate</param>
+      <param name="manyDlg">a many resolver delegate</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.DelegatedDemuxCacheManyItemResolver`2.DemultiplexedTryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary>
+            Performs the resolve.
+            </summary>
+      <param name="keys" />
+      <param name="values" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Core.Cache.DelegatedDemuxCacheManyItemResolver`2.DemultiplexedTryResolve(`0,`1@)">
+      <summary>
+            Performs the resolve.
+            </summary>
+      <param name="key" />
+      <param name="value" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheExtensions">
+      <summary>
+            Extensions over ICache&lt;,&gt;
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheExtensions.Get``2(NetSteps.Core.Cache.ICache{``0,``1},``0)">
+      <summary>
+            Gets an item's representation from the cache by the item's key.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="key">the item's key</param>
+      <returns>the item's cached representation</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheExtensions.Put``2(NetSteps.Core.Cache.ICache{``0,``1},``0,``1)">
+      <summary>
+            Puts an item's representation into the cache.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="key">the item's key</param>
+      <param name="representation">the item's representation</param>
+      <returns>the item's representation</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheAxis`3">
+      <summary>
+            Interface for accessing cache items on an axis other than the
+            item's key.
+            </summary>
+      <typeparam name="K">cache's key type K</typeparam>
+      <typeparam name="AK">axis key type AK</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheAxis`3.TryGet(`1,`2@)">
+      <summary>
+            Tries to get an item.
+            </summary>
+      <param name="axisKey">the item's axis key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item was retrieved; otherwise false</returns>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheAxis`3.Cache">
+      <summary>
+            Gets the cache over which this axis operates.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheAxisItemResolver`3">
+      <summary>
+            Interface for objects that resolve items that are missing from the cache
+            on an axis other than the item's key.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="AK">axis key type AK</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheAxisItemResolver`3.TryResolve(`1,`2@)">
+      <summary>
+            Tries to resolve an item that is missing from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheAxisItemResolver`3.ResolveCount">
+      <summary>
+            Gets the number of items resolved.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICachedList`1">
+      <summary>
+            Represents a list that will refresh its contents on a given interval
+            </summary>
+      <typeparam name="V">The type in the list</typeparam>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.Name">
+      <summary>
+            The List's name. 
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.TotalRefreshes">
+      <summary>
+            The total number of refresshes performed by this list
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.IsRefreshing">
+      <summary>
+            Indicates if the list is currently refreshing.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.RefreshesIn">
+      <summary>
+            The TimeSpan from this point in time that the List should refresh.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.RefreshesAfter">
+      <summary>
+            The DateTime after which the List should refresh.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.LastRefreshedOn">
+      <summary>
+            The DateTime the List last refreshed.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICachedList`1.RefreshInterval">
+      <summary>
+            The TimeSpan interval in which the List refreshes.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheEvictionManager">
+      <summary>
+            Interface for cache eviction managers.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheEvictionManager.AddEvictionMonitor(NetSteps.Core.Cache.ICacheEvictionMonitor)">
+      <summary>
+            Adds an eviction monitor.
+            </summary>
+      <param name="monitor">the monitor</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheEvictionManager.RemoveEvictionMonitor(System.Guid)">
+      <summary>
+            Removes an eviction monitor.
+            </summary>
+      <param name="key">the monitor's key</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheEvictionManager.AddEvictionCallback(System.Func{System.Boolean,System.Boolean})">
+      <summary>
+            Adds an eviction callback to be run on then next
+            eviction cycle.
+            </summary>
+      <param name="callback">Callback function taking a boolean
+            and returning a boolean. The parameter indicates whether
+            the call is synchrounous, the result indicates whether
+            the callback should be rescheduled.
+            </param>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheEvictionManager">
+      <summary>
+            Default eviction manager implementation.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.#ctor(System.Int32,System.Net.IPEndPoint)">
+      <summary>
+            Creates a new instance with a maximum number of eviction workers, on the
+            endpoint given.
+            </summary>
+      <param name="maxConcurrentEvictionWorkers" />
+      <param name="endpoint" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.AddEvictionMonitor(NetSteps.Core.Cache.ICacheEvictionMonitor)">
+      <summary>
+            Adds an eviction monitor.
+            </summary>
+      <param name="monitor">the monitor</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.RemoveEvictionMonitor(System.Guid)">
+      <summary>
+            Removes an eviction monitor.
+            </summary>
+      <param name="key">the monitor's key</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.AddEvictionCallback(System.Func{System.Boolean,System.Boolean})">
+      <summary>
+            Adds an eviction callback to be run on then next
+            eviction cycle.
+            </summary>
+      <param name="callback" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CacheEvictionManager.PerformDispose(System.Boolean)">
+      <summary>
+            Performs the instance's disposal.
+            </summary>
+      <param name="disposing" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheEvictionMonitor">
+      <summary>
+            Interface for cache eviction monitors.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheEvictionMonitor.OnEvictionNotification(System.String,System.Object)">
+      <summary>
+            Invoked by the framework when cache evictions arrive.
+            </summary>
+      <param name="contextKey">a context key</param>
+      <param name="evictionInfo">the eviction info</param>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheEvictionMonitor.RegistrationKey">
+      <summary>
+            Gets the monitor's registration key.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ICacheEvictionMonitor.ContextKeys">
+      <summary>
+            Gets the context keys identifying what the monitor is 
+            monitoring.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1">
+      <summary>
+            Default eviction monitor implementation.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.#ctor(System.Collections.Generic.IEnumerable{System.String},System.Action{NetSteps.Encore.Core.Parallel.Reactor{`0},`0})">
+      <summary>
+            Creates a new instance.
+            </summary>
+      <param name="contextKeys">context keys to be monitored</param>
+      <param name="reactor">reactor method that recieves eviction notification</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.OnEvictionNotification(System.String,System.Object)">
+      <summary>
+            Invoked by the framework when cache evictions arrive.
+            </summary>
+      <param name="contextKey">a context key</param>
+      <param name="evictionInfo">the eviction info</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.HandleUnrecognizedEvictionInfo(System.String,System.Object)">
+      <summary>
+            Invoked when unrecognized eviction info is received.
+            </summary>
+      <param name="contextKey" />
+      <param name="evictionInfo" />
+    </member>
+    <member name="M:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.PerformDispose(System.Boolean)">
+      <summary>
+            Performs disposal for the instance.
+            </summary>
+      <param name="disposing" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.RegistrationKey">
+      <summary>
+            Gets the monitor's registration key.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ReactiveCacheEvictionMonitor`1.ContextKeys">
+      <summary>
+            Gets the context keys identifying what the monitor is 
+            monitoring.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ResolutionKind">
+      <summary>
+            Enum that indicates a resolution kind.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionKind.None">
+      <summary>
+            None; the item was not resolved.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionKind.Resolved">
+      <summary>
+            Indicates the item was resolved.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionKind.Created">
+      <summary>
+            Indicates the item was created.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CodeContracts.ContractForICacheItemResolver`2">
+      <summary>
+            Contract class for ICacheItemResolve&lt;,&gt;
+            </summary>
+      <typeparam name="K">The key</typeparam>
+      <typeparam name="R">The value representation</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CodeContracts.ContractForICacheItemResolver`2.TryResolve(`0,`1@)">
+      <summary>
+            Tries to resolve an item that is missing from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>the resolution kind</returns>
+      <see cref="T:NetSteps.Core.Cache.ResolutionKind" />
+    </member>
+    <member name="P:NetSteps.Core.Cache.CodeContracts.ContractForICacheItemResolver`2.AttemptCount">
+      <summary>
+            Gets the number of items attempted.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.CodeContracts.ContractForICacheItemResolver`2.ResolveCount">
+      <summary>
+            Gets the number of items resolved.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheHerarchyManagement`2">
+      <summary>
+            Interface for managing a cache's hierarchy.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheHerarchyManagement`2.LinkFallbackCache(NetSteps.Core.Cache.ICache{`0,`1})">
+      <summary>
+            Links the current cache with a fallback cache.
+            </summary>
+      <param name="cache">a fallback cache</param>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ICacheManyExtensions">
+      <summary>
+            Extensions over ICacheMany&lt;,&gt;
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheManyExtensions.GetMany``2(NetSteps.Core.Cache.ICacheMany{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+      <summary>
+            Gets item representations from the cache by the items' keys.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="keys">the item's key</param>
+      <returns>the item's cached representation</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheManyExtensions.PutMany``2(NetSteps.Core.Cache.ICacheMany{``0,``1},System.Collections.Generic.IEnumerable{``1},System.Func{``1,``0})">
+      <summary>
+            Puts an item's representation into the cache.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="representations">the item's representation</param>
+      <param name="keySelector">Func to select the key for a given item</param>
+      <returns>the item's representation</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheManyExtensions.Get``2(NetSteps.Core.Cache.ICacheMany{``0,``1},``0)">
+      <summary>
+            Gets an item's representation from the cache by the item's key.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="key">the item's key</param>
+      <returns>the item's cached representation</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ICacheManyExtensions.Put``2(NetSteps.Core.Cache.ICacheMany{``0,``1},``0,``1)">
+      <summary>
+            Puts an item's representation into the cache.
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+      <param name="cache">the cache</param>
+      <param name="key">the item's key</param>
+      <param name="representation">the item's representation</param>
+      <returns>the item's representation</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ResolutionManyKind">
+      <summary>
+            Enum that indicates a resolution kind.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionManyKind.None">
+      <summary>
+            None; the items were not resolved.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionManyKind.Resolved">
+      <summary>
+            Indicates that all of the items were resolved.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionManyKind.Created">
+      <summary>
+            Indicates the item was created.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Core.Cache.ResolutionManyKind.PartiallyResolved">
+      <summary>
+            Indicates that some of the items were resolved.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CodeContracts.CotnractForICacheManyItemResolver`2">
+      <summary>
+            CodeContracts Class for ICacheManyItemResolver&lt;,&gt;
+            </summary>
+      <typeparam name="K">Key type</typeparam>
+      <typeparam name="R">representation type</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.CodeContracts.CotnractForICacheManyItemResolver`2.TryResolveMany(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}}@)">
+      <summary />
+      <param name="keys" />
+      <param name="values" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Core.Cache.CodeContracts.CotnractForICacheManyItemResolver`2.TryResolve(`0,`1@)">
+      <summary />
+      <param name="key" />
+      <param name="value" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Core.Cache.CodeContracts.CotnractForICacheManyItemResolver`2.AttemptCount">
+      <summary />
+    </member>
+    <member name="P:NetSteps.Core.Cache.CodeContracts.CotnractForICacheManyItemResolver`2.ResolveCount">
+      <summary />
+    </member>
+    <member name="T:NetSteps.Core.Cache.IIdentifiable`1">
+      <summary>
+            Interface for types that are uniquely identifiable by identity key type IK
+            </summary>
+      <typeparam name="IK">identity type IK</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.IIdentifiable`1.GetIdentity">
+      <summary>
+            Gets the instance's unique identity.
+            </summary>
+      <returns>the instance's identity key</returns>
+    </member>
+    <member name="T:NetSteps.Core.Cache.LocalMemoryCache`2">
+      <summary>
+            Local memory cache implementation of ICache
+            </summary>
+      <typeparam name="K">key type K</typeparam>
+      <typeparam name="R">representation type R</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.#ctor">
+      <summary>
+            Creates a new instance.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.TryAdd(`0,`1)">
+      <summary>
+            Tries to add an item to the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.TryUpdate(`0,`1,`1)">
+      <summary>
+            Tries to update a cache item.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the updated item</param>
+      <param name="expected">the cached item</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.TryRemove(`0,`1@)">
+      <summary>
+            Tries to remove an item from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="removed">variable to hold the removed item upon success</param>
+      <returns>true if successful; otherwise false</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.TryGet(`0,`1@)">
+      <summary>
+            Tries to get an item from the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">variable to hold the item upon success</param>
+      <returns>true if successful; otherwise false.</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.GetOrAdd(`0,`1)">
+      <summary>
+            Gets an existing item or adds an item to the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the item to add if not already present</param>
+      <returns>the item</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.GetOrAdd(`0,System.Func{`0,`1})">
+      <summary>
+            Gets an existing item or adds an item to the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="factory">a factory that produces the item to add if not already present</param>
+      <returns>the item</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.AddOrUpdate(`0,`1,System.Func{`0,`1,`1})">
+      <summary>
+            Adds an item to the cache if the key does not already exist, or updates the item already present in the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="value">the value to be added if not already present</param>
+      <param name="updateFactory">a factory that updates the item already present</param>
+      <returns>the added or updated item</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.AddOrUpdate(`0,System.Func{`0,`1},System.Func{`0,`1,`1})">
+      <summary>
+            Adds an item to the cache if the key does not already exist, or updates the item already present in the cache.
+            </summary>
+      <param name="key">the item's key</param>
+      <param name="valueFactory">a factory that produces the value to be added if not already present</param>
+      <param name="updateFactory">a factory that updates the item already present</param>
+      <returns>the added or updated item</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.FlushAll">
+      <summary>
+            Flushes all items from the cache.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.PerformDispose(System.Boolean)">
+      <summary>
+            Performs dispose logic.
+            </summary>
+      <param name="disposing">whether called from Dispose method</param>
+      <returns>true if disposed as a result of this call</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.CreateAxis``1(System.String,NetSteps.Encore.Core.Representation.IRepresentation{`1,``0})">
+      <summary>
+            Creates a cache axis.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <param name="transform">a transform for getting axis keys from representations</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.GetAxis``1(System.String)">
+      <summary>
+            Gets a cache axis by name.
+            </summary>
+      <typeparam name="AK">axisKey type AK</typeparam>
+      <param name="name">the axis name</param>
+      <returns>a cache axis</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.LocalMemoryCache`2.TryGetOnAxis``1(System.String,``0,`1@)">
+      <summary>
+            Tries to get an item by an axis key.
+            </summary>
+      <typeparam name="AK">axis key type AK</typeparam>
+      <param name="axisName">the name of the axis</param>
+      <param name="axisKey">the axis key</param>
+      <param name="value">variable where the item will be returned upon success</param>
+      <returns>true if the item is present in the cache; otherwise false</returns>
+    </member>
+    <member name="P:NetSteps.Core.Cache.LocalMemoryCache`2.Name">
+      <summary>
+            Gets the cache's name.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1">
+      <summary>
+            An active local memory implementation that will actively refresh itself.
+            This happens upon first access or subsequent access following expiration.
+            </summary>
+      <typeparam name="T">The type stored in the List</typeparam>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.#ctor">
+      <summary>
+            Constructs a new ActiveLocalMemoryCachedListBase with an Empty Name
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.#ctor(System.String)">
+      <summary>
+            Constructs a new ActiveLocalMemoryCachedListBase
+            </summary>
+      <param name="name">The name for this ActiveLocalMemoryCachedListBase</param>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.PerformRefresh">
+      <summary>
+            Delegates the collection of the List data
+            </summary>
+      <returns>The List contents for this instance</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.AfterListRefreshed">
+      <summary>
+            Allows an inheritor to perform some further logic after the List has refreshed
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Refresh">
+      <summary>
+            Forces an immediate refresh of the Lists contents
+            </summary>
+      <returns>True if the List was successfully refreshed otherwise False</returns>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.IndexOf(`0)">
+      <summary>
+            Returns the index of the given item in the List.
+            </summary>
+      <param name="item">The item to locate within the List</param>
+      <returns>The zero based index of the item if found, otherwise -1</returns>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &gt;= -1" vb="result &gt;= -1">result &gt;= -1</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.IndexOf(`0)" inheritedFromTypeName="IList" csharp="result &lt; this.Count" vb="result &lt; Me.Count">result &lt; this.Count</ensures>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Insert(System.Int32,`0)">
+      <summary>
+            This method is invalid due to the readonly nature of the list.
+            </summary>
+      <param name="index" />
+      <param name="item" />
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.Insert(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt;= this.Count" vb="index &lt;= Me.Count">index &lt;= this.Count</requires>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.RemoveAt(System.Int32)">
+      <summary>
+            This method is invalid due to the readonly nature of the list.
+            </summary>
+      <param name="index" />
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      <ensures inheritedFrom="M:System.Collections.Generic.IList`1.RemoveAt(System.Int32)" inheritedFromTypeName="IList" csharp="this.Count == old(this.Count) - 1" vb="Me.Count = old(Me.Count) - 1">this.Count == old(this.Count) - 1</ensures>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Add(`0)">
+      <summary>
+            This method is invalid due to the readonly nature of the list.
+            </summary>
+      <param name="item" />
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Add(`0)" inheritedFromTypeName="ICollection" csharp="this.Count &gt;= old(this.Count)" vb="Me.Count &gt;= old(Me.Count)">this.Count &gt;= old(this.Count)</ensures>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Clear">
+      <summary>
+            Supported for the IList interface.  
+            This will trigger an immediate refresh of the List.
+            </summary>
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Clear" inheritedFromTypeName="ICollection" csharp="this.Count == 0" vb="Me.Count = 0">this.Count == 0</ensures>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Contains(`0)">
+      <summary>
+            Indicates if the list contains the given item.
+            </summary>
+      <param name="item">The item to locate within the List</param>
+      <returns>True if the List contains the item, else False</returns>
+      <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.Contains(`0)" inheritedFromTypeName="ICollection" csharp="result ⇒ this.Count &gt; 0" vb="result Implies Me.Count &gt; 0">!result || this.Count &gt; 0</ensures>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.CopyTo(`0[],System.Int32)">
+      <summary>
+            Copies the contents of the list to the given Array.
+            </summary>
+      <param name="array">The Array to copy to</param>
+      <param name="arrayIndex">The point in the array in which to copy the List to.</param>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="array != null" vb="array &lt;&gt; Nothing">array != null</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &gt;= 0" vb="arrayIndex &gt;= 0">arrayIndex &gt;= 0</requires>
+      <requires inheritedFrom="M:System.Collections.Generic.ICollection`1.CopyTo(`0[],System.Int32)" inheritedFromTypeName="ICollection" csharp="arrayIndex &lt;= array.Length - this.Count" vb="arrayIndex &lt;= array.Length - Me.Count">arrayIndex &lt;= array.Length - this.Count</requires>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Remove(`0)">
+      <summary>
+            This method is invalid due to the readonly nature of the list.
+            </summary>
+      <param name="item" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.GetEnumerator">
+      <summary>
+            Gets an Enumerator over the contents of the List
+            </summary>
+      <returns>an Enumerator over the contents of the List</returns>
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.Generic.IEnumerable`1.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Name">
+      <summary>
+            The List's name. 
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.TotalRefreshes">
+      <summary>
+            The total number of refresshes performed by this list
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.IsRefreshing">
+      <summary>
+            Indicates if the list is currently refreshing.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.RefreshesIn">
+      <summary>
+            The TimeSpan from this point in time that the List should refresh.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.RefreshesAfter">
+      <summary>
+            The DateTime after which the List should refresh.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.LastRefreshedOn">
+      <summary>
+            The DateTime the List last refreshed.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.RefreshInterval">
+      <summary>
+            The TimeSpan interval in which the List refreshes.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Item(System.Int32)">
+      <summary>
+            Returns the item at the given index
+            </summary>
+      <param name="index">The zero based index of the item to return</param>
+      <returns>the item at the given index</returns>
+      <getter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.get_Item(System.Int32)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </getter>
+      <setter>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &gt;= 0" vb="index &gt;= 0">index &gt;= 0</requires>
+        <requires inheritedFrom="M:System.Collections.Generic.IList`1.set_Item(System.Int32,`0)" inheritedFromTypeName="IList" csharp="index &lt; this.Count" vb="index &lt; Me.Count">index &lt; this.Count</requires>
+      </setter>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.Count">
+      <summary>
+            The count of items in the List
+            </summary>
+      <getter>
+        <ensures inheritedFrom="M:System.Collections.Generic.ICollection`1.get_Count" inheritedFromTypeName="ICollection" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.IsReadOnly">
+      <summary>
+            Indicates if the List is read only.  Always True.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ModuleWireup">
+      <summary>
+            Wireup command. Performs default wireup for the module.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ModuleWireup.PerformWireup(NetSteps.Encore.Core.Wireup.IWireupCoordinator)">
+      <summary>
+            Wires up this module.
+            </summary>
+      <param name="coordinator" />
+    </member>
+    <member name="T:NetSteps.Core.Cache.MruCacheOptions">
+      <summary>
+            Options for MRU caches
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.ConcurrentEvictionFactor">
+      <summary>
+            Factor that determines when concurrent eviction threads are 
+            launched.
+            </summary>
+      <remarks>
+            This factor is combined with a cache's depth in order to
+            determine the cache threshold. When the threshold is exceeded
+            concurrent eviction workers will be started to remove the
+            least-recently-used items from the cache.
+            </remarks>
+      <setter>
+        <requires description="Eviction factor must be 1.0 or greater" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1.0" vb="value &gt;= 1">value &gt;= 1.0</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1.0</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.SynchronizedEvictionFactor">
+      <summary>
+            Factor that determines when evictions become synchronous.
+            </summary>
+      <remarks>
+            This factor is combined with a cache's depth in order to
+            determine the cache synchronization threshold. When the 
+            threshold is exceeded the caller's thread will be borrowed 
+            to process evictions.
+            </remarks>
+      <setter>
+        <requires description="Sychronized eviction factor must be greater than or equal to the concurrent eviction factor" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= this.ConcurrentEvictionFactor" vb="value &gt;= Me.ConcurrentEvictionFactor">value &gt;= this.ConcurrentEvictionFactor</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; ConcurrentEvictionFactor</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.EvictionsPerSynchronizedWorker">
+      <summary>
+            Number of evictions processed per synchronized eviction event.
+            </summary>
+      <remarks>
+            If the synchronization threshold is exceeded then a calling
+            thread is borrowed to process evictions. This setting 
+            indicates the max number of evictions the borrowed thread
+            should process before returning the thread to the caller.
+            </remarks>
+      <setter>
+        <requires description="Evictions per synchronized worker must be 1 or more" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1" vb="value &gt;= 1">value &gt;= 1</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.CacheItemLifespan">
+      <summary>
+            Gets a cache item's lifespan.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.CacheDepth">
+      <summary>
+            Gets the cache's depth; after which evictions will be scheduled/processed.
+            </summary>
+      <setter>
+        <requires description="Cache depth must be greater than zero" exception="T:System.ArgumentOutOfRangeException" csharp="value &gt;= 1" vb="value &gt;= 1">value &gt;= 1</requires>
+      </setter>
+      <exception cref="T:System.ArgumentOutOfRangeException">value &lt; 1</exception>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.ContextKeys">
+      <summary>
+            Gets the cache's context keys.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.MruCacheOptions.FullActive">
+      <summary>
+            Indicates if the Cache should be in Full Active mode, meaning should actively monitor and reload expiring cache items.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ShouldEvict">
+      <summary>
+            Indicator flags used to return a status for an EvictionCandidate
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.Properties.Resources">
+      <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Properties.Resources.ResourceManager">
+      <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Core.Cache.Properties.Resources.Culture">
+      <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Core.Cache.CacheStats">
+      <invariant>_hRatio != null</invariant>
+      <invariant>_hRatioBase != null</invariant>
+      <invariant>_hitRatioInstance != null</invariant>
+      <invariant>_hitRatioBaseInstance != null</invariant>
+      <invariant>_readsPerSec != null</invariant>
+      <invariant>_writesPerSec != null</invariant>
+      <invariant>_removesPerSec != null</invariant>
+      <invariant>_expiresPerSec != null</invariant>
+      <invariant>_evictionsPerSec != null</invariant>
+      <invariant>_evictionWorkers != null</invariant>
+    </member>
+    <member name="M:NetSteps.Core.Cache.ActiveLocalMemoryCachedListBase`1.System#Collections#IEnumerable#GetEnumerator">
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_Model == this.get_Model" vb="result.get_Model = Me.get_Model">result.get_Model == this.get_Model</ensures>
+      <ensures inheritedFrom="M:System.Collections.IEnumerable.GetEnumerator" inheritedFromTypeName="IEnumerable" csharp="result.get_CurrentIndex == -1" vb="result.get_CurrentIndex = -1">result.get_CurrentIndex == -1</ensures>
+    </member>
+    <member name="T:NetSteps.Core.Cache.ActiveCacheStats">
+      <invariant>_resolveRatio != null</invariant>
+      <invariant>_resolveRatioBase != null</invariant>
+      <invariant>_resolveRatioInstance != null</invariant>
+      <invariant>_resolveRatioBaseInstance != null</invariant>
+      <invariant>_resolvesPerSec != null</invariant>
+    </member>
+    <member name="M:NetSteps.Core.Cache.MruLocalMemoryCache`2.EvictionCandidate.#ctor(NetSteps.Core.Cache.MruLocalMemoryCache{`0,`1}.Item,System.Int32)">
+      <requires csharp="item != null" vb="item &lt;&gt; Nothing">item != null</requires>
+    </member>
+  </members>
+</doc>

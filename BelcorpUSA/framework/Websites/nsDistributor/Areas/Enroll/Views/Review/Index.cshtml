@@ -1,0 +1,18 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Review.IndexModel
+@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+}
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.Partial("_CustomReviewInfo")
+	
+    @Html.ValidationSummary(true)
+
+    @Html.DisplayFor(m => m.Summary)
+
+    <p class="FormSubmit enrollSectionBtns">
+        <a id="btnSubmit" class="Button completeEnrollment" href="javascript:void(0);" data-click-submit="parent">
+            <span>@Html.Term("CompleteEnrollment", "Complete Enrollment")</span> </a>
+    </p>
+    @Html.AntiForgeryToken()
+}

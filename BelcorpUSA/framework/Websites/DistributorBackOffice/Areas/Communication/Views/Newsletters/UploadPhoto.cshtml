@@ -1,0 +1,66 @@
+﻿@model dynamic
+@{
+    ViewBag.Title = "Photo Cropper";
+}
+@section head{
+    <link rel="Stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/fileuploader.css")" />
+    <link rel="stylesheet" type="text/css" href="@Href("~/Resource/Content/CSS/jcrop.css")" />
+
+    <script type="text/javascript" src="@Href("~/Resource/Scripts/fileuploader.js")"></script>
+
+    <script src="@Href("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#btnSave').click(function () {
+                if (!$('#newsletterCrop').attr('src')) {
+                    showMessage('@Html.Term("PleaseUploadAPhoto", "Please upload a photo first.")', true);
+                    return false;
+                }
+
+               
+
+                $.post('@Href("~/Communication/Newsletters/SavePhoto")', {
+                    newsletterId: '@ViewBag.NewsletterId',
+                    coords: $('#newsletterCoords').val(),
+                    imagePath: $('#newsletterCrop').attr('src')
+                }, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Communication/Newsletter/PersonalizeContent", new {newsletterId = ViewBag.NewsletterId})';
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        });
+    </script>
+
+}
+@section title{
+Upload a Photo
+}
+@Html.Partial("PhotoCropper", new PhotoCropperModel()
+{
+    Content = null,
+    Folder = "NewsletterConsultantPhotos",
+    Mode = "newsletter",
+    OriginalHeight = 0,
+    OriginalWidth = 0,
+    TargetWidth = 130,
+    TargetHeight = 175
+})
+
+    <script src="@Href("~/Resource/Scripts/jcrop.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".qq-upload-button span.uploaderLabel").text("@Html.Term("ImgUploadHint", "Click here to upload a photo")");
+        });
+    </script>
+<div class="center mb10 mt10">
+<p>
+    <a id="btnSave" href="javascript:void(0);" class="Button"><span>@Html.Term("SavePhoto", "Save Photo") </span></a>
+    <img class="loading" src='@Url.Content("~/Resource/Content/Images/loader_36x36.gif")' alt="Saving..." style="height:31px;display:none;" />
+    <a href="@Href("~/Communication/Newsletters")" class="Button MoreOptions"><span>@Html.Term("Cancel", "Cancel") </span></a>
+</p>
+</div>

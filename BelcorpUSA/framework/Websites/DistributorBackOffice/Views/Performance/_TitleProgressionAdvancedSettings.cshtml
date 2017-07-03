@@ -1,0 +1,123 @@
+﻿<script type="text/javascript">
+	<!--
+	/*******************************************************************************************
+	* Customizable Options for Titles Progress KPI.
+	*******************************************************************************************/
+	//Companies organization titles in terms
+	var titles = [
+		'@Html.Term("TitleLevel1", "I")',
+		'@Html.Term("TitleLevel2", "II")',
+		'@Html.Term("TitleLevel3", "III")',
+		'@Html.Term("TitleLevel4", "IV")',
+		'@Html.Term("TitleLevel5", "V")',
+		'@Html.Term("TitleLevel6", "VI")',
+		'@Html.Term("TitleLevel7", "VII")',
+		'@Html.Term("TitleLevel8", "VIII")',
+		'@Html.Term("TitleLevel9", "IX")',
+		'@Html.Term("TitleLevel10", "X")',
+		'@Html.Term("TitleLevel11", "XI")',
+		'@Html.Term("TitleLevel12", "XII")'
+	],
+	qualifiers = [
+		[
+			['@Html.Term("TitleQualification1", "Personal Vol")', 'Monitary'],   //Qualification Term, Type ($ = Monitary, # = Integer, Boolean = Bool)
+			[0, 250, 300, 600, 900, 1200, 1200, 1200, 1200, 1200]                //Value requirements for each title level
+		],
+		[
+			['@Html.Term("TitleQualification2", "Team Vol")', 'Monitary'],
+			[0, 0, 1250, 2500, 5000, 7500, 7500, 7500, 7500, 7500]
+		],
+		[
+			['@Html.Term("TitleQualification3", "Active Legs")', 'Integer'],
+			[0, 1, 2, 2, 2, 3, 3, 3, 3, 3]
+		],
+		[
+			['@Html.Term("TitleQualification4", "Downline Volume")', 'Monitary'],
+			['NA', 'NA', 'NA', 0, 100000, 200000, 400000, 800000, 1500000, 4000000]
+		],
+		[
+			['@Html.Term("TitleQualification5", "TL Legs")', 'Integer'],
+			['NA', 'NA', 'NA', 1, 2, 3, 4, 5, 6, 7]
+		],
+		[
+			['@Html.Term("TitleQualification6", "New TL Last 12")', 'Integer'],
+			['NA', 'NA', 'NA', 1, 1, 1, 2, 2, 2, 2]
+		],
+		[
+			['@Html.Term("TitleQualification7", "Car")', 'Bool'],
+			['NA', 'NA', 'NA', 0, 1, 1, 1, 1, 1, 1]
+		]
+	];
+
+	var myChart = new FusionCharts({
+		type: 'Bar2D',    //Bar2D, Column2D, or Column3D
+		width: '100%',    //px by default, add a "%" to change to percentage
+		height: '230',    //px by default, add a "%" to change to percentage
+		id: 'AdvancedTitleChart',
+		debugMode: false
+	});
+
+	var 
+	/****************************************************************
+	* Graph Font Settings
+	****************************************************************/
+		fontColor = '9F9F9F',
+		fontFamily = '"Lucida Sans Unicode","Lucida Grande",sans-serif',
+		fontSize = '11',
+	/****************************************************************
+	* Graph General Color Settings (do not include '#')
+	****************************************************************/
+		barTopColor = '454545',          //Use with barBottomColor to create a gradient effect, if leave quotes empty with no color, each bar will have a different color	
+		barBottomColor = '777777',       //Creates a gradiant on the plotted bar, can leave empty ('') or set to the same as the barTopColor to have a solid color.
+		paidAsColor = '333333',          //Paid as line indicator line and the text, adjusts the font color and the line color, can not be independant.
+		titleColor = '333333',           //Career Title line indicator line and the text, adjusts the font color and the line color, can not be independant.
+		titleLinesColor = '9F9F9F',      //Title lines indicator line and the text, adjusts the font color and the line color, can not be independant.
+		zoneColorPaid = '6DB33F',        //Set the color for the Paid As Title zone line and font
+		zoneColorCareer = '6DB33F',      //Set the color for the Career Title zone line and font
+	/****************************************************************
+	* Graph Border Display Settings
+	****************************************************************/
+		graphBorderColor = 'cccccc',     //Color of the immediate border around the graph
+		graphBorderThickness = '2',      //Thickness of the immediate border around the graph
+	/****************************************************************
+	* Opacity Settings of graph elements (0 - 100)
+	****************************************************************/
+		plotInactiveOpacity = '15',      //Makes plotted bars opaque when there are qualifications that are not affecting the title until other qualifications are met.
+		plotOpacity = '100',             //Alpha transparency for the for the plotted bars on the graph
+		zoneOpacity1 = '10',             //Will apply to the either Paid As or Career Zone depending on which on is at a higher level
+		zoneOpacity2 = '10',             //Will apply to the either Paid As or Career Zone depending on which on is at a lower level
+	/****************************************************************
+	* Title Line Settings (width in pixels, dashed: '1' for Yes or '0' for No)
+	****************************************************************/
+		currentLineDashed = '1',         //Make the Paid As/Current Title line indicators dashed or solid
+		currentLineThickness = '2',      //Paid As/Current Title line indicator thickness
+		lineDashed = '1',                //Make the title line indicators dashed or solid
+		lineThickness = '1',             //Title line indicator line thickness in Pixels
+		lineOnTop = '1',                 //Show the title line indicators on top of or behind the bars (Does not effect position when using chart type "Column3D")      
+	/****************************************************************
+	* Turn on/off display settings ('1'=On, '0'=Off)
+	****************************************************************/
+		boldTitles = '0',                //Make the title terms and indicators (paid as, career) bold
+		showCurrentInLabel = '0',        //Display the users current value for each qualification next to the qualification label (i.e. "Personal Volume ($275)")
+		showNextValReq = '0',            //Show the value needed to meet the next level requirement.
+		showToolTip = '1',               //Show the current user value and the value remaining remaining to reach the next level in a popup on hover over bar in graph.
+	/****************************************************************
+	* Graph Padding and Margins (in pixels)
+	****************************************************************/
+		chartRightMargin = '30'          //Adjust to allow for a longer title term if it is getting cut off on the right side
+	/****************************************************************
+	* Style Effect settings
+	****************************************************************/
+	plotGradiantAngle = '180',       //0-360 Used if there is a varBottomColor value set...it adjusts the angle of the plotted bar gradient
+		useRoundEdges = '0',             //Adds a style to the bar to make it appear 3D
+	/****************************************************************
+	* Misc Settings (available in case, but are not likely to be used)
+	****************************************************************/
+		altColor = 'ffffff',             //Adjust the color of the alternating colors        	
+		altColorShow = '0',              //Display alternating color for the titles
+		titlesRotate = 'auto',           //Rotate title display [90deg even if not necessary='1', auto adjust if needed='auto' (Does not effect rotation when using chart type "Bar2D")	
+		titlesOnRight = '1',             //Display titles on right='1', display titles on left='0' (Does not effect location when using chart type "Bar2D").
+		toolTipBorderCol = '000000',     //Popup tool tip border line color
+		toolTipBgColor = 'ffffff';       //Popup tool tip background color
+	// -->     
+</script>

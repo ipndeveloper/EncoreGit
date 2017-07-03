@@ -1,0 +1,10 @@
+﻿<div class="checkOutSteps">
+    <ul class="inlineNav">
+        <li class="@(ViewContext.RouteData.Values["action"].ToString() == "Shipping" ? "UI-whiteBg activeCheckoutStep" : "")">@Html.Term("Shipping")</li>
+        <li class="@(ViewContext.RouteData.Values["action"].ToString() == "ShippingMethod" ? "UI-whiteBg activeCheckoutStep" : "")">@Html.Term("ShippingMethod", "Shipping Method")</li>
+        <li class="@(ViewContext.RouteData.Values["action"].ToString() == "Billing" ? "UI-whiteBg activeCheckoutStep" : "")">@Html.Term("Billing")</li>
+        <li class="@(ViewContext.RouteData.Values["action"].ToString() == "Confirmation" ? "UI-whiteBg activeCheckoutStep" : "")">@Html.Term("ConfirmOrder", "Confirm Order")</li>
+        <li class="@(ViewContext.RouteData.Values["action"].ToString() == "Receipt" ? "UI-whiteBg activeCheckoutStep" : "")">@Html.Term("Receipt")</li>
+    </ul>
+    <span class="clr"></span>
+</div>

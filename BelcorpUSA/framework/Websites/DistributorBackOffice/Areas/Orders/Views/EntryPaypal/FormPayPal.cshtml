@@ -1,0 +1,520 @@
+﻿<!-- Vista: Formulario para el manejo de operaciones de pasarela de pago con PayPal
+    Proyecto: nscore
+    Author: Juan Morales Olivares - CSTI * Año: 2016
+-->
+@{
+    ViewBag.Title = "PayPal";
+}
+<div id="ppplus" style="text-align: center; background-color: White; max-height: 300px;
+    overflow: hidden; z-index: 3;">
+</div>
+<div style="text-align: center; z-index: 4;">
+    <a href="javascript:void(0);" id="continueButton" style="display: inline-block;"
+        class="Button BigBlue">Confirmar Pagamento </a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" id="btnCancelarPay"
+            style="display: inline-block;" class="Button BigBlue  ">@Html.Term("Cancelar", "Cancelar")</a>
+</div>
+<div id="paymentWait" class="PModal WaitWin">
+    @Html.Term("PleaseWaitWhileWeProcessYourOrder", "Please wait while we process your order...")
+    <br />
+    <img src="@Href("~/Content/Images/processing.gif")" alt="@Html.Term("Processing", "processing...")" />
+    <br />
+    <p id="lblProcess" style="color: Aqua">
+    </p>
+</div>
+<script type="application/javascript">
+    var uri = "@ViewData["approval_url"].ToString()";
+    var uri_dec = decodeURIComponent(uri);
+    var scause="";
+    var errorForm="@ViewData["error_formpaypal"].ToString()";
+    
+    if(uri_dec.charAt(0)!='h' || errorForm!=""){
+        
+        var smessage = '@Html.Term("paymenterror", "inconvenientes al cargar el pago")';
+        var paymentConf = $('#sPaymentMethod').val();
+
+        var dataResul = { state: 'ERROR PROCESANDO PAGO',
+            message: smessage,
+            cause: scause,
+            paymentConfigID: paymentConf
+        };
+
+        $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+    }
+     
+    try{ 
+        var firstname=$('#txtName').val().trim();
+        var lastname=firstname.substring(firstname.indexOf(" ")+1, firstname.length).trim().toUpperCase();
+        firstname=firstname.substring(0, firstname.indexOf(" ")).trim().toUpperCase();
+
+        var typeNum=$('#txtTypeNumber').val();
+        var email=$('#txtEmail').val();
+        var numberCuota = $("#txtNumberCuotas").val();
+
+        var lang = "@ViewData["language"].ToString()";
+        var country = "@ViewData["country"].ToString()";
+        var mode = "@ViewData["mode"].ToString()";
+        var idtype = country+"_"+$("#sIdTypes option:selected").html();
+
+        var phoneNumber="@ViewData["phonenumber"].ToString()";
+
+        var ppp = PAYPAL.apps.PPP({ 
+                "approvalUrl": uri_dec,
+                "placeholder": "ppplus",
+                "payerFirstName": firstname,
+                "payerLastName": lastname,
+                "payerEmail": email,
+                "payerPhone": phoneNumber,
+                "payerTaxId": typeNum,
+                "payerTaxIdType": idtype,
+                "language": lang,
+                "country": country,
+                "mode": mode,
+                "buttonLocation": "outside",
+                "disableContinue": "continueButton" ,
+                "enableContinue": "continueButton",
+                "disallowRememberedCards": "true",
+                "merchantInstallmentSelection": numberCuota,
+                "merchantInstallmentSelectionOptional": "false",
+        });
+
+        
+
+    }catch(exc){
+        var smessage = '@Html.Term("paymenterror", "inconvenientes al cargar autorizacion el pago")' + "("+exc+")";
+        var paymentConf = $('#sPaymentMethod').val();
+
+        var dataResul = { state: 'ERROR_AUTHORIZE_PAY',
+            message: smessage,
+            cause: scause,
+            paymentConfigID: paymentConf
+        };
+
+        $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+    }
+</script>
+<script type="text/javascript">
+    var sResult;
+    var sExecuteActiva = 0;
+
+    $("#continueButton").click(function ()
+    {
+        $("#paymentWait").css({ 'display': "block", 'width': "700px", 'height': "510px", 'background-color': "gray", 'top': "0px", 'left': "200px", 'z-index': "5", 'opacity': "0.5" });
+        $("#paymentWait").show();
+        ppp.doContinue();
+        return false;
+    });
+
+    // Register postMessage Listener for the iframe. 
+    if (window.addEventListener)
+    {
+        window.addEventListener("message", messageListener, false);
+        //log("addEventListener successful", "debug");
+    } else if (window.attachEvent)
+    {
+        window.attachEvent("onmessage", messageListener);
+        //log("attachEvent successful", "debug");
+    } else
+    {
+        //log("Could not attach message listener", "debug");
+        throw new Error("Can't attach message listener");
+    }
+
+    function messageListener(event)
+    {
+
+        var st = "";
+
+
+        try
+        {
+            //this is how we extract the message from the incoming events, data format should look like 
+            //{"action":"inlineCheckout","checkoutSession":"error","result":"missing data in the credit card form”}
+
+            $('#PrePayPalLoadImg').hide();
+
+            var data = JSON.parse(event.data);
+            sResult = data.result;
+
+            if (sResult == "error" && data.action == "enableContinueButton")
+            {
+                $("#paymentWait").hide();
+                $("#continueButton").hide();
+            }
+
+            if (data.action == "onError")
+            {
+                $("#continueButton").show();
+                $("#paymentWait").hide();
+
+                var msgCause = data.cause;
+
+                var datosErroPayPal = { msgPayPal: msgCause };
+
+                $.ajax({
+                    url: '@Url.Action("SaveErroPayPalIFrame", "EntryPayPal")',
+                    type: 'GET',
+                    dataType: 'json',
+                    cache: false,
+                    data: datosErroPayPal,
+                    success: function (response)
+                    {
+                        var msgResponse="Error";
+                    }
+                });
+                
+
+            }
+
+            if (data.action == "enableContinueButton")
+            {
+
+                $("#continueButton").show();
+            }
+
+            if (data.action == "disableContinueButton")
+            {
+                $("#continueButton").hide();
+            }
+
+            if (data.action == "checkout" && sExecuteActiva == 0)
+            {
+                $("#paymentWait").show();
+                sExecuteActiva = 1;
+
+                var payerID = data.result.payer.payer_info.payer_id;
+                var dataPay = { payer_Id: payerID };
+
+                document.getElementById("lblProcess").innerText = '@Html.Term("ExecutePaymenPleaseWait", "Execute Payment, Wait to sending with PayPal ...")';
+
+                $.ajax({
+                    url: '@Url.Action("executePayment", "EntryPayPal")',
+                    type: 'POST',
+                    dataType: 'json',
+                    cache: false,
+                    data: dataPay,
+                    success: function (results)
+                    {
+                        try
+                        {
+                            if (results.state != undefined)
+                            {
+                                st = new String(results.state);
+                                st = st.toUpperCase();
+                            } else if (results.name != undefined)
+                            {
+                                st = new String(results.name);
+                                st = st.toUpperCase();
+                            } else
+                            {
+                                st = "ERROR_DATA";
+                            }
+
+
+                            if (st == "APPROVED")
+                            {
+                                var payment = $('#sPaymentMethod').val();
+                                var amountPay = $('#hdamountPay').val();
+
+                                var datos = {
+                                    paymentMethodId: payment
+                                };
+
+                                document.getElementById("lblProcess").innerText = '@Html.Term("SaveOrderPleaseWait", "Payment is Approved, wait save your order.....")';
+
+                                $.ajax({
+                                    url: '@Url.Action("SubmitOrder", "OrderEntry")',
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    cache: false,
+                                    data: datos,
+                                    success: function (response)
+                                    {
+                                        if (response.result)
+                                        {
+                                            var numberCuota = $("#txtNumberCuotas").val();
+
+                                            var dataResul = { name: '',
+                                                amount: amountPay,
+                                                orderID: response.orderNumber,
+                                                numCuotas: numberCuota
+                                            };
+
+                                            $('#PayPalPrePayment').load('@Url.Action("Pay_Approved", "EntryPayPal")', dataResul);
+
+                                        }
+                                        else
+                                        {
+                                            var smessage = response.message;
+                                            smessage = smessage.replace(/[^a-zA-Z 0-9.]+/g, ' ');
+                                            var paymentConf = $('#sPaymentMethod').val();
+
+                                            if (st == "APPROVED") st = "ERROR_SAVE_ORDER";
+
+                                            if (st == "")
+                                            {
+                                                st = "ERROR PROCESANDO PAGO (SUBMIT_ORDER)";
+                                                smessage = 'Error al aplicar SubmitOrder';
+                                                scause = "";
+                                            }
+
+                                            var dataResul = { state: st,
+                                                message: smessage,
+                                                cause: scause,
+                                                paymentConfigID: paymentConf
+                                            };
+
+                                            $('#paypalForm').load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                                        }
+                                    },
+                                    error: function (errFun)
+                                    {
+                                        var smessage = '@Html.Term("paymenterror", "Pago Realizado en PayPal--inconvenientes en el SubmitOrder")';
+                                        var paymentConf = $('#sPaymentMethod').val();
+
+                                        if (st == "APPROVED") st = "ERROR_SAVE_ORDER";
+
+                                        if (st == "")
+                                        {
+                                            st = "ERROR_PROCESANDO_PAGO_(SUBMIT_ORDER)";
+                                            smessage = errFun.toString();
+                                        }
+
+                                        var dataResul = { state: st,
+                                            message: smessage,
+                                            cause: scause,
+                                            paymentConfigID: paymentConf
+                                        };
+
+                                        $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                                    }
+                                });
+
+                            } else if (st == "PAYMENT_ALREADY_DONE")
+                            {
+                                var payment = $('#sPaymentMethod').val();
+
+                                var datos = {
+                                    paymentMethodId: payment
+                                };
+
+                                document.getElementById("lblProcess").innerText = '@Html.Term("SaveOrderPleaseWait", "Payment is Approved, wait save your order.....")';
+
+                                $.ajax({
+                                    url: '@Url.Action("SubmitOrder", "OrderEntry")',
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    cache: false,
+                                    data: datos,
+                                    success: function (response)
+                                    {
+                                        if (response.result)
+                                        {
+                                            var numberCuota = $("#txtNumberCuotas").val();
+
+                                            var dataResul = { name: '',
+                                                amount: amountPay,
+                                                orderID: response.orderNumber,
+                                                numCuotas: numberCuota
+                                            };
+
+                                            $('#PayPalPrePayment').load('@Url.Action("Pay_Approved", "EntryPayPal")', dataResul);
+
+                                        }
+                                        else
+                                        {
+                                            var smessage = response.message;
+                                            smessage = smessage.replace(/[^a-zA-Z 0-9.]+/g, ' ');
+                                            var paymentConf = $('#sPaymentMethod').val();
+
+                                            if (st == "PAYMENT_ALREADY_DONE") st = "ERROR_SUBMIT_ORDER";
+
+                                            if (st == "")
+                                            {
+                                                st = "ERROR PROCESANDO PAGO (SUBMIT_ORDER)";
+                                                smessage = 'Error al aplicar SubmitOrder';
+                                            }
+
+                                            var dataResul = { state: st,
+                                                message: smessage,
+                                                cause: scause,
+                                                paymentConfigID: paymentConf
+                                            };
+
+                                            $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+
+                                        }
+                                    },
+                                    error: function (errFun)
+                                    {
+                                        var smessage = '@Html.Term("paymenterror", "Pago Realizado en PayPal--inconvenientes en el SubmitOrder")';
+                                        var paymentConf = $('#sPaymentMethod').val();
+
+                                        if (st == "PAYMENT_ALREADY_DONE") st = "ERROR_SUBMIT_ORDER";
+
+                                        if (st == "")
+                                        {
+                                            st = "ERROR_PROCESANDO_PAGO_(SUBMIT_ORDER)";
+                                            smessage = errFun.toString();
+                                        }
+
+                                        var dataResul = { state: st,
+                                            message: smessage,
+                                            cause: scause,
+                                            paymentConfigID: paymentConf
+                                        };
+
+                                        $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                                    }
+                                });
+
+
+                            } else if (st == "INSTRUMENT_DECLINED")
+                            {
+
+                                var smessage = '@Html.Term("paymentdeclined", "Pago Declinado. Intente el proceso nuevamente")';
+                                var paymentConf = $('#sPaymentMethod').val();
+
+                                var dataResul = { state: st,
+                                    message: smessage,
+                                    paymentConfigID: paymentConf
+                                };
+
+                                $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+
+                            } else if (st == "ONERROR")
+                            {
+
+                                var smessage = '@Html.Term("paymenterror", "desvantagens em processamento de pagamentos")';
+                                var paymentConf = $('#sPaymentMethod').val();
+                                scause = results.cause;
+
+                                var dataResul = { state: st,
+                                    message: smessage,
+                                    cause: scause,
+                                    paymentConfigID: paymentConf
+                                };
+
+                                $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                            } else if (st == "OTHER_EXECUTE")
+                            {
+                                var nothing = "";
+                            }
+                            else
+                            {
+
+                                var smessage = '@Html.Term("paymenterror", "inconvenientes en el procesamiento del pago")';
+
+                                if (results.message != undefined)
+                                    smessage = results.message;
+
+                                var paymentConf = $('#sPaymentMethod').val();
+
+                                var dataResul = { state: st,
+                                    message: smessage,
+                                    cause: scause,
+                                    paymentConfigID: paymentConf
+                                };
+
+                                $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                            }
+                        } catch (excA)
+                        {
+
+                            var smessage = '@Html.Term("paymenterror", "desvantagens em processamento de pagamentos")' + "(" + excA + ")";
+                            var paymentConf = $('#sPaymentMethod').val();
+
+                            if (st == "APPROVED") st = "ERROR_EXECUTE_PAYMENT";
+
+                            if (st == "")
+                            {
+                                st = "ERROR_EXECUTE_PAYMENT"
+                                smessage = excA;
+                            }
+
+                            var dataResul = { state: st,
+                                message: smessage,
+                                cause: scause,
+                                paymentConfigID: paymentConf
+                            };
+
+                            $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                        }
+                    },
+                    error: function (errFn)
+                    {
+                        var smessage = '@Html.Term("paymenterror", "desvantagens em processamento de pagamentos")';
+                        var paymentConf = $('#sPaymentMethod').val();
+
+                        if (st == "APPROVED" || st == "PAYMENT_ALREADY_DONE")
+                        {
+                            st = "ERROR_EXECUTION_PAYMENT";
+                            smessage = "Ocorreu um erro. Em caso de dúvida ligue para 08007788992.";
+                        } else if (st == "")
+                        {
+                            st = "ERROR_PROCESANDO_PAGO_(EXECUTION_PAYMENT)";
+                            smessage = errFn.toString();
+                        }
+
+                        var dataResul = { state: st,
+                            message: smessage,
+                            cause: scause,
+                            paymentConfigID: paymentConf
+                        };
+
+                        $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+                    }
+                });
+
+            }
+
+            //do some logic here to handle success events or errors if any
+
+        } catch (excB)
+        {
+            var smessage = '@Html.Term("paymenterror", "inconvenientes en el procesamiento del pago en General")' + "(" + excB + ")";
+            var paymentConf = $('#sPaymentMethod').val();
+
+            if (st == "")
+            {
+                st = 'ERROR_PROCESANDO_PAGO_(GENERAL ERROR)';
+                smessage = excB;
+            }
+
+            var dataResul = { state: st,
+                message: smessage,
+                cause: scause,
+                paymentConfigID: paymentConf
+            };
+
+            $("#paypalForm").load('@Url.Action("PayPal_Error", "EntryPayPal")', dataResul);
+        }
+    }
+
+    $('#btnCancelarPay').click(function ()
+    {
+        var sid = $("#hdid").val();
+        var sindice = $("#hdindice").val();
+
+        var datosCancel = { botonCancel: '2' };
+
+        $.ajax({
+            url: '@Url.Action("CancelPay", "EntryPayPal")',
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            data: datosCancel,
+            success: function (response)
+            {
+                removePayment(sid, sindice);
+
+                $("#continueButton").show();
+                $("#prepaymentWait").hide();
+                $("#paypalForm").hide();
+                $("#paymentWait").hide();
+                $('#PayPalPrePayment').jqmHide();
+            }
+        });
+    });
+
+
+</script>

@@ -1,0 +1,26 @@
+﻿
+@model nsDistributor.Areas.Enroll.Models.Products.EnrollmentItemsModel
+
+@{
+    if (Model.MiniShop != null)
+    {
+        if (Model.MiniShop.OrderItems != null)
+        {
+            if (Model.MiniShop.OrderItems.Count() > 0)
+            {
+                var orderItems = Model.MiniShop.OrderItems.Where(oi => oi.IsRemovable).ToList();
+                var itemCount = orderItems.Count;
+                for (var i = 0; i < itemCount; i++)
+                {
+                    if (i != 0)
+                    {
+                 @string.Format("{0}", ", ");
+                    }
+            @string.Format("{0} {1}", orderItems[i].ProductName, orderItems[i].Quantity);
+              }
+            }
+         }
+        
+    }
+}
+

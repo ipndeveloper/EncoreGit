@@ -1,0 +1,19 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.DisbursementProfileModel
+@{
+    if (Model.ViewModel.PaymentPreference == DIsbursmentMethodKind.Check)
+    {
+        @Html.Term("CheckProfile", "Check Profile : ")
+        @Model.ViewModel.CheckAddress.ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine)
+    }
+    else
+    {
+         @Html.Term("EFTProfile", "EFT Profile : ")
+        foreach (var profile in this.Model.ViewModel.EFTProfiles.Where(profile => profile.Enabled.HasValue && profile.Enabled.Value))
+        {
+            @this.Html.Label(profile.EFTProfile.BankAccountNumber)
+            @this.Html.Label(profile.EFTProfile.BankName)
+            @this.Html.Label(profile.EFTProfile.BankAccountType.ToString())
+            @this.Html.Label(profile.EFTProfile.GetAddress().ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine))
+        }
+    }
+}

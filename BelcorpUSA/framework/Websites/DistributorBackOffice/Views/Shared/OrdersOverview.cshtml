@@ -1,0 +1,166 @@
+@model dynamic
+@using DistributorBackOffice.Models;
+@{var orderOverviewModel = new OrdersOverviewModel();}
+
+@if (orderOverviewModel.IsPartyOrderClient)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#Parties_TabContent a.eviteStatsLink').live('click', function () {
+                $('#EviteStats').jqm({
+                    modal: false,
+                    overlay: 0.01,
+                    target: '#EvitesStatsContent',
+                    ajaxText: '<div class="mContent"><img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="" /></div>',
+                    ajax: '@Href("~/Orders/Party/EvitesStats")?partyId=' + $('.partyId', this).val()
+                }).jqmShow();
+            });
+
+            $('a.resendToggle').live('click', function () {
+                $('#resendInvite').toggle();
+                $('#resendInviteInput').focus();
+            });
+            $('a.ResendHostInvitation').live('click', function () {
+                var t = $(this);
+                showLoading(t);
+                $.post('@Href("~/Orders/Party/ResendHostInvitation")', { partyId: $('.partyId', this).val(), hostEmailAddress: $('#resendInviteInput').val() }, function (response) {
+                    hideLoading(t);
+                    showMessage(response.message || '@Html.Term("HostInvitationSent", "Host invitation sent successfully!")', !response.result);
+                });
+            });
+            $('#resendInviteInput').watermark('Enter the invitation email address');
+
+
+            $('a.CancelParty').live('click', function () {
+                var result = confirm('@Html.Term("ConfirmCancelation", "Are you sure you want to cancel this party?")');
+                if (result == true) {
+                    var t = $(this);
+                    showLoading(t);
+                    $.post('@Href("~/Orders/Party/CancelParty")', { partyId: $('.partyId', this).val() }, function (response) {
+                        hideLoading(t);
+                        $('#EviteStats').jqm().jqmHide();
+                        $('#paginatedGridRefreshOpenParties').click();
+                    });
+                }
+
+            });
+        });
+    </script>
+    <div class="Tabber UI-linkAlt">
+        <ul class="inlineNav" id="TabOrdersOverview">
+            <li class="UI-lightBg @(orderOverviewModel.IsOrderHistoryReport || orderOverviewModel.IsFundraiserOrderHistoryReport ? "" : "current")" id="li_Pending_TabContent" rel="Parties_TabContent">
+                <a href="javascript:void(0);"><span>
+                    @Html.Term("MyParties", "My Parties")</span></a></li>
+            <li class="UI-lightBg @(orderOverviewModel.IsOrderHistoryReport ? "current" : "")" id="li_History_TabContent" rel="History_TabContent">
+                <a href="javascript:void(0);"><span>
+                    @Html.Term("OrderHistory", "Order History")</span></a></li>
+                    @if (orderOverviewModel.FundraisersEnabled)
+                    {
+            <li class="UI-lightBg" id="li_PendingFR_TabContent" rel="Fundraisers_TabContent">
+                <a href="javascript:void(0);"><span>
+                    @Html.Term("MyFundraisers", "My Fundraisers")</span></a></li>
+            <li class="UI-lightBg @(orderOverviewModel.IsFundraiserOrderHistoryReport ? "current" : "")" id="li_FROrders_TabContent" rel="FROrders_TabContent">
+                <a href="javascript:void(0);"><span>
+                    @Html.Term("FundraiserHistory", "Fundraiser History")</span></a></li>
+                    }
+        </ul>
+        <span class="clr"></span>
+    </div>
+}
+<div id="History_TabContent" class="ModuleBody TabberBody TabOrdersOverview" style="display: @(orderOverviewModel.IsOrderHistoryReport ? "block" : "none");">
+    @if (!Request.Url.LocalPath.Contains("Orders"))
+    {
+        <div class="pad5 ordersDrillLinks">
+            <a href="@Href("~/Orders/OrderHistory")" class="FR fullOrderHistory"><span></span><span
+                class="label">@Html.Term("GoToOrderHistory", "Go To Order History")</span></a>
+            <span class="clr"></span>
+        </div>
+    }
+
+    @Html.Partial("_OrderPaginatedView")
+
+</div>
+
+@if (orderOverviewModel.FundraisersEnabled)
+{
+<div id="FROrders_TabContent" class="ModuleBody TabberBody TabOrdersOverview" style="display: @(orderOverviewModel.IsFundraiserOrderHistoryReport ? "block" : "none");">
+    @if (!Request.Url.LocalPath.Contains("Orders"))
+    {
+        <div class="pad5 ordersDrillLinks">
+            <a href="@Href("~/Orders/OrderHistory?type=15&searchOpenParties=true")" class="FR fullOrderHistory"><span></span><span
+                class="label">@Html.Term("GoToOrderHistory", "Go To Order History")</span></a>
+            <span class="clr"></span>
+        </div>
+    }
+
+    @Html.Partial("_FundraiserOrderPaginatedView")
+
+</div>
+
+<div id="Fundraisers_TabContent" class="ModuleBody TabberBody TabOrdersOverview" style="display: none">
+@if (!Request.Url.LocalPath.Contains("Orders"))
+{
+    <div class="pad5 ordersDrillLinks">
+        <a href="@Href("~/Orders/OrderHistory")" class="FR fullOrderHistory"><span></span><span
+            class="label">@Html.Term("GoToOrderHistory", "Go To Order History")</span></a>
+        <span class="clr"></span>
+    </div>
+}
+@{
+var partyGrid = Html.PaginatedGrid<PartySearchData>("~/Orders/FundraiserHistory/GetOpenFundraisers", "OpenFundraisers")
+    .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+    .AddColumn("", "", false)
+    .AddColumn(Html.Term("OrderID", "Order ID"), "Order.OrderNumber", true)
+    .AddColumn(Html.Term("Name"), "Name", true)
+    .AddColumn(Html.Term("Date"), "StartDateUTC", true, true, Constants.SortDirection.Descending)
+    .AddColumn(Html.Term("Host"), "HostName", true)
+    .AddColumn(Html.Term("Total"), "Order.GrandTotal", true)
+    .ClickEntireRow(1);
+if (ViewBag.AddOrderHistoryFilters == null || !ViewBag.AddOrderHistoryFilters)
+{
+    partyGrid.ClearPageSizeOptions()
+        .AddPageSizeOption(10, "10")
+        .HidePagination();
+}
+partyGrid.Render();
+}
+</div>
+
+}
+
+@if (orderOverviewModel.IsPartyOrderClient)
+{
+    <div id="Parties_TabContent" class="ModuleBody TabberBody TabOrdersOverview" style="display: @(orderOverviewModel.IsOrderHistoryReport || orderOverviewModel.IsFundraiserOrderHistoryReport ? "none" : "block");">
+        @if (!Request.Url.LocalPath.Contains("Orders"))
+        {
+            <div class="pad5 ordersDrillLinks">
+                <a href="@Href("~/Orders/OrderHistory")" class="FR fullOrderHistory"><span></span><span
+                    class="label">@Html.Term("GoToOrderHistory", "Go To Order History")</span></a>
+                <span class="clr"></span>
+            </div>
+        }
+        @{
+        var partyGrid = Html.PaginatedGrid<PartySearchData>("~/Orders/OrderHistory/GetOpenParties", "OpenParties")
+            .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+            .AddColumn("", "", false)
+        .AddColumn(Html.Term("OrderID", "Order ID"), "Order.OrderNumber", true)
+            .AddColumn(Html.Term("Name"), "Name", true)
+            .AddColumn(Html.Term("Date"), "StartDateUTC", true, true, Constants.SortDirection.Descending)
+            .AddColumn(Html.Term("Host"), "HostName", true)
+            .AddColumn(Html.Term("Total"), "Order.GrandTotal", true)
+            .ClickEntireRow(1);
+        if (ViewBag.AddOrderHistoryFilters == null || !ViewBag.AddOrderHistoryFilters)
+        {
+            partyGrid.ClearPageSizeOptions()
+                .AddPageSizeOption(10, "10")
+                .HidePagination();
+        }
+        partyGrid.Render();
+        }
+    </div>
+}
+<!-- Evite Stats -->
+<div id="EviteStats" class="UI-mainBg LModal jqmWindow">
+    <div id="EvitesStatsContent">
+    </div>
+</div>

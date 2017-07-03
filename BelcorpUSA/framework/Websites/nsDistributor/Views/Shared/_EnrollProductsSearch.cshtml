@@ -1,0 +1,32 @@
+﻿
+<div class="UI-lightBg brdrAll GridFilters">
+	<div class="FL FilterSet QuickAdd">
+		<div class="FL">
+			<label>
+				@Html.Term("SKUOrName", "SKU or Name"):</label>
+			<input id="txtQuickAddSearch" type="text" style="width: 550px;" class="required"
+                    name="@Html.Term("SKUOrName", "SKU or Name Required")" />
+			<input id="hQuickAddProductId" type="hidden" />
+			<input id="hQuickAddNeedsBackOrderConfirmation" type="hidden" />
+		</div>
+		<div class="FL">
+			<label>
+				@Html.Term("Quantity", "Quantity"):</label>
+			<input id="txtQuickAddQuantity" type="text" class="Short quantity required" style="width: 40px"
+                    name="@Html.Term("Quantity", "Quantity")" />
+		</div>
+		<div class="FL RunFilter">
+			@*<a id="btnQuickAdd" href="javascript:void(0);" class="UI-icon-container" title="@Html.Term("AddToOrder", "Add to Order")">
+				<span class="UI-icon icon-plus"></span></a>*@
+            <a id="btnQuickAdd" href="javascript:void(0);" class="UI-icon-container" title="@Html.Term("Add", "Add")">
+                <div style="padding-top:5px">
+                    <span class="add"></span>
+                    <span class="addtext">@Html.Term("Add", "Add")</span>
+                </div>
+            </a>
+		</div>
+		@*@Html.Partial("_ProductCredit", Model.Order)*@
+	</div>
+	<span class="ClearAll"></span>
+</div>
+

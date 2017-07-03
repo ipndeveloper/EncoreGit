@@ -1,0 +1,34 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="LeftNav" runat="server">
+ 
+        <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks"> 
+			<%--	<%= Html.SelectedLink("~/Products/Materials", Html.Term("BrowseMaterial", "Browse Material"), new List<string>() { "~/Products/Materials/index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>--%>
+
+               <%-- <%= Html.SelectedLink("~/Products/Materials", Html.Term("BrowseMaterial", "Browse Material"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "")%>--%>
+			<%= Html.SelectedLink("~/Products/Materials", Html.Term("BrowseMaterial", "Browse Material"), new List<string>() { "~/Products/Materials/Index", "~/Products/Materials/Index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="MainContent" runat="server">
+
+    <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="YellowWidget" runat="server">
+    <asp:ContentPlaceHolder ID="YellowWidget" runat="server" />
+</asp:Content>

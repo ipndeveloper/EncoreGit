@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Processes project overrides and copies files to the override targets.
+-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <IsClientOverride Condition=" '$(IsClientOverride)' == '' ">False</IsClientOverride>
+	<FrameworkRootPath Condition=" '$(FrameworkRootPath)' == '' ">$(SolutionDir)Framework</FrameworkRootPath>
+  </PropertyGroup>
+	<Import Condition="Exists('$(MSBuildProjectDirectory)\Override.targets')" Project="$(MSBuildProjectDirectory)\Override.targets" />
+  <!-- For reading items -->
+  <UsingTask AssemblyFile="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.MsBuildHelper" />
+  <Target Name="DebugBuildDirectories" BeforeTargets="AfterBuild">
+    <Message Text="OutputPath: $(OutputPath)" />
+    <Message Text="TeamBuildOutDir: $(TeamBuildOutDir)" />
+    <Message Text="Outdir $(OutDir)" />
+  </Target>
+  
+  <Target Name="PreCopyProjectOverrides_Filter" Condition=" '$(ProjectReference)' != '' ">
+	<!-- Get Project Reference of the Overidden Framework Project -->
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="FilterItems" InputItems1="@(ProjectReference)" MetaData="Name" RegExPattern="$(FrameworkOverrideOf)">
+      <Output TaskParameter="OutputItems" ItemName="filtered" />
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+    <Message Text="Filtered Item Name: %(filtered.Name)" />
+    <Message Text="Filtered Item: @(filtered)" />    
+  </Target>
+  
+  <Target Name="CopyProjectOverrides" Condition=" $(IsClientOverride) == True " AfterTargets="AfterBuild"
+	DependsOnTargets="PreCopyProjectOverrides_Filter">
+    <Message Text="IsClientOverride: $(IsClientOverride)." />
+    <Message Text="Will copy output for: $(MSBuildProjectName)." />
+	<PropertyGroup>
+		<DestinationRoot Condition=" '$(filtered)' == '' ">$(filtered)</DestinationRoot>	
+	</PropertyGroup>
+    <CreateProperty Value="$([System.String]::Copy($(DestinationRoot)).Replace('$(FrameworkOverrideOf).csproj',''))">
+      <Output TaskParameter="Value" PropertyName="DestinationRoot" />
+    </CreateProperty>
+    <CreateProperty Value="$([System.String]::Concat('$(DestinationRoot)','Bin\'))">
+      <Output TaskParameter="Value" PropertyName="DestinationBin" />
+    </CreateProperty>
+    <Message Text="Destination Root: $(DestinationRoot)" />
+    <Message Text="Destination Bin: $(DestinationBin)" />
+    <Message Text="Copy Bin To:"/>
+    <CreateItem Condition=" @(ProjectTarget) != 'None' " Include="@(CopyTo)" Exclude="@(ProjectTarget)">
+      <Output TaskParameter="Include" ItemName="RemoveCopyTo"/>
+    </CreateItem>
+    <CreateItem Condition=" @(ProjectTarget) != 'None' " Include="@(CopyTo)" Exclude="@(RemoveCopyTo)">
+      <Output TaskParameter="Include" ItemName="FilteredCopyTo"/>
+    </CreateItem>
+	
+	<!-- Ignoring ExitCode here to remove warning, saving and handling ExitCode in next section -->
+    <Exec Condition=" @(ProjectTarget) != 'None'" IgnoreExitCode="true" Command="robocopy &quot;$(MSBuildProjectDirectory)\$(OutDir.TrimEnd('\'))&quot; &quot;%(FilteredCopyTo.RelativePath)&quot; /E /NP /NJS /XX" ContinueOnError="True">
+		 <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+	<Error Condition="@(ProjectTarget) != 'None' And $(ErrorCode) > '3'" Text="Libraries not copied to the overridden location; see output above." />
+    
+	<Exec Condition=" @(ProjectTarget) != 'None'" IgnoreExitCode="true" Command="robocopy &quot;$(MSBuildProjectDirectory)\$(OutDir.TrimEnd('\'))&quot; &quot;%(FilteredCopyTo.RelativePathClientBin)&quot; /E /NP /NJS /XX" ContinueOnError="True">
+		 <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+    <Error Condition="@(ProjectTarget) != 'None' And $(ErrorCode) > '3'" Text="Libraries not copied to the overridden location; see output above." />
+    
+    <Exec Condition=" @(ProjectTarget) == 'None'" IgnoreExitCode="true" Command="robocopy &quot;$(MSBuildProjectDirectory)\$(OutDir.TrimEnd('\'))&quot; &quot;%(CopyTo.RelativePath)&quot; /E /NP /NJS /XX" ContinueOnError="True">
+		 <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+    <Error Condition="@(ProjectTarget) != 'None' And $(ErrorCode) > '3'" Text="Libraries not copied to the overridden location; see output above." />
+    
+    <Exec Condition=" @(ProjectTarget) == 'None'" IgnoreExitCode="true" Command="robocopy &quot;$(MSBuildProjectDirectory)\$(OutDir.TrimEnd('\'))&quot; &quot;%(CopyTo.RelativePathClientBin)&quot; /E /NP /NJS /XX" ContinueOnError="True">
+		 <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+    <Error Condition="@(ProjectTarget) != 'None' And $(ErrorCode) > '3'" Text="Libraries not copied to the overridden location; see output above." />
+    
+  </Target>
+  <ItemGroup>
+    <ProjectTarget Include="None"/>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyTo Include="nsCore">
+      <RelativePath>$(FrameworkRootPath)\WebSites\nsCore\Bin</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\WebSites\nsCore\ClientBin</RelativePathClientBin>
+    </CopyTo>
+    <CopyTo Include="nsDistributor">
+      <RelativePath>$(FrameworkRootPath)\WebSites\nsDistributor\Bin</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\WebSites\nsDistributor\ClientBin</RelativePathClientBin>
+    </CopyTo>
+    <CopyTo Include="DistributorBackOffice">
+      <RelativePath>$(FrameworkRootPath)\WebSites\DistributorBackOffice\Bin</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\WebSites\DistributorBackOffice\ClientBin</RelativePathClientBin>
+    </CopyTo>
+    <CopyTo Include="WebService.Mobile">
+      <RelativePath>$(FrameworkRootPath)\Web Services\WebService.Mobile\Bin</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\Web Services\WebService.Mobile\ClientBin</RelativePathClientBin>
+    </CopyTo>
+    <CopyTo Include="QueueProcessingService">
+      <RelativePath>$(FrameworkRootPath)\Windows Services\QueueProcessing\NetSteps.QueueProcessing.Host\bin\$(Configuration)</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\Windows Services\QueueProcessing\NetSteps.QueueProcessing.Host\ClientBin</RelativePathClientBin>
+    </CopyTo>
+    <CopyTo Include="AutoshipProcessor">
+      <RelativePath>$(FrameworkRootPath)\ConsoleApplications\AutoshipProcessor\Bin\$(Configuration)</RelativePath>
+      <RelativePathClientBin>$(FrameworkRootPath)\ConsoleApplications\AutoshipProcessor\ClientBin</RelativePathClientBin>
+    </CopyTo>
+	<CopyTo Include="Encore.ApiSite">
+		<RelativePath>$(FrameworkRootPath)\Websites\Encore.ApiSite\Bin</RelativePath>
+		<RelativePathClientBin>$(FrameworkRootPath)\Websites\Encore.ApiSite\ClientBin</RelativePathClientBin>
+	</CopyTo>
+  </ItemGroup>
+</Project>

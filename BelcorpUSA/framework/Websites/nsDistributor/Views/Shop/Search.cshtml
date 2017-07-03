@@ -1,0 +1,37 @@
+@model System.Collections.Generic.List<NetSteps.Data.Entities.Product>
+@{
+    ViewBag.Title = "Search Results";
+}
+@section head {
+    <script type="text/javascript">
+		//<![CDATA[
+        $(function () {
+            $('#sCategory').change(function () {
+                $.get('@Url.Resolve("~/Shop/GetSearchResults")', { category: $(this).val() }, function (response) {
+                    if (response.result === undefined || response.result) {
+                        $('#searchResults').html(response);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+        });
+		//]]>
+    </script>
+}
+<h2>
+    @Html.Term("SearchResults", "Search Results")</h2>
+<div class="FilterSet">
+    @Html.Term("FilterByCategory", "Filter by Category"):
+    <select id="sCategory">
+        <option value="">None</option>
+        @foreach (Category category in ViewBag.SearchCategories)
+        {
+            <option value="@category.CategoryID">
+                @category.Translations.Name()</option>
+        }
+    </select>
+</div>
+<div id="searchResults">
+    @{ Html.RenderPartial("SearchResults", Model); }
+</div>

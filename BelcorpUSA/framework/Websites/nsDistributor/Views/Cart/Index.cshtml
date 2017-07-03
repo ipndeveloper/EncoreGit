@@ -1,0 +1,360 @@
+@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components;
+@using NetSteps.OrderAdjustments.Common.Model;
+@model NetSteps.Data.Entities.Order
+@{
+	ViewBag.Title = "Cart";
+	var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+}
+@section head {
+	<script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Shared/CartModel.js")"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		var cartModel;
+        $(function () {
+			var cartModelOptions = {
+				removeItemUrl: '@Url.Resolve("~/Cart/Remove")',
+				updateUrl: '@Url.Resolve("~/Cart/Update")'
+			};
+			cartModel = new CartModel(@Html.Raw(Json.Encode(ViewBag.CartModel)), cartModelOptions);
+			ko.applyBindings(cartModel, document.getElementById('cartInnerPane'));
+
+            $('#CartItems .quantity').numeric({ allowNegative: false, allowDecimal: false });
+
+            $('.CreateBundle').live('click', function () {
+                var t = $(this);
+	            var div = t.closest('div');
+                var productId = div.find('.dynamicKitProductSuggestion').val();
+
+                // ensure that productId is valid
+                if(parseInt(productId)){
+                    $.post('@Url.Resolve("~/Cart/CreateDynamicBundleUpSale")', { productId: productId }, function (response) {
+                        if (response.result) {
+                            window.location.href = '@Url.Resolve("~/Shop/BundlePackItems?productId=")' + productId + '&bundleGuid=' + response.guid;
+                        } else {
+                            showMessage(response.message, !response.result);
+                        }
+                    });
+                } else {
+                    showMessage('@Html.Term("InvalidProductId", "Invalid Product Id")', true);
+                }
+            });
+
+            $('#CartItems .EditKit').live('click', function () {
+                var t = $(this);
+	            var tr = t.closest('tr');
+                var productId = tr.find('.productId').val();
+                var guid = tr.find('.guid').val();
+
+                // ensure that productId is valid
+                if(parseInt(productId)){
+                    window.location.href = '@Url.Resolve("~/Shop/BundlePackItems?productId=")' + productId + '&bundleGuid=' + guid;
+                } else {
+                    showMessage('@Html.Term("InvalidProductId", "Invalid Product Id")', true);
+                }
+            });
+
+            $('#CartItems .ViewKitContents').live('click', function () {
+                var t = $(this);
+                if (t.hasClass('Minimize')) {
+                    t.text('@Html.Term("ViewKitContents", "View Kit Contents")').removeClass('Minimize').next().slideUp('fast');
+                } else {
+                    t.text('@Html.Term("Close")').addClass('Minimize').next().slideDown('fast');
+                }
+            });
+
+            $('a.partyAttachBtn').click(function () {
+                $('#selectParty').slideDown(50);
+                $(this).hide();
+            });
+
+            $('a.cancelAttach').click(function () {
+                $('#selectParty').slideUp(50);
+                $('a.partyAttachBtn').show();
+            });
+
+            $('a.confirmAttach').click(function() {
+                var ajaxPartyId = $('#selectParty input[name="party"]:checked').val();
+                if(ajaxPartyId == undefined) {
+                    showMessage('@Html.Term("PleaseSelectAParty", "Please select a party")');
+                    return;
+                }
+                
+                var btn = $(this).showLoading();
+                $.ajax({
+                    url: '@Url.Resolve("~/Shop/AttachToParty")',
+                    async: false,
+                    data: { partyId: ajaxPartyId },
+                    type: 'POST',
+                    success: function(response) {
+                        if (!response.result) {
+                            showMessage(response.message, true);
+						} else {
+                            showMessage(response.message, false);
+                            $('#hidShouldAsk').val(false);
+                            $('#selectParty').slideUp(50);
+                            $('a.partyAttachBtn').show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showMessage(xhr.responseText);
+                    }
+                });
+                btn.hideLoading();
+            });
+            
+			$('#btnAddPromo').click(function() {
+				var data = { promotionCode: $('input.promoCode').val() };
+				if (data.promotionCode) {
+					var options = {
+						url: '@Url.Resolve("~/Cart/ApplyPromotionCode")',
+						showLoading: $(this),
+						data: data,
+						success: function(response) {
+							if (response.result) {
+								$('input.promoCode').val('');
+								showMessage('@Html.Term("Promotions_PromotionCodeApplied", "Promotion Code Successfully Applied!")');
+								updateCartDisplay(response);
+							}
+							else {
+								showMessage(response.message, true);
+							}
+						}
+					};
+					NS.post(options);
+				}
+			});
+
+            $('#btnNext').click(function () {
+                if ($('#selectParty').is(':visible')) {
+                    var t = $(this);
+                    showLoading(t);
+                    var canContinue = true;
+                    $.ajax({
+                        url: '@Url.Resolve("~/Shop/AttachToParty")',
+                        async: false,
+                        data: { partyId: $('#selectParty input[name="party"]:checked').val() },
+                        type: 'POST',
+                        success: function (response) {
+                            if (!response.result) {
+                                hideLoading(t);
+                                showMessage(response.message, true);
+                                canContinue = false;
+                            }
+                        },
+                        error: function (xhr, status, error)
+                        {
+                            hideLoading(t);
+                            showMessage(xhr.responseText);
+                        }
+                    });
+                    return canContinue;
+                }
+            });
+            //CSTI(mescobar)-28/01/2016 - Inicio
+            $('#btnNext').click(function (event) {
+                event.stopPropagation();
+            });
+            //CSTI(mescobar)-28/01/2016 - Fin
+
+            $('.btnStartCheckOut').click(function () {
+                var t = $(this);
+                showLoading(t);
+                var url = '@(Url.Resolve("~/Cart/Rewards"))';
+				$.post('@Url.Resolve("~/Cart/Submit")', { }, function (response) {
+                    if (response.result) {
+                        window.location.href = url;
+                    } else {
+                        //CSTI(mescobar)-28/01/2016 - Inicio
+                       if(response.validrule){
+                            $('.fadeInbox').jqmShow();
+                            var strReplaceAll = response.message;
+                            var intIndexOfMatch = strReplaceAll.indexOf("|n");
+                            while (intIndexOfMatch != -1) {
+                                strReplaceAll = strReplaceAll.replace("|n", String.fromCharCode(10))
+                                intIndexOfMatch = strReplaceAll.indexOf("|n");
+                            }
+                            $("#MessageCenter").hide();
+                            $("#PopUpGenericPreViewMessage").html(strReplaceAll)
+                            $('.fadeInbox').jqmShow();
+                        //CSTI(mescobar)-28/01/2016 - Fin
+                        }else{
+                            if (results.restricted) {
+                                showMessage(results.message+": "+results.products, true);
+                                return false;
+                            }
+                        }
+                        showMessage(response.message, true);
+                        hideLoading(t);
+                    }
+                });
+            });
+        });
+
+        function RefreshDynamicBundleUpSale() {
+            $.get('@Url.Resolve("~/Cart/RetrieveDynamicBundleUpSaleHTML")', function (response) {
+                if (response.result) {
+                    if (response.DynamicBundleUpSaleHTML == "") {
+                        $('.BundleAlert').hide();
+                    } else {
+                        $('.BundleAlert').show();
+                    }
+                    $('.BundleAlert').html(response.DynamicBundleUpSaleHTML);
+                }
+            });
+        }
+
+		function updateCartDisplay(response) {
+			if (response.CartModel){
+				cartModel.updateFromJS(response.CartModel);
+			}
+
+			RefreshDynamicBundleUpSale();
+			$('#CartItems .quantity').numeric({ allowNegative: false, allowDecimal: false });
+		}
+    //]]>
+	</script>
+}
+<div class="shoppingCartPane">
+	<div id="cartInnerPane" class="shoppingCartInnerPane">
+		<div class="PageTitle">
+			<h1>@Html.Term("YourCart", "Your Cart")</h1>
+		</div>
+		@if (NetSteps.Data.Entities.ApplicationContext.Instance.UseDefaultBundling)
+  {
+			<div class="BundleAlert pad10 mb10" style="display:@(ViewBag.DynamicKitUpSaleHTML == "" ? "none" : "block");">
+				<h2>@Html.Term("OneItemAwayFromBundle", "You are 1 item away from a money saving bundle!")</h2>
+				<div>
+					@Html.Raw(ViewBag.DynamicKitUpSaleHTML)
+				</div>
+			</div>
+  }
+		<div class="MyCartPage">
+			<div class="mb10 TablePane">
+				<div class="Content">
+					<span class="ClearAll"></span>
+					<p>
+						<a href="@Url.Resolve("~/Shop")" class="Button MinorButton ContinueShopping"><span>
+							@Html.Term("ContinueShopping", "Continue Shopping")</span></a>
+					</p>
+					@Html.Partial("PromotionNotifications")
+					<table class="DataGrid CartPreviewGrid" width="100%">
+						<thead>
+							<tr>
+								@Html.Partial("_CartTableHeaders")
+							</tr>
+						</thead>
+						<tbody id="CartItems">
+							<!-- ko if: OrderItems().length == 0 -->
+							<tr>
+								<td colspan="7">
+									@Html.Term("NoItemsInCart", "There are no items in your cart")
+								</td>
+							</tr>
+							<!-- /ko -->
+							<!-- ko foreach: OrderItems -->
+							@Html.Partial("CartOrderItem")
+							<!-- /ko -->
+							<!-- ko foreach: PromotionallyAddedItems -->
+							@Html.Partial("CartPromotionallyAddedItem")
+							<!-- /ko -->
+						</tbody>
+						<tbody>
+							<tr class="UI-lightBg pad5 GuestOrderSummary">
+								<td colspan="6">
+									&nbsp;
+								</td>
+								<td class="pad5 center updateCartCol">
+									<a id="btnUpdate" href="javascript:void(0);" data-bind="click: updateQuantities, disable: isUpdating"
+										class="Button MinorButton"><span>
+											@Html.Term("Update", "Update")</span></a>
+									<img class="loading" src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" height="15" width="15" data-bind="visible: isUpdating" style="margin: 3px 0 0 10px; padding: 1px;" />
+								</td>
+							</tr>
+							<!-- Promotion Code entry -->
+							<tr class="UI-lightBg pad5 PromotionalCodes">
+								<td colspan="8">
+									<span class="block ml5 mt5 mb10 promoCodeInstruction"><b class="block applyPromoCodeHeader">@Html.Term("Cart_ApplyPromotionCodes", "Apply Promotion Codes")</b>
+										@Html.Term("Cart_PromotionCodeInstructions", "Stacking is not permitted. If multiple codes are entered for the same item, only the first promotion code will apply.")
+									</span><span id="EnterPromo" class="m5 promoCodeLabel">@Html.Term("Cart_PromotionCodeLabel", "Promotion Code:")</span>
+									<input type="text" class="TextInput pad2 mb5 promoCode" />
+									<a id="btnAddPromo" href="javascript:void(0);" class="Button MinorButton"><span>@Html.Term("Add", "Add")</span>
+									</a>
+									<img class="loading" src="@Url.Content("~/Resource/Content/Images/loading.gif")" alt="" height="15" width="15" style="display: none; margin: 3px 0 0 10px; padding: 1px;" />
+								</td>
+							</tr>
+							<!--End Promotion Code entry -->
+						</tbody>
+					</table>
+					<!-- out of stock products -->
+					<div id="outOfStockMessage" data-bind="visible: OutOfStockProducts().length > 0"
+						style="background: none repeat scroll 0pt 0pt rgb(254, 233, 233); border: 1px solid rgb(255, 0, 0);
+						color: rgb(255, 0, 0);">
+						@Html.Term("ProductsAreOutOfStock", "The following product(s) that you tried to add to your order are out of stock:")
+						<ul id="outOfStockProducts" data-bind="foreach: OutOfStockProducts">
+							<li>
+								<!-- ko text: SKU -->
+								<!-- /ko -->
+								-
+								<!-- ko text: ProductName -->
+								<!-- /ko -->
+							</li>
+						</ul>
+					</div>
+					<!-- end out of stock products -->
+					<!-- subtotals -->
+					<div class="UI-mainBg pad10 brdrAll center bold cartPageSubTotal">
+						<span class="Label">@Html.Term("SubTotal", "Sub Total"):</span> &nbsp; <span id="subtotal"
+							class="price OriginalPrice Total" data-bind="currency: Subtotal, css: { strikethrough: isSubtotalAdjusted }" />
+						<span id="adjustedSubtotal" class="price discountPrice DiscountTotal" data-bind="currency: AdjustedSubtotal, visible: isSubtotalAdjusted" />
+					</div>
+					<!-- end subtotals -->
+                    @*@Html.Partial("_UpgradeAccountNotifications")*@
+				</div>
+			</div>
+			@{var canSelectParty = ViewBag.IsPartyOrderClient && Model != null && (!Model.ParentOrderID.HasValue || Model.ParentOrderID == 0) && ViewBag.OpenParties != null && ViewBag.OpenParties.Count > 0;}
+			@if (canSelectParty)
+			{
+				<!-- attach party -->
+				<div id="selectParty" class="hide UI-lightBg pad10 brdrAll cartPage attachPartyWindow"
+					style="display: none; overflow: auto;">
+					<div class="UI-mainBg pad5 brdrAll mb10 selectPartyHeader">
+						@Html.Term("PleaseChooseAParty", "Please select one of the parties below")
+					</div>
+					@Html.Partial("OpenParties")
+					<!--/ end parties list -->
+					<div class="clr pad5">
+						<a href="javascript:void(0);" class="FL confirmAttach Button MinorButton m10"><span>@Html.Term("Confirm")</span></a>
+						<a href="javascript:void(0);" class="FL cancelAttach Button MinorButton m10"><span>@Html.Term("Cancel")</span></a>
+					</div>
+				</div>
+				<!--/ end attach party -->
+			}
+			<div class="clr pad5 checkOutButtons">
+				@if (canSelectParty)
+				{
+					<div class="FL attachPartyLastChance">
+						<a href="javascript:void(0);" class="Button btnPlain partyAttachBtn"><span>@Html.Term("WouldYouLikeToAttachAParty", "Would you like to attach this order to a party?")</span></a>
+					</div>
+				}
+				<div class='FL'>
+					@Html.Partial("_CartAdditionalInfo", Model)
+				</div>
+				<div class="FR">
+                    <a id="btnNext" href="javascript:void(0);" class="Button btnContinue btnStartCheckOut">
+						<span>@(Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.Contains("Checkout") ? Html.Term("Resume") : Html.Term("CheckoutNow", "Checkout Now"))</span></a>
+				</div>
+				<span class="clr"></span>
+			</div>
+		</div>
+        @*CSTI(mescobar)-28/01/2016 - Inicio*@
+		<div id="MessageCenter" >
+			@Html.Partial("MessageCenter")
+		</div>
+        @*CSTI(mescobar)-28/01/2016 - Fin*@
+	</div>
+    @*CSTI(mescobar)-28/01/2016 - Inicio*@
+    @Html.Partial("_PopUpGeneric") 
+    @*CSTI(mescobar)-28/01/2016 - Fin*@
+</div>
+@Html.Partial("GiftSelection", new GiftSelectionModel(Href("~/Cart/GetGiftStepInfo"), Href("~/Cart/AddGifts"), callbackFunctionName: "updateCartDisplay"))

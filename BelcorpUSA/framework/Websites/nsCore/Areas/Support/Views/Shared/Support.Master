@@ -1,0 +1,56 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage"  MasterPageFile="~/Views/Shared/Site.Master"  %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="SubNavigation">
+	<%= Html.SubTab("~/Support/Consult", Html.Term("BrowseTickets", "Browse Tickets"))%>
+    <%= Html.SubTab("~/Support/Ticket/Edit", Html.Term("CreateTicket", "Create a New Ticket")) %> 
+    <%--<%= Html.SubTab("~/Support/Consult", "Consult Ticket") %>--%>
+    <%--	<%= Html.SubTab("~/Support/Ticket/Stats", Html.Term("TicketStats", "Ticket Stats"))%>
+    <%= Html.SubTab("~/Support/Admin", Html.Term("Administration")) %>--%> 
+    <%= Html.DropDownNavigation(Html.Term("TreeManagement", "Tree Management"), "", new List<NavigationItem>()
+		{
+			new NavigationItem() { LinkText = Html.Term("SupportLevel", "Support Levels"), Url = "~/Support/Level/EditTree", MappedUrls = new List<string>(){ "~/Support/Level/EditTree/" } },
+            new NavigationItem() { LinkText = Html.Term("SupportMotiveBrowse", "Browse Support Motives"), Url = "~/Support/Motive/Index", MappedUrls = new List<string>(){ "~/Support/Motive/Index/" } },
+            new NavigationItem() { LinkText = Html.Term("SupportMotiveCreate", "Add New Support Motive"), Url = "~/Support/Motive/Edit", MappedUrls = new List<string>(){ "~/Support/Motive/Edit/" } },
+		}) %> 
+</asp:Content>
+
+
+<asp:Content ID="Content3" runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="YellowWidget" runat="server">
+                    <div>
+                    
+                    </div>
+                </asp:ContentPlaceHolder>
+                <div class="SectionNav">
+                    <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+                        <% var currentSiteId = nsCore.Areas.Sites.Controllers.BaseSitesController.CurrentSiteId;
+                           if (currentSiteId != null)
+                           { %>
+                        <ul class="SectionLinks">
+                            <%= Html.SelectedLink("~/Sites/Overview", Html.Term("Overview"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Sites") %>
+                            
+                        </ul>
+                        <% } %>
+                    </asp:ContentPlaceHolder>
+                </div>
+            </td>
+            <td class="CoreContent">
+                <div class="BreadCrumb">
+                    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+                </div>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </td>
+            <asp:ContentPlaceHolder ID="RightContent" runat="server">
+				
+			</asp:ContentPlaceHolder>
+        </tr>
+    </table>
+</asp:Content>
+            

@@ -1,0 +1,62 @@
+﻿@using NetSteps.Web.Mvc.Extensions
+@model IEnumerable<nsCore.Areas.Commissions.Models.BonusValuesModel>
+           
+<script type ="text/javascript">
+    $(function () {
+
+        $('#btnGenerate').click(function () {
+
+            if ($("#sltPeriod").val() != 0) {
+                var t = $("#frmFooter");
+                showLoading(t);
+                var url = "/Payments/GenerateCSV";
+
+                var data = { Period: $("#sltPeriod").val() };
+                var parameters = '?Period=' + $("#sltPeriod").val();
+                window.location = '@Href("~/Commissions/Payments/GenerateCSV")' + parameters;
+
+                hideLoading(t);
+            } else {
+                showMessage('@Html.Term("errorBonusCSV", "Please choice PeriodID")',true);
+            }
+        });
+    });
+</script>
+           
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <div class="SectionHeader">
+        <h2>
+           @Html.Term("Payments", "Payments") 
+        </h2>
+    </div>
+    
+    <div>
+        @Html.Label("Periods", Html.Term("Periods", "Periods")):
+        <select id="sltPeriod">  
+            <option value="0">@Html.Term("PaymentDefault","Seleccione Period")</option>          
+            @foreach (var period in Model)
+            {
+                <option value="@period.PeriodID">@period.PeriodID</option>
+            }
+        </select>
+            
+    </div>
+    <br /><br />   
+    <div id="frmFooter">
+        <table class="FormTable" width="100%">
+		    <tr>
+			    <td>
+                     <input type="button" id="btnGenerate" value = "@Html.Term("Generate", "Generate")" class="Button BigBlue"/>
+			    </td>
+		    </tr>
+	    </table>
+    </div>
+    
+    @Html.ValidationSummary()
+
+}
+
+

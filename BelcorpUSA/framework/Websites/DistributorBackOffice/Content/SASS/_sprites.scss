@@ -1,0 +1,532 @@
+.AdditionalFilterButton {
+	line-height: em(50);
+}
+.archiveAddLink {
+	display: block;
+}
+.Toggle {
+	display: inline-block;
+	width: 63px;
+	height: 20px;
+	background: #8d8d8d url(../Images/OnOffToggle.png) no-repeat 0 0;
+	overflow: hidden;
+	outline: none;
+	cursor: pointer;
+	@include BorderRadius(4px);
+	@include BoxShadow(em(0 0 3) rgba(0,0,0,.35), inset);
+	border:1px solid #555;
+}
+.ToggleOn {
+	background-color:$SuccessMessage;
+}
+.Toggle span {
+	display: block;
+	height:22px;
+	margin:-1px;
+	text-indent: -100em;
+	background: url(../Images/OnOffToggle.png) no-repeat 32px bottom;
+	@include transition-duration($transition_time);
+}
+.ToggleOn span {
+	background-position: 0px bottom;
+}
+.PageSaveButtons {
+	margin: 0 auto;
+	text-align: left;
+	width: em(300);
+	margin-top: em(10);
+	a {
+		float: left;
+		margin-right: em(10);
+	}
+}
+.LinkCancel, .PageSaveButtons {
+	line-height: em(30);
+}
+.ButtonOff {
+	opacity: 0.25;
+	cursor: default;
+}
+.downlineColorKeys {
+	.accountList li {
+		background: url(../Images/Encore/downlineKey_acctType.png) no-repeat 0 0;
+	}
+	.qualificationList {
+		li {
+			background: url(../Images/Encore/downlineKey_acctAlerts.png) no-repeat 0 0;
+		}
+		.qual1 {
+			background-position: 0 0;
+		}
+		.qual2 {
+			background-position: 0 -34px;
+		}
+		.qual3 {
+			background-position: 0 -67px;
+		}
+	}
+	.accountList {
+		.acct1 {background-position: 0 0;}
+		.acct2 {background-position: 0 -34px; }
+		.acct3 {background-position: 0 -67px; }
+		.acct4 {background-position: 0 -101px; }
+
+		.acct5 { background-position: 0 -138px; }
+		.acct6 { background-position: 0 -172px; }
+		.acct7 { background-position: 0 -205px; }
+		.acct8 { background-position: 0 -239px; }
+		.acct9 { background-position: 0 -273px; }
+		.acct10 { background-position: 0 -307px; }
+		.acct11 { background-position: 0 -340px; }
+		.acct12 { background-position: 0 -374px; }
+		.acct13 { background-position: 0 -409px; }
+	}
+}
+
+
+
+/*****************************************************
+* JeffJ
+*****************************************************/
+
+
+/*****************************************************
+* IcoMoon Font Icons
+*****************************************************/
+@font-face {
+	font-family: 'encoreWkstnIcons';
+	src:url('../Fonts/encore-wkstn-icons.eot');
+	src:url('../Fonts/encore-wkstn-icons.eot?#iefix') format('embedded-opentype'),
+		url('../Fonts/encore-wkstn-icons.svg#icomoon') format('svg'),
+		url('../Fonts/encore-wkstn-icons.woff') format('woff'),
+		url('../Fonts/encore-wkstn-icons.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-size:em($IconSize);
+	font-family: 'encoreWkstnIcons';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+[class^="icon-"], [class*=" icon-"], a.nextPage, a.previousPage {
+	&:before, .ie7Icon {
+		font-family: 'encoreWkstnIcons';
+		font-style: normal;
+		font-size:em($IconSize);
+		speak: none;
+		font-weight: normal;
+		line-height: 1;
+		-webkit-font-smoothing: antialiased;
+	}
+}
+.UI-icon-container span {
+	line-height:em($IconSize);
+	&.UI-icon {
+		line-height:1em;
+	}
+}
+.actionItems {
+	.UI-icon-container {
+		line-height: em($action-link-size + 4);
+		clear:both;
+	}
+	[class^="icon-"], [class*=" icon-"] {
+			height: em($action-link-size + 4);
+			width: em($action-link-size + 4);
+			&:before, .ie7Icon {
+				font-size:em($action-link-size);
+			}
+	}
+}
+//A fix for IE9 with multiple rules assigning em font size
+body.IE9 .actionItems, body.IE10 .actionItems {
+	[class^="icon-"], [class*=" icon-"] {
+		&:before {
+			font-size:em($action-link-size, $IconSize + $action-link-size + $base_font_size); 
+		}
+	}
+}
+.icon-plus {
+	&:before, .ie7Icon {
+		content: "\271a";
+	}
+}
+.icon-arrowDown {
+	&:before, .ie7Icon {
+		content: "\25bc";
+	}
+}
+.icon-arrowNext-circle {
+	&:before, .ie7Icon {
+		content: "\25b6";
+	}
+}
+.icon-arrowPrev-circle {
+	&:before, .ie7Icon {
+		content: "\25c4";
+	}
+}
+.icon-arrowUp {
+	&:before, .ie7Icon {
+		content: "\25b2";
+	}
+}
+.icon-arrow-down {
+	&:before, .ie7Icon {
+		content: "\25be";
+	}
+}
+.icon-Attach {
+	&:before, .ie7Icon {
+		content: "\21d5";
+	}
+}
+.icon-cancelled {
+	&:before, .ie7Icon {
+		content: "\2717";
+	}
+}
+.icon-check {
+	&:before, .ie7Icon {
+		content: "\2714";
+	}
+}
+.icon-deactive {
+	&:before, .ie7Icon {
+		content: "\2612";
+	}
+}
+.icon-x, .icon-deleteReportLink  {
+	&:before, .ie7Icon { 
+		content: "\2718";
+	}
+}
+
+.icon-xsm  {
+	&:before, .ie7Icon {
+		content: "\e02a";
+	}
+}
+.icon-deleteSelected, .icon-trash { 
+	&:before, .ie7Icon {
+		content: "\2613";
+	}
+}
+.icon-exclamation {
+	&:before, .ie7Icon {
+		content: "\27b2";
+	}
+}
+.icon-arrowPrev, .icon-goBack, a.previousPage {
+	&:before, .ie7Icon {
+		content: "\21e6";
+	}
+}
+.icon-arrowNext, .icon-goForward, .icon-forward, a.nextPage {
+	&:before, .ie7Icon {
+		content: "\21e8";
+	}
+}
+.icon-actionLock {
+	&:before, .ie7Icon {
+		content: "\e000";
+	}
+}
+.icon-plusAlt {
+	&:before, .ie7Icon {
+		content: "\2719";
+	}
+}
+.icon-print {
+	&:before, .ie7Icon {
+		content: "\2338";
+	}
+}
+.icon-refresh {
+	&:before, .ie7Icon {
+		content: "\21ba";
+	}
+}
+.icon-search, .icon-navbarSearch, .icon-searchIcon {
+	&:before, .ie7Icon {
+		content: "\260c";
+	}
+}
+.icon-upload {
+	&:before, .ie7Icon {
+		content: "\e001";
+	}
+}
+.icon-file {
+	&:before, .ie7Icon {
+		content: "\2630";
+	}
+}
+.icon-fileAudio {
+	&:before, .ie7Icon {
+		content: "\e002";
+	}
+}
+.icon-fileFlash {
+	&:before, .ie7Icon {
+		content: "\e003";
+	}
+}
+.icon-fileImage {
+	&:before, .ie7Icon {
+		content: "\e004";
+	}
+}
+.icon-filePdf {
+	&:before, .ie7Icon {
+		content: "\e005";
+	}
+}
+.icon-filePowerpoint {
+	&:before, .ie7Icon {
+		content: "\e006";
+	}
+}
+.icon-fileVideo {
+	&:before, .ie7Icon {
+		content: "\e007";
+	}
+}
+.icon-exportToExcel {
+	&:before, .ie7Icon {
+		content: "\e008";
+	}
+}
+.icon-edit {
+	&:before, .ie7Icon {
+		content: "\270f";
+	}
+}
+.icon-actionDashTools {
+	&:before, .ie7Icon {
+		content: "\e009";
+	}
+}
+.icon-actionContactAdd {
+	&:before, .ie7Icon {
+		content: "\263a";
+	}
+}
+.icon-actionParty {
+	&:before, .ie7Icon {
+		content: "\e00a";
+	}
+}
+.icon-actionImport {
+	&:before, .ie7Icon {
+		content: "\e00b";
+	}
+}
+.icon-actionReport {
+	&:before, .ie7Icon {
+		content: "\e00c";
+	}
+}
+.icon-save {
+	&:before, .ie7Icon {
+		content: "\e00d";
+	}
+}
+.icon-email, .icon-emailAllLink {
+	&:before, .ie7Icon {
+		content: "\2709";
+	}
+}
+.icon-emailLink {
+	&:before, .ie7Icon {
+		content: "\e00e";
+	}
+}
+.icon-actionTreeView {
+	&:before, .ie7Icon {
+		content: "\e00f";
+	}
+}
+.icon-chooseVisibleColumns {
+	&:before, .ie7Icon {
+		content: "\25eb";
+	}
+}
+.icon-groupByAccount, .icon-mergeUsers {
+	&:before, .ie7Icon {
+		content: "\e010";
+	}
+}
+.icon-info {
+	&:before, .ie7Icon {
+		content: "\e011";
+	}
+}
+.icon-actionPersonalOrder {
+	&:before, .ie7Icon {
+		content: "\260b";
+	}
+}
+.icon-actionPartyOrder {
+	&:before, .ie7Icon {
+		content: "\e012";
+	}
+}
+.icon-actionCompose {
+	&:before, .ie7Icon {
+		content: "\e013";
+	}
+}
+.icon-actionComposeLetter, .icon-pageEdit {
+	&:before, .ie7Icon {
+		content: "\270d";
+	}
+}
+.icon-actionNewsletter {
+	&:before, .ie7Icon {
+		content: "\2633";
+	}
+}
+.icon-actionDashPWS {
+	&:before, .ie7Icon {
+		content: "\e014";
+	}
+}
+.icon-template {
+	&:before, .ie7Icon {
+		content: "\e015";
+	}
+}
+.icon-saveReportLink {
+	&:before, .ie7Icon {
+		content: "\e016";
+	}
+}
+.icon-actionFlatReport {
+	&:before, .ie7Icon {
+		content: "\2637";
+	}
+}
+.icon-help {
+	&:before, .ie7Icon {
+		content: "\e017";
+	}
+}
+.icon-editPerson {
+	&:before, .ie7Icon {
+		content: "\e018";
+	}
+}
+.icon-directShipOff, .icon-directShipOn {
+	&:before, .ie7Icon {
+		content: "\e019";
+	}
+}
+.icon-bundle-add {
+	&:before, .ie7Icon {
+		content: "\e01a";
+	}
+}
+.icon-bundle-arrow {
+	&:before, .ie7Icon {
+		content: "\e01b";
+	}
+}
+.icon-bundle-full {
+	&:before, .ie7Icon {
+		content: "\e01c";
+	}
+}
+.icon-replyAll {
+	&:before, .ie7Icon {
+		content: "\e01d";
+	}
+}
+.icon-reply {
+	&:before, .ie7Icon {
+		content: "\e01e";
+	}
+}
+.icon-eventCalendar, .icon-actionEvent {
+	&:before, .ie7Icon {
+		content: "\e01f";
+	}
+}
+.icon-pageAdd {
+	&:before, .ie7Icon {
+		content: "\e020";
+	}
+}
+.icon-pageMin {
+	&:before, .ie7Icon {
+		content: "\e021";
+	}
+}
+.icon-pageSearch {
+	&:before, .ie7Icon {
+		content: "\e022";
+	}
+}
+.icon-pageX {
+	&:before, .ie7Icon {
+		content: "\e023";
+	}
+}
+.icon-actionGlobe {
+	&:before, .ie7Icon {
+		content: "\e024";
+	}
+}
+.icon-actionAutoShip {
+	&:before, .ie7Icon {
+		content: "\e025";
+	}
+}
+.icon-actionHome {
+	&:before, .ie7Icon {
+		content: "\e026";
+	}
+}
+
+/************************************************************************************
+* Special Case rules
+************************************************************************************/
+.SortColumn {
+	&:before, .ie7Icon {
+		font-size:em(28);
+		line-height:.5;
+		@include opacity(.5);
+	}
+}
+.currentSort {
+	span:before, .ie7Icon {
+		content: "\e028";
+		@include opacity(1);
+	}
+	.SortDescend {
+		&:before, .ie7Icon {
+			content: "\25be";
+		}
+	}
+}
+
+.DeleteGuest {
+	margin-right:em($IconSize+2);
+}
+
+/************************************************************************************
+* Fixes
+************************************************************************************/
+body.IE9, body.IE10 {
+	.SortColumn:before {
+		font-size:.9em;
+	}
+}

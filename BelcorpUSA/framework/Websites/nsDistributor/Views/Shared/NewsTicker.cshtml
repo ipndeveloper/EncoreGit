@@ -1,0 +1,72 @@
+﻿
+<div id="Previous" class="UI-cycle-icon news-icon-arrowPrev FL" data-icon="<"></div>
+<div id="NewsTicker" class="overflow FL">
+    <ul id="NewsList" class="FL inlineNav">
+        @foreach (News news in ViewBag.News)
+        {
+            <li id="Slide-@news.NewsID">
+                <a href="@Href("~/News/Article", news.NewsID)" class="ArticleImage" id="@news.NewsID"></a>
+                <div class="FL">
+                    <span class="newsDate">
+                        @news.StartDate.ToString("MMM", BaseController.CurrentCulture)
+                        @news.StartDate.Day.ToString(BaseController.CurrentCulture),
+                        @news.StartDate.Year.ToString(BaseController.CurrentCulture)
+                    </span>
+                    <h2>
+                        <a href="@Url.Resolve("~/News/Article", news.NewsID)">@Html.Raw(news.HtmlSection.ProductionContentForDisplay(BaseController.CurrentSite).Title())</a>
+                    </h2>
+                    <p>
+                        @Html.Raw(news.HtmlSection.ProductionContentForDisplay(BaseController.CurrentSite).Caption())
+                        <a href="@Url.Resolve("~/News/Article", news.NewsID)" class="block">@Html.Term("ReadFullArticle", "Read full article")</a>
+                    </p>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<div id="Next" class="UI-cycle-icon news-icon-arrowNext FR" data-icon=">"></div>
+<span class="clrall"></span>
+
+
+
+<script type="text/javascript" src="@Url.Content("~/Resource/Scripts/jquery.cycle.all.min.js")"></script>
+<script type="text/javascript">
+    $(function () {
+
+        //News article thumbnails
+        $('a.ArticleImage').each(function () {
+            var articleThumb = $(this).attr('ID');
+            var thumbName = articleThumb.replace(/-/g, "");
+            var defaultThumb = "encore_default_news_thumbnail";
+            $.ajax({
+                url: '/FileUploads/CMS/Images/' + thumbName + '.png',
+                type: 'HEAD',
+                error:
+                function () {
+                    $('a#' + articleThumb).css({ 'background': 'url(/FileUploads/CMS/Images/' + defaultThumb + '.png)' });
+
+                },
+                success:
+                function () {
+                    $('a#' + articleThumb).css({ 'background': 'url(/FileUploads/CMS/Images/' + thumbName + '.png)' });
+                }
+            });
+        });
+
+        $('.UI-cycle-icon').hover(function () {
+            $(this).toggleClass('hovered');
+        });
+
+        $('#NewsTicker #NewsList').cycle({
+            fx: 'scrollHorz',
+            prev: '#Previous',
+            next: '#Next',
+            width: '100%',
+            timeout: 0,
+            speed: 250
+        });
+
+
+    });
+</script>
+

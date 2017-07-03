@@ -1,0 +1,95 @@
+﻿/***********************************
+Last Update 8/29/2012 2:30PM Kirstina
+***********************************/
+@import "_DecoratedLinks";
+@import "_Base";
+
+html, body, #Container {height:100%;}
+.clr {clear:both;display:block;}
+body {
+    margin:0;
+	padding:0;
+	font:100%/100% $font_family;
+	@include Gradient(#E5E6E6, (#ffffff 30%) (#d1d3d4 70%), null, center -10em, Radial);
+}
+input, textarea, select {
+	font-size:100%;
+	font-family: $font_family;
+}
+#Container {
+    background:url("../Images/grayWave.png") no-repeat scroll center 180px;
+}
+#Login {
+	padding-top:200px;
+	font-size:.75em;
+	background:url("../Images/encore.png") no-repeat scroll center 25px;
+}	
+#LoginForm {
+	width:21.667em;
+	margin:auto;
+	min-height:14.167em;
+	padding:2.5em 8em;
+	overflow:hidden;	
+    background:#FFFFFF;
+	border:.1em solid #d4d6d7;
+    border-radius:$border-radius + .25;
+	@include BoxShadow(0 0 50px rgba(0, 0, 0, 0.2));
+	
+	h1 {
+		margin:0 0 .947em 0;
+		padding:0;	
+		color:#8E8F90;
+		font-size:1.583em;
+		font-weight:normal;
+	}
+}
+.Fields  {
+	margin-bottom:1.667em;
+	
+	p {
+		margin:1.25em 0;
+	}
+	input {
+		width:95%;
+		padding:.417em;
+	}
+}
+#btnLogin {
+    clear:both;
+	display:block;
+	float:left;
+	overflow:hidden;	
+    color:#fff;
+	text-decoration:none;
+	text-transform:uppercase;
+	border:.167em solid #fff;
+	border-radius:$border_radius;
+	@include BoxShadow(0 0 .25em rgba(0, 0, 0, 0.2));
+
+	span {
+		display:block;
+		font-size:1.583em;
+		line-height:1.895em;
+		padding:0 .789em;
+		@include Gradient(#A7CF84, (rgba(180,222,151,0) 0%) (rgba(101,164,59,1) 90%));
+		@include transition(background-color, $transition_time / 2);	
+		
+		&:hover {
+			background-color:#78b94b;
+		}
+	}
+}
+.error_message_block {	
+	position:fixed;
+	bottom:0;
+	left:0;
+	display:block;
+	width:100%;
+	clear:both;
+	margin-top:1em;
+	padding:20px;
+	line-height:1.6em;
+	font-size:1.35em;
+	text-align:center;
+	background-color:#FFF9DF;
+}

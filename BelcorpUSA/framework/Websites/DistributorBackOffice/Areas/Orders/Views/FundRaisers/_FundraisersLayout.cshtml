@@ -1,0 +1,31 @@
+﻿@{
+	Layout = "~/Views/Shared/_Site.cshtml";
+}
+@section head{
+	@RenderSection("head", false)
+}
+<div class="PageTitle">
+	<div class="Crumbs PartyStepNavigation">
+		@RenderSection("breadcrumb", false)
+	</div>
+	<h1>
+		@RenderSection("title", true)
+	</h1>
+</div>
+<table class="DashColumns">
+	<tr>
+		<td id="SecondaryRail">
+		@if (IsSectionDefined("rail"))
+  {
+			@RenderSection("rail", false)
+  }
+  else if (Model != null && Model.PartyID > 0)
+  {
+	  Html.RenderPartial("PartySummary");
+  }
+		</td>
+		<td id="ContentColumn">
+			@RenderBody()
+		</td>
+	</tr>
+</table>

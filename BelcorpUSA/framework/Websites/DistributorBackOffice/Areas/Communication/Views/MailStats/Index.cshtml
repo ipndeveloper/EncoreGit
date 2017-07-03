@@ -1,0 +1,70 @@
+﻿@model DistributorBackOffice.Areas.Communication.Models.MailStats.IndexModel
+
+<script type="text/javascript">
+    $(function () {
+        $('#newsletterStatistics.Tabber').undelegate('li', 'click');
+        $('#newsletterStatistics a.NewsletterStatisticsTabClickable').click(function () {
+            if (!$(this).parent().hasClass('current')) {
+                var tabber = $(this).closest('ul');
+                $('.current', tabber).removeClass('current');
+                $(this).parent().addClass('current');
+
+                $('#mailStatsRecipientListContainer').hide().empty();
+
+                $.post('/Communication/MailStats/RecipientList', {
+                    searchType: $(this).attr('rel'),
+                    campaignActionID: $('#MailStatsCampaignActionID').val(),
+                    campaignSubscriptionAddedByAccountID: $('#MailStatsCampaignSubscriptionAddedByAccountID').val()
+                }, function (response) {
+                    $('#mailStatsRecipientListContainer').html(response).show();
+                });
+            }
+        });
+    });
+</script>
+@Html.HiddenFor(m => m.CampaignActionID, new { id = "MailStatsCampaignActionID" })
+@Html.HiddenFor(m => m.CampaignSubscriptionAddedByAccountID, new { id = "MailStatsCampaignSubscriptionAddedByAccountID" })
+
+<div id="newsletterStatistics" class="NewsletterStatisticsNav Tabber">
+    <ul class="inlineNav">
+        <li>
+            <a class="NewsletterStatisticsTabNotClickable UI-lightBg" href='javascript:void(0);'>
+                <span class="label">@Html.Term("MailingDate", "Mailing Date"):</span>
+                <span class="statValue">@(Model.MailingDate.HasValue ? Model.MailingDate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo) : "")</span>
+                <br class="clr" />
+            </a>
+        </li>
+        <li class='@(Model.SearchType == Constants.MailMessageGroupAddressSearchType.Sent ? "current" : "")'>
+            <a class="NewsletterStatisticsTabClickable UI-lightBg" href='javascript:void(0);' rel='@Constants.MailMessageGroupAddressSearchType.Sent'>
+                <span class="label">@Html.Term("EmailsSent", "Emails Sent"):</span>
+                <span class="statValue">@Model.Totals.SentCount.ToString("N0", CoreContext.CurrentCultureInfo)</span>
+                <br class="clr" />
+            </a>
+        </li>
+        <li class='@(Model.SearchType == Constants.MailMessageGroupAddressSearchType.Failed ? "current" : "")'>
+            <a class="NewsletterStatisticsTabClickable UI-lightBg" href='javascript:void(0);' rel='@Constants.MailMessageGroupAddressSearchType.Failed'>
+                <span class="label">@Html.Term("EmailsBounced", "Emails Bounced"):</span>
+                <span class="statValue">@Model.Totals.FailedCount.ToString("N0", CoreContext.CurrentCultureInfo)</span>
+                <br class="clr" />
+            </a>
+        </li>
+        <li class='@(Model.SearchType == Constants.MailMessageGroupAddressSearchType.Opened ? "current" : "")'>
+            <a class="NewsletterStatisticsTabClickable UI-lightBg" href='javascript:void(0);' rel='@Constants.MailMessageGroupAddressSearchType.Opened'>
+                <span class="label">@Html.Term("EmailsOpened", "Emails Opened"):</span>
+                <span class="statValue">@Model.Totals.OpenedCount.ToString("N0", CoreContext.CurrentCultureInfo)</span>
+                <br class="clr" />
+            </a>
+        </li>
+        <li class='@(Model.SearchType == Constants.MailMessageGroupAddressSearchType.Clicked ? "current" : "")'>
+            <a class="NewsletterStatisticsTabClickable UI-lightBg" href='javascript:void(0);' rel='@Constants.MailMessageGroupAddressSearchType.Clicked'>
+                <span class="label">@Html.Term("UniqueClicks", "Unique Clicks"):</span>
+                <span class="statValue">@Model.Totals.ClickedCount.ToString("N0", CoreContext.CurrentCultureInfo)</span>
+                <br class="clr" />
+            </a>
+        </li>
+    </ul>
+    <span class="clr"></span>
+</div>
+<div id="mailStatsRecipientListContainer">
+    @Html.Partial("RecipientList", Model.RecipientListModel)
+</div>

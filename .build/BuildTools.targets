@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sets up the build tools and paths.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<BuildToolsRoot>$(MSBuildThisFileDirectory)</BuildToolsRoot>
+		<BuildTargetsRoot>$(BuildToolsRoot)BuildTargets\</BuildTargetsRoot>
+	    <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildThisFileDirectory)3rdParty\MSBuild.Community.Tasks.v1.4.0.65\</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+	
+	<Import Project="$(SolutionDir)\import-before-buildtools.targets" 
+		Condition="Exists('$(SolutionDir)\import-before-buildtools.targets')"/>	
+
+	<Import Project="$(BuildToolsRoot)3rdParty\MSBuild Extension Pack 4.0.8.0 Binaries\MSBuild.ExtensionPack.tasks"/>
+	<Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.Targets" />  
+					
+	<Import Project="$(SolutionDir)\import-after-buildtools.targets" 
+			Condition="Exists('$(SolutionDir)\import-after-buildtools.targets')"/>
+</Project>

@@ -1,0 +1,62 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Receipt.IndexModel
+
+@section head {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/Receipts-Print.css")" media="print" /> 
+	<iframe   name ="frmExportar" id="frmExportar" style="display:none" src="">
+</iframe>
+}
+
+@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+    
+ <script type="text/javascript">
+     $(function () {
+         $.post('/Enroll/Receipt/ValidateSendEmailBoleto', { orderNumber: '@Model.OrderNumber ' }, function (results) {
+             if (results.result) {
+                 var url = '@Href("~/Enroll/Receipt/ExportarBoleta")?';
+                 url = url + "OrderPaymentID=" + results.OrderPaymentID + "&BankName=" + results.BankName + "&BankCode=" + results.BankCode;
+                 $("#frmExportar").attr("src", url);
+             }
+         });
+     });
+  </script>
+}
+
+
+
+<div class="clr UI-lightBg pad10 m5 brdrAll receiptOrderNumber">
+    <div class="FL">
+        @if (Model.DisplayUserName && !string.IsNullOrWhiteSpace(Model.Summary.UserName))
+        {
+            <h3>@Html.Term("YourUsernameIs", "Your username is"): @Model.Summary.UserName</h3>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.OrderNumber))
+        {
+            <h3>@Html.Term("YourOrderNumberIs", "Your order number is"): @Model.OrderNumber</h3>
+        }
+        @Html.Partial("_CustomReceiptInfo", Model.Summary.EnrollingAccount)
+    </div>
+  @*  Modificacion asociada al req BR-PRD-00 salcedo vila G.GYS*@
+   @* @1{*@
+    <a href="javascript:void(0);" onclick="window.print();" class="FR Button btnPrintReceipt">
+        <span>@Html.Term("PrintYourReceipt", "Print your receipt")</span>
+    </a>
+    @*}*@
+    <span class="clr"></span>
+</div>
+
+@Html.DisplayFor(m => m.Summary)
+
+<div class="FL pad10">
+    <div class="UI-cmsWrap block">
+        @ViewData["Enrollment_Receipt_BottomContent"]
+    </div>
+</div>
+<span class="clr"></span>
+
+<a href="@Url.Content(@Html.Term("ReturnToDWS", "https://consultor.lbel.com.br"))" class="Button MinorButton" id="BtnReturnHome"><span>@Html.Term("ReturnToHomePage", "Return to Home Page")</span></a>
+<a href="javascript:void(0);" onclick="window.print();" class="FR Button btnPrintReceipt">
+    <span>@Html.Term("PrintYourReceipt", "Print your receipt")</span>
+</a>
+
+    

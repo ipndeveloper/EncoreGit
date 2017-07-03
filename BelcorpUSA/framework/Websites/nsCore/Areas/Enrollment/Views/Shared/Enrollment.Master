@@ -1,0 +1,124 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Accounts/Views/Shared/Accounts.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <script type="text/javascript" src="<%= ResolveUrl("~/Scripts/functions.js") %>"></script>
+
+	<script type="text/javascript">
+		window.letUnload = true;
+		window.ajaxFiring = window.ieclicklink = false;
+		window.onbeforeunload = function () {
+			if (!letUnload && !ajaxFiring && !ieclicklink) {
+				return window.onbeforeunloadmessage || '<%= Html.Term("TheEnrollmentProcessWillBeTerminatedIfYouNavigateAway", "The enrollment process will be terminated if you navigate away.") %>' + (window.enrollmentAccountNumber ? String.format('  <%= Html.Term("AccountNumberOfAlreadyEnrolledPerson", "Please note that the account number of the person you have already enrolled is {0}.") %>', window.enrollmentAccountNumber) : '');
+			}
+			if (ieclicklink)
+				ieclicklink = false;
+		}
+        <%-- Master page namespace --%>
+		var enrollmentMaster = new function () {
+            this.getStepAction = function (options) {
+                this.stepAction($.extend({}, options, { type: 'GET' }));
+            };
+            this.postStepAction = function (options) {
+                this.stepAction($.extend({}, options, { type: 'POST' }));
+            };
+		    this.stepAction = function (options) {
+		        var defaults = {
+                    type: 'GET',
+		            step: undefined,
+		            stepAction: '',
+		            data: {},
+		            showLoadingElement: undefined,
+		            load: false,
+                    loadElement: $('#enrollment'),
+		            success: function () { }
+		        };
+		        var settings = $.extend({}, defaults, options);
+
+		        if (settings.step === undefined)
+		            return;
+
+		        if (settings.showLoadingElement !== undefined)
+		            showLoading(settings.showLoadingElement);
+		        
+                window.letUnload = false;
+
+		        var url = '<%: ResolveUrl("~/Enrollment") %>/' + settings.step + '/' + settings.stepAction;
+		        $.ajax({
+                    url: url,
+                    type: settings.type,
+                    data: settings.data,
+                    success: function (response) {
+                    	if (settings.load) {
+                            if (response.result === undefined) {
+                                settings.loadElement.fadeOut('fast', function () {
+									$(this).empty().append(response).fadeIn('fast');
+                                });
+                                 showMessage('Save successfully!', false);
+                            } else {
+                            	if (settings.showLoadingElement !== undefined) {
+                        			hideLoading(settings.showLoadingElement);
+								} 
+                            	showMessage(response.message, !response.result);
+                            }
+                        }
+                    	
+                        settings.success(response);
+                    },
+                    error: function () {
+                        if (settings.showLoadingElement !== undefined) {
+                        	hideLoading(settings.showLoadingElement);
+                        }
+                    	showMessage(undefined, true);
+                    }
+                });
+		    };
+		};
+
+        $(function () {
+		    $('body').ajaxStart(function () {
+		        window.ajaxFiring = true;
+		    }).ajaxStop(function () {
+		        window.ajaxFiring = false;
+		    });
+		    $('#enrollment a,#messageCenterModal a').live('click', function () {
+		        window.ieclicklink = true;
+		    });
+
+		});
+
+	</script>
+	<style type="text/css">
+		h4
+		{
+			font-size: 13px;
+			border-bottom: 1px solid rgb(82, 82, 84);
+		}
+		.requiredMarker
+		{
+			color: Red;
+			font-weight: bold;
+		}
+	</style>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ContentPlaceHolderID="LeftNav" runat="server" />
+
+<asp:Content ContentPlaceHolderID="BreadCrumbContent" runat="server">
+    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server">
+	    <a href="<%= ResolveUrl("~/Accounts") %>"><%= Html.Term("Accounts") %></a>
+        > <%= Html.Term("Enrollment") %>
+    </asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+	<div class="SectionHeader">
+		<h2>
+			<%= Html.Term("Enrollment") %><% if (ViewBag.AccountTypeName != null) { %> - <%= ViewBag.AccountTypeName %><% } %> </h2>
+	</div>
+	<div id="enrollment">
+	    <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+	</div>
+</asp:Content>
+
+<asp:Content ContentPlaceHolderID="RightContent" runat="server" />

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This file provides version stamps used by the build.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Condition="Exists('$(MSBuildThisFileDirectory)Version.targets')" Project="$(MSBuildThisFileDirectory)Version.targets" />
+	<PropertyGroup>
+		<AssemblyInfo Condition="!Exists('$(AssemblyInfo)')">Properties\AssemblyInfo.cs</AssemblyInfo>
+		<VersionMajor Condition="'$(VersionMajor)' == ''">0</VersionMajor>
+		<VersionMinor Condition="'$(VersionMinor)' == ''">1</VersionMinor>
+		<VersionBuild Condition="'$(VersionBuild)' == ''">0</VersionBuild>
+		<VersionRevision Condition="'$(Configuration)' != 'Release'">1</VersionRevision>
+		<VersionRevision Condition="'$(CMVersionRevision)' != '' and '$(Configuration)' == 'Release' and $(CMBuild) != ''">$(CMVersionRevision)</VersionRevision>
+		<VersionRevision Condition="'$(VersionRevision)' == ''">0</VersionRevision>
+		<VersionInformationalSuffix Condition="'$(Configuration)' == 'Debug'">-$(USERNAME.Replace(" ", ""))</VersionInformationalSuffix>
+	</PropertyGroup>
+	
+	<Target Name="SvnCleanVersionFiles" BeforeTargets="BeforeClean">
+		<ItemGroup>
+        <FilesToDelete Include="$(MSBuildProjectDirectory)\**\*.version.cs" />
+    </ItemGroup>
+    <Delete 
+        Files="@(FilesToDelete)" 
+        ContinueOnError="true" 
+        TreatErrorsAsWarnings="true"/>
+	</Target>
+	
+	<Target Name="SvnVersioningPrerequisites" Condition="!Exists('$(AssemblyInfoVersionFile)')">
+		<!-- Creates the AssemblyInfo.version.cs file -->
+		<ItemGroup>
+			<Line Include="line0"><Text>using System;</Text></Line>
+			<Line Include="line1"><Text>using System.Reflection;</Text></Line>
+			<Line Include="line2"><Text>[assembly: AssemblyFileVersion("0.1.0.0")]</Text></Line>
+			<Line Include="line3"><Text>[assembly: AssemblyVersion("0.1.0.0")]</Text></Line>
+		</ItemGroup>
+		
+		<SvnInfo Condition="'$(VersionBuild)' == '0'" RepositoryPath="$(MSBuildThisFileDirectory.Replace('\', '/'))">
+			<Output TaskParameter="Revision" PropertyName="VersionBuild" />
+		</SvnInfo>
+		<PropertyGroup>
+			<AssemblyInfoVersionFile>Properties\AssemblyInfo.$(Configuration).r$(VersionBuild).version.cs</AssemblyInfoVersionFile>
+			<MustWriteAssemblyInfoVersionFile Condition="!Exists('$(AssemblyInfoVersionFile)')">true</MustWriteAssemblyInfoVersionFile>
+		</PropertyGroup>
+				
+		<WriteLinesToFile Condition="'$(MustWriteAssemblyInfoVersionFile)' == 'true'" File="$(AssemblyInfoVersionFile)" Lines="@(Line->'%(Text)')" Overwrite="true" />
+	</Target>
+	
+	<Target Name="SvnVersioning" BeforeTargets="BeforeBuild" Condition="'$(RunSvnVersioning)' == 'True'"
+				DependsOnTargets="SvnVersioningPrerequisites">
+		<CreateItem Include="$(AssemblyInfoVersionFile)">
+			<Output TaskParameter="Include" ItemName="Compile" />
+		</CreateItem>
+		
+		<CallTarget Condition="'$(MustWriteAssemblyInfoVersionFile)' == 'true'" Targets="WriteAssemblyInfoVersionFile" />
+	</Target>
+
+
+	<Target Name="WriteAssemblyInfoVersionFile">
+		<!-- Remove (possibly) duplicate assembly versioning attributes from AssemblyInfo.cs -->
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyFileVersion" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyVersion" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfo)" Lines="AssemblyInformationalVersion" />
+
+		<!-- Update AssemblyInfo.cfg.r.version.cs -->
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfoVersionFile)" Lines="AssemblyFileVersion" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfoVersionFile)" Lines="AssemblyVersion" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="RemoveLines" Files="$(AssemblyInfoVersionFile)" Lines="AssemblyInformationalVersion" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfoVersionFile)" Lines="[assembly: AssemblyFileVersion(&quot;$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot;)]" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfoVersionFile)" Lines="[assembly: AssemblyVersion(&quot;$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)&quot;)]" />
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="WriteLines" Files="$(AssemblyInfoVersionFile)" Lines="[assembly: AssemblyInformationalVersion(&quot;$(VersionMajor).$(VersionMinor).$(VersionBuild)$(VersionInformationalSuffix)&quot;)]" />
+	</Target>
+	
+	
+</Project>

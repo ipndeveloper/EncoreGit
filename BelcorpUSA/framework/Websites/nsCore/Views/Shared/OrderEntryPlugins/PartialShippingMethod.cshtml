@@ -1,0 +1,81 @@
+﻿@model OrderEntryModel
+@{
+    AutoshipSchedule autoshipSchedule = ViewData["AutoshipSchedule"] as AutoshipSchedule;
+    InventoryBaseRepository inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>();
+    //bool fixedAutoship = autoshipSchedule != null && autoshipSchedule.AutoshipScheduleProducts.Count > 0;
+    var containsShippableOrderItems = Model.Order.OrderCustomers.SelectMany(x => x.OrderItems).Any(x => inventory.GetProduct(x.ProductID ?? 0).ProductBase.IsShippable);
+    bool displayShippingMethods = ((autoshipSchedule != null && autoshipSchedule.IsVirtualSubscription) || !containsShippableOrderItems);
+    int selectedShippingMethod = Model.Order.GetDefaultShipment() == null ? 0 : Model.Order.GetDefaultShipment().ShippingMethodID.ToInt();
+    IEnumerable<ShippingMethodWithRate> shippingMethodWithRates = ViewData["ShippingMethods"] as IEnumerable<ShippingMethodWithRate>;
+    var displayNone = string.Empty;
+    var shipmentAdjustmentAmount = shippingMethodWithRates != null && shippingMethodWithRates.Count() > 0 ? Model.Order.OrderCustomers[0].ShippingAdjustmentAmount : 0;
+}
+<table class="FormTable Section shippingMethodsSection" width="100%" @(displayShippingMethods ? "style=display:none" : string.Empty)>
+    <tr>
+        <td class="FLabel">
+            @Html.Term("ShipMethod", "Ship Methdod")
+        </td>
+        <td id="shippingMethods">
+            @if (shippingMethodWithRates != null && shippingMethodWithRates.Any() && containsShippableOrderItems)
+            {
+                foreach (ShippingMethodWithRate shippingMethod in shippingMethodWithRates.OrderBy(sm => sm.ShippingAmount))
+                {
+                    string methodName = string.IsNullOrEmpty(shippingMethod.Name) == true ? string.Empty : shippingMethod.Name.ToUpper().Replace("DAY(S)", Html.Term("DayPlural", "day(s)").ToUpper()); 
+                <div class="FL AddressProfile">
+                    <input id='@string.Format("shippingMethod{0}", shippingMethod.ShippingMethodID)' type="radio" name="shippingMethod"
+                    class="Radio" value="@shippingMethod.ShippingMethodID" @(shippingMethod.ShippingMethodID == selectedShippingMethod ? "checked=\"checked\"" : "") />
+                    <label for='@string.Format("shippingMethod{0}", shippingMethod.ShippingMethodID)'>
+                        <b>
+                            @methodName</b><br />
+                        @if (shipmentAdjustmentAmount != 0)
+                        {
+                            <span class="shipMethodPrice originalPrice strikethrough">@(shippingMethod.ShippingAmount.ToString(Model.Order.CurrencyID))</span>
+                            <span class="shipMethodPrice discountPrice">@((shippingMethod.ShippingAmount - shipmentAdjustmentAmount).ToString(Model.Order.CurrencyID))</span>
+                        }
+                        else
+	                    {
+                            <span class="shipMethodPrice originalPrice">@(shippingMethod.ShippingAmount.ToString(Model.Order.CurrencyID))</span>;
+                        }
+                    </label>
+                    <br /> 
+                </div>
+                }
+            }
+            else
+            {
+                @Html.Term("NoShippingRatesAvailable", "No shipping rates available. Please enter a shipping address if one is not yet added to order or adjust existing address or order contents.")
+            }
+            @*<div class="UI-lightBg pad10" id="ProcessingTimeDisclaimer">
+            <p>@Html.Term("ShippingMethodHighVolumeDisclaimer", "Processing times may increase during periods of high sales volume.")</p>
+            <p>@Html.Term("ShippingMethodProcessingTimeDisclaimer", "Estimated shipping times do not include processing.")</p>
+            </div>*@
+        </td>
+    </tr> 
+    <tr id="divDate" class="FLabel">
+          <td class="FLabel">
+                @Html.Term("DateEstimated", "Date Estimated"): 
+         </td> 
+         <td> 
+            <div class="FL AddressProfile"><label id="lblDateEstimated" >@Convert.ToString(Session["DateEstimated"])</label>   </div>
+         </td>
+    </tr>
+</table>
+    
+<script type="text/javascript"> 
+    $(function () {
+//    $('#divDate').hide();
+        $('input:radio[name=shippingMethod]').live('click', function () {
+            $.post('@Href("~/" + Model.SetShippingMethodLocation)', { shippingMethodId: $(this).val() }, function (results) {
+                if (results.result) {
+                    updateTotals(results);
+                    $('#divDate').show();
+                    $('#lblDateEstimated').html(results.dateEstimated);  
+                }
+                else {
+                    showMessage('@Html.Term("ErrorChangingShippingMethod", "The shipping method could not be changed"): ' + results.message, true);
+                }
+            });
+        });
+    });
+
+</script>

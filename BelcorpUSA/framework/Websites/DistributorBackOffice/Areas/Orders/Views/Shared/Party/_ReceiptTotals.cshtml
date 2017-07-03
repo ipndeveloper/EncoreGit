@@ -1,0 +1,51 @@
+﻿@model NetSteps.Data.Entities.Party
+<div class="UI-lightBg brdrAll orderTotals">
+    <table width="100%">
+        <tr class="GridTotalBar">
+            <td style="text-align: right;">
+                @Html.Term("Subtotal"):<br />
+
+                @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+                                if (valorSCV == "S")
+                                {
+                @Html.Term("CommissionableTotal", "Commissionable Total")@:<br />
+                                                                         }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                @Html.Term("Tax"):<br />
+                @Html.Raw(Html.Term("S&H", "S&amp;H")):<br />
+                <b>@Html.Term("Total"):</b>
+            </td>
+            <td>
+                <span class="subtotal">
+                    @Model.Order.Subtotal.ToString(Model.Order.CurrencyID)</span>
+                <br />
+
+                 @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+                <span class="commissionableTotal">
+                    @Model.Order.CommissionableTotal.ToString(Model.Order.CurrencyID)</span>
+                <br />
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                <span class="taxTotal">
+                    @((Model.Order.TaxAmountTotalOverride != null) ? Model.Order.TaxAmountTotalOverride.ToString(Model.Order.CurrencyID) : Model.Order.TaxAmountTotal.ToString(Model.Order.CurrencyID))</span>
+                <br />
+                <span class="shippingTotal">
+                    @((Model.Order.ShippingTotalOverride != null) ? Model.Order.ShippingTotalOverride.ToString(Model.Order.CurrencyID) : Model.Order.ShippingTotal.ToString(Model.Order.CurrencyID))</span>
+                <br />
+                <b><span class="grandTotal">
+                    @Model.Order.GrandTotal.ToString(Model.Order.CurrencyID)</span></b>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,24 @@
+﻿@model DistributorBackOffice.Models.Agreements.AgreementModel
+@*ITG 2833(JCT) - Inicio*@
+<div>@Html.Term("NoticeTermsAndConditions", "Text field to inform the process of signing terms and conditions.")</div>
+<div class="FL policy @Model.CssClass">
+    <h3 class="brdrYYNN" >@Model.Name</h3>
+    @if (!string.IsNullOrWhiteSpace(Model.Url))
+    {
+        <div class="brdr"><a href="@Model.Url" class="pdf" target="_blank"><span class="UI-icon icon-file-pdf" id="UI-Pdf-object"></span> @Html.Term("DownloadAsPDF", "Download as PDF")</a></div>
+    }
+    @if (!MvcHtmlString.IsNullOrEmpty(Model.Content))
+    {
+        <div class="terms pad10">
+            @Model.Content
+        </div>
+    }
+    <div class="UI-lightBg">
+        @{ var chkId = "chkPolicy" + Model.PolicyID; }
+        @Html.HiddenFor(m => m.PolicyID)
+        @Html.CheckBoxFor(m => m.Accepted, new { id = chkId })
+        @Html.ValidationMessageFor(m => m.Accepted)
+        <label for="@chkId">@string.Format(Html.Term("IAgreeToTheAgreement", "I agree to the {0}"), Model.Name)</label>
+        <span class="clr"></span>
+    </div>
+</div>

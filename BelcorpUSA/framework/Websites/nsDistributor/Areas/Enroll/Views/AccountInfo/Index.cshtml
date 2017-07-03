@@ -1,0 +1,42 @@
+﻿@model IEnumerable<nsDistributor.Areas.Enroll.Models.AccountInfo.SectionModel>
+@{
+	Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+}
+@foreach (var sectionModel in Model)
+{
+	<div class="personalInfoForm">
+		@if (sectionModel.Active)
+  {
+			@*<div class="UI-darkBg brdrAll pad2 m5 sectionTitle">*@
+            <div class="brdrAll pad2 m5 sectionTitle">      
+				<h4>@sectionModel.Title</h4>
+			</div>
+			<div class="UI-lightBg brdrAll m5 active">
+				<div class="pad10">
+					@Html.Partial(sectionModel.PartialViewName, sectionModel)
+				</div>
+			</div>
+  }
+  else if (sectionModel.Completed)
+  {
+			<div class="UI-lightBg brdrAll pad2 m5 sectionTitle completed">
+				<h4>@sectionModel.Title <a href="@Url.Action(sectionModel.Action)"><span class="FR UI-icon icon-edit">@Html.Term("Edit")</span></a></h4>
+				<div>
+					@Html.Partial(sectionModel.PartialViewName, sectionModel)
+				</div>
+			</div>
+  }
+  else
+  {
+			@*<div class="UI-lightBg brdrAll pad2 m5 sectionTitle">
+				<h4>@sectionModel.Title</h4>
+			</div>*@
+  }
+	</div>
+	<span class="ClearAll"></span>
+}
+@section bodyFooter
+{
+	@*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz7WLquI2F2K7f-feFn-6VzJDp0wBWB-M"></script>*@
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+}

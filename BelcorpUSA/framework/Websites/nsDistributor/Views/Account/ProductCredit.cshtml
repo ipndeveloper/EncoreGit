@@ -1,0 +1,20 @@
+@model dynamic
+@{
+    ViewBag.Title = Html.Term("ProductCreditLedger", "Product Credit Ledger");
+}
+<div class="pageTitle">
+    <div class="breadCrumb">
+        <a href="@Url.Resolve("~/Account")"><span>@Html.Term("MyAccount", "My Account")</span></a>
+    </div>
+    <h1>@Html.Term("ProductCreditLedger", "Product Credit Ledger")</h1>
+</div>
+@{ Html.PaginatedGrid("~/Account/GetProductCredit")
+        .AddColumn(Html.Term("Description"), "EntryDescription", false)
+        .AddColumn(Html.Term("Reason"), "LedgerEntryReason.Name", false)
+        .AddColumn(Html.Term("Type"), "LedgerEntryType.Name", false)
+        .AddColumn(Html.Term("EffectiveDate", "Effective Date"), "EffectiveDate", false)
+        .AddColumn(Html.Term("BonusType", "Bonus Type"), "BonusType.Name", false)
+        .AddColumn(Html.Term("Amount"), "EntryAmount", false)
+        .AddColumn(Html.Term("Balance"), "EndingBalance", false)
+        .Render();
+}

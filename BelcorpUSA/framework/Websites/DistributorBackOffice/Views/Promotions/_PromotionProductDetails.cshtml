@@ -1,0 +1,26 @@
+﻿@using NetSteps.Web.Mvc.Extensions
+@model NetSteps.Promotions.UI.Common.Interfaces.IDisplayInfo
+<div style="display">
+    <div class="mb10 pad10 ml10 brdr1 promotionCoupon">
+        <!--The <h3> below would be the provided title of the promotion, I was thinkning these could be terms so they can edit the verbiage-->
+        <h3 class="mb10 pad5 promotionTitle">@Model.Title</h3>
+        <div class="promotionDetails">
+            <!-- The imageWrapper was if we were going to support getting an image for the promotion, if we do not, just leave commented out for now --
+                
+                -- End optional imageWrapper-->
+            <div class="FL ml10 splitCol60">
+                <div class="promotionDescription">@Model.Description</div>
+                <a href="javascript:void(0);" title="@Model.ActionText" class="FL UI-mainBg mt10 pad5 brdrAll promotionCodeBtn">
+                    <span class="block FL mr10 ml10 promotionCode">@Model.CouponCode</span>
+                    <div class="FL UI-icon-container Add">
+                        <span class="UI-icon icon-plus"></span><span class="clr"></span>
+                    </div>
+                </a>
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="UI-lightBg mt10 pad2 center">
+           @*@Model.Expired @Model.ExpiredDate*@
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿@model Account
+@{
+    var paymentMethods = Model.AccountPaymentMethods;
+    var defaultPaymentMethod = paymentMethods.OrderByDescending(pm => pm.IsDefault).FirstOrDefault();
+}
+<div id="PartyShipConsultant" class="FormContainer pad10 PartyShip">
+       
+        <div class="FL splitCol60 ProfilesList mr10">
+            <ul id="consultantProfiles" class="flatList listNav">
+                @foreach (var paymentMethod in paymentMethods.OrderBy(pm => !pm.IsDefault).ThenBy(pm => pm.AccountPaymentMethodID))
+                {
+                    string profileName = paymentMethod.ProfileName ?? string.Empty;
+                    if (string.IsNullOrEmpty(profileName))
+                    {
+                        profileName = paymentMethod.NameOnCard ?? string.Empty;
+                    }
+                    profileName += paymentMethod.IsDefault ? " (" + Html.Term("default") + ")" : "";
+                    <li><a href="javascript:void(0);" id="paymentMethod@(paymentMethod.AccountPaymentMethodID)" 
+                        class="block paymentMethod overlay@(paymentMethod.AccountPaymentMethodID == defaultPaymentMethod.AccountPaymentMethodID ? " defaultProfile current" : "")" 
+                        title="@Html.Term("Use","Use") @paymentMethod.MaskedAccountNumber" data-paymenttype="@paymentMethod.PaymentTypeID">
+                        @profileName
+                    </a> 
+                    <span class="address" style="display: none;">
+                            @Html.Raw(((IPayment)paymentMethod).ToDisplay(false, false, true))
+                            @if (paymentMethod.PaymentTypeID == (int)Constants.PaymentType.CreditCard || paymentMethod.PaymentTypeID == (int)Constants.PaymentType.EFT)
+                            {
+                                string jsMethod = paymentMethod.PaymentTypeID == (int)Constants.PaymentType.EFT ? "editBankBillingProfile" : "editCCBillingProfile";
+                            <a href="javascript:void(0);" onclick="@(jsMethod)(@(paymentMethod.AccountPaymentMethodID))">@Html.Term("edit")</a>
+                            }
+                    </span>
+                    
+                    </li>
+                }
+            </ul>
+        </div>
+    @if (defaultPaymentMethod != null)
+    {
+        <div class="FR splitCol30 DefaultProfile pad5  bold mr10">
+            <p id="paymentMethodPreview">
+                @Html.Raw(((IPayment)defaultPaymentMethod).ToDisplay(false, false, true))
+                @if (defaultPaymentMethod.AccountPaymentMethodID > 0 && (defaultPaymentMethod.PaymentTypeID == (int)Constants.PaymentType.CreditCard
+                    || defaultPaymentMethod.PaymentTypeID == (int)Constants.PaymentType.EFT))
+                {
+                    string jsMethod2 = defaultPaymentMethod.PaymentTypeID == (int)Constants.PaymentType.EFT ? "editBankBillingProfile" : "editCCBillingProfile";
+                <a href="javascript:void(0);" onclick="@(jsMethod2)(@(defaultPaymentMethod.AccountPaymentMethodID))">@Html.Term("edit")</a>
+                }
+            </p>
+        </div>
+    }
+</div>
+<span class="clr"></span>

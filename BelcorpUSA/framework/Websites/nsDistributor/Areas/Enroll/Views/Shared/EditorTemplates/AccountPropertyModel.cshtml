@@ -1,0 +1,17 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.AccountPropertyModel
+<div class="mb10 aboutQuestion">
+    <p>
+        @Html.HiddenFor(model => model.AccountPropertyTypeID)
+        @Html.HiddenFor(model => model.AccountPropertyID)
+
+        @Model.PropertyTypeLabel
+        @if (Model.Required)
+        { 
+            @Html.Raw("*")
+        }
+    </p>
+    <div class="aboutAnswer">
+        @Html.TextAreaFor(model => Model.PropertyValue)
+        @Html.ValidationMessageFor(model=>Model.PropertyValue)
+    </div>
+</div>

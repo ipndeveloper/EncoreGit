@@ -1,0 +1,75 @@
+﻿<div class="signUpActionTitle">
+    <h3>@Html.Term("PWS_SignUp_Consultant_Heading", "Consultant") <a class="icon-help qmark_trigger" ﻿aria-hidden="true" href="#" content-qmark="@Html.Term("AccountToolTip_Consultant", "Make some extra cash by becoming a consultant today.")"></a></h3>
+</div>
+<div style="display: none;" class="target signUpActionContent">
+    <div class="FormContainer loginForm">
+        <div class="FRow splitCol firstName">
+            <div class="FLabel">
+                <label for="txtFirstName">
+                    @Html.Term("FirstName", "First Name"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtFirstName" class="required" name="@Html.Term("FirstNameIsRequired", "First Name is required.")" tabindex="22" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow splitCol lastName">
+            <div class="FLabel">
+                <label for="txtLastName">
+                    @Html.Term("LastName", "Last Name"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtLastName" class="required" name="@Html.Term("LastNameIsRequired", "Last Name is required.")" tabindex="23" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow fullWidth email">
+            <div class="FLabel">
+                <label for="txtEmail">
+                    @Html.Term("Email"):</label>
+            </div>
+            <div class="FInput">
+                <input type="text" id="txtEmail" class="required" name="@Html.Term("EmailIsRequired", "Email is required.")" tabindex="24" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        @if (Model.DisplayUsernameField)
+        {
+            <div class="FRow splitCol username">
+                <div class="FLabel">
+                    <label for="txtUsername">
+                        @Html.Term("Username"):</label>
+                </div>
+                <div class="FInput">
+                    <input type="text" id="txtNewUsername" class="required" name="@Html.Term("UsernameIsRequired", "Username is required.")" tabindex="25" />
+                </div>
+                <span class="clr"></span>
+            </div>
+        }
+        <div class="FRow splitCol password">
+            <div class="FLabel">
+                <label for="txtPassword">
+                    @Html.Term("Password"):</label>
+            </div>
+            <div class="FInput">
+                <input type="password" id="txtNewPassword" class="required" name="@Html.Term("PasswordIsRequired", "Password is required.")" tabindex="26" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <div class="FRow splitCol confirmPassword">
+            <div class="FLabel">
+                <label for="txtPassword">
+                    @Html.Term("ConfirmPassword", "Confirm Password"):</label>
+            </div>
+            <div class="FInput">
+                <input type="password" id="txtNewPasswordConfirm" class="required" name="@Html.Term("PasswordConfirmationIsRequired", "Password confirmation is required.")" tabindex="27" />
+            </div>
+            <span class="clr"></span>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <p class="FormSubmit">
+        <a class="Button MinorButton btnSignUp" href="javascript:void(0);" id="btnSignUp" tabindex="28"><span>
+            @Html.Term("PWS_SignUp_Continue_Button", "Continue")</span></a>
+    </p>
+</div>

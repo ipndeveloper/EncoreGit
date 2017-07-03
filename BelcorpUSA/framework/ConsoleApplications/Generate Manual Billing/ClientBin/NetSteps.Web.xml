@@ -1,0 +1,1435 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Web</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Web.Base.HttpAsynchOperation">
+      <summary>
+            Author: John Egbert
+            Description: A generic implementation of an HTTP IAsyncResult result.
+            Taken from http://msdn.microsoft.com/en-us/library/ms227433.aspx
+            Created: 04-22-2010
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Base.BaseHttpHandler">
+      <summary>
+            Author: John Egbert
+            Description: A bass class for HttpHandlers 
+            Created: 04-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.ProcessRequest(System.Web.HttpContext)">
+      <summary>
+            Process the incoming HTTP request.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Handles the request.  This is where you put your business logic.
+            </summary>
+      <remarks>
+        <p>This method should result in a call to one (or more) of the following methods:</p>
+        <p>
+          <code>context.Response.BinaryWrite();</code>
+        </p>
+        <p>
+          <code>context.Response.Write();</code>
+        </p>
+        <p>
+          <code>context.Response.WriteFile();</code>
+        </p>
+        <p>
+          <code>
+            someStream.Save(context.Response.OutputStream);
+            </code>
+        </p>
+        <p>etc...</p>
+        <p>
+            If you want a download box to show up with a pre-populated filename, add this call here 
+            (supplying a real filename).
+            </p>
+        <p>
+          <code>Response.AddHeader("Content-Disposition", "attachment; filename=\"" + Filename + "\"");</code>
+        </p>
+      </remarks>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.ValidateParameters(System.Web.HttpContext)">
+      <summary>
+            Validates the parameters.  Inheriting classes must implement this and return 
+            true if the parameters are valid, otherwise false.
+            </summary>
+      <param name="context">Context.</param>
+      <returns>
+        <c>true</c> if the parameters are valid; otherwise, <c>false</c></returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.SetResponseCachePolicy(System.Web.HttpCachePolicy)">
+      <summary>
+            Sets the cache policy.  Unless a handler overrides
+            this method, handlers will not allow a response to be cached.
+            </summary>
+      <param name="cache">Cache.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.RespondInternalError(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that an error occurred in 
+            processing the request.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.RespondForbidden(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that the request in attempting 
+            to access a resource that the user does not have access to.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.RespondFileNotFound(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that the file was not found.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.GetQueryStringVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandler.GetQueryStringVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Web.Base.BaseHttpHandler.RequiresAuthentication">
+      <summary>
+            Gets a value indicating whether this handler requires users to be authenticated.
+            </summary>
+      <value>
+        <c>true</c> if authentication is required
+               otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Web.Base.BaseHttpHandler.ContentMimeType">
+      <summary>
+            Gets the MIME Type.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Controls.Base.BaseWebControl">
+      <summary>
+            Author: John Egbert
+            Description: A bass class for WebControls 
+            Created: 06-17-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BaseWebControl.GetViewstateVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BaseWebControl.GetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BaseWebControl.SetViewstateVar``1(System.String,System.Object)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BaseWebControl.RegisterClientScriptOnHeader(System.String,System.String)">
+      <summary>
+            This method guatantees that only one instance of the script get included in the page header. - JHE
+            </summary>
+      <param name="key" />
+      <param name="javascript" />
+    </member>
+    <member name="T:NetSteps.Web.Base.BasicBasePage">
+      <summary>
+            Author: John Egbert
+            Description: A base class to add helper methods to access ViewState variables.
+            Created: 04-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBasePage.GetViewstateVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBasePage.GetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBasePage.GetViewstateVar``1(System.String,System.Web.UI.StateBag,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="stateBag">Pass in the ViewState for the current control.</param>
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBasePage.SetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBasePage.SetViewstateVar``1(System.String,System.Web.UI.StateBag,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="T:NetSteps.Web.Base.BasicBaseUserControl">
+      <summary>
+            Author: John Egbert
+            Description: A base class to add helper methods to access ViewState variables.
+            Created: 04-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBaseUserControl.GetViewstateVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBaseUserControl.GetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicBaseUserControl.SetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="T:NetSteps.Web.Controls.Base.BasicCompositeControl">
+      <summary>
+            Author: John Egbert
+            Description: A base class to add helper methods to access ViewState variables.
+            Created: 06-08-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BasicCompositeControl.GetViewstateVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BasicCompositeControl.GetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Controls.Base.BasicCompositeControl.SetViewstateVar``1(System.String,System.Object)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="T:NetSteps.Web.Base.BasicWebControl">
+      <summary>
+            Author: John Egbert
+            Description: A base class to add helper methods to access ViewState variables.
+            Created: 06-17-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicWebControl.GetViewstateVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicWebControl.GetViewstateVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicWebControl.SetViewstateVar``1(System.String,System.Object)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="M:NetSteps.Web.Base.BasicWebControl.RegisterClientScriptOnHeader(System.String,System.String)">
+      <summary>
+            This method guatantees that only one instance of the script get included in the page header. - JHE
+            </summary>
+      <param name="key" />
+      <param name="javascript" />
+    </member>
+    <member name="T:NetSteps.Web.Base.BaseHttpHandlerAsync">
+      <summary>
+            Author: John Egbert
+            Description: A bass async class for HttpHandlers 
+            Created: 04-22-2010
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Handles the request.  This is where you put your business logic.
+            </summary>
+      <remarks>
+        <p>This method should result in a call to one (or more) of the following methods:</p>
+        <p>
+          <code>context.Response.BinaryWrite();</code>
+        </p>
+        <p>
+          <code>context.Response.Write();</code>
+        </p>
+        <p>
+          <code>context.Response.WriteFile();</code>
+        </p>
+        <p>
+          <code>
+            someStream.Save(context.Response.OutputStream);
+            </code>
+        </p>
+        <p>etc...</p>
+        <p>
+            If you want a download box to show up with a pre-populated filename, add this call here 
+            (supplying a real filename).
+            </p>
+        <p>
+          <code>Response.AddHeader("Content-Disposition", "attachment; filename=\"" + Filename + "\"");</code>
+        </p>
+      </remarks>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.ValidateParameters(System.Web.HttpContext)">
+      <summary>
+            Validates the parameters.  Inheriting classes must implement this and return 
+            true if the parameters are valid, otherwise false.
+            </summary>
+      <param name="context">Context.</param>
+      <returns>
+        <c>true</c> if the parameters are valid; otherwise, <c>false</c></returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.SetResponseCachePolicy(System.Web.HttpCachePolicy)">
+      <summary>
+            Sets the cache policy.  Unless a handler overrides
+            this method, handlers will not allow a response to be cached.
+            </summary>
+      <param name="cache">Cache.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.RespondInternalError(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that an error occurred in 
+            processing the request.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.RespondForbidden(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that the request in attempting 
+            to access a resource that the user does not have access to.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.RespondFileNotFound(System.Web.HttpContext)">
+      <summary>
+            Helper method used to Respond to the request that the file was not found.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.ProcessRequest(System.Web.HttpContext)">
+      <summary>
+            Process the incoming HTTP request.
+            </summary>
+      <param name="context">Context.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.GetQueryStringVar``1(System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Base.BaseHttpHandlerAsync.GetQueryStringVar``1(System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="P:NetSteps.Web.Base.BaseHttpHandlerAsync.RequiresAuthentication">
+      <summary>
+            Gets a value indicating whether this handler requires users to be authenticated.
+            </summary>
+      <value>
+        <c>true</c> if authentication is required
+               otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:NetSteps.Web.Base.BaseHttpHandlerAsync.ContentMimeType">
+      <summary>
+            Gets the MIME Type.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.Configuration.ViewstateCompression">
+      <summary>
+            Gets or sets the type of the compression.
+            </summary>
+      <value>The type of the compression.</value>
+    </member>
+    <member name="P:NetSteps.Web.Configuration.CacheHandlerImages">
+      <summary>
+            Gets or sets the type of the compression.
+            </summary>
+      <value>The type of the compression.</value>
+    </member>
+    <member name="F:NetSteps.Web.OrderContextSessionProvider._orderContextSessionKey">
+      <summary>
+            The key name of the <see cref="T:NetSteps.Data.Common.Context.IOrderContext" /> object stored in session.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Get(System.Web.HttpSessionStateBase)">
+      <summary>
+            Returns the <see cref="T:NetSteps.Data.Common.Context.IOrderContext" /> object from session (creating it if necessary).
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Get(System.Web.SessionState.HttpSessionState)">
+      <summary>
+            Returns the <see cref="T:NetSteps.Data.Common.Context.IOrderContext" /> object from session (creating it if necessary).
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Set(System.Web.HttpSessionStateBase,NetSteps.Data.Common.Context.IOrderContext)">
+      <summary>
+            Sets the <see cref="T:NetSteps.Data.Common.Context.IOrderContext" /> object.
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Set(System.Web.SessionState.HttpSessionState,NetSteps.Data.Common.Context.IOrderContext)">
+      <summary>
+            Sets the <see cref="T:NetSteps.Data.Common.Context.IOrderContext" /> object.
+            </summary>
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.ButtonExtensions">
+      <summary>
+            Author: John Egbert
+            Description: Button Extensions
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.ControlExtensions">
+      <summary>
+            Author: John Egbert
+            Description: Control Extensions
+            Created: 06-09-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.HttpPostedFileBaseExtensions">
+      <summary>
+            Author: John Egbert
+            Description: HttpPostedFileBase Extensions
+            Created: 12-20-2010
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.DateTimeExtensions">
+      <summary>
+            Author: John Egbert
+            Description: DateTime Extensions
+            Created: 05-20-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.DropDownListExtensions">
+      <summary>
+            Author: John Egbert
+            Description: DropDownList Extensions
+            Created: 05-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.FillMonths(System.Web.UI.WebControls.DropDownList,NetSteps.Common.Constants.MonthDisplayType)">
+      <summary>
+            For populating dropdowns with all the months. - JHE
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.FillDays(System.Web.UI.WebControls.DropDownList)">
+      <summary>
+            For populating dropdowns with all the days of a month. - JHE
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.FillYears(System.Web.UI.WebControls.DropDownList,System.Int32,System.Int32,System.Boolean)">
+      <summary>
+            For populating dropdowns with a selection of years. - JHE
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.RemoveDuplicateItems(System.Web.UI.WebControls.DropDownList)">
+      <summary>
+            Removes duplicate items from DropDownList. - JHE
+            Taken from: http://dotnetguts.blogspot.com/2006/10/removing-duplicates-item-from.html
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.SortByItemText(System.Web.UI.WebControls.DropDownList)">
+      <summary>
+            Sort items in DropDownList by ListItem.Value - JHE
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.DropDownListExtensions.SortAndRemoveDuplicates(System.Web.UI.WebControls.DropDownList)">
+      <summary>
+            Sort items in DropDownList by ListItem.Value and removes duplicate items. - JHE
+            </summary>
+      <param name="dropDownList" />
+    </member>
+    <member name="T:NetSteps.Web.Extensions.GridViewExtensions">
+      <summary>
+            Author: John Egbert
+            Description: GridView Extensions
+            Created: 05-18-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.HtmlTableExtensions">
+      <summary>
+            Author: John Egbert
+            Description: HtmlTable Extensions
+            Created: 06-09-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.ImageButtonExtensions">
+      <summary>
+            Author: John Egbert
+            Description: ImageButton Extensions
+            Created: 03-18-209
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.LabelExtensions">
+      <summary>
+            Author: John Egbert
+            Description: Label Extensions
+            Created: 04-04-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.LinkButtonExtensions">
+      <summary>
+            Author: John Egbert
+            Description: LinkButton Extensions
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.PageExtensions">
+      <summary>
+            Author: John Egbert
+            Description: Page Extensions
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.PageExtensions.AddFavicon(System.Web.UI.Page,System.String)">
+      <summary>
+            This method guarantees that only one instance of the css get included in the page header. - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.PageExtensions.AddCss(System.Web.UI.Page,System.String)">
+      <summary>
+            This method guarantees that only one instance of the css get included in the page header. - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.PageExtensions.AddJavascript(System.Web.UI.Page,System.String,System.String)">
+      <summary>
+            This method guarantees that only one instance of the script get included in the page header. - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.PageExtensions.AddJavascriptCode(System.Web.UI.Page,System.String,System.String)">
+      <summary>
+            This method guarantees that only one instance of the script get included in the page header. - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.PageExtensions.RegisterStartupScript(System.Web.UI.Page,System.String,System.Boolean)">
+      <summary>
+            This method registers a script to run after page loads and places the script at the bottom of the page. - JHE
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.StringExtensions">
+      <summary>
+            Author: John Egbert
+            Description: String Extensions
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.StringExtensions.CleanForUrl(System.String)">
+      <summary>
+            Remove any characters that are unfriendly in the URL - JHE
+            </summary>
+      <param name="value" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Web.Extensions.TextBoxExtensions">
+      <summary>
+            Author: John Egbert
+            Description: TextBox Extensions
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Extensions.WebVariableExtensions">
+      <summary>
+            Author: John Egbert
+            Description: Generic helper methods to get variables from Session, QueryString, and Attributes
+            with parameters to specify a default if the variable does not exist.
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Extensions.WebVariableExtensions.GetSessionVar``1(System.Web.UI.Control,System.String)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.WebVariableExtensions.GetSessionVar``1(System.Web.UI.Control,System.String,``0,System.Func{``0})">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="defaultValue" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.Extensions.WebVariableExtensions.SetSessionVar``1(System.Web.UI.Control,System.String,``0)">
+      <summary>
+            Currently supports get/set int and string for query Vars - JHE
+            </summary>
+      <typeparam name="T" />
+      <param name="name" />
+      <param name="value" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.ThumbnailerAsync">
+      <summary>
+            Author: John Egbert
+            Description: Image Handler to create dynamic thumbnail images.
+            Based off of code from: http://www.codeproject.com/KB/web-image/thumbnailer.aspx
+            Created: 04-22-2010
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.ThumbnailerAsync.IsValidImage(System.String)">
+      <summary>
+            Determines if the img parameter is a valid image.
+            </summary>
+      <param name="fileName">File name from the img parameter.</param>
+      <returns>
+        <c>true</c> if valid image, otherwise <c>false</c></returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.ThumbnailerAsync.CreateThumbnail(System.Drawing.Image)">
+      <summary>
+            This method generates the actual thumbnail.
+            </summary>
+      <param name="image" />
+      <returns>Thumbnail image</returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.ThumbnailerAsync.GetDefaultImage(System.Web.HttpContext)">
+      <summary>
+            Get default image.
+            </summary>
+      <remarks>
+            This method is only invoked when there is a problem with the parameters.
+            </remarks>
+      <param name="context" />
+    </member>
+    <member name="M:NetSteps.Web.Handlers.ThumbnailerAsync.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Main interface for reacting to the Thumbnailer request.
+            </summary>
+      <param name="context" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.ThumbnailerAsync.ThumbnailSizeType">
+      <summary>
+            An internal enumeration defining the thumbnail sizes.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Handlers.ExcelHandler">
+      <summary>
+            Author: John Egbert
+            Description: Outputs a binary data as CSV from cache, put there by other logic. 
+            Created: 04-25-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.ExcelHandler.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Main interface for reacting to the Thumbnailer request.
+            </summary>
+      <param name="context" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.GradientHandler">
+      <summary>
+            Author: John Egbert
+            Description: Generated a image of a gradient of specified colors in parameters.
+            Based off of code from: http://www.codeproject.com/KB/aspnet/GradientHandler.aspx
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.GradientHandler.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Main interface for reacting to the Thumbnailer request.
+            </summary>
+      <param name="context" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.Thumbnailer">
+      <summary>
+            Author: John Egbert
+            Description: Image Handler to create dynamic thumbnail images.
+            Based off of code from: http://www.codeproject.com/KB/web-image/thumbnailer.aspx
+            Created: 03-18-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.Thumbnailer.IsValidImage(System.String)">
+      <summary>
+            Determines if the img parameter is a valid image.
+            </summary>
+      <param name="fileName">File name from the img parameter.</param>
+      <returns>
+        <c>true</c> if valid image, otherwise <c>false</c></returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.Thumbnailer.CreateThumbnail(System.Drawing.Image)">
+      <summary>
+            This method generates the actual thumbnail.
+            </summary>
+      <param name="image" />
+      <returns>Thumbnail image</returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.Thumbnailer.GetDefaultImage(System.Web.HttpContext)">
+      <summary>
+            Get default image.
+            </summary>
+      <remarks>
+            This method is only invoked when there is a problem with the parameters.
+            </remarks>
+      <param name="context" />
+    </member>
+    <member name="M:NetSteps.Web.Handlers.Thumbnailer.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Main interface for reacting to the Thumbnailer request.
+            </summary>
+      <param name="context" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.Thumbnailer.ThumbnailSizeType">
+      <summary>
+            An internal enumeration defining the thumbnail sizes.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Handlers.WebPageThumbnailHandler">
+      <summary>
+            Author: John Egbert
+            Description: Handler that a URL parameter to a web site and outputs an screen shot(image) of the site.
+            Created: 04-03-2009
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.WebPageThumbnailHandler.IsValidImage(System.String)">
+      <summary>
+            Determines if the img parameter is a valid image.
+            </summary>
+      <param name="fileName">File name from the img parameter.</param>
+      <returns>
+        <c>true</c> if valid image, otherwise <c>false</c></returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.WebPageThumbnailHandler.CreateThumbnail(System.Drawing.Image)">
+      <summary>
+            This method generates the actual thumbnail.
+            </summary>
+      <param name="image" />
+      <returns>Thumbnail image</returns>
+    </member>
+    <member name="M:NetSteps.Web.Handlers.WebPageThumbnailHandler.GetDefaultImage(System.Web.HttpContext)">
+      <summary>
+            Get default image.
+            </summary>
+      <remarks>
+            This method is only invoked when there is a problem with the parameters.
+            </remarks>
+      <param name="context" />
+    </member>
+    <member name="M:NetSteps.Web.Handlers.WebPageThumbnailHandler.HandleRequest(System.Web.HttpContext)">
+      <summary>
+            Main interface for reacting to the Thumbnailer request.
+            </summary>
+      <param name="context" />
+    </member>
+    <member name="T:NetSteps.Web.Handlers.WebPageThumbnailHandler.ThumbnailSizeType">
+      <summary>
+            An internal enumeration defining the thumbnail sizes.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.Configuration.CompressionType">
+      <summary>
+            Gets or sets the type of the compression.
+            </summary>
+      <value>The type of the compression.</value>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.Configuration.ExcludedPaths">
+      <summary>
+            Gets the excluded paths.
+            </summary>
+      <value>The paths.</value>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.Configuration.ExcludedMimeTypes">
+      <summary>
+            Gets the excluded MIME types.
+            </summary>
+      <value>The MIME types.</value>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.Configuration.IncludedPaths">
+      <summary>
+            Gets the included paths.
+            </summary>
+      <value>The paths.</value>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.Configuration.IncludedMimeTypes">
+      <summary>
+            Gets the included MIME types.
+            </summary>
+      <value>The MIME types.</value>
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.ExcludedPath">
+      <summary>
+            A path that is to be excluded from the compression module
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.ExcludedPath.Path">
+      <summary>
+            Gets or sets the path.
+            </summary>
+      <value>The path.</value>
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.ExcludedPaths">
+      <summary>
+            The paths to be excluded
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedPaths.Contains(System.String)">
+      <summary>
+            Determines whether [contains] [the specified path].
+            </summary>
+      <param name="path">The path.</param>
+      <returns>
+        <c>true</c> if [contains] [the specified path]; otherwise, <c>false</c>.
+            </returns>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.ExcludedPaths.Item(System.Int32)">
+      <summary>
+            Gets or sets the <see cref="T:ExcludedPath" /> at the specified index.
+            </summary>
+      <value />
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.ExcludedMime">
+      <summary>
+            A mime type to be excluded from the compression module
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.ExcludedMime.Mime">
+      <summary>
+            Gets or sets the MIME.
+            </summary>
+      <value>The MIME.</value>
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.ExcludedMimes">
+      <summary>
+            The mime-types to be excluded
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedMimes.Contains(System.String)">
+      <summary>
+            Determines whether [contains] [the specified MIME].
+            </summary>
+      <param name="mime">The MIME.</param>
+      <returns>
+        <c>true</c> if [contains] [the specified MIME]; otherwise, <c>false</c>.
+            </returns>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.ExcludedMimes.Item(System.Int32)">
+      <summary>
+            Gets or sets the <see cref="T:ExcludedMime" /> at the specified index.
+            </summary>
+      <value />
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.IncludedMime">
+      <summary>
+            A mime type to be excluded from the compression module
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.IncludedMime.Mime">
+      <summary>
+            Gets or sets the MIME.
+            </summary>
+      <value>The MIME.</value>
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.IncludedMimes">
+      <summary>
+            The mime-types to be excluded
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedMimes.Contains(System.String)">
+      <summary>
+            Determines whether [contains] [the specified MIME].
+            </summary>
+      <param name="mime">The MIME.</param>
+      <returns>
+        <c>true</c> if [contains] [the specified MIME]; otherwise, <c>false</c>.
+            </returns>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.IncludedMimes.Item(System.Int32)">
+      <summary>
+            Gets or sets the <see cref="T:ExcludedMime" /> at the specified index.
+            </summary>
+      <value />
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.IncludedPath">
+      <summary>
+            A path that is to be excluded from the compression module
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.IncludedPath.Path">
+      <summary>
+            Gets or sets the path.
+            </summary>
+      <value>The path.</value>
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.IncludedPaths">
+      <summary>
+            The paths to be excluded
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedPaths.Contains(System.String)">
+      <summary>
+            Determines whether [contains] [the specified path].
+            </summary>
+      <param name="path">The path.</param>
+      <returns>
+        <c>true</c> if [contains] [the specified path]; otherwise, <c>false</c>.
+            </returns>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.IncludedPaths.Item(System.Int32)">
+      <summary>
+            Gets or sets the <see cref="T:ExcludedPath" /> at the specified index.
+            </summary>
+      <value />
+    </member>
+    <member name="T:NetSteps.Web.HttpCompress.HttpModule">
+      <summary>
+            The Http Module that will compress the outputstream to the browser if it is supported by the browser.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.ReplaceCss(System.String)">
+      <summary>
+            Replcase stylesheet links with ones pointing to HttpHandlers that compress and cache the css
+            </summary>
+      <param name="html" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.ReplaceJS(System.String)">
+      <summary>
+            Replcase javascript links with ones pointing to HttpHandlers that compress and cache the javascript
+            </summary>
+      <param name="html" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.ReplaceJSInHead(System.String)">
+      <summary>
+            Replaces the js in the head tag. (see ReplaceCss for comments)
+            </summary>
+      <param name="html" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.ReplaceJSInBody(System.String)">
+      <summary>
+            Replaces the js in the body. (see ReplaceCss for comments)
+            </summary>
+      <param name="html" />
+      <returns />
+    </member>
+    <member name="T:NetSteps.Web.Imaging.ImageResize">
+      <summary>
+            ADDED BY: Travis Watson - CTMH
+            CREATED: Feb. 14, 2004
+            
+            NOTE 1:
+            "System.Drawing" had to be added to the project references.
+            
+            NOTE 2:
+            This class will create a new .JPG that has been resized and compressed.
+            
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.#ctor">
+      <summary>
+            Default Constructor
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.Reset">
+      <summary>
+            Internal reset before each image resize
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.ResizeAndSaveImageAsJPEG(System.String,System.String,System.Int32,System.Single,System.Single,System.Boolean,System.String@)">
+      <summary>
+            Resize and save image as a JPEG
+            </summary>
+      <param name="inOriginalFullFileName">The full path of the original file name</param>
+      <param name="inDestinationFullFileName">The full path of the destination file name</param>
+      <param name="inCompressionValue">100=best compression, 1=worst, -1=use default value</param>
+      <param name="inPercentWidthResize">Resize width this percent OR -1 for AUTO SIZE width based on height</param>
+      <param name="inPercentHeightResize">Resize height this perecent OR -1 for AUTO SIZE height based on width</param>
+      <param name="inError">Any errors are set here</param>
+      <returns>TRUE if successfull</returns>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.ResizeAndSaveImageAsJPEG(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.String@)">
+      <summary>
+            Resize and save image as a JPEG
+            </summary>
+      <param name="inOriginalFullFileName">The full path of the original file name</param>
+      <param name="inDestinationFullFileName">The full path of the destination file name</param>
+      <param name="inCompressionValue">100=best compression, 1=worst, -1=use default value</param>
+      <param name="inWidth">Forced width on the new image OR -1 for AUTO SIZE based on height</param>
+      <param name="inHeight">Forced heigth on the new image OR -1 for AUTO SIZE based on width</param>
+      <param name="inError">Any errors are set here</param>
+      <returns>TRUE if successfull</returns>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.SetupWidthAndHeight(System.Drawing.Size,System.Int32,System.Int32,System.Single,System.Single,System.Boolean)">
+      <summary>
+            Sets up the destination width and heigth depending on the parameters passed in
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.ForceFileExtension(System.String,System.String)">
+      <summary>
+            Used in cases where a .GIF file was passed in and a .JPG file is saved
+            So the JPG file doesn't get saved with a .gif extension
+            </summary>
+      <param name="inFileName">a file name, with or without full path</param>
+      <param name="inForcedExtension">EG: .JPG (must have the period)</param>
+      <returns> a file with the newly forced extension</returns>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.GetFileNameOnly(System.String)">
+      <summary>
+            Returns just the name of the file passed in
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.ResizeImage(System.Drawing.Bitmap,System.Int32,System.Int32,System.String@)">
+      <summary>
+            Returns a resized image
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.ImageResize.SaveAsJPEG(System.Drawing.Image,System.String,System.Int64,System.String@)">
+      <summary>
+            Save the image as a jpg
+            </summary>
+      <param name="inImage">The Image to save</param>
+      <param name="inSaveAsFileName">The filename to save the image as</param>
+      <param name="inCompressionValue">Number between 1 and 100 (100 is best quality)</param>
+      <returns>TRUE on success ELSE FALSE on failure</returns>
+    </member>
+    <member name="T:NetSteps.Web.Imaging.WebPageThumbnail">
+      <summary>
+            Class for taking a screen shot of a web page
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.WebPageThumbnail.#ctor">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.WebPageThumbnail.GenerateBitmap(System.String,System.Int32,System.Int32)">
+      <summary>
+            Generates a screen shot of a web site
+            </summary>
+      <param name="url">Url to take the screen shot of</param>
+      <param name="width">Width of the image (-1 for full size)</param>
+      <param name="height">Height of the image (-1 for full size)</param>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.WebPageThumbnail.CreateBrowser">
+      <summary>
+            Creates the browser
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Imaging.WebPageThumbnail.Browser_DocumentCompleted(System.Object,System.Windows.Forms.WebBrowserDocumentCompletedEventArgs)">
+      <summary>
+            Called when the browser is completed
+            </summary>
+      <param name="sender" />
+      <param name="e" />
+    </member>
+    <member name="T:NetSteps.Web.Providers.AuthenticatedPrincipalProvider">
+      <summary>
+            TODO: Update summary.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Providers.SitePrincipal">
+      <summary>
+            TODO: Update summary.
+            </summary>
+    </member>
+    <member name="T:NetSteps.WebControls.ResourceCache">
+      <summary>
+            For caching assembly resources. - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Security.ConfigurationEncryption.ProtectSectionGroup(System.String)">
+      <summary>
+            Author: John Egbert
+            Description: Will encrypt a SectionGroup in the webconfig. - JHE
+            Created: 09-20-2011
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Security.ConfigurationEncryption.UnProtectSectionGroup(System.String)">
+      <summary>
+            Will unencrypt a SectionGroup in the webconfig. - JHE
+            </summary>
+      <param name="sectionGroupName" />
+    </member>
+    <member name="M:NetSteps.Web.Security.ConfigurationEncryption.ProtectSection(System.String)">
+      <summary>
+            Example: ProtectSection("appSettings", "DataProtectionConfigurationProvider"); - JHE
+            http://davidhayden.com/blog/dave/archive/2005/11/17/2572.aspx
+            </summary>
+      <param name="sectionName" />
+    </member>
+    <member name="M:NetSteps.Web.Security.ConfigurationEncryption.UnProtectSection(System.String)">
+      <summary>
+            Example: UnProtectSection("appSettings"); - JHE
+            http://davidhayden.com/blog/dave/archive/2005/11/17/2572.aspx
+            </summary>
+      <param name="sectionName" />
+    </member>
+    <member name="T:NetSteps.Web.Base.HttpPostSubmitter">
+      <summary>
+            Submits post data to a url.
+            http://geekswithblogs.net/rakker/archive/2006/04/21/76044.aspx - JHE
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.#ctor">
+      <summary>
+            Default constructor.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.#ctor(System.String)">
+      <summary>
+            Constructor that accepts a url as a parameter
+            </summary>
+      <param name="url">The url where the post will be submitted to.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.#ctor(System.String,System.Collections.Specialized.NameValueCollection)">
+      <summary>
+            Constructor allowing the setting of the url and items to post.
+            </summary>
+      <param name="url">the url for the post.</param>
+      <param name="values">The values for the post.</param>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.Post">
+      <summary>
+            Posts the supplied data to specified url.
+            </summary>
+      <returns>a string containing the result of the post.</returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.Post(System.String)">
+      <summary>
+            Posts the supplied data to specified url.
+            </summary>
+      <param name="url">The url to post to.</param>
+      <returns>a string containing the result of the post.</returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.Post(System.String,System.Collections.Specialized.NameValueCollection)">
+      <summary>
+            Posts the supplied data to specified url.
+            </summary>
+      <param name="url">The url to post to.</param>
+      <param name="values">The values to post.</param>
+      <returns>a string containing the result of the post.</returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.PostData(System.String,System.String)">
+      <summary>
+            Posts data to a specified url. Note that this assumes that you have already url encoded the post data.
+            </summary>
+      <param name="postData">The data to post.</param>
+      <param name="url">the url to post to.</param>
+      <returns>Returns the result of the post.</returns>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpPostSubmitter.EncodeAndAddItem(System.Text.StringBuilder@,System.String,System.String)">
+      <summary>
+            Encodes an item and ads it to the string.
+            </summary>
+      <param name="baseRequest">The previously encoded data.</param>
+      <param name="dataItem">The data to encode.</param>
+      <returns>A string containing the old data and the previously encoded data.</returns>
+    </member>
+    <member name="P:NetSteps.Web.Base.HttpPostSubmitter.Url">
+      <summary>
+            Gets or sets the url to submit the post to.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.Base.HttpPostSubmitter.PostItems">
+      <summary>
+            Gets or sets the name value collection of items to post.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Web.Base.HttpPostSubmitter.Type">
+      <summary>
+            Gets or sets the type of action to perform against the url.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Web.Base.HttpPostSubmitter.PostTypeEnum">
+      <summary>
+            determines what type of post to perform.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Web.Base.HttpPostSubmitter.PostTypeEnum.Get">
+      <summary>
+            Does a get against the source.
+            </summary>
+    </member>
+    <member name="F:NetSteps.Web.Base.HttpPostSubmitter.PostTypeEnum.Post">
+      <summary>
+            Does a post against the source.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Web.WebContext.GetServerVariable(System.String)">
+      <summary>
+            Allows safe gets of server variables; in case the server variables are not available - JHE
+            </summary>
+      <param name="name" />
+      <returns />
+    </member>
+    <member name="M:NetSteps.Web.WebContext.IsServerVariablesAvailable">
+      <summary>
+            Allows safe gets of server variables; to check that server variables are available - JHE
+            </summary>
+      <returns />
+    </member>
+    <member name="M:util.MyMin.ToString">
+      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:util.MyMinCSS.ToString">
+      <ensures inheritedFrom="M:System.Object.ToString" inheritedFromTypeName="Object" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Clear(System.Web.HttpSessionStateBase)">
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.OrderContextSessionProvider.Clear(System.Web.SessionState.HttpSessionState)">
+      <requires exception="T:System.ArgumentNullException" csharp="session != null" vb="session &lt;&gt; Nothing">session != null</requires>
+      <exception cref="T:System.ArgumentNullException">session == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedPaths.CreateNewElement">
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.CreateNewElement" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedPaths.GetElementKey(System.Configuration.ConfigurationElement)">
+      <requires inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="element != null" vb="element &lt;&gt; Nothing">element != null</requires>
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedPaths.CreateNewElement">
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.CreateNewElement" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedPaths.GetElementKey(System.Configuration.ConfigurationElement)">
+      <requires inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="element != null" vb="element &lt;&gt; Nothing">element != null</requires>
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedMimes.CreateNewElement">
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.CreateNewElement" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.IncludedMimes.GetElementKey(System.Configuration.ConfigurationElement)">
+      <requires inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="element != null" vb="element &lt;&gt; Nothing">element != null</requires>
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.Read(System.Byte[],System.Int32,System.Int32)">
+      <requires inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="buffer != null" vb="buffer &lt;&gt; Nothing">buffer != null</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="offset &gt;= 0" vb="offset &gt;= 0">offset &gt;= 0</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="count &gt;= 0" vb="count &gt;= 0">count &gt;= 0</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="count &lt;= buffer.Length - offset" vb="count &lt;= buffer.Length - offset">count &lt;= buffer.Length - offset</requires>
+      <ensures inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="result &gt;= 0" vb="result &gt;= 0">result &gt;= 0</ensures>
+      <ensures inheritedFrom="M:System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="result &lt;= count" vb="result &lt;= count">result &lt;= count</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.SetLength(System.Int64)">
+      <requires inheritedFrom="M:System.IO.Stream.SetLength(System.Int64)" inheritedFromTypeName="Stream" csharp="value &gt;= (long)0" vb="value &gt;= ((Long )0)">value &gt;= (long)0</requires>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.Write(System.Byte[],System.Int32,System.Int32)">
+      <requires inheritedFrom="M:System.IO.Stream.Write(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="buffer != null" vb="buffer &lt;&gt; Nothing">buffer != null</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Write(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="offset &gt;= 0" vb="offset &gt;= 0">offset &gt;= 0</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Write(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="count &gt;= 0" vb="count &gt;= 0">count &gt;= 0</requires>
+      <requires inheritedFrom="M:System.IO.Stream.Write(System.Byte[],System.Int32,System.Int32)" inheritedFromTypeName="Stream" csharp="count &lt;= buffer.Length - offset" vb="count &lt;= buffer.Length - offset">count &lt;= buffer.Length - offset</requires>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.Length">
+      <getter>
+        <ensures inheritedFrom="M:System.IO.Stream.get_Length" inheritedFromTypeName="Stream" csharp="result &gt;= (long)0" vb="result &gt;= ((Long )0)">result &gt;= (long)0</ensures>
+      </getter>
+    </member>
+    <member name="P:NetSteps.Web.HttpCompress.HttpModule.CompressionPageFilter.Position">
+      <getter>
+        <ensures inheritedFrom="M:System.IO.Stream.get_Position" inheritedFromTypeName="Stream" csharp="result &gt;= (long)0" vb="result &gt;= ((Long )0)">result &gt;= (long)0</ensures>
+      </getter>
+      <setter>
+        <requires inheritedFrom="M:System.IO.Stream.set_Position(System.Int64)" inheritedFromTypeName="Stream" csharp="value &gt;= (long)0" vb="value &gt;= ((Long )0)">value &gt;= (long)0</requires>
+      </setter>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedMimes.CreateNewElement">
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.CreateNewElement" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.HttpCompress.ExcludedMimes.GetElementKey(System.Configuration.ConfigurationElement)">
+      <requires inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="element != null" vb="element &lt;&gt; Nothing">element != null</requires>
+      <ensures inheritedFrom="M:System.Configuration.ConfigurationElementCollection.GetElementKey(System.Configuration.ConfigurationElement)" inheritedFromTypeName="ConfigurationElementCollection" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.Routing.RedirectHttpHandler.#ctor(System.String,System.Boolean)">
+      <requires exception="T:System.ArgumentNullException" csharp="targetUrl != null" vb="targetUrl &lt;&gt; Nothing">targetUrl != null</requires>
+      <exception cref="T:System.ArgumentNullException">targetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="targetUrl.Length &gt; 0" vb="targetUrl.Length &gt; 0">targetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">targetUrl.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.Routing.RedirectHttpHandler.GetHttpHandler(System.Web.Routing.RequestContext)">
+      <requires inheritedFrom="M:System.Web.Routing.IRouteHandler.GetHttpHandler(System.Web.Routing.RequestContext)" inheritedFromTypeName="IRouteHandler" csharp="requestContext != null" vb="requestContext &lt;&gt; Nothing">requestContext != null</requires>
+      <ensures inheritedFrom="M:System.Web.Routing.IRouteHandler.GetHttpHandler(System.Web.Routing.RequestContext)" inheritedFromTypeName="IRouteHandler" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="M:NetSteps.Web.Routing.RedirectHttpHandler.Redirect(System.Web.HttpResponse,System.String,System.Boolean)">
+      <requires exception="T:System.ArgumentNullException" csharp="response != null" vb="response &lt;&gt; Nothing">response != null</requires>
+      <exception cref="T:System.ArgumentNullException">response == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.Routing.RedirectRoute.#ctor(System.String,System.String,System.Boolean)">
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="targetUrl != null" vb="targetUrl &lt;&gt; Nothing">targetUrl != null</requires>
+      <exception cref="T:System.ArgumentNullException">targetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="targetUrl.Length &gt; 0" vb="targetUrl.Length &gt; 0">targetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">targetUrl.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.Base.HttpAsynchOperation.System#IAsyncResult#get_AsyncWaitHandle">
+      <ensures inheritedFrom="M:System.IAsyncResult.get_AsyncWaitHandle" inheritedFromTypeName="IAsyncResult" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+    </member>
+    <member name="P:NetSteps.Web.Base.HttpAsynchOperation.System#IAsyncResult#AsyncWaitHandle">
+      <getter>
+        <ensures inheritedFrom="M:System.IAsyncResult.get_AsyncWaitHandle" inheritedFromTypeName="IAsyncResult" csharp="result != null" vb="result &lt;&gt; Nothing">result != null</ensures>
+      </getter>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.Redirect(System.Web.Routing.RouteCollection,System.String,System.String)">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="targetUrl != null" vb="targetUrl &lt;&gt; Nothing">targetUrl != null</requires>
+      <exception cref="T:System.ArgumentNullException">targetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="targetUrl.Length &gt; 0" vb="targetUrl.Length &gt; 0">targetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">targetUrl.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.RedirectPermanent(System.Web.Routing.RouteCollection,System.String,System.String)">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="targetUrl != null" vb="targetUrl &lt;&gt; Nothing">targetUrl != null</requires>
+      <exception cref="T:System.ArgumentNullException">targetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="targetUrl.Length &gt; 0" vb="targetUrl.Length &gt; 0">targetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">targetUrl.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.Redirect(System.Web.Routing.RouteCollection,NetSteps.Common.IUrlRedirect)">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="urlRedirect != null" vb="urlRedirect &lt;&gt; Nothing">urlRedirect != null</requires>
+      <exception cref="T:System.ArgumentNullException">urlRedirect == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="urlRedirect.Url != null" vb="urlRedirect.Url &lt;&gt; Nothing">urlRedirect.Url != null</requires>
+      <exception cref="T:System.ArgumentException">urlRedirect.Url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="urlRedirect.Url.Length &gt; 0" vb="urlRedirect.Url.Length &gt; 0">urlRedirect.Url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">urlRedirect.Url.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentException" csharp="urlRedirect.TargetUrl != null" vb="urlRedirect.TargetUrl &lt;&gt; Nothing">urlRedirect.TargetUrl != null</requires>
+      <exception cref="T:System.ArgumentException">urlRedirect.TargetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="urlRedirect.TargetUrl.Length &gt; 0" vb="urlRedirect.TargetUrl.Length &gt; 0">urlRedirect.TargetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">urlRedirect.TargetUrl.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.RegisterRedirectRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{NetSteps.Common.IUrlRedirect})">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="urlRedirects != null" vb="urlRedirects &lt;&gt; Nothing">urlRedirects != null</requires>
+      <exception cref="T:System.ArgumentNullException">urlRedirects == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.RegisterRedirectRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{NetSteps.Common.IUrlRedirect},System.Action{System.Exception})">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="urlRedirects != null" vb="urlRedirects &lt;&gt; Nothing">urlRedirects != null</requires>
+      <exception cref="T:System.ArgumentNullException">urlRedirects == null</exception>
+    </member>
+    <member name="M:NetSteps.Web.RouteExtensions.Redirect(System.Web.Routing.RouteCollection,System.String,System.String,System.Boolean)">
+      <requires exception="T:System.ArgumentNullException" csharp="routes != null" vb="routes &lt;&gt; Nothing">routes != null</requires>
+      <exception cref="T:System.ArgumentNullException">routes == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="targetUrl != null" vb="targetUrl &lt;&gt; Nothing">targetUrl != null</requires>
+      <exception cref="T:System.ArgumentNullException">targetUrl == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="targetUrl.Length &gt; 0" vb="targetUrl.Length &gt; 0">targetUrl.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">targetUrl.Length &lt;= 0</exception>
+    </member>
+  </members>
+</doc>

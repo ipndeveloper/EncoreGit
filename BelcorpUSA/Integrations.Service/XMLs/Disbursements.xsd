@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:simpleType name="DisbursementType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Check"/>
+      <xsd:enumeration value="EFT"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AccountType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Checking"/>
+      <xsd:enumeration value="Savings"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DisbursementStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Entered"/>
+      <xsd:enumeration value="In Process"/>
+      <xsd:enumeration value="Reserved"/>
+      <xsd:enumeration value="Complete"/>
+      <xsd:enumeration value="Unable To Process"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Country">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="US"/>
+      <xsd:enumeration value="CA"/>
+      <xsd:enumeration value="AU"/>
+      <xsd:enumeration value="GB"/>
+      <xsd:enumeration value="IE"/>
+      <xsd:enumeration value="SE"/>
+      <xsd:enumeration value="NL"/>
+      <xsd:enumeration value="BE"/>
+      <xsd:enumeration value="GB"/>
+      <xsd:enumeration value="GB"/>
+      <xsd:enumeration value="GB"/>
+      <xsd:enumeration value="AT"/>
+      <xsd:enumeration value="CZ"/>
+      <xsd:enumeration value="DK"/>
+      <xsd:enumeration value="FI"/>
+      <xsd:enumeration value="FR"/>
+      <xsd:enumeration value="DE"/>
+      <xsd:enumeration value="IT"/>
+      <xsd:enumeration value="NO"/>
+      <xsd:enumeration value="PL"/>
+      <xsd:enumeration value="SK"/>
+      <xsd:enumeration value="CH"/>
+      <xsd:enumeration value="GB"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="DisbursementCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1" maxOccurs="1">
+        <xsd:element name="PeriodID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="EffectiveDate" type="xsd:dateTime" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="Disbursement" minOccurs="0" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DisbursementDetail">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="DisbursementDetailID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="DisbursementType" type="DisbursementType" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="Percentage" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="DisbursementProfile" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="DisbursementStatus" type="DisbursementStatus" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="CheckNumber" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="CheckDate" type="xsd:dateTime" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="CheckPayee" type="xsd:string" minOccurs="1" maxOccurs="1" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Disbursement">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="DisbursementID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="AccountNumber" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="ConsultantID" type="xsd:int" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="FirstName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="LastName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="Amount" type="xsd:decimal" minOccurs="1" maxOccurs="1" />
+        <xsd:element ref="DisbursementDetail" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DisbursementProfile">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="NameOnAccount" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="RoutingNumber" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="BankAccountNumber" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="BankName" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="BankPhone" type="xsd:string" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="EnrollmentFormReceived" type="xsd:boolean" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="AccountType" type="AccountType" minOccurs="1" maxOccurs="1" />
+        <xsd:element name="AccountAddress">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="Address" minOccurs="1" maxOccurs="1"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="BankAddress">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="Address" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Address">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Company" type="xsd:string" minOccurs="0" />
+        <xsd:element name="FirstName" type="xsd:string" minOccurs="1" />
+        <xsd:element name="LastName" type="xsd:string" minOccurs="1" />
+        <xsd:element name="Address1" type="xsd:string" minOccurs="1" />
+        <xsd:element name="Address2" type="xsd:string" minOccurs="0" />
+        <xsd:element name="City" type="xsd:string" minOccurs="1" />
+        <xsd:element name="State" type="xsd:string" minOccurs="0" />
+        <xsd:element name="Zip" type="xsd:string" minOccurs="0" />
+        <xsd:element name="CountryISOCode" type="Country" minOccurs="1" />
+        <xsd:element name="Phone" type="xsd:string" minOccurs="0" />
+        <xsd:element name="Email" type="xsd:string" minOccurs="0" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

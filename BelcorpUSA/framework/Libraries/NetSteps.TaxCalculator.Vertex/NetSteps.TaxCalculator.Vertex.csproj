@@ -1,0 +1,492 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\..\csproj-import-before.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\..\csproj-import-before.targets')" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Testing|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Testing\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\NetSteps.TaxCalculator.Vertex.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\NetSteps.TaxCalculator.Vertex.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HomeSolution>Framework.sln</HomeSolution>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D37E6D86-FD39-4FF0-B4B3-8E6F844A8BB0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetSteps.TaxCalculator.Vertex</RootNamespace>
+    <AssemblyName>NetSteps.TaxCalculator.Vertex</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Addresses.Common">
+      <HintPath>..\..\packages\NetSteps.Addresses.Common.1.0.10\lib\net40\NetSteps.Addresses.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Common">
+      <HintPath>..\..\packages\NetSteps.Common.1.3.240\lib\net40\NetSteps.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Content.Common">
+      <HintPath>..\..\packages\NetSteps.Content.Common.1.0.8\lib\net40\NetSteps.Content.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Encore.Core, Version=2.4.143.0, Culture=neutral, PublicKeyToken=d116fce376e37d09, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NetSteps.Encore.Core_r2_3.2.4.143\lib\net40\NetSteps.Encore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Extensibility.Core">
+      <HintPath>..\..\packages\Extensibility.Core.1.0.16115\lib\net40\NetSteps.Extensibility.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Logistics.Common">
+      <HintPath>..\..\packages\NetSteps.Logistics.Common.1.0.9\lib\net40\NetSteps.Logistics.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Orders.Common">
+      <HintPath>..\..\packages\NetSteps.Orders.Common.1.0.6\lib\net40\NetSteps.Orders.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NetSteps.Products.Common">
+      <HintPath>..\..\packages\NetSteps.Products.Common.1.0.4\lib\net40\NetSteps.Products.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.version.cs" />
+    <Compile Include="Converters\TaxCommonToVertexModel.cs" />
+    <Compile Include="Proxy\CalculateTaxServiceProxy.cs" />
+    <Compile Include="Config\VertexTaxCalculatorConfigSection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config\VertexTaxPayerCodeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config\VertexTaxPayerCodeElement.cs" />
+    <Compile Include="JurisdictionConverter.cs" />
+    <Compile Include="ModuleWireup.cs" />
+    <Compile Include="Service References\CalculateTaxService60\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Proxy\LookupTaxAreaServiceProxy.cs" />
+    <Compile Include="Service References\TaxAreaService60\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="VertexTaxCalculator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Service References\CalculateTaxService60\CalculateTax60.wsdl" />
+    <None Include="Service References\CalculateTaxService60\CalculateTax60.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax601.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6010.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6011.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6012.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6013.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6014.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6015.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6016.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6017.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6018.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6019.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax602.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6020.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6021.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6022.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6023.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6024.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6025.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6026.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6027.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6028.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6029.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax603.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6030.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6031.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6032.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax6033.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax604.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax605.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax606.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax607.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax608.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\CalculateTax609.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CalculateTaxService60\NetSteps.TaxCalculator.Vertex.CalculateTaxService60.VertexEnvelope.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas60.wsdl" />
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas60.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas601.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6010.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6011.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6012.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6013.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6014.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6015.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6016.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6017.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6018.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6019.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas602.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6020.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6021.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6022.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6023.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6024.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6025.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6026.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6027.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6028.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6029.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas603.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6030.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6031.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6032.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas6033.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas604.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas605.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas606.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas607.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas608.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\LookupTaxAreas609.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TaxAreaService60\NetSteps.TaxCalculator.Vertex.TaxAreaService60.VertexEnvelope.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CalculateTaxService60\" />
+    <WCFMetadataStorage Include="Service References\TaxAreaService60\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CalculateTaxService60\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CalculateTaxService60\configuration.svcinfo" />
+    <None Include="Service References\CalculateTaxService60\configuration91.svcinfo" />
+    <None Include="Service References\TaxAreaService60\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\TaxAreaService60\configuration.svcinfo" />
+    <None Include="Service References\TaxAreaService60\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Netsteps.Data.Entities\NetSteps.Data.Entities.csproj">
+      <Project>{FA88FE0C-9AF1-4527-9DA5-5A572A04ECEB}</Project>
+      <Name>NetSteps.Data.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\csproj-import-after.targets" Condition="Exists('$(MSBuildThisFileDirectory)..\..\csproj-import-after.targets')" />
+</Project>

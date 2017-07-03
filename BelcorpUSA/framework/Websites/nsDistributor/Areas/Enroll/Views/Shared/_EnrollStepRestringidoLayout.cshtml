@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollRestringidoLayout.cshtml";
+}
+
+@section head
+{
+    @RenderSection("head", false)
+}
+
+<div class="pageTitle">
+    <h1>@Html.Term("Enrollment_Master_Title", "Enrollment Application")</h1>
+</div>
+
+<div class="steps enrollment">
+    @Html.Partial("_HeaderSteps", ViewBag.HeaderSteps as object)
+    <span class="clr"></span>
+</div>
+
+<div class="enrollmentContentPane">
+    <h2 class="step">@ViewBag.StepCounter</h2>
+    @if (ViewBag.HeaderTotals != null)
+    {
+        <div id="CartTotals" class="brdr brdrAll pad5">
+            @Html.Partial("_HeaderTotals", ViewBag.HeaderTotals as object)
+            <span class="clr"></span>
+
+            <cite class="labelItems"></cite>
+            <cite class="labelSubs">
+            <span class="subTotal">@Html.Term("ProductCreditBalance", "Product Credit Balance"):</span>
+            <span class="Total">@ViewBag.Balance</span>
+            </cite>
+        </div>
+    }
+    @Html.Messages()
+    <span class="clr"></span>
+    @RenderBody()
+    <span class="clr"></span>
+</div>
+
+@section bodyFooter
+{
+    @RenderSection("bodyFooter", false)
+}

@@ -1,0 +1,30 @@
+@model dynamic
+@{string baseUrl = "~/".ResolveUrl() + ViewContext.RouteData.DataTokens["area"].ToString() + "/" + ViewContext.RouteData.Values["controller"].ToString() + "/";}
+@section head {
+    <script type="text/javascript">
+        $(function () {
+            $('#ledgerContainer').ajaxStop(function () {
+                $('#ledgerContainer .Negative').css('color', 'Red');
+            });
+        });
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Account")">
+        @Html.Term("AccountOverview", "Account Overview")</a> > @Html.Term("AccountLedger", "Account Ledger")
+}
+@section title {
+    @Html.Term("ProductCreditLedger", "Product Credit Ledger")
+}
+<div id="ledgerContainer">
+    @{ Html.PaginatedGrid("~/Account/Ledger/GetProductCredit")
+        .AddColumn(Html.Term("Description"), "EntryDescription", false)
+        .AddColumn(Html.Term("Reason"), "LedgerEntryReason.Name", false)
+        .AddColumn(Html.Term("Type"), "LedgerEntryType.Name", false)
+        .AddColumn(Html.Term("EffectiveDate", "Effective Date"), "EffectiveDate", false)
+        .AddColumn(Html.Term("BonusType", "Bonus Type"), "BonusType.Name", false)
+        .AddColumn(Html.Term("Amount"), "EntryAmount", false)
+        .AddColumn(Html.Term("Balance"), "EndingBalance", false)
+        .Render();
+    }
+</div>

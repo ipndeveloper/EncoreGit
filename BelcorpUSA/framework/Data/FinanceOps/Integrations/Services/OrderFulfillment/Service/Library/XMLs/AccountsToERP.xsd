@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:simpleType name="Country">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="USA"/>
+      <xsd:enumeration value="CAN"/>
+      <xsd:enumeration value="AUS"/>
+      <xsd:enumeration value="IRL"/>
+      <xsd:enumeration value="SWE"/>
+      <xsd:enumeration value="NLD"/>
+      <xsd:enumeration value="BEL"/>
+      <xsd:enumeration value="GBR"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EntityType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Business"/>
+      <xsd:enumeration value="Personal"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AccountType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Distributor"/>
+      <xsd:enumeration value="Preferred Customer"/>
+      <xsd:enumeration value="Retail Customer"/>
+      <xsd:enumeration value="Employee"/>
+      <xsd:enumeration value="Prospect"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="AccountExportCollection">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Account"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Account">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="1">
+        <xsd:element name="AccountNumber" type="xsd:string" />
+        <xsd:element name="FirstName" type="xsd:string" />
+        <xsd:element name="LastName" type="xsd:string" />
+        <xsd:element name="TaxNumber" type="xsd:string" />
+        <xsd:element name="EntityType" type="EntityType" />
+        <xsd:element name="AccountType" type="AccountType" />
+        <xsd:element ref="Address" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="EmailAddress" type="xsd:string" />
+        <xsd:element name="PhoneNumber" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Address">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Company" type="xsd:string" minOccurs="0" />
+        <xsd:element name="FirstName" type="xsd:string" minOccurs="1" />
+        <xsd:element name="LastName" type="xsd:string" minOccurs="1" />
+        <xsd:element name="Address1" type="xsd:string" minOccurs="1" />
+        <xsd:element name="Address2" type="xsd:string" minOccurs="1" nillable="1" />
+		<xsd:element name="Address3" type="xsd:string" minOccurs="1" nillable="1" />
+        <xsd:element name="City" type="xsd:string" minOccurs="1" />
+        <xsd:element name="State" type="xsd:string" minOccurs="0" />
+        <xsd:element name="Zip" type="xsd:string" minOccurs="0" />
+        <xsd:element name="CountryISOCode" type="Country" minOccurs="1" />
+        <xsd:element name="Phone" type="xsd:string" minOccurs="0" />
+        <xsd:element name="Email" type="xsd:string" minOccurs="0" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

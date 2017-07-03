@@ -1,0 +1,29 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/Products/Views/Shared/Products.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+<%if(Request.Url.LocalPath == "/Products"){ %>
+
+	<script type="text/javascript">
+		$(function () {
+			$('.SectionLinks a:first').addClass('selected');
+		});
+	</script>
+<%} %>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<ul class="SectionLinks">
+				<%= Html.SelectedLink("~/Products/Catalogs", Html.Term("BrowseCatalogs", "Browse Catalogs"), new List<string>() { "~/Products/Catalogs/Edit" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+				<%= Html.SelectedLink("~/Products/Categories",  Html.Term("BrowseCategoryTrees", "Browse Category Trees"), new List<string>(){"~/Products/Categories/EditTree", "~/Products/Categories/NewTree"}, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>

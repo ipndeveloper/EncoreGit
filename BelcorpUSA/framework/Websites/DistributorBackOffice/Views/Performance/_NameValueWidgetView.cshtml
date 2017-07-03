@@ -1,0 +1,67 @@
+﻿<script type="text/javascript">
+    $(function () {
+
+        var PersonalVol = "PV";
+        var GroupVol = "GV";
+
+        $('#statusSelectFilter').parent().hide();
+        $('#statusSelectFilter').change(function () {
+            $.get('@Href("~/Performance/GetNameValueWidgetData")', { periodId: $(this).val() }, function (response) {
+                if (response.result && response.data) {
+                    var overviewData = response.data,
+                        volPlotColor = rgb2hex($('div.UI-lightBg').css('color'));
+                    $('#nameValueBody').html(overviewData);
+                    $('#OverviewText_View').html(overviewData);
+                    if (overviewData.match('id="' + PersonalVol + '"') != null && overviewData.match('id="' + GroupVol + '"') != null) {
+                        var matches = [],
+						    re = /"[PG]V"(.+?[0-9]+?)</g;
+                        overviewData.replace(re, function (string, match) {
+                            matches.push(match.match(/[0-9]/g).join(''));
+                        });
+                        var salesVol = {
+                            personal: matches[0],
+                            group: matches[1]
+                        };
+                        RenderPerformanceOverviewChart(salesVol, volPlotColor);
+                        $('#OverviewBar_Chart, .kpiNameValue .changeViewIcon').show();
+                    }
+                    else {
+                        $('#OverviewBar_Chart').hide();
+                        $('.kpiNameValue .changeViewIcon ').hide();
+                    }
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        }).one('change', function () {
+            if ($('#statusSelectFilter option').length > 0) {
+                $('#statusSelectFilter').parent().show();
+            }
+        }).triggerHandler('change');
+    });
+</script>
+<!-- name/value Widget -->
+<div class="FL PerfKPI kpiNameValue last">
+    <div class="UI-secBg brdrAll pad5">
+        <div class="FL">
+            <span>@Html.Term("PerformanceOverview", "Performance Overview")</span></div>
+        <div class="FR">
+            <a href="javascript:void(0);" id="OverviewBar_Button" class="changeViewIcon icon-barChart active"
+                data-icon="&#xe02b;"></a><a href="javascript:void(0);" id="OverviewText_Button" class="changeViewIcon icon-textView"
+                    data-icon="&#xe02d;"></a>
+        </div>
+        <span class="clr"></span>
+    </div>
+    <div class="brdr1 body" id="">
+        <div class="pad10">
+            <div id="OverviewBar_View" class="titlesBar">
+                <div id="OverviewBar_Chart">
+            </div>
+                <div id="nameValueBody" class="">
+        </div>
+    </div>
+            <div id="OverviewText_View" class="overviewText hide">
+            </div>
+        </div>
+    </div>
+</div>

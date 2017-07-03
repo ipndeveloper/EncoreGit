@@ -1,0 +1,132 @@
+@model NetSteps.Data.Entities.Address
+<script type="text/javascript">
+
+    $(function () {
+        $('#btnEditSaveAddress').click(function () {
+            if ($('#eachAddressControl').checkRequiredFields()) {
+                $('#eachAddressControl input').each(function () {
+                    if ($(this).val() == $(this).attr('title')) {
+                        $(this).val('');
+                    }
+                });
+                
+                 var p = $(this).parent();
+                showLoading(p, { float: 'right' });
+                
+                 // address validation
+                var validation = abstractAddressValidation({
+                    address1: $('#eachAddressAddress1').val(),
+                    address2: $('#eachAddressAddress2').val(),
+                    address3: $('#eachAddressAddress3').val(),
+                    //city: $("#eachAddressCity :selected").text() == "" ? $("#eachAddressCity").val() : $("#eachAddressCity :selected").text(), // in case Country is not US, it is a simple text input
+                    city: $("#eachAddressCity").val() == "" ? $("#eachAddressCity").val() : $("#eachAddressCity").val(), // in case Country is not US, it is a simple text input
+                    //state: $('#eachAddressState :selected').val(),
+                    state: $('#eachAddressState').val(),
+                    postalCode: $('#eachAddressControl .PostalCode').fullVal(),
+                    //country: $('#eachAddressCountry :selected').data("countrycode"),
+                    country: $('#eachAddressCountry').data("countrycode"),
+                    //street: $("#eachAddressStreet :selected").text() == "" ? $("#eachAddressStreet").val() : $("#eachAddressStreet :selected").text(),
+                    street: $("#eachAddressStreet").val() == "" ? $("#eachAddressStreet").val() : $("#eachAddressStreet").val()
+                });
+                
+                validation.init();                
+                
+               
+                $(document).bind("validAddressFound", function(event, address) {
+
+                console.log("address: ", address);
+                console.log("datos ", $('#shippingAddressStreet').val() + '  --- ' + $('#eachAddressStreet').val());
+
+                    $.post('@Url.Content("~/Account/BillingShippingProfiles/SaveAddress")', {
+                        addressId: $('#currentAddressId').val(),
+                        profileName: $('#eachAddressProfileName').val(),
+                        attention: $('#eachAddressAttention').val(),
+                        name: $('#eachAddressName').val(),
+                        Address1: address.address1,
+                        Address2: address.address2,
+                        Address3: address.address3,
+                        PostalCode: address.postalCode,
+                        City: address.city,
+                        county: $('#eachAddressCounty').val(),
+                        //State: address.state,
+                        State: $('#eachAddressState').val(),
+                        countryId: $('#eachAddressCountry').val(),
+                        phone: $('#eachAddressPhone').length ? $('#eachAddressPhone').phone('getPhone') : '',
+                        email: $('#eachProfileEmail').length ? $('#eachProfileEmail').val() : '',
+                        street:  $('#eachAddressStreet').val()
+
+                        
+                    }, function (response) {
+                        hideLoading(p);
+                        if (response.result) {
+                            showMessage('@Html.Term("SavedSuccessfully", "Saved successfully")', false);
+                            if ($('#editAddressModal').length && $('#editAddressModal').is(':visible'))
+                                $('#editAddressModal').jqmHide();
+                            getAddresses();
+                            window.location = '@Href("~/Account")';
+                        }
+                        else {
+                            hideLoading(p);
+                            showMessage(response.message, true);
+                        }
+                    });
+                });
+            }
+        });
+        $('#btnCancelEditAddress').click(function () {
+            if ($('#editAddressModal').length)
+                $('#editAddressModal').jqmHide();
+            window.location = '@Href("~/Account")';
+        });
+    });
+
+</script>
+@if (Model.AddressID > 0)
+{
+    <div class="UI-mainBg brdrAll GridUtility">
+        <input type="hidden" id="currentAddressId" value="@Model.AddressID" />
+        <a href="javascript:void(0);" class="UI-icon-container IconText Delete" onclick="deleteAddress($('#currentAddressId').val());"><span class="UI-icon icon-x"></span><span>
+            @Html.Term("DeleteThisProfile", "Delete This Profile")</span> </a>
+        @if (!Model.IsDefault)
+        {
+            <span id="shippingAddressSetAsDefaultLink"><a href="javascript:void(0);" class="UI-icon-container IconText SetDefault" onclick="setDefaultAddress($('#currentAddressId').val());"><span class="UI-icon icon-save icon-makeDefault"></span><span>
+                @Html.Term("MakeDefaultProfile", "Make Default Profile")</span> </a></span>
+        }
+        <!--<a href="#" class="IconText Close close"><span>Close Window</span></a>-->
+        <span class="clr"></span>
+    </div>
+}
+<div id="shippingAddressContainer">
+    @Html.Partial("Address", new AddressModel()
+                        {
+                            Address = Model,
+                            LanguageID = CoreContext.CurrentLanguageID,
+                            ShowCountrySelect = true,
+                            ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                            Prefix = "eachAddress"
+                        })
+     @if (Model.AddressTypeID == 2 && NetSteps.Common.Configuration.ConfigurationManager.GetAppSetting("ShowShipToEmail", false))
+      { 
+            var prop = Model.AddressProperties.Where<NetSteps.Data.Entities.AddressProperty>((x) => x.AddressPropertyTypeID == Convert.ToInt32(NetSteps.Data.Entities.Constants.AddressPropertyType.EmailAddress)).FirstOrDefault(); 
+    <div class="FRow">
+        <div class="FLabel">
+            @Html.Label(Html.Term("Notification Email Address"))
+        </div>
+        <div class="FInput">
+            @Html.TextBox("shippingProfileEmail", prop == null ? "" : prop.PropertyValue)
+        </div>
+    </div>
+      }
+</div>
+<hr />
+<div class="FormSubmits">
+    <p class="FR">
+        <a href="@Href("~/Account")" class="close"><span>
+            @Html.Term("Cancel")</span></a>
+    </p>
+    <p class="FL">
+        <a id="btnEditSaveAddress" href="javascript:void(0);" class="Button"><span>
+            @Html.Term("SaveAddress", "Save Address")</span></a>
+    </p>
+    <span class="clr"></span>
+</div>

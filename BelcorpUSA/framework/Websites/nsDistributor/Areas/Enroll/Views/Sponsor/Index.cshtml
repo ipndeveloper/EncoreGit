@@ -1,0 +1,60 @@
+﻿@model nsDistributor.Areas.Enroll.Models.Sponsor.IndexModel
+
+@{
+    Layout = "~/Areas/Enroll/Views/Shared/_EnrollStepLayout.cshtml";
+}
+
+@using (Html.BeginFormWithHtmlAttributes(new { data_submit_showloading = "[data-click-submit]" }))
+{
+    @Html.ValidationSummary(true);
+    
+    <div class="splitCol UI-lightBg brdrAll mauto" id="sponsor">
+        <div class="pad10 overflow">
+            @Model.SponsorPhotoHtml
+            <h2>
+                <span>@Model.SponsorFullName</span><br />
+                @Html.Term("IsCurrentlySelectedAsYourSponsor", "is currently selected as your sponsor")
+            </h2>
+            @if (Model.ShowBrowseLink)
+            {
+                //validar si el sponsor es valido
+                if(@Model.IsValidSponsor) 
+                {
+                      @Html.Partial("_SponsorShowBrowseLink")
+                }
+
+            }
+            else
+            {
+                <span class="clr"></span>
+            }
+                
+                
+                 @if (@Model.IsValidSponsor)
+                 {
+                            <a id="btnSelectSponsor" name="btnSelectSponsor" href="javascript:void(0);" class="FR Button btnSelectSponsor" data-click-submit="parent">
+                            <span>@Html.Term("Enrollment_Sponsor_ContinueLabel", "Continue with Selected Sponsor")</span>
+                            </a>
+                 }
+                 else
+                 { // si el sponsor seleccionados no es valido se tiene q seleccionar un sponsor
+                        <p>
+                        @Html.Term("InvalidSponsorSelected", "The Beauty Advisor Selected is not to able be your sponsor. PLease , contact her/Him or click below to searchanother Beauty Advisor ")
+                        
+                        <a href="@Url.Action("Browse")" class="FL Button MinorButton btnSwitchSponsor">
+                        <span>@Html.Term("Enrollment_Sponsor_BrowseLabel", "Search for a Different Sponsor")</span>
+                        </a>
+                        </p>
+                 } 
+                  
+              
+                
+            
+            <span class="clr"></span>
+        </div>
+    </div>
+    <div class="splitCol65 mauto">
+
+    </div>
+    @Html.AntiForgeryToken()
+}

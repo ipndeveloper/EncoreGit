@@ -1,0 +1,94 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content1" runat="server" ContentPlaceHolderID="SubNavigation">
+	<%= Html.SubTab("~/Orders/Browse", Html.Term("BrowseOrders", "Browse Orders")) %>
+	<%= Html.SubTab("~/Orders/Shipping", Html.Term("ShipOrders", "Ship Orders")) %>
+    <%= Html.SubTab("~/Orders/Autoships", Html.Term("AutoshipRunOverview", "Autoship Run Overview")) %>
+	<li class="pipe">&nbsp;</li>
+
+	<%--<%= Html.SelectedLink("~/Orders/OrderEntry/NewOrder", Html.Term("StartOrder", "Start a New Order"), LinkSelectionType.ActualPage, CoreContext.CurrentUser, "Orders-Order Entry") %>--%>
+    
+    <li><a id="lnkStartOrder" href="javascript:void(0);" title="Start a New Order"><span><%=Html.Term("StartOrder", "Start a New Order")%></span> </a></li>
+	
+</asp:Content>
+<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="MainContent">
+	<table class="CoreColumns" width="100%" cellspacing="0">
+		<tr>
+			<td class="CoreLeftNav">
+				<asp:ContentPlaceHolder ID="YellowWidget" runat="server">
+					<% Html.RenderPartial("YellowWidget", ((NetSteps.Web.Mvc.Controls.Models.OrderEntryModel)Model).Order); %>
+				</asp:ContentPlaceHolder>
+				<asp:ContentPlaceHolder ID="LeftNav" runat="server" />
+			</td>
+			<td class="CoreContent">
+				<div class="BreadCrumb">
+					<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+				</div>
+				<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+			</td>
+			<asp:ContentPlaceHolder ID="RightContent" runat="server">
+				<%--<% Html.RenderPartial("Notes"); %>--%>
+			</asp:ContentPlaceHolder>
+		</tr>
+	</table>
+   <div id="addMessage" class="jqmWindow LModal Overrides"> 
+       <div class="mContent">
+            <h2> <%=Html.Term("Mensage", "Mensage")%> </h2> 
+                 <p>
+                    Actualmente hay una Pre Orden disponible
+                 </p>
+                 <p>
+                    <a id="btnContinuar" href="javascript:void(0);"  class="Button BigBlue"> <%= Html.Term("Continuar", "Continuar")%></a> 
+                    <a id="btnCancel"  href="javascript:void(0);" class="Button jqmClose"> <%= Html.Term("Salir","Salir")%></a>
+                </p>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        $('#addMessage').jqm({ modal: false, onShow: function (h) {
+            h.w.css({
+                top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+                left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+            }).fadeIn();
+        }});
+
+        $('#lnkStartOrder').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '<%=ResolveUrl("~/OrderEntry/ValidPreOrder") %>',
+                data: ({ Code: this.id }),
+                asyn: false,
+                success: function (data) {
+                    if (data.result == true) {
+                        $('#addMessage').jqmShow();
+                    } else {
+                        location = '/Orders/OrderEntry/NewOrder';
+                    }
+                }
+            });
+        });
+
+        $("#btnContinuar").click(function () {
+            $('#addMessage').jqmHide();
+       });
+
+       $("#btnCancel").click(function () {
+           $.ajax({
+               type: 'POST',
+               url: '<%=ResolveUrl("~/OrderEntry/DeletePreOrder") %>',
+               data: ({ Code: this.id }),
+               asyn: false,
+               success: function (data) {
+                   if (data.result == true) {
+                       $('#addMessage').jqmHide();
+                       location = '/Orders/OrderEntry/NewOrder';
+                   }
+               }
+           });
+       });
+    
+    </script>
+</asp:Content>

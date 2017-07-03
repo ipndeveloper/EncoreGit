@@ -1,0 +1,166 @@
+@using NetSteps.OrderAdjustments.Common.Model;
+@using NetSteps.Promotions.Plugins.Common.Rewards.Effects.Components;
+@model NetSteps.Data.Entities.Order
+@{
+	ViewBag.Title = "Confirmation";
+}
+@section head {
+	<script type="text/javascript" src="@Url.Content("~/Scripts/Shared/CartModel.js")"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+        function HideButtons(t, arg) {
+            var btns = $('#btnNext, #continueShopping, #editCart, #editShipping, #editBilling');
+            btns.hide();
+            showLoading(t, arg);
+        }
+
+        function ShowButtons(t) {
+            hideLoading(t);
+            var btns = $('#btnNext, #continueShopping, #editCart, #editShipping, #editBilling');
+            btns.show();
+        }
+
+        function NavigateTo(obj, url, arg) {
+            HideButtons(obj, arg);
+            window.location = url;
+        }
+
+        $(function () {
+
+			var cartModel = new CartModel(@Html.Raw(Json.Encode(ViewBag.CartModel)), { showDeleteLink: false, showSelectGiftLink: false, allowQuantityEdit: false });
+			ko.applyBindings(cartModel);
+
+        	$('#CartItems .EditKit').live('click', function () {
+        		var t = $(this);
+        		var tr = t.closest('tr')
+        		var productId = tr.find('.productId').val();
+        		var guid = tr.find('.guid').val();
+        		window.location.href = '@Url.Resolve("~/Shop/BundlePackItems?productId=")' + productId + '&bundleGuid=' + guid;
+        	});
+
+        	$('#CartItems .ViewKitContents').live('click', function () {
+        		var t = $(this);
+        		if (t.hasClass('Minimize')) {
+        			t.text('@Html.Term("ViewKitContents", "View Kit Contents")').removeClass('Minimize').next().slideUp('fast');
+        		} else {
+        			t.text('@Html.Term("Close")').addClass('Minimize').next().slideDown('fast');
+        		}
+        	});
+
+        	$('#btnNext').click(function () {
+        		var t = $(this);
+        		HideButtons(t, { float: 'right' });
+        		$.post('@Url.Resolve("~/Checkout/Submit")', {}, function (response) {
+        			if (response.result) {
+        				window.location = '@Url.Resolve("~/Checkout/Receipt")' + '?orderId=' + response.newOrderId;
+        			} else {
+        				ShowButtons(t);
+        				showMessage(response.message, true);
+        				$('#paymentsGrid').html(response.paymentsGrid);
+        			}
+        		});
+        	});
+
+        	$('#continueShopping').click(function () {
+        		NavigateTo($(this), '@Url.Resolve("~/Shop")');
+        	});
+
+        	$('#editCart').click(function () {
+        		NavigateTo($(this), '@Url.Resolve("~/Cart")');
+        	});
+
+        	$('#editShipping').click(function () {
+        		NavigateTo($(this), '@Url.Resolve("~/Checkout/Shipping")');
+        	});
+
+        	$('#editBilling').click(function () {
+        		NavigateTo($(this), '@Url.Resolve("~/Checkout/Billing")');
+        	});
+
+        });
+		//]]>
+	</script>
+}
+<div class="pageTitle">
+	<h1>
+		@Html.Term("PleaseConfirmYourOrder", "Please confirm your order")</h1>
+</div>
+<!--Ships to-->
+<div class="FL splitCol Shipping Confirm">
+	<div class="pad5">
+		<div class="UI-darkBg brdrAll pad5 bold">
+			<span class="label">@Html.Term("ShippingToLabel", "Shipping to")</span>
+		</div>
+		<a id="editShipping" href="javascript:void(0);" class="FL pad10 UI-icon-container" title="@Html.Term("MakeChanges", "Make Changes")">
+			<span class="UI-icon icon-edit"></span></a>
+		<div class="FL pad5 addressDisplay">
+			@foreach (var shipment in Model.OrderShipments)
+   { 
+				@Html.Raw(shipment.ToDisplay(false, showName: true, showShipToEmail: true))
+				<span class="clr"></span> @Html.Term("via")
+				<span class="clr ShipMethod">@Html.Term(shipment.ShippingMethodName) </span>
+   }
+		</div>
+		<span class="clr"></span>
+	</div>
+</div>
+<!--Bills to-->
+<div class="FR splitCol Billing Confirm">
+	<div class="pad5">
+		<div class="UI-darkBg brdrAll pad5 bold">
+			<span class="label">@Html.Term("BillingToLabel", "Billing to")</span>
+		</div>
+		<a id="editBilling" href="javascript:void(0);" class="FL pad10 UI-icon-container" title="@Html.Term("MakeChanges", "Make Changes")">
+			<span class="UI-icon icon-edit"></span></a>
+		<div class="FL pad5 addressDisplay" id="paymentsGrid">
+			@Html.Partial("PaymentsGrid", Model)
+		</div>
+		<span class="clr"></span>
+	</div>
+</div>
+<div class="clr TablePane">
+	@Html.Partial("PromotionNotifications")
+	<table class="DataGrid" width="100%">
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>@Html.Term("SKU")
+				</th>
+				<th>
+				</th>
+				<th>
+					@Html.Term("Product")
+				</th>
+				<th>
+					@Html.Term("Price")
+				</th>
+				<th class="center cartQty">
+					@Html.Term("Quantity")
+				</th>
+				<th class="right">
+					@Html.Term("Total")
+				</th>
+			</tr>
+		</thead>
+		<tbody id="CartItems">
+			<!-- ko foreach: OrderItems -->
+			@Html.Partial("CartOrderItem")
+			<!-- /ko -->
+			<!-- ko foreach: PromotionallyAddedItems -->
+			@Html.Partial("CartPromotionallyAddedItem")
+			<!-- /ko -->
+		</tbody>
+	</table>
+	@Html.Partial("_OrderTotals")
+</div>
+@*@Html.Partial("_UpgradeAccountNotifications")*@
+<div class="FormSubmit">
+	<a id="continueShopping" href="javascript:void(0);" class="FL Button btnPlain btnReturn GoBack">
+		<span class="FL iconLabel">@Html.Term("ContinueShopping", "Continue Shopping")</span>
+	</a>&nbsp;<a id="editCart" href="javascript:void(0);" class="FL ml5 Button btnPlain btnReturn editCart">
+		<span class="iconLabel">@Html.Term("EditCart", "Edit Cart")</span> </a><a id="btnNext"
+			href="javascript:void(0);" class="FR Button btnContinue btnSubmitOrder"><span>@Html.Term("SubmitOrderButton", "Submit your order")</span></a>
+	<span class="clr"></span>
+</div>
+@Html.Partial("MessageCenter")

@@ -1,0 +1,22 @@
+@model NetSteps.Data.Entities.News
+@section head {
+    <script type="text/css">
+    $(function(){
+        $('body').addClass('noAction');
+    });
+    </script>
+}
+@{var content = Model.HtmlSection.ProductionContentForDisplay((Site)ViewData["CurrentSite"]);}
+@section breadcrumb {
+    <a href="@Href("~/News")">
+        @Html.Term("News")</a>
+}
+@section title {
+    @content.Title()
+}
+<div class="caption newsCaption">
+    @Html.Raw(content.Caption())
+</div>
+<div class="body newsBody">
+    @Html.Raw(content.Body())
+</div>

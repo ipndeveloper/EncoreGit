@@ -1,0 +1,56 @@
+@using NetSteps.Web
+@model DistributorBackOffice.Models.Home.AutoshipOverviewModel
+@*@model NetSteps.Data.Entities.Widget*@
+<!-- autoship widget -->
+@{
+    var autoships = AutoshipOrder.GetOverviews(CoreContext.CurrentAccount.AccountID, CoreContext.CurrentAccount.AccountTypeID)
+        .Where(s => s.IsEnrollable || s.AutoshipOverviews.Any());
+
+	var autoshipEnabled = Model.AutoshipEnabled;
+}
+@if (autoships != null && autoships.Count() > 0 && autoshipEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#autoshipSchedule').change(function () {
+                $('#autoshipOverview').html('<img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="" />');
+                $.get('@Href("~/Home/GetAutoshipOverview")', { autoshipScheduleId: $(this).val() }, function (response) {
+                    if (response.result === undefined || response.result) {
+                        $('#autoshipOverview').html(response).find('.autoship').css('margin', '0').find('h5').hide();
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }).triggerHandler('change');
+
+        });
+    </script>
+
+	<div class="WidgetWrap Account">
+		
+			<div class="Widget">
+				<div class="UI-btn txtShadowDrk WidgetTitle">
+					<span class="Txt UI-btn">
+						@Html.Term("MyAutoshipments", "My Autoshipments")</span> <span class="FR WidgetControls">
+																				 	<a href="javascript:void(0);" onclick=" javascript:hideWidget(@Model.Widget.WidgetID);" title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")">
+																						<span>X</span></a></span>
+				</div>
+				<div class="center UI-lightBg pad5 brdrAll WidgetUtility">
+					<select id="autoshipSchedule">
+						@foreach (var schedule in autoships)
+						{
+							if (schedule.Active)
+							{
+								<option value="@schedule.AutoshipScheduleID">@schedule.LocalizedName</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="WidgetBody">
+					<div id="autoshipOverview">
+					</div>
+				</div>
+			</div>
+	</div>
+}
+<!--end widget -->

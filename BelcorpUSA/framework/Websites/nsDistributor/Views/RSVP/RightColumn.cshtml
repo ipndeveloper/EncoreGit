@@ -1,0 +1,14 @@
+﻿<div id="RightColumn" class="layoutColumn sideCol SideColumn rsvpPartyInfoCol">
+    @{Party party = ViewBag.Party;}
+    <div class="block mb10 pad10">
+        <h3>
+            @Html.Term("GetDirectionsToTheParty", "Get directions to the party"):</h3>
+        <a href="http://maps.google.com/?q=@(party.Address.Address1), @(party.Address.City), @(party.Address.State) @(party.Address.PostalCode)" target="_blank" rel="external">@Html.Term("Google")</a><br />
+        <a href="http://www.bing.com/maps/?v=2&where1=@(party.Address.Address1), @(party.Address.City), @(party.Address.State) @(party.Address.PostalCode)" target="_blank" rel="external">@Html.Term("Bing")</a>
+    </div>
+    <div class="block pad10">
+        <h3>
+            @Html.Term("YouCanShopOnlineFromTheParty", "You can shop online from the party")</h3>
+        <a href="@Url.Resolve("~/Shop", new { partyId = party.PartyID })">@Html.Term("ShopNow", "Shop Now")</a>
+    </div>
+</div>

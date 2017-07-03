@@ -1,0 +1,39 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="SubNavigation">
+    <%--<%= Html.SubTab("~/Communication/Campaigns", Html.Term("Campaigns"), onlyCheckController: true, function: "Communication")%>--%>
+    <%= Html.SubTab("~/Communication/NewsletterCampaigns", Html.Term("GMP-Nav-Campaigns","Campaigns"), onlyCheckController: true, function: "Communication")%>
+    <%--<%= Html.SubTab("~/Communication/Autoresponders", Html.Term("Autoresponders"), onlyCheckController: true, function: "Communication")%>--%>
+    <%= Html.SubTab("~/Communication/EmailTemplates", Html.Term("GMP-Nav-EmailTemplates", "Email Templates"), onlyCheckController: true, function: "Communication")%>
+    <%= Html.SubTab("~/Communication/Alerts", Html.Term("GMP-Nav-Alerts","Alerts"), onlyCheckController: true, function: "Communication") %>
+
+
+    <%--     Developed by FSV - GYS - BR-PD-003--%>
+    <%= Html.DropDownNavigation(Html.Term("OtherTemplates", "Other Templates"), "", new List<NavigationItem>()
+		{
+            //new NavigationItem() { LinkText = Html.Term("WarehouseInventory", "Warehouse Inventory"), Url = "~/Products/Warehouses", MappedUrls = new List<string>(){ "~/Products/Warehouses/*" } },
+            new NavigationItem() { LinkText = Html.Term("NewsPrintOrder", "News Print Order"), Url = "~/Communication/NewPrintOrder" }
+	}) %>
+
+    <%= Html.SubTab("~/Communication/OrderPaymentTemplates", "Payment Overdue")%>
+
+
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="LeftNav" runat="server" />
+            </td>
+            <td class="CoreContent">
+                <div class="BreadCrumb">
+                    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+                </div>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

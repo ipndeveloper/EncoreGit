@@ -1,0 +1,105 @@
+﻿@model DistributorBackOffice.Areas.Communication.Models.Newsletters.NewsletterContentModel
+@Html.HiddenFor(m => m.CampaignActionID, new { id = "NewsletterContentCampaignActionID" })
+@Html.HiddenFor(m => m.LanguageID, new { id = "NewsletterContentLanguageID" })
+<div class="FL splitCol">
+    @Html.TextAreaFor(m => m.DistributorContent, new { id = "personalizedContent", @class = "fullWidth personalizedContent" })
+    <div class="clr pad10">
+        <div class="FL">
+            <a id="saveMessage" href="javascript:void(0);" class="Button"><span>
+                @Html.Term("SavePersonalizedContent", "Save Your Personalized Content")</span></a>
+        </div>
+        <div class="FL">
+            <span class="pad5 ml10 UI-lightBg bold" style="display: none;" id="response"></span>
+        </div>
+        <span class="clr"></span>
+    </div>
+</div>
+<div class="FR splitCol">
+    <div class="FL center contentOption mr10" id="uploadPhoto">
+        <div class="UI-mainBg brdrAll pad5">
+            @Html.Term("NewsletterUploadPhotoHeader", "Upload your own photo"):</div>
+        <a
+		   href="javascript:void(0);"
+           class="newsletterImgWrap personalPhoto brdr1"
+           title="@Html.Term("NewsletterUploadPhotoTooltip", "Click here to upload your photo")">
+            @if (!string.IsNullOrWhiteSpace(Model.DistributorImageUrl))
+            {
+                <img src="@Model.DistributorImageUrl" alt="" id="distributorImage" />
+            }
+        </a>
+    </div>
+    <div class="FL center contentOption" id="newsLetterPreview">
+        <div class="UI-mainBg brdrAll pad5">
+            @Html.Term("NewsletterPreviewHeader", "Preview the newsletter"):</div>
+        <a 
+		   href="javascript:void(0);"
+           class="newsletterImgWrap newsLetterPreview brdr1"
+           title="@Html.Term("NewsletterPreviewTooltip", "Click here to see what the newsletter looks like")">
+        </a>
+    </div>
+    <span class="clr"></span>
+</div>
+<div class="jqmWrap">
+    <div id="uploadPhotoModal" class="jqmWindow LModal">
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#DistributorContent').watermark('@Html.JavascriptTerm("CustomizeYourContentInstructions", "You still have time to customize the newsletter with your own content.  Click here to enter it now.")');
+
+        $('#saveMessage').click(function () {
+            $.post('/Communication/Newsletters/SaveDistributorContent', {
+                CampaignActionID: $('#NewsletterContentCampaignActionID').val(),
+                LanguageID: $('#NewsletterContentLanguageID').val(),
+                DistributorContent: $('#personalizedContent').val(),
+                DistributorImageUrl: $('#distributorImage').attr('src')
+            }, function (response) {
+                if (response.result) {
+                    showMessage('@Html.Term("NewsletterMessageSaved", "Your message has been saved for this newsletter/language.")', false);
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+
+        $('#newsLetterPreview').click(function () {
+            var data, newWindow;
+            //data to be passed to server
+            data = {
+                CampaignActionID: $('#NewsletterContentCampaignActionID').val(),
+                LanguageID: $('#NewsletterContentLanguageID').val(),
+                DistributorContent: $('#personalizedContent').val(),
+                DistributorImageUrl: $('#distributorImage').attr('src')
+            };
+
+            newWindow = window.open('', '');
+            $.post('/Communication/Newsletters/SetupPreview', data, function (response, status, xhr) {
+                if (status === "success") {
+                    newWindow.location = '/Communication/Newsletters/Preview';
+                }
+                else if (status === "error") {
+                    //$("#error").html('There was an error: ' + xhr.status + ' ' + xhr.statusText);
+                    alert('There was an error: ' + xhr.status + ' ' + xhr.statusText);
+                }
+                else {
+                    alert(xhr.status + ' ' + xhr.statusText);
+                }
+            });
+        });
+
+        $('#uploadPhotoModal').jqm({
+            modal: false
+        });
+
+        $('#uploadPhoto').click(function () {
+            $.get('/Communication/Newsletters/UploadPhotoControl', {}, function (response) {
+                if (response.result === undefined || response.result) {
+                    $('#uploadPhotoModal').html(response);
+                    $('#uploadPhotoModal').jqmShow();
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        });
+    });
+</script>

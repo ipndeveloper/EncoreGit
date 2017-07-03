@@ -1,0 +1,207 @@
+﻿@Html.Partial("_PerformanceFusionCharts")
+<script type="text/javascript">
+
+	$(function () {
+		var qtyTitles = titleLookup.getCount(),
+			qtyQualifiers = qualifiers.length,
+			containerHeight = $('#TitleLevels').height(),
+			tlHeight = Math.floor(containerHeight / qtyTitles),
+			titleTableContent = '',
+			titleList = '',
+			currentTerms,
+			$chartWrap = $('#TitleBar_Chart'),
+			levels = {
+				recognized: '1',
+				paid: '1'
+			},
+			colors = {
+				recognized: rgb2hex($('.chartLegendLabel.recognized').css('color')),
+				paid: rgb2hex($('.chartLegendLabel.paidAs').css('color'))
+			};
+
+		$chartWrap.height(tlHeight * qtyTitles);
+
+		$('#statusSelectFilter').change(function () {
+			titleList = '';
+			titleTableContent = '';
+			$.get('@Href("~/Performance/GetTitleProgressionWidgetData")', { periodId: $(this).val() }, function (response) {
+				if (response.result) {
+					if (response.model === undefined) {
+						levels.recognized = '0';
+						levels.paid = '0';
+					} else {
+						var curLev = response.model.CurrentLevel,
+							paidLev = response.model.PaidAsLevel;
+						if (curLev != null && curLev >= 1) {
+							levels.recognized = (curLev).toString();
+						}
+						else {
+							levels.recognized = '0';
+						}
+						if (paidLev != null && paidLev >= 0) {
+							levels.paid = (paidLev).toString();
+						}
+						else {
+							levels.paid = '0';
+						}
+					}
+					RenderChartTitleBarChart(levels, qtyTitles, colors);
+					RenderRecognizedTitleRadChart(levels, qtyTitles, colors);
+
+					for (var i = qtyTitles; i >= 0; i--) {
+						currentTerms = setTitleClasses(levels, i + 1);
+						titleList +=
+							'<span class="' + currentTerms.rowClass + '" style="line-height:' + tlHeight + 'px">' +
+							titleLookup.getTitleName(titleLookup.getKey(i)) +
+							'</span>';
+					};
+
+					var cln = response.model ? response.model.CurrentLevelName : '@Html.JavascriptTerm("N/A")';
+					$('#TitleLevels').html(titleList);
+					$('.chartLegendLabel.recognized').html(
+						'<span class="label">@Html.JavascriptTerm("CareerTitle", "Career Title"): </span>' +
+						'<span class="term">' + cln + '</span>'
+					);
+					var paln = response.model ? response.model.PaidAsLevelName : '@Html.JavascriptTerm("N/A")';
+					$('.chartLegendLabel.paidAs').html(
+						'<span class="label">@Html.JavascriptTerm("PaidAsTitle", "Paid as Title"): </span>' +
+						'<span class="term">' + paln + '</span>'
+					);
+
+					/************************ Start Title Text View ************************/
+					for (var i = 1; i <= qtyTitles; i++) {
+						currentTerms = setTitleClasses(levels, i);
+						titleTableContent +=
+							'<tr class="' + currentTerms.rowClass + '">' +
+							'<td>' + i + '</td>' +
+							'<td>' + titleLookup.getTitleName(i) + '</td>' +
+							'<td>' + currentTerms.labelTerm + '</td>' +
+							'</tr>';
+					};
+					$('#TitleData tbody').html(titleTableContent)
+					$('#TitleLevel .recognized').html(titleLookup.getTitleCode(levels.recognized));
+					$('#TitleLevel .paidAs').html(titleLookup.getTitleCode(levels.paid));
+					/************************ End Title Text View ************************/
+
+				} else {
+					showMessage(response.message, true);
+				}
+			});
+		}).one('change', function () {
+			if ($('#statusSelectFilter option').length > 0) {
+				$('#statusSelectFilter').parent().show();
+			}
+		});
+
+	});
+
+	function setTitleClasses(lvls, i) {
+		var t = '&nbsp;',
+			rc = '',
+			terms;
+		if (i == lvls.recognized && i == lvls.paid) {
+			t = '@Html.JavascriptTerm("Performance_TitleProgress_RecognizedAs", "Recognized As"), @Html.JavascriptTerm("Performance_TitleProgress_PaidAs", "Paid As")';
+			rc = 'recognized';
+		}
+		else if (i == lvls.recognized) {
+			t = '@Html.JavascriptTerm("Performance_TitleProgress_RecognizedAs", "Recognized As")';
+			rc = 'recognized';
+		}
+		else if (i == lvls.paid) {
+			t = '@Html.JavascriptTerm("Performance_TitleProgress_PaidAs", "Paid As")';
+			rc = 'paidAs';
+		}
+		else {
+			t = '&nbsp;';
+			rc = 'titleLevel';
+			if (i < lvls.recognized || i < lvls.paid) {
+				t = '<span class="UI-icon icon-check"></span>';
+				rc = 'titleLevel complete';
+			}
+		}
+		terms = {
+			labelTerm: t,
+			rowClass: rc
+		};
+		return terms;
+	}
+</script>
+<!-- Title Progression Widget -->
+<div class="FL PerfKPI kpiProgress TitleProgress @Html.Term("TitleProgressLanguage")">
+	<div class="UI-secBg brdrAll pad5">
+		<div class="FL">
+			<span>@Html.Term("TitleProgress", "Title Progress")</span></div>
+		<div class="FR">
+			<a href="javascript:void(0);" id="TitleBar_Button" class="changeViewIcon icon-barChart active" data-icon="&#xe02b;"></a><a href="javascript:void(0);" id="TitleRadial_Button" class="changeViewIcon icon-radialChart" data-icon="&#xe02c;"></a><a href="javascript:void(0);" id="TitleText_Button" class="changeViewIcon icon-textView" data-icon="&#xe02d;"></a>
+		</div>
+		<span class="clr"></span>
+	</div>
+	<div class="brdr1 body">
+		<div class="pad10">
+			<div id="TitleBar_View" class="titlesBar">
+				<div id="TitleLevels" class="titlesListing">
+				</div>
+				<div id="TitleBar_Chart" class="chart">
+				</div>
+				<span class="clr"></span>
+				<div id="TitleProgressLegend" class="UI-lightBg pad5 titleProgressLegend">
+					<div class="chartLegend">
+						<div class="FL chartLegendColor recognizedLegend">
+						</div>
+						<div class="FL chartLegendLabel recognized">
+						</div>
+					</div>
+					<div class="chartLegend">
+						<div class="FL chartLegendColor paidAsLegend">
+						</div>
+						<div class="FL chartLegendLabel paidAs">
+						</div>
+					</div>
+					<span class="clr"></span>
+				</div>
+			</div>
+			<div id="TitleRadial_View" class="circularChartWrap titleRadial hide">
+				<div id="TitleChart" class="circularChartWrap">
+					<div id="TitleRadial_Chart_Paid" class="chart">
+					</div>
+					<div id="TitleRadial_Chart_Recognized" class="chart">
+					</div>
+					<div id="TitleLevel">
+						<span class="recognized"></span><span class="paidAs"></span>
+					</div>
+				</div>
+				<div id="TitleProgressLegend2" class="UI-lightBg brdrAll titleProgressLegend">
+					<div class="chartLegend">
+						<div class="FL chartLegendColor recognizedLegend">
+						</div>
+						<div class="FL chartLegendLabel recognized">
+						</div>
+					</div>
+					<div class="chartLegend">
+						<div class="FL chartLegendColor paidAsLegend">
+						</div>
+						<div class="FL chartLegendLabel paidAs">
+						</div>
+					</div>
+				</div>
+				<span class="clr"></span>
+			</div>
+			<div id="TitleText_View" class="titlesText hide">
+				<table id="TitleData" class="DataGrid">
+					<thead>
+						<tr>
+							<th>@Html.Term("Performance_TitleProgress_LevelHeading", "Level")
+							</th>
+							<th>@Html.Term("Performance_TitleProgress_TitleHeading", "Title")
+							</th>
+							<th>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

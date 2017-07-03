@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Site.cshtml";
+}
+@section head{
+    @RenderSection("head", false)
+}
+@*<div class="LeftColumn" style="width: auto;">
+    @Html.Partial("AccountInfo")
+</div>*@
+<div class="contentPane">
+    <div class="pageTitle">
+        <h1>@Html.Term("PWS_Checkout_Title","Checkout")</h1>
+    </div>
+    @{Html.RenderPartial("_CheckoutSteps");}
+    <div class="checkoutContentPane">
+        @RenderBody()
+    </div>
+    <span class="clr"></span>
+</div>

@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ISOs xmlns="http://www.netsteps.com/ISOConfiguration">
+  <ISO Id="BR">
+    <PostalCodeLookup Size="8" SizeSearch="8" Enabled="true" Regex="^(\d{8}|\d{5})" PostalCodeFieldName="PostalCode" LookupURL="~/Checkout/LookupZip" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" MaxLength="50" />
+      <Tag Id="zip" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="5" IsRequired="true" Regex="\d{5}" LiveRegexCheck="false" DefaultRegexFailMessage="Invalid zip code" RegexFailMessageTermName="InvalidZipCode" DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" FocusElementOnFilled="zipPlusFour">
+        <AfterTag>
+          <![CDATA[&nbsp;-&nbsp;]]>
+        </AfterTag>
+      </Tag>
+      <Tag Id="zipPlusFour" TagName="input" DefaultLabel="" LabelTermName="" MaxLength="3" IsRequired="false" Regex="\d{3}" LiveRegexCheck="false" DefaultRegexFailMessage="Invalid zip code" RegexFailMessageTermName="InvalidZipCode" Field="PostalCode">
+        <AfterTag>
+          <![CDATA[<img class="zipLoading" src="/Resource/Content/Images/Icons/loading-blue.gif" alt="" style="height:15px;display:none;" /><br />]]>
+        </AfterTag>
+      </Tag>
+      <Tag Id="state" TagName="input" DefaultLabel="State" LabelTermName="State" IsRequired="true" DefaultRequiredMessage="State is required." RequiredMessageTermName="StateRequired" Field="State"></Tag>
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required." RequiredMessageTermName="CityRequired" Field="City"></Tag>
+      <Tag Id="county" TagName="input" DefaultLabel="County" LabelTermName="County" IsRequired="false" Field="County"></Tag>
+      <Tag Id="street" TagName="input" DefaultLabel="Street" LabelTermName="Street" IsRequired="true" DefaultRequiredMessage="Street is required." RequiredMessageTermName="StreetRequired" Field="Street"></Tag>
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true" DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="address3" TagName="input" DefaultLabel="Address Line 3" LabelTermName="AddressLine3" MaxLength="50" IsRequired="false" Field="Address3" />
+    </Tags>
+  </ISO>
+  
+	<ISO Id="US">
+    <PostalCodeLookup Size="9" SizeSearch="5" Enabled="true" Regex="^(\d{9}|\d{5})" PostalCodeFieldName="PostalCode" LookupURL="~/Checkout/LookupZip" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" MaxLength="50" />
+      <Tag Id="zip" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="5" IsRequired="true" Regex="\d{5}" LiveRegexCheck="false" DefaultRegexFailMessage="Invalid zip code" RegexFailMessageTermName="InvalidZipCode" DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" FocusElementOnFilled="zipPlusFour">
+        <AfterTag>
+          <![CDATA[&nbsp;-&nbsp;]]>
+        </AfterTag>
+      </Tag>
+      <Tag Id="zipPlusFour" TagName="input" DefaultLabel="" LabelTermName="" MaxLength="4" IsRequired="false" Regex="\d{4}" LiveRegexCheck="false" DefaultRegexFailMessage="Invalid zip code" RegexFailMessageTermName="InvalidZipCode" Field="PostalCode">
+        <AfterTag>
+          <![CDATA[<img class="zipLoading" src="/Resource/Content/Images/Icons/loading-blue.gif" alt="" style="height:15px;display:none;" /><br />]]>
+        </AfterTag>
+      </Tag>
+      <Tag Id="state" TagName="input" DefaultLabel="State" LabelTermName="State" IsRequired="true" DefaultRequiredMessage="State is required." RequiredMessageTermName="StateRequired" Field="State"></Tag>
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required." RequiredMessageTermName="CityRequired" Field="City"></Tag>
+      <Tag Id="county" TagName="input" DefaultLabel="County" LabelTermName="County" IsRequired="false" Field="County"></Tag>
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true" DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="address3" TagName="input" DefaultLabel="Address Line 3" LabelTermName="AddressLine3" MaxLength="50" IsRequired="false" Field="Address3" />
+    </Tags>
+	</ISO>
+
+  <ISO Id="CA">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="address3" TagName="input" DefaultLabel="Address Line 3" LabelTermName="AddressLine3" MaxLength="50" IsRequired="false" Field="Address3" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" FocusElementOnFilled="postalCode">
+        <AfterTag><![CDATA[&nbsp;]]></AfterTag>
+      </Tag>
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <Tag Id="state" TagName="select" DefaultLabel="Province" LabelTermName="Province" IsRequired="true" DefaultRequiredMessage="Province is required."
+				 RequiredMessageTermName="ProvinceRequired" Field="State">
+        <InTag><![CDATA[<option value="">-- Please enter a valid zip --</option>]]></InTag>
+      </Tag>
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="GB">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="AU">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <Tag Id="state" TagName="select" DefaultLabel="Province" LabelTermName="Province" IsRequired="true" DefaultRequiredMessage="Province is required."
+				 RequiredMessageTermName="ProvinceRequired" Field="State">
+        <InTag><![CDATA[<option value="">-- Please enter a valid zip --</option>]]></InTag>
+      </Tag>
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="IE">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="SE">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="NL">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				 DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+  <ISO Id="BE">
+    <PostalCodeLookup Enabled="false" />
+    <Tags>
+      <Tag Id="profileName" TagName="input" DefaultLabel="Profile Name" LabelTermName="ProfileName" IsRequired="true" MaxLength="50"
+				 DefaultRequiredMessage="Profile Name is required." RequiredMessageTermName="ProfileNameRequired" Field="ProfileName" />
+      <!--<Tag Id="attention" TagName="input" DefaultLabel="Attention (C/O)" LabelTermName="Attention" IsRequired="false" Field="Attention" />-->
+      <Tag Id="address1" TagName="input" DefaultLabel="Address Line 1" LabelTermName="AddressLine1" MaxLength="50" IsRequired="true"
+				 DefaultRequiredMessage="Address Line 1 is required." RequiredMessageTermName="AddressLine1Required" Field="Address1" />
+      <Tag Id="address2" TagName="input" DefaultLabel="Address Line 2" LabelTermName="AddressLine2" MaxLength="50" IsRequired="false" Field="Address2" />
+      <Tag Id="postalCode" TagName="input" DefaultLabel="Postal Code" LabelTermName="PostalCode" MaxLength="12" IsRequired="true" LiveRegexCheck="false"
+				  DefaultRequiredMessage="Postal Code is required." RequiredMessageTermName="PostalCodeRequired" Field="PostalCode" />
+      <Tag Id="city" TagName="input" DefaultLabel="City" LabelTermName="City" IsRequired="true" DefaultRequiredMessage="City is required."
+				 RequiredMessageTermName="CityRequired" Field="City" />
+      <!--<Tag Id="phone" TagName="span" DefaultLabel="Phone Number" LabelTermName="PhoneNumber" IsRequired="false" Field="PhoneNumber" />-->
+    </Tags>
+  </ISO>
+
+</ISOs>

@@ -1,0 +1,13 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.HostCreditItem
+<div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+    <span class="FL">@Html.Term(Model.Title, "Host Credit")</span>
+    <div class="FR">
+        <span class="bold">@Html.Term("HostCreditRemaining", "Host Credit Remaining"): <span id="@Model.HeaderPrefix.GetId("Remaining")">@(Model.RemainingDictionary.First().Key)</span>
+        </span>
+        <input type="hidden" class="@Model.HeaderPrefix.GetId("RewardRuleId")" value="@(Model.RemainingDictionary.First().Value)" />
+    </div>
+    <span class="clr"></span>
+</div>
+@{
+    Html.RenderPartial("Party/_cartTools", Model);
+}

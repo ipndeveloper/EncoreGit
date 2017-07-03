@@ -1,0 +1,29 @@
+﻿<tr data-bind="css: { Alt: $index() % 2 == 0 }">
+	<td>
+		<img alt="" width="25" data-bind="attr: { src: ImageUrl }" />
+	</td>
+	<td data-bind="text: SKU">
+	</td>
+	<td data-bind="text: ProductName">
+	</td>
+	<td data-bind="template: OriginalUnitPrice() != AdjustedUnitPrice() && AdjustedUnitPrice() != null ? 'unitPriceStrikethrough' : 'unitPrice'">
+		<script type="text/html" id="unitPriceStrikethrough">
+		<span class="block price strikethrough originalPrice" data-bind="currency:OriginalUnitPrice"></span>
+		<span class="block price discountPrice" data-bind="currency: AdjustedUnitPrice"></span>
+		</script>
+		<script type="text/html" id="unitPrice">
+		<span class="price originalPrice" data-bind="currency: OriginalUnitPrice"></span>
+		</script>
+	</td>
+	<td data-bind="text: Quantity">
+	</td>
+	<td data-bind="template: OriginalTotal() != AdjustedTotal() ? 'totalStrikethrough' : 'total'">
+		<script type="text/html" id="totalStrikethrough">
+		<span class="block price originalPrice strikethrough" data-bind="currency: OriginalTotal"></span>
+		<span class="block price discountPrice" data-bind="currency: AdjustedTotal"></span>
+		</script>
+		<script type="text/html" id="total">
+		<span class="price originalPrice" data-bind="currency: OriginalTotal"></span>
+		</script>
+	</td>
+</tr>

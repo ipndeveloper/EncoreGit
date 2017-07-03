@@ -1,0 +1,16 @@
+﻿@model NetSteps.Communication.UI.Common.IAccountAlertMessageModel
+<div class="UI-Alert">
+    <div class="Inner">
+        <p>
+            <a href="@Model.ActionLinkUrl" target='@Model.OpenActionLinkInNewWindow ? "_blank" : "_self"'>
+                @Model.Message
+            </a>
+			@if (Model.IsDismissable)
+            {
+				<a class="FR dismissAlert DTL" data-hideSelector=".UI-Alert" data-accountAlertId="@Model.AccountAlertId">
+                    @Html.Term("Dismiss")&nbsp;
+                </a>
+            }
+		</p>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@model nsDistributor.Areas.Enroll.Models.AccountInfo.BasicInfoModel
+
+@Model.FirstName @Model.LastName,
+@if (Model.IsEntity)
+{
+    @(Model.EntityName + ",")
+}
+@*@Model.MaskedTaxNumber<br />*@
+@if (Model.CountryID == (int)Constants.Country.Brazil)
+{   
+    if (Model.Gender != Constants.Gender.NotSet)
+    {
+        @*@(SmallCollectionCache.Instance.Genders.GetById((short)Model.Gender).GetTerm() + ", ")*@
+        var gender = Model.Gender.ToString();
+        @(Html.Term(gender, gender) + ", ");
+    }
+    @string.Format(CoreContext.CurrentCultureInfo, "{0:d}", Model.RGIssueDate.Date)<br />
+    @string.Format(CoreContext.CurrentCultureInfo, "{0:d}", Model.Birthday.Date)<br />
+
+    @Model.MainAddressHtml<br />
+    <label>@Html.Term("CPF", ""): </label>@Model.CPF.Value<br />
+    <label>@Html.Term("PIS", ""): </label>@Model.PIS.Value<br />
+    <label>@Html.Term("Main Phone", "Telefone Principal"): </label>@Model.MainPhone.Value<br />
+    <label>@Html.Term("Email", "Email"): </label>@Model.Email<br /> 
+@*@Model.MainAddress.Street  @Model.MainAddress.ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine)*@
+}
+else
+{    
+    @Model.MaskedTaxNumber
+    <br />
+    if (Model.Gender != Constants.Gender.NotSet)
+    {
+        @(SmallCollectionCache.Instance.Genders.GetById((short)Model.Gender).GetTerm() + ", ")
+    }
+    @string.Format(CoreContext.CurrentCultureInfo, "{0:d}", Model.Birthday.Date)<br />
+
+    @Model.MainPhone.Value<br />
+
+    @Model.Email<br />
+    @Model.MainAddress.ToDisplay(IAddressExtensions.AddressDisplayTypes.SingleLine)
+}

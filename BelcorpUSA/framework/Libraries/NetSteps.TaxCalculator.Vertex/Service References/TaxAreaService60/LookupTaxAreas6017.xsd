@@ -1,0 +1,1640 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=25" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=2" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=3" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=4" />
+  <xsd:include schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=5" />
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Core components used in the XML interface. Declararion of structures and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:attributeGroup name="nexusExemptionGroup">
+    <xsd:annotation>
+      <xsd:documentation>A type of deduction that applies to sales that would normally be taxable but, because of special circumstances, are not. For example, the sale of machinery is normally subject to sales tax. However, when the machinery is used in manufacturing, some taxing jurisdictions consider the sale exempt. A certificate is usually required for an exemption to apply.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="nexusIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether the Seller is not required to collect taxes. In this case, all associated child line items are exempt from taxes. You can use the Vertex Central user interface to create and maintain nexus requirements.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="nexusReasonCode" type="ReasonCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates the reason that the Seller is exempt from tax. If your host system provides this functionality, this data element can be used. You can use the Vertex Central user interface to set up reason codes. Valid reason codes are expected from the host system and are pre-defined by Vertex for use in the Returns Export module in Vertex Central. Required (1) if the nexusIndicator is true. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="BuyerGroup">
+    <xsd:attribute default="false" name="isTaxExempt" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates that the buyer is not required to collect taxes, and all line items associated with the purchase order are exempt from taxes. It is recommended that the buyer and vendor nexus requirements be created and maintained in the Vertex Central user interface. Note: This attribute is set to true if you pass an exemption certificate number in the XML message.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="exemptionReasonCode" type="ReasonCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates the reason that the Buyer is exempt from tax. If your host system provides this functionality, this data element can be used. You can use the Vertex Central user interface to set up reason codes. Valid reason codes are expected from the host system and are pre-defined by Vertex for use in the Returns Export module in Vertex Central. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:element name="AmountBilledToDate" type="AmountType" />
+  <xsd:element name="AssistedParameters" type="AssistedParametersType" />
+  <xsd:element name="CommodityCode">
+    <xsd:annotation>
+      <xsd:documentation>A standardized, unique code for the product or service.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="EntityCodeType">
+          <xsd:attribute name="commodityCodeType" use="required">
+            <xsd:annotation>
+              <xsd:documentation>The type of commodity code mapping.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="60" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="CustomerCode" type="CustomerCodeType">
+    <xsd:annotation>
+      <xsd:documentation>A user-defined code that represents the customer for the transaction or line item.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="DispatcherCode">
+    <xsd:annotation>
+      <xsd:documentation>A user-defined code that represents the dispatcher for the transaction or line item.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:restriction base="CompanyCodeType">
+          <xsd:minLength value="0" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="RecipientCode" type="CustomerCodeType">
+    <xsd:annotation>
+      <xsd:documentation>A user-defined code that represents the recipient for the transaction or line item.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="VendorCode">
+    <xsd:annotation>
+      <xsd:documentation>A user-defined code that represents the vendor (external seller or vendor) for the transaction or line item. Use the Vertex Central user interface to set up any taxability rules that apply at this level. This should be a parameter that is configurable to data from the host system.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:restriction base="CompanyCodeType">
+          <xsd:minLength value="0" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DeductionOverride">
+    <xsd:annotation>
+      <xsd:documentation>Details on the deduction override.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" name="ExemptOverride">
+          <xsd:annotation>
+            <xsd:documentation>The amount used to override taxability to partial or full exempt status. If this data element is used to pass an override amount from the host system, the calculation engine ignores any applicable exceptions or overrides set up using the Vertex Central user interface. Vertex recommends that you use the Vertex Central user interface to create and maintain exceptions and overrides rather than using this data element.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="AmountType">
+                <xsd:attribute name="overrideExemptReasonCode" use="optional">
+                  <xsd:annotation>
+                    <xsd:documentation>A code that indicates the reason for the override. If your host system provides this functionality, this data element can be used. You can use the Vertex Central user interface to set up reason codes. Valid reason codes are expected from the host system and are pre-defined by Vertex for use in the Returns Export module in Vertex Central. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                      <xsd:minLength value="1" />
+                      <xsd:maxLength value="4" />
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" name="NonTaxableOverride">
+          <xsd:annotation>
+            <xsd:documentation>The amount used to override taxability to partial or full non-taxable status. If this data element is used to pass an override amount from the host system, the calculation engine ignores any applicable exceptions or overrides set up using the Vertex Central user interface. Vertex recommends that you use the Vertex Central user interface to create and maintain exceptions and overrides rather than using this data element.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="AmountType">
+                <xsd:attribute name="overrideNonTaxableReasonCode" type="ReasonCodeType" use="optional">
+                  <xsd:annotation>
+                    <xsd:documentation>A code that indicates the reason for the override. If your host system provides this functionality, this data element can be used. You can use the Vertex Central user interface to set up reason codes. Valid reason codes are expected from the host system and are pre-defined by Vertex for use in the Returns Export module in Vertex Central. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Discount">
+    <xsd:annotation>
+      <xsd:documentation>Details on the discount. To pass Discount information, pass either DiscountPercent or DiscountAmount, but not both.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:choice>
+        <xsd:element name="DiscountPercent" type="PercentType">
+          <xsd:annotation>
+            <xsd:documentation>The discount to be applied expressed as a percentage. Required (1) if no Discount Amount information is supplied.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="DiscountAmount" type="AmountType">
+          <xsd:annotation>
+            <xsd:documentation>The discount to be applied expressed as an amount. Required (1) if no Discount Percent information is supplied.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:attribute name="userDefinedDiscountCode" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>A user-defined code that maps to a Vertex-supplied discount category. You can use the Vertex Central user interface to map your discount codes to discount categories.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ExemptionCertificate">
+    <xsd:annotation>
+      <xsd:documentation>Details on the exemption certificate.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="exemptionCertificateNumber" use="optional">
+            <xsd:annotation>
+              <xsd:documentation>The identifier of the exemption certificate, which is recorded in the Tax Journal. Vertex recommends that you use the Vertex Central user interface to set up and maintain Exemption Certificates. Note: If you pass an exemption certificate number in the XML message, the isTaxExempt attribute of the participant is set to true and the transaction is treated as exempt from tax.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:minLength value="1" />
+                <xsd:maxLength value="30" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="InvoiceTextCode" type="xsd:integer">
+    <xsd:annotation>
+      <xsd:documentation>Indicator that alerts the host system of the need to add invoice text of a specific type to a line item. For a list of the codes and their meanings, see the Supporting Information section in the XML Integration Guide. Note: This transaction is considered to involve a VAT group if a value of 2 (Intra-EU Notice) is returned, the POS jurisdiction is an EU country, and the buyer and seller have the same registration number.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="JurisdictionOverride">
+    <xsd:annotation>
+      <xsd:documentation>Details on the jurisdiction overrides.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" ref="DeductionOverride" />
+        <xsd:element minOccurs="0" ref="RateOverride" />
+      </xsd:sequence>
+      <xsd:attribute name="jurisdictionLevel" type="JurisdictionLevelCodeType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>The jurisdiction level of the overrides. Vertex recommends that you use the Vertex Central user interface to create and maintain jurisdiction overrides.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="impositionType" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>The type description assigned to the imposition. When multiple impositions are imposed within a jurisdiction, each must have a different type. This is assigned either by Vertex or by the user when setting up a user-defined imposition in the Vertex Central user interface.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="0" />
+            <xsd:maxLength value="60" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="AdditionalTaxesDue" type="AmountType" />
+  <xsd:element name="AdministrativeDestination" type="LocationType">
+    <xsd:annotation>
+      <xsd:documentation>A Vertex-defined term that is equivalent to the benefit received location in some service transactions. Required (1) for some service transactions at either the Transaction level or the Line Item level. If information is provided at both levels, the Line Item level information supersedes the Transaction level information.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="AdministrativeOrigin" type="LocationType">
+    <xsd:annotation>
+      <xsd:documentation>A Vertex-defined term that is equivalent to the following terms: order taken, order acceptance, place of principle negotiation, or place of business.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ChargedTax" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>This value is used when the buyer has paid a portion of the tax due on the invoice but an undercharge scenario occurs that required a partial accrual of tax or additional use tax may be due depending on the jurisdiction and usage of the Purchase. The amount paid from the invoice verification process should be passed so that partial accrual can be applied. Additional consumer use tax will be automatically accrued. </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Cost">
+    <xsd:annotation>
+      <xsd:documentation>The actual basis cost to the purchaser for the materials of the asset. For manufacturers, this is the cost of the actual materials purchased for resale from outside suppliers. For wholesalers and retailers, this is the material cost of the property itself.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="CurrencyConversion">
+    <xsd:annotation>
+      <xsd:documentation>The rate (multiplier) used for converting the transaction currency amount to the filing currency amount. Pass in this value and the currency code (isoCurrencyCodeAlpha or isoCurrencyCodeNum) to have filing currency calculated if your configuration parameters are set up to do so.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal">
+          <xsd:attributeGroup ref="isoCurrencyCode" />
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Destination" type="LocationType">
+    <xsd:annotation>
+      <xsd:documentation>A Vertex-defined term that is equivalent to the following terms: ship-to, benefit received, first used, where used, primary place of use, principle use location, location of property, or place of use. Required (1) at either the Transaction level or the Line Item level. If Destination information is provided at both levels, the Line Item level information supersedes the Transaction level information.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Dispatcher">
+    <xsd:annotation>
+      <xsd:documentation>Dispatcher information. The dispatcher is described by the child elements and attributes.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="DispatcherCode" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ExtendedPrice" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>This field specifies the actual price of the line item.  However, if quantity and unit price are supplied, this is not required.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="FairMarketValue" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>The basis price at which the asset could be sold to the public. This is also known as the selling price or the value of the product for sale.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="FlexibleFields">
+    <xsd:annotation>
+      <xsd:documentation>Container for user-defined fields. Fields are provided for string values, numeric (double) values, and date values.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="25" name="FlexibleCodeField">
+          <xsd:annotation>
+            <xsd:documentation>User-defined field for string values.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="FlexibleFieldCodeType">
+                <xsd:attribute name="fieldId" use="required">
+                  <xsd:annotation>
+                    <xsd:documentation>An identifier for a Flexible Code Field.</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:integer">
+                      <xsd:minInclusive value="1" />
+                      <xsd:maxInclusive value="25" />
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" maxOccurs="5" name="FlexibleNumericField">
+          <xsd:annotation>
+            <xsd:documentation>User-defined field for double values.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:double">
+                <xsd:attribute name="fieldId" use="required">
+                  <xsd:annotation>
+                    <xsd:documentation>An identifier for a Flexible Numeric Field.</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:integer">
+                      <xsd:minInclusive value="1" />
+                      <xsd:maxInclusive value="5" />
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" maxOccurs="5" name="FlexibleDateField">
+          <xsd:annotation>
+            <xsd:documentation>User-defined field for date values.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:date">
+                <xsd:attribute name="fieldId" use="required">
+                  <xsd:annotation>
+                    <xsd:documentation>An identifier for a Flexible Date Field.</xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:simpleType>
+                    <xsd:restriction base="xsd:integer">
+                      <xsd:minInclusive value="1" />
+                      <xsd:maxInclusive value="5" />
+                    </xsd:restriction>
+                  </xsd:simpleType>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Freight" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>This field sets the freight charge associated with the line item.  Note that the preferred method for dealing with freight is to create a separate line item with an item type mapped to one of the Vertex-provided Item Categories.  However, using this method will calculate tax for the default Freight Item Category and roll it into this line item.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="InputTax">
+    <xsd:annotation>
+      <xsd:documentation>Information necessary for the calculation of recoverability of an input tax. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="TaxingJurisdictionLocation">
+          <xsd:annotation>
+            <xsd:documentation>Identifies the jurisdiction where the tax is reported.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:complexContent mixed="false">
+              <xsd:extension base="TaxingJurisdictionLocationType" />
+            </xsd:complexContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element ref="InputAmount" />
+        <xsd:element minOccurs="0" name="InvoiceTaxRate" type="xsd:decimal">
+          <xsd:annotation>
+            <xsd:documentation>The tax rate  as shown on the vendor invoice.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element minOccurs="0" name="RecoverableOverridePercent">
+          <xsd:annotation>
+            <xsd:documentation>The rate to be used to override the standard rate to calculate Recoverable Input VAT.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="PercentType" />
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element minOccurs="0" name="ReportedInputRecoverableAmount" type="AmountType" />
+      </xsd:sequence>
+      <xsd:attribute default="false" name="isImport" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that the input tax is Import VAT. Defaults to false.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ImpositionToProcess">
+    <xsd:annotation>
+      <xsd:documentation>Limits the taxes calculated for the transaction to a specific jurisdiction level and imposition type. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="JurisdictionLevelCodeType">
+          <xsd:attribute name="impositionType" use="optional">
+            <xsd:annotation>
+              <xsd:documentation>Categorizes the tax being imposed. It can be either Vertex-defined or user-defined. Examples of Vertex-defined imposition types include General Sales and Use Tax, Surcharge, and VAT. Note: If no value is provided for impositionType, all impositions for the specified Jurisdiction Level are processed.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:minLength value="0" />
+                <xsd:maxLength value="60" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="InputAmount" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>The amount of Input Tax to be distributed. Negative numbers are permitted so that corrections may be processed</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="InputTotalTax" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>The amount of tax to be distributed.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="LandedCost" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>Landed Costs are costs associated with transporting goods.  They are additional costs beyond the merchandise cost of inventory incurred in purchasing and receiving items, for instance, freight, import duties, and customs charges. Landed Costs are added to the Extended Amount on a line item but are not subject to any discounts or adjustments</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="OriginalCurrency" type="CurrencyType">
+    <xsd:annotation>
+      <xsd:documentation>This represents the currency in which the original business transaction took place.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="PreviousTaxPaid" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>This value represents the amount of taxes paid previously on the asset. This information is needed to determine reciprocity rules between jurisdictions.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="PhysicalOrigin" type="LocationType">
+    <xsd:annotation>
+      <xsd:documentation>A Vertex-defined term that is equivalent to the following terms: ship-from or first removed. Required (1) for VAT triangulation at either Transaction level or the Line Item level. If Physical Origin information is provided at both levels, the Line Item level information supersedes the Transaction level information.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Product">
+    <xsd:annotation>
+      <xsd:documentation>A code from the host system that identifies the product, material, service, or SKU number. You can use the Vertex Central user interface to map your products to Product Categories. If the supplied Product and Product Class information is not recognized by the calculation engine, a general category indicating TPP is assigned. Required (1) if no Product Class information is supplied. If both are supplied, Product information supersedes Product Class information.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="EntityCodeType">
+          <xsd:attribute name="productClass" type="EntityCodeType" use="optional">
+            <xsd:annotation>
+              <xsd:documentation>A code used to represent groups or categories of products or services with similar taxability. You can use the Vertex Central user interface to map your products classes to Product Class Categories. If the supplied Product and Product Class information is not recognized by the calculation engine, a general category indicating TPP is assigned. Required (1) if no Product information is supplied. If both are supplied, Product information supersedes Product Class information.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Purchase">
+    <xsd:annotation>
+      <xsd:documentation>A code from the host application that identifies the product, material, service or SKU code. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="EntityCodeType">
+          <xsd:attribute name="purchaseClass" type="EntityCodeType" use="optional">
+            <xsd:annotation>
+              <xsd:documentation>A code from the host application that identifies a general classification of product, material, service or SKU code.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Recipient">
+    <xsd:annotation>
+      <xsd:documentation>Recipient information. The recipient is described by the child elements and attributes.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="RecipientCode" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="RateOverride">
+    <xsd:annotation>
+      <xsd:documentation>The rate override percentage for the specified jurisdiction. Vertex recommends that you use the Vertex Central user interface to create and maintain exceptions and overrides rather than using this data element.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:decimal" />
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Quantity" type="MeasureType">
+    <xsd:annotation>
+      <xsd:documentation>The number of units included in the line item based on quantity and not a currency amount. This value is applied on a line item basis to the quantity level of the product. This application of tax differs from normal tax calculation because the tax amount/rate is applied at the quantity level of the item sold in the transaction and not to the purchase price. Required (1) if no Extended Price information is supplied.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="SitusOverride">
+    <xsd:annotation>
+      <xsd:documentation>Details on the situs determination overrides.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:attribute name="taxingLocation" type="TaxingLocationCodeType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>The address type to be used as the situs. Required if performing a situs override.
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="SubTotal" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>Sum of all extended amounts for line items in the transaction.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Taxes" type="TaxesType" />
+  <xsd:element name="TaxOverride">
+    <xsd:annotation>
+      <xsd:documentation>Details on the tax override.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:attribute name="overrideType" type="TaxOverrideCodeType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>Classifies the override as taxable or nontaxable.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="overrideReasonCode" type="ReasonCodeType" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>A code that indicates the reason for the override. If your host system provides this functionality, this data element can be used. You can use the Vertex Central user interface to set up reason codes. Valid reason codes are expected from the host system and are pre-defined by Vertex for use in the Returns Export module in Vertex Central. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="TaxRegistration" type="TaxRegistrationType">
+    <xsd:annotation>
+      <xsd:documentation>Registration information for Value Added Tax. Note: This transaction is considered to involve a  group if the buyer and seller have the same registration number, the POS jurisdiction is an EU country, and a value of 2 (Intra-EU Notice) is returned for InvoiceTextCode.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Total" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>Total tax amount of each line item.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="TotalTax" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>Amount of tax based on variables of transaction.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="UnitPrice" type="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>The Unit Price is used in conjunction with the quantity to calculate an extended price, if one is not provided.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Volume" type="MeasureType">
+    <xsd:annotation>
+      <xsd:documentation>The volume of the product.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Weight" type="MeasureType">
+    <xsd:annotation>
+      <xsd:documentation>The weight of the product.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:simpleType name="ChainTransactionPhaseCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="MANUFACTURER" />
+      <xsd:enumeration value="INTERMEDIARY" />
+      <xsd:enumeration value="FINAL" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CountryAlphaCodeType">
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value="[A-Z]{2,3}" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EntityCodeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0" />
+      <xsd:maxLength value="40" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ExternalJurisdictionCodeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0" />
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="FlexibleFieldCodeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="40" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="InputOutputCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="INPUT" />
+      <xsd:enumeration value="IMPORT" />
+      <xsd:enumeration value="OUTPUT" />
+      <xsd:enumeration value="INPUT_OUTPUT" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="InpuRegistrationIdType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0" />
+      <xsd:maxLength value="40" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LocationCustomsStatusCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:minLength value="0" />
+      <xsd:enumeration value="FREE_CIRCULATION">
+        <xsd:annotation>
+          <xsd:documentation>Indicates a status of Free Circulation.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BONDED_WAREHOUSE">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that goods are in a Bonded or Customs Warehouse regime.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="FREE_TRADE_ZONE">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that goods are located in a Free-Trade or Enterprise Zone.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="TEMPORARY_IMPORT">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that goods have entered the location on a temporary basis and shall be exported within the allowable time frame.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="INWARD_PROCESSING_RELIEF">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that goods are subject to inward processing relief.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="OUTWARD_PROCESSING_RELIEF">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that goods are subject to outward processing relief.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LocationCodeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0" />
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LookupResultType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="NORMAL">
+        <xsd:annotation>
+          <xsd:documentation>The lookup returned at least one tax area.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BAD_REGION_FIELDS">
+        <xsd:annotation>
+          <xsd:documentation>The location information used during the lookup was incomplete or inconsistent.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BAD_STREET_INFORMATION">
+        <xsd:annotation>
+          <xsd:documentation>The street address used during the lookup were incomplete or inconsistent.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="IGNORED_REGION_FIELDS">
+        <xsd:annotation>
+          <xsd:documentation>Some of the location information was missing and may have been ignored during the lookup.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="MAX_TAXAREAS_EXCEEDED">
+        <xsd:annotation>
+          <xsd:documentation>The maximum number of tax areas was exceeded. The maximum number of tax areas that can be returned during a lookup is specified in the taxgis.jurisdictionfinder.MaximumTaxAreas parameter. The default value for this parameter is 5. For details on the configuration parameters, refer to the Configuration File Parameters Reference Guide.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="MAX_FULL_ADDRESSES_EXCEEDED">
+        <xsd:annotation>
+          <xsd:documentation>The maximum number of full addresses was exceeded. The maximum number of full addresses that can be returned during a lookup is specified in the taxgis.jurisdictionfinder.MaximumFullAddresses parameter. The default value for this parameter is 100. For details on the configuration parameters, refer to the Configuration File Parameters Reference Guide.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="MIN_AGGREGATE_CONFIDENCE_EXCEEDED">
+        <xsd:annotation>
+          <xsd:documentation>The minimum aggregate confidence has been exceeded. The minimum aggregate confidence indicator for returning tax areas is specified in the taxgis.jurisdictionfinder.MinimumAggregateConfidence parameter. The default value for this parameter is 100. For details on the configuration parameters, refer to the Configuration File Parameters Reference Guide.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CONFIDENCE_INDICATOR_SUPPRESSED">
+        <xsd:annotation>
+          <xsd:documentation>The confidence indicator values were suppressed because the feature is not supported for the input criteria provided.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="PRECEDES_CONFIDENCE_INDICATOR_FUNCTIONALITY">
+        <xsd:annotation>
+          <xsd:documentation>The confidence indicator feature has been disabled because the transaction date precedes the feature implementation date.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="MovementMethodCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="CONSIGNMENT">
+        <xsd:annotation>
+          <xsd:documentation>Indicates transfer of goods from one country to another to create a stock which is held in the second country under the owner's control. The stock is available for sale to multiple customers.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CALL_OFF">
+        <xsd:annotation>
+          <xsd:documentation>Indicates transfer of goods from one country to another to create a stock which is held in the second country for the use of a single customer. The stock is not intended for sale to any party other than the single customer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="REGULAR">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that there is no special consignment stock or call off stock condition to be considered for tax calculation.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PointOfTitleTransferCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="ORIGIN" />
+      <xsd:enumeration value="IN_TRANSIT" />
+      <xsd:enumeration value="DESTINATION" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ProcurementTransactionType">
+    <xsd:annotation>
+      <xsd:documentation>Identifies the transaction type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="RENTAL" />
+      <xsd:enumeration value="LEASE" />
+      <xsd:enumeration value="PURCHASE" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ReasonCodeType">
+    <xsd:annotation>
+      <xsd:documentation>The 'Reason Code' can be passed through the ERP application if functionality is provided, however most Lessee's will set up reason codes associated with Lessee's in Vertex Central by the tax department.  The valid reason codes are expected from the calling application and are pre-defined by Vertex for use in the Tax Returns application.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="4" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RegistrationIdType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0" />
+      <xsd:maxLength value="40" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SaleTransactionType">
+    <xsd:annotation>
+      <xsd:documentation>Identifies the transaction type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="SALE" />
+      <xsd:enumeration value="RENTAL" />
+      <xsd:enumeration value="LEASE" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SimplificationCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="CONSIGNMENT">
+        <xsd:annotation>
+          <xsd:documentation>Indicates special handling of an Asset Movement transaction. Typically allows for the deferment of VAT, depending on the countries involved in the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CALL_OFF">
+        <xsd:annotation>
+          <xsd:documentation>Indicates special handling of an Asset Movement transaction. Typically allows for the deferment of VAT, depending on the countries involved in the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="TRIANGULATION">
+        <xsd:annotation>
+          <xsd:documentation>Indicates that the EU's 6th Directive triangulation simplification rules will be used to process the transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="REGISTRATION_GROUP">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the transaction as involving a VAT group even though the normal system logic would not identify a VAT group.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SyncronizationCodeType">
+    <xsd:annotation>
+      <xsd:documentation>Identifies the type of synchronization to be performed.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="ADD" />
+      <xsd:enumeration value="MODIFY" />
+      <xsd:enumeration value="DELETE" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TaxAreaIdType">
+    <xsd:annotation>
+      <xsd:documentation>Identifies a specific instance of tax area. A Tax Area is determined by the geographic areas that correspond to a unique combination of taxing jurisdictions where the tax area's boundaries are derived from the overlay of the geographic areas that form the domain of those jurisdictions.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="0" />
+      <xsd:maxInclusive value="999999999" />
+      <xsd:totalDigits value="9" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TaxCollectedFromPartyType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="SELLER" />
+      <xsd:enumeration value="BUYER" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TaxOverrideCodeType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="TAXABLE" />
+      <xsd:enumeration value="NONTAXABLE" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TaxResultCodeType">
+    <xsd:annotation>
+      <xsd:documentation>System determination of taxable status based on situs and item type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="TAXABLE" />
+      <xsd:enumeration value="NONTAXABLE" />
+      <xsd:enumeration value="EXEMPT" />
+      <xsd:enumeration value="DPPAPPLIED" />
+      <xsd:enumeration value="NO_TAX" />
+      <xsd:enumeration value="DEFERRED" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AssistedParametersType">
+    <xsd:annotation>
+      <xsd:documentation>List of all parameters on the tax or line item that were assisted by one or more assisting services.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" name="AssistedParameter">
+        <xsd:annotation>
+          <xsd:documentation>
+            Element body is value for assisted parameter.  Body may be date
+            (yyyy-mm-dd), numeric (default format for long or double), boolean
+            (true or false), or simple string.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="paramName" type="xsd:string" use="required">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Unique name by which the modified parameter can be identified.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+              <xsd:attribute name="phase" use="required">
+                <xsd:annotation>
+                  <xsd:documentation>Indicates whether the parameter was assisted pre-calculation or post-calculation.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="PRE" />
+                    <xsd:enumeration value="POST" />
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BuyerType">
+    <xsd:annotation>
+      <xsd:documentation>The buyer for the transaction or line item. The buyer is described by the child elements and attributes.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxpayerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="Recipient" />
+          <xsd:element minOccurs="0" ref="Destination" />
+          <xsd:element minOccurs="0" ref="AdministrativeDestination" />
+          <xsd:element minOccurs="0" ref="ExemptionCertificate" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+        <xsd:attributeGroup ref="BuyerGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CompanyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="EntityCodeType">
+        <xsd:attribute name="classCode" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>A code used to represent groups of customers, vendors, dispatchers, or recipients who have similar taxability. Note: If you pass a classCode, you should not pass a TaxRegistrationNumber because the registration number does not apply to the entire class.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:minLength value="1" />
+              <xsd:maxLength value="40" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="CompanyCodeType">
+        <xsd:attribute name="isBusinessIndicator" type="xsd:boolean" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Indicates whether or not the participant is a business.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="PartyType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="CustomerCode" />
+          <xsd:element minOccurs="0" ref="Destination" />
+          <xsd:element minOccurs="0" ref="AdministrativeDestination" />
+          <xsd:element minOccurs="0" ref="ExemptionCertificate" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+        <xsd:attribute default="false" name="isTaxExempt" type="xsd:boolean" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Indicates that the buyer is not required to collect taxes, and all line items associated with the purchase order are exempt from taxes. It is recommended that the buyer and vendor nexus requirements be created and maintained in the Vertex Central user interface. Note: this attribute is set to true if you pass an exemption certificate number in the XML message.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="exemptionReasonCode" type="ReasonCodeType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>The 'Reason Code' can be passed through the ERP application if functionality is provided, however most Lessee's will set up reason codes associated with Lessee's in the Vertex Central user interface by the tax department.  The valid reason codes are expected from the calling application and are pre-defined by Vertex for use in the Tax Returns application. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoiceVerificationBuyerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxpayerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="Destination" />
+          <xsd:element minOccurs="0" ref="AdministrativeDestination" />
+          <xsd:element minOccurs="0" ref="ExemptionCertificate" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+        <xsd:attributeGroup ref="BuyerGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="JurisdictionType">
+    <xsd:annotation>
+      <xsd:documentation>The name that this jurisdiction is commonly known. For example, Pennsylvania.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2008 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="jurisdictionLevel" type="JurisdictionLevelCodeType" use="required">
+          <xsd:annotation>
+            <xsd:documentation>The level of the jurisdiction for which the tax on the line item is applied.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="jurisdictionId" use="required">
+          <xsd:annotation>
+            <xsd:documentation>The Vertex-specific number that identifies a jurisdiction.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:minInclusive value="0" />
+              <xsd:maxInclusive value="999999999" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="effectiveDate" type="xsd:date" use="optional">
+          <xsd:annotation>
+            <xsd:documentation />
+            <xsd:documentation>The date when the tax for the jurisdiction became effective.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="expirationDate" type="xsd:date" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>The date after which the tax for the jurisdiction is no longer effective.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="externalJurisdictionCode" type="ExternalJurisdictionCodeType">
+          <xsd:annotation>
+            <xsd:documentation>Jurisdiction code assigned by the relevant governmental authority.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LocationType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="PostalAddressType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="CurrencyConversion" />
+        </xsd:sequence>
+        <xsd:attribute name="taxAreaId" type="TaxAreaIdType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>A Vertex-specific number that identifies a tax area. If the Tax Area ID exists in your host system, use that data to populate this data element in a request message.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="locationCustomsStatus" type="LocationCustomsStatusCodeType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>The customs status at this location.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="locationCode" type="LocationCodeType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>A value that can be used for tax return filing in jurisdictions that require taxes to be filed for individual retail locations.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="externalJurisdictionCode" type="ExternalJurisdictionCodeType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Jurisdiction code assigned by the relevant governmental authority.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="LoginType">
+    <xsd:annotation>
+      <xsd:documentation>System Login. Declaration of structure and data types.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="UserName">
+        <xsd:annotation>
+          <xsd:documentation>The User ID of the individual initiating the login.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="64" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Password">
+        <xsd:annotation>
+          <xsd:documentation>The password associated with the User ID of the individual initiating the login.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="64" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="TrustedId">
+        <xsd:annotation>
+          <xsd:documentation>An identifier supplied by an ERP.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="6" />
+            <xsd:maxLength value="16" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attribute name="unitOfMeasure" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>The unit of measure for the line item to be used in surcharges based on quantity and not price. For a list of the possible values, see the Supporting Information section of the XML Integration Guide. If you pass a value that does not match the unit of measure for the quantity-based tax rule, that rule is not used. May be Required (1) to determine tax liability in some jurisdictions.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:minLength value="1" />
+              <xsd:maxLength value="3" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OwnerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxpayerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="PhysicalOrigin" />
+          <xsd:element minOccurs="0" ref="Destination" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="PartyType">
+    <xsd:annotation>
+      <xsd:documentation>Specialized participant to mark taxpayer in DOM.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="SellerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="TaxpayerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="Dispatcher" />
+          <xsd:element minOccurs="0" ref="PhysicalOrigin" />
+          <xsd:element minOccurs="0" ref="AdministrativeOrigin" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+        <xsd:attributeGroup ref="nexusExemptionGroup" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RuleType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:positiveInteger">
+        <xsd:attribute name="userDefined" type="xsd:boolean" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>An identifier to distinguish between user-defined rules from Vertex-defined rules.This can be used as a troubleshooting aid.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="salesTaxHolidayIndicator" type="xsd:boolean" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Indicates whether this rule applies as a Sales Tax Holiday.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxAreaLookupType">
+    <xsd:choice minOccurs="0">
+      <xsd:element name="TaxAreaId" type="TaxAreaIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Vertex-defined Tax Area ID for the jurisdiction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="PostalAddress" />
+      <xsd:element name="ExternalJurisdiction">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ExternalJurisdictionCode" type="ExternalJurisdictionCodeType">
+              <xsd:annotation>
+                <xsd:documentation>Jurisdiction code assigned by the relevant governmental authority.</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Country">
+              <xsd:annotation>
+                <xsd:documentation>The country associated with the external jurisdiction code. You can use a Data Extract report to see the valid country values. (Refer to the Vertex Central online help for information on running Data Extract reports.)</xsd:documentation>
+              </xsd:annotation>
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:minLength value="1" />
+                  <xsd:maxLength value="60" />
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:choice>
+    <xsd:attribute name="asOfDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A date that provides time perspective for a Tax Area lookup. Tax Area IDs returned for the lookup are based on the jurisdiction boundaries in effect as of this date. Defaults to the current date.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="lookupId" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Internal identifier or sequence number for this lookup.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxAreaResultType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Jurisdiction" type="JurisdictionType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="PostalAddress" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Status">
+        <xsd:annotation>
+          <xsd:documentation>Represents the result of the lookup process.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="lookupResult" type="LookupResultType" use="required">
+                <xsd:annotation>
+                  <xsd:documentation>The lookup result status.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="taxAreaId" type="TaxAreaIdType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A Vertex-specific number that identifies a tax area.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="asOfDate" type="xsd:date" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A date that provides time perspective for a Tax Area lookup. Tax Area IDs returned for the lookup are based on the jurisdiction boundaries in effect as of this date. Defaults to the current date.
+</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="confidenceIndicator" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates the relative likelihood that a result of a tax area lookup is correct based on the lookup criteria.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+          <xsd:minInclusive value="0" />
+          <xsd:maxInclusive value="100" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxesType">
+    <xsd:annotation>
+      <xsd:documentation>Taxes calculated by the transaction processing system.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Jurisdiction">
+        <xsd:annotation>
+          <xsd:documentation>The name of jurisdiction to which a tax is applied.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:complexContent mixed="false">
+            <xsd:extension base="JurisdictionType" />
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="CalculatedTax" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>Amount of tax calculated by the calculation engine.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="EffectiveRate">
+        <xsd:annotation>
+          <xsd:documentation>For Buyer Input tax and Seller Import tax, this rate is calculated based on the Extended Price and Tax Amount (Import or Input) passed in the Request message. If you total the Extended Price and Tax Amounts before passing them in, this rate is an average.
+
+For all other message types, this is the effective rate the system used to calculate tax.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:decimal">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Exempt" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>Amount of the line item not subject to tax due to exempt status.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="NonTaxable" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>Amount of the line item not subject to tax due to nontaxable status.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Taxable" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>Amount of the line item subject to tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Imposition">
+        <xsd:annotation>
+          <xsd:documentation>The name of the imposition to which the relevant tax rule belongs. This is assigned either by Vertex or by the user when setting up a user-defined imposition in the Vertex Central user interface.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="impositionType" use="optional">
+                <xsd:annotation>
+                  <xsd:documentation>The type description assigned to the imposition. When multiple impositions are imposed within a jurisdiction, each must have a different type. This is assigned either by Vertex or by the user when setting up a user-defined imposition in the Vertex Central user interface.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:minLength value="0" />
+                    <xsd:maxLength value="60" />
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="TaxRuleId" type="RuleType">
+        <xsd:annotation>
+          <xsd:documentation>An identifier for the tax rule that was used in tax calculation. This can be used as a troubleshooting aid.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="BasisRuleId" type="RuleType">
+        <xsd:annotation>
+          <xsd:documentation>An identifier for the basis rule that was used in tax calculation. This can be used as a troubleshooting aid.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="MaxTaxRuleId" type="RuleType">
+        <xsd:annotation>
+          <xsd:documentation>An identifier for the Max Tax rule that was used in tax calculation. This can be used as a troubleshooting aid.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="CertificateNumber">
+        <xsd:annotation>
+          <xsd:documentation>The certificate number associated with the line item tax.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="certificateType" type="xsd:string" use="optional">
+                <xsd:annotation>
+                  <xsd:documentation>The certificate type associated with the line item tax.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="RecoverableAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>The amount of input or import tax that the buyer is able to recover on a transaction.  This is the amount that the Buyer puts on their returns in order to recover these funds.    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="RecoverablePercent" type="PercentType">
+        <xsd:annotation>
+          <xsd:documentation>The percent of the tax that is recoverable, as calculated based on passed in recoverable amount and tax. Expressed as a decimal: 1.0 for 100%, .8 for 80%, .5 for 50%, and so on.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="UnrecoverableAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>The amount of input or import tax that the taxpayer is not able to recover.  It is lost, which is a true cost to the taxpayer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="FilingCurrencyAmounts">
+        <xsd:annotation>
+          <xsd:documentation>A grouping of filing currency converted taxability amounts.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="CurrencyConversion" />
+            <xsd:element minOccurs="0" name="FilingCalculatedTax" type="AmountType" />
+            <xsd:element minOccurs="0" name="FilingExempt" type="AmountType" />
+            <xsd:element minOccurs="0" name="FilingNonTaxable" type="AmountType" />
+            <xsd:element minOccurs="0" name="FilingTaxable" type="AmountType" />
+            <xsd:element minOccurs="0" name="FilingRecoverableAmount" type="AmountType" />
+            <xsd:element minOccurs="0" name="FilingUnrecoverableAmount" type="AmountType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="SellerRegistrationId" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Seller associated with this line item tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="BuyerRegistrationId" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Buyer associated with this line item tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="OwnerRegistrationId" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Owner associated with this line item tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="DispatcherRegistrationId" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Dispatcher associated with this line item tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="RecipientRegistrationId" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Recipient associated with this line item tax.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="InvoiceTextCode" />
+      <xsd:element minOccurs="0" name="SummaryInvoiceText" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Additional information about a tax, to be returned to your host system after tax calculation. To supply a value for this field, you need to set up a post-calculation Tax Assist rule. Note: The text you add to this field is not stored in the Tax Journal.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" ref="AssistedParameters" />
+    </xsd:sequence>
+    <xsd:attribute name="taxResult" type="TaxResultCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>System determination of taxable status based on situs and item type. Note: Tax amounts with a value of Deferred are payable at a later time and should NOT be written to the invoice.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxType" type="TaxingType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>System determined tax type, based on situs, transaction type, and party role type (perspective).</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="maxTaxIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates that max tax was applied to this line item of the invoice.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="situs" type="TaxingLocationCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The situs determined by the calculation engine for the line item.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="notRegisteredIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates that the taxpayer company is not registered in the taxing jurisdiction.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="inputOutputType" type="InputOutputCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Identifies whether tax is Input VAT, Output VAT, or both according to the perspective of the transaction to allow for Reverse Charges.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxCode" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A user-defined code for the tax, to be returned to your host system after tax calculation. To return a value for this field, set up a post-calculation Tax Assist rule.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="vertexTaxCode" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that can be used to classify the transaction at the tax level for reporting or tax return filing purposes. The code is generated by the Calculation Engine for each line item after tax calculation. It can be used as a filter for reports or as an input for post-calculation Tax Assist rules. For detailed information about the contents of the code, see the Supporting Information section of the XML Integration Guide.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="reasonCode" type="ReasonCodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A code that indicates the reason for the exception that was applied to this tax. Note: For a tax with multiple tiers, O Series returns the reason code associated with the largest basis amount. Note: To pass a standard (i.e., not user-defined) single-digit reason code, pad the code to four digits. Refer to the Supporting Information section of the XML Integration Guide for information on exemption and deduction reason codes.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="filingCategoryCode" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Provides additional classification of the transaction for tax returns and reporting. Codes are jurisdiction-specific. Note: For a tax with multiple tiers, O Series returns the filing category code associated with the largest basis amount.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:positiveInteger">
+          <xsd:minInclusive value="1" />
+          <xsd:maxInclusive value="99999" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="isService" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether or not the product is a service.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="rateClassification" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>A Vertex-defined classification of the applicable tax rule for returns filing purposes. Possible values are: Luxury Rate, Standard Rate, Reduced Rate 1, Reduced Rate 2, Reduced Rate 3, Reduced Rate 4, Reduced Rate 5, User Defined, Zero Rate, Outside the Scope.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxCollectedFromParty" type="TaxCollectedFromPartyType">
+      <xsd:annotation>
+        <xsd:documentation>The party who is responsible for the sales tax. Note: Tax amounts with a value of Seller cannot be charged to your customer and should NOT be written to the invoice.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxgisRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Taxgis request messages</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="TaxgisResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Taxgis response messages</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="TaxingJurisdictionLocationType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="LocationType">
+        <xsd:attribute name="jurisdictionLevel" type="JurisdictionLevelCodeType" use="required">
+          <xsd:annotation>
+            <xsd:documentation>Identifies the jurisdiction level to which the tax applies.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="impositionType" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Categorizes the tax being imposed. It can be either Vertex-defined or user-defined.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:minLength value="0" />
+              <xsd:maxLength value="60" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxpayerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="PartyType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Company" type="EntityCodeType">
+            <xsd:annotation>
+              <xsd:documentation>Identifies the top-level legal entity for which tax exceptions may exist. The Vertex Central user interface is used to set up any taxability rules that apply at this level. This should be a parameter that is configurable to data from the host system based on an individual company's legal and tax requirements.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Division" type="EntityCodeType">
+            <xsd:annotation>
+              <xsd:documentation>Identifies the mid-level legal entity for which tax exceptions may exist. The Vertex Central user interface is used to set up any taxability rules that apply at this level. This should be a parameter that is configurable to data from the host system based on an individual company's legal and tax requirements.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Department" type="EntityCodeType">
+            <xsd:annotation>
+              <xsd:documentation>Identifies the low-level legal entity for which specific tax requirements and exceptions may exist. Use the Vertex Central user interface to set up any taxability rules that apply at this level. Based on your legal/tax liabilities at this level, map the appropriate host system parameter to this data element. If all of your tax exceptions are at the top- or mid-level entity, you may choose not to populate this data element. Note that this data element is also used to sort reports.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxRegistrationType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="TaxRegistrationNumber" type="RegistrationIdType">
+        <xsd:annotation>
+          <xsd:documentation>The tax registration ID number.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="4" name="NexusOverride">
+        <xsd:annotation>
+          <xsd:documentation>Information for the nexus override.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:attribute name="locationRole" type="TaxingLocationCodeType" use="required">
+            <xsd:annotation>
+              <xsd:documentation>The location for the nexus override.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="country" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>Indicates whether or not the override applies at this jurisdiction level.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="mainDivision" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>Indicates whether or not the override applies at this jurisdiction level.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="subDivision" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>Indicates whether or not the override applies at this jurisdiction level.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="city" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>Indicates whether or not the override applies at this jurisdiction level.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="district" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>Indicates whether or not the override applies at this jurisdiction level.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="PhysicalLocation">
+        <xsd:annotation>
+          <xsd:documentation>The physical location associated with the tax registration. Use the taxAreaId or address information to identify the physical location.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:complexContent mixed="false">
+            <xsd:extension base="PostalAddressType">
+              <xsd:attribute name="taxAreaId" type="TaxAreaIdType">
+                <xsd:annotation>
+                  <xsd:documentation>The Vertex-defined Tax Area ID for the location.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:attribute>
+            </xsd:extension>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="isoCountryCode" type="CountryAlphaCodeType" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The 2-character or 3-character alphabetic ISO 3166 code indicating the country represented by the registration.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="mainDivision">
+      <xsd:annotation>
+        <xsd:documentation>The proper name or postal abbreviation of the state, province, or territory of the tax registration.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:minLength value="1" />
+          <xsd:maxLength value="60" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="hasPhysicalPresenceIndicator" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Indicates whether or not the entity has a physical presence in the country represented by the registration.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxSynchronizationRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Tax Synchronization request messages</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="TaxSynchronizationResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Tax Synchronziation response message</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="TaxTransactionRequestType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Tax Transaction request messages</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="TaxTransactionResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Parent type for all Tax Transaction response messges</xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="VendorType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="PartyType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" ref="VendorCode" />
+          <xsd:element minOccurs="0" ref="PhysicalOrigin" />
+          <xsd:element minOccurs="0" ref="AdministrativeOrigin" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="TaxRegistration" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

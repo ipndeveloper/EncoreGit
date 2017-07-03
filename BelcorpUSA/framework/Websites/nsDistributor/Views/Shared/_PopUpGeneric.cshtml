@@ -1,0 +1,68 @@
+﻿@*CGI(CMR)-06/05/2015-Prueba-Inicio*@
+<style type="text/css">
+        .fadeInbox
+        {
+            padding: 20px;
+            margin: 16px;
+            border: 3px solid #39399C;
+            width: 600px;
+            height: auto;
+            background-color: #D9D1DE;
+            color: Black;
+            position: relative;
+            z-index: 999;
+            left: 0;
+            top: -300px;
+            font-size: .9em;
+            border-top-left-radius: 3em;
+            border-top-right-radius: 3em;
+            border-bottom-right-radius: 3em;
+            border-bottom-left-radius: 3em;
+        }
+        .fadeInbox a
+        {
+            color: Blue;
+            text-decoration: underline;
+            font-style: italic;
+        }
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var contenedor = $('.shoppingCartPane').width();
+        var left = '0';
+        if (contenedor == null) {
+            left = '-40px';
+            $("#MessageContainer").html($("#MessageContainer").html() + ' or <a class="closeFadeInbox" href="javascript:void(0)" onclick="window.history.back();" >@Html.Term("GoBackAndAddKits", "here to change the Enrollment kit option")</a>');
+        } else {
+            left = '150px';
+        }
+
+        // CGI(AAHA)-12/05/2015-Inicio
+        $('.fadeInbox').jqm({
+            modal: true,
+            trigger: true,
+            onShow: function (h) {
+                h.w.css({
+                    position: 'relative',
+                    top: '-350px',
+                    left: left
+                }).fadeIn();
+            },
+            overlay: 50,
+            overlayClass: 'HModalOverlay'
+        });
+
+        $('.closeFadeInbox').on("click", function () {
+            $('.fadeInbox').jqmHide();
+        });
+        // CGI(AAHA)-12/05/2015-Fin
+    });
+</script>
+<div id="PopUpGenericPreView" class="fadeInbox" style="display: none">
+    <div id="MessageContainer" style="text-align:center">
+        <span id="PopUpGenericPreViewMessage"></span>
+        <a class="closeFadeInbox" href="javascript:void(0)">@Html.Term("GoBackAndAddProducts", "Click here to go back and add more products")</a>
+    </div>
+</div>
+@*CGI(CMR)-06/05/2015-Prueba-Fin*@

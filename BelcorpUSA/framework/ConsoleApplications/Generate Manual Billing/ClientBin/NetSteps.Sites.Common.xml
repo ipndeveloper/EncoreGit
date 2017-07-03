@@ -1,0 +1,522 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>NetSteps.Sites.Common</name>
+  </assembly>
+  <members>
+    <member name="T:NetSteps.Sites.Common.Configuration.IAnalyticsConfiguration">
+      <summary>
+            The AnalyticsConfiguration interface.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Configuration.IAnalyticsConfiguration.PropertyIds">
+      <summary>
+            Gets the property ids.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Configuration.IAnalyticsConfiguration.IsDebug">
+      <summary>
+            Gets or sets a value indicating whether is debug.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Configuration.ISitesConfiguration">
+      <summary>
+            The configuration settings for Sites.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Configuration.ISitesConfiguration.SiteTypeID">
+      <summary>
+            The SiteTypeID of the current executing site.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.ISiteServiceExtensions">
+      <summary>
+            Site service extension methods.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteServiceExtensions.GetSite(NetSteps.Sites.Common.ISiteService,System.Uri)">
+      <summary>
+            Gets a site by URI or returns null if the site is not found.
+            </summary>
+      <param name="siteService">The <see cref="T:NetSteps.Sites.Common.ISiteService" />.</param>
+      <param name="uri">The <see cref="T:System.Uri" />.</param>
+      <returns>The site or null.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="siteService != null" vb="siteService &lt;&gt; Nothing">siteService != null</requires>
+      <exception cref="T:System.ArgumentNullException">siteService == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="uri != null" vb="uri &lt;&gt; Nothing ">uri != null</requires>
+      <exception cref="T:System.ArgumentNullException">uri == null</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteServiceExtensions.GetSiteId(NetSteps.Sites.Common.ISiteService,System.Uri)">
+      <summary>
+            Gets a site ID by URI or returns null if the site is not found.
+            </summary>
+      <param name="siteService">The <see cref="T:NetSteps.Sites.Common.ISiteService" />.</param>
+      <param name="uri">The <see cref="T:System.Uri" />.</param>
+      <returns>The site ID or null.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="siteService != null" vb="siteService &lt;&gt; Nothing">siteService != null</requires>
+      <exception cref="T:System.ArgumentNullException">siteService == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="uri != null" vb="uri &lt;&gt; Nothing ">uri != null</requires>
+      <exception cref="T:System.ArgumentNullException">uri == null</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteServiceExtensions.GetGoogleAnalyticsSettings(NetSteps.Sites.Common.ISiteService,System.Uri)">
+      <summary>
+            Returns Google Analytics settings for a site or returns null if none are found.
+            </summary>
+      <param name="siteService">The <see cref="T:NetSteps.Sites.Common.ISiteService" />.</param>
+      <param name="uri">The <see cref="T:System.Uri" />.</param>
+      <returns>The <see cref="T:NetSteps.Sites.Common.Models.ISiteGoogleAnalyticsSettings" /> for the site or null if none are found.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="siteService != null" vb="siteService &lt;&gt; Nothing">siteService != null</requires>
+      <exception cref="T:System.ArgumentNullException">siteService == null</exception>
+      <requires exception="T:System.ArgumentNullException" csharp="uri != null" vb="uri &lt;&gt; Nothing ">uri != null</requires>
+      <exception cref="T:System.ArgumentNullException">uri == null</exception>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Repositories.ISiteSettingRepository">
+      <summary>
+            Provides access to site settings.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Sites.Common.Repositories.ISiteSettingRepository.GetAllKinds">
+      <summary>
+            Gets all available site settings (these are kinds, not values).
+            </summary>
+      <returns />
+    </member>
+    <member name="M:NetSteps.Sites.Common.Repositories.ISiteSettingRepository.GetSiteSettings(System.Int32)">
+      <summary>
+            Gets a key-value dictionary of settings for a site (including settings from the base site).
+            </summary>
+      <param name="siteId" />
+      <returns />
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="siteId &gt; 0" vb="siteId &gt; 0">siteId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">siteId &lt;= 0</exception>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteGoogleAnalyticsSettings">
+      <summary>
+            The settings for a Google Analytics java script snippet.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteGoogleAnalyticsSettings.PropertyIds">
+      <summary>
+            Gets or sets the property ids.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteGoogleAnalyticsSettings.IsDebug">
+      <summary>
+            Gets or sets a value indicating whether to run in debug mode.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Repositories.ISiteRepository">
+      <summary>
+            Provides access to sites.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Sites.Common.Repositories.ISiteRepository.GetSite(System.Int32)">
+      <summary>
+            Gets a site by ID or returns null if the site is not found.
+            </summary>
+      <param name="siteId">The site id.</param>
+      <returns>The <see cref="T:NetSteps.Sites.Common.Models.ISite" /> or null.</returns>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="siteId &gt; 0" vb="siteId &gt; 0">siteId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">siteId &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.Repositories.ISiteRepository.GetSiteId(System.String)">
+      <summary>
+            Gets a site ID by URL or returns null if the site is not found.
+            </summary>
+      <param name="url">A properly formatted site URL.</param>
+      <returns>The site ID or null.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+    </member>
+    <member name="T:NetSteps.Sites.Common.ISiteService">
+      <summary>
+            The SiteService interface.
+            </summary>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteService.GetSite(System.Int32)">
+      <summary>
+            Gets a site by ID or returns null if the site is not found.
+            </summary>
+      <param name="siteId">The site ID.</param>
+      <returns>The site or null.</returns>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="siteId &gt; 0" vb="siteId &gt; 0">siteId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">siteId &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteService.GetSiteId(System.String)">
+      <summary>
+            Gets a site ID by URL or returns null if the site is not found.
+            </summary>
+      <param name="url">A properly formatted site URL.</param>
+      <returns>The site ID or null.</returns>
+      <requires exception="T:System.ArgumentNullException" csharp="url != null" vb="url &lt;&gt; Nothing">url != null</requires>
+      <exception cref="T:System.ArgumentNullException">url == null</exception>
+      <requires exception="T:System.ArgumentException" csharp="url.Length &gt; 0" vb="url.Length &gt; 0">url.Length &gt; 0</requires>
+      <exception cref="T:System.ArgumentException">url.Length &lt;= 0</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteService.FormatSiteUrl(System.Uri)">
+      <summary>
+            Returns a URL string in the proper SiteUrl format for database lookups.
+            </summary>
+      <param name="uri">The <see cref="T:System.Uri" />.</param>
+      <returns />
+      <requires exception="T:System.ArgumentNullException" csharp="uri != null" vb="uri &lt;&gt; Nothing ">uri != null</requires>
+      <exception cref="T:System.ArgumentNullException">uri == null</exception>
+    </member>
+    <member name="M:NetSteps.Sites.Common.ISiteService.GetGoogleAnalyticsSettings(System.Int32)">
+      <summary>
+            Returns Google Analytics settings for a site or returns null if none are found.
+            </summary>
+      <param name="siteId">The site ID.</param>
+      <returns>The <see cref="T:NetSteps.Sites.Common.Models.ISiteGoogleAnalyticsSettings" /> for the site or null if none are found.</returns>
+      <requires exception="T:System.ArgumentOutOfRangeException" csharp="siteId &gt; 0" vb="siteId &gt; 0">siteId &gt; 0</requires>
+      <exception cref="T:System.ArgumentOutOfRangeException">siteId &lt;= 0</exception>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISite">
+      <summary>
+            Common interface for Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.SiteID">
+      <summary>
+            The SiteID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.BaseSiteID">
+      <summary>
+            The BaseSiteID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.SiteTypeID">
+      <summary>
+            The SiteTypeID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.SiteStatusID">
+      <summary>
+            The SiteStatusID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.Name">
+      <summary>
+            The Name for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.DisplayName">
+      <summary>
+            The DisplayName for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.Description">
+      <summary>
+            The Description for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.AccountID">
+      <summary>
+            The AccountID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.AccountNumber">
+      <summary>
+            The AccountNumber for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.DateSignedUpUTC">
+      <summary>
+            The DateSignedUpUTC for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.MarketID">
+      <summary>
+            The MarketID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.IsBase">
+      <summary>
+            The IsBase for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.DefaultLanguageID">
+      <summary>
+            The DefaultLanguageID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.SiteStatusChangeReasonID">
+      <summary>
+            The SiteStatusChangeReasonID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.AutoshipOrderID">
+      <summary>
+            The AutoshipOrderID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.DateCreatedUTC">
+      <summary>
+            The DateCreatedUTC for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.CreatedByUserID">
+      <summary>
+            The CreatedByUserID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this Site.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISite.DateLastModifiedUTC">
+      <summary>
+            The DateLastModifiedUTC for this Site.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteSetting">
+      <summary>
+            Common interface for SiteSetting.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSetting.SiteSettingID">
+      <summary>
+            The SiteSettingID for this SiteSetting.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSetting.BaseSiteID">
+      <summary>
+            The BaseSiteID for this SiteSetting.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSetting.Name">
+      <summary>
+            The Name for this SiteSetting.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteSettingItem">
+      <summary>
+            Common interface for SiteSettingItem.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingItem.Name">
+      <summary>
+            The site setting name.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingItem.Value">
+      <summary>
+            The site setting value.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingItem.SiteID">
+      <summary>
+            The SiteID of the site where this value came from.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteSettingValue">
+      <summary>
+            Common interface for SiteSettingValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingValue.SiteSettingValueID">
+      <summary>
+            The SiteSettingValueID for this SiteSettingValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingValue.SiteSettingID">
+      <summary>
+            The SiteSettingID for this SiteSettingValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingValue.SiteID">
+      <summary>
+            The SiteID for this SiteSettingValue.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteSettingValue.Value">
+      <summary>
+            The Value for this SiteSettingValue.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteStatus">
+      <summary>
+            Common interface for SiteStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatus.SiteStatusID">
+      <summary>
+            The SiteStatusID for this SiteStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatus.Name">
+      <summary>
+            The Name for this SiteStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatus.TermName">
+      <summary>
+            The TermName for this SiteStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatus.Description">
+      <summary>
+            The Description for this SiteStatus.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatus.Active">
+      <summary>
+            The Active for this SiteStatus.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteStatusChangeReason">
+      <summary>
+            Common interface for SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatusChangeReason.SiteStatusChangeReasonID">
+      <summary>
+            The SiteStatusChangeReasonID for this SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatusChangeReason.Name">
+      <summary>
+            The Name for this SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatusChangeReason.Description">
+      <summary>
+            The Description for this SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatusChangeReason.Editable">
+      <summary>
+            The Editable for this SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteStatusChangeReason.Active">
+      <summary>
+            The Active for this SiteStatusChangeReason.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteType">
+      <summary>
+            Common interface for SiteType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteType.SiteTypeID">
+      <summary>
+            The SiteTypeID for this SiteType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteType.Name">
+      <summary>
+            The Name for this SiteType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteType.TermName">
+      <summary>
+            The TermName for this SiteType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteType.Description">
+      <summary>
+            The Description for this SiteType.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteType.Active">
+      <summary>
+            The Active for this SiteType.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.ISiteUrl">
+      <summary>
+            Common interface for SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.SiteUrlID">
+      <summary>
+            The SiteUrlID for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.SiteID">
+      <summary>
+            The SiteID for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.Url">
+      <summary>
+            The Url for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.ExpirationDateUTC">
+      <summary>
+            The ExpirationDateUTC for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.LanguageID">
+      <summary>
+            The LanguageID for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.IsPrimaryUrl">
+      <summary>
+            The IsPrimaryUrl for this SiteUrl.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.ISiteUrl.ModifiedByUserID">
+      <summary>
+            The ModifiedByUserID for this SiteUrl.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.Models.IUrlRedirect">
+      <summary>
+            Common interface for UrlRedirect.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.IUrlRedirect.UrlRedirectID">
+      <summary>
+            The UrlRedirectID for this UrlRedirect.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.IUrlRedirect.SiteTypeID">
+      <summary>
+            The SiteTypeID for this UrlRedirect.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.IUrlRedirect.Url">
+      <summary>
+            The Url for this UrlRedirect.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.IUrlRedirect.TargetUrl">
+      <summary>
+            The TargetUrl for this UrlRedirect.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.Models.IUrlRedirect.IsPermanent">
+      <summary>
+            The IsPermanent for this UrlRedirect.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.SiteConstants">
+      <summary>
+            Constant values to be used in place of magic numbers and strings.
+            </summary>
+    </member>
+    <member name="T:NetSteps.Sites.Common.SiteConstants.SiteSettingKeys">
+      <summary>
+            String values to be used as keys for site settings.
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.SiteConstants.SiteSettingKeys.BaseGoogleAnalyticsTrackerID">
+      <summary>
+            BaseGoogleAnalyticsTrackerID
+            </summary>
+    </member>
+    <member name="P:NetSteps.Sites.Common.SiteConstants.SiteSettingKeys.GoogleAnalyticsTrackerID">
+      <summary>
+            GoogleAnalyticsTrackerID
+            </summary>
+    </member>
+  </members>
+</doc>

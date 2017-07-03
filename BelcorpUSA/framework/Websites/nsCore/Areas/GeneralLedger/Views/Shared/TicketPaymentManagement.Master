@@ -1,0 +1,25 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/GeneralLedger/Views/Shared/GeneralLedger.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			
+            <ul class="SectionLinks">
+				<%= Html.SelectedLink("~/GeneralLedger/PaymentTickets/BrowseTickets", Html.Term("BrowseTickets", "Browse Tickets"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+				
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>

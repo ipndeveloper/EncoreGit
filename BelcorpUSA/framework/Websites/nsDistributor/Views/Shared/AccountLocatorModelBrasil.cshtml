@@ -1,0 +1,190 @@
+﻿@model nsDistributor.Models.Shared.AccountLocatorModel
+@using nsDistributor.Models.Shared
+
+<script>
+    $("#btnSearchOther").click(function (evento) { 
+            $("#n3").css("display", "");
+            $("#n1").css("display", "none"); 
+            $("#n2").css("display", "none"); 
+    });
+</script>
+@{
+    var searchUrl = Request.Path;
+    var queryString = Request.QueryString.ToString();
+    if (!string.IsNullOrWhiteSpace(queryString))
+    {
+        searchUrl += "?" + queryString;
+    }
+    
+    var enviroment = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EnvironmentCountry_Aux"]) == (int)Constants.Country.UnitedStates ? 1 : 0; 
+}
+<div class="FL splitCol60 UI-lightBg brdrAll distributorLocatorWrap">
+    <div class="inner" style="top:0px; width::80%; height:100%;">
+        @using (Html.BeginFormWithHtmlAttributes(new { id = "AccountLocatorForm", action = searchUrl }))
+        {
+            <div data-bind="visible: showError" class="validation-summary-errors locatorErrors">
+                <ul class="flatList"><li data-bind="text: errorMessage"></li></ul>
+            </div>
+            @Html.ValidationSummary(true)
+
+            <div class="UI-mainBg pad10 brdrAll GridUtility locatorTools">
+                @Html.Partial("_LocatorSearchRadioButtons", Model)
+            </div> 
+          @*  <div class="UI-mainBg pad12 brdrAll GridUtility locatorTools" >
+                    <input checked="checked" class="toggleButton" data-bind="checked: searchParams.searchType" id="btnSearchTypeAccountInfo" 
+                    name="SearchType" style="margin-right: 5px" value="AccountInfo" type="radio"> 
+                        <label for="btnSearchTypeAccountInfo">
+                            Search by Beauty Advisor</label>
+                     
+                    <input class="toggleButton " data-bind="checked: searchParams.searchType" id="btnSearchTypeLocation"
+                        name="SearchType"  value="Location" type="radio" style="margin-left: 5px">
+                     
+                        <label for="btnSearchTypeLocation"> Search by your location.</label>
+                    
+                    <input class="toggleButton" data-bind="checked: searchParams.searchType" id="btnSearchTypeOther"
+                        name="SearchType" style="margin-left: 5px" value="Other" type="radio"> 
+                        <label for="btnSearchTypeLocations">
+                            Don't know a Beauty Advisor?</label> 
+                </div>*@
+            
+            <div  data-bind="visible: showAccountInfoParams" class="FormContainer locatorForm">
+                <h2>@Html.Term("AccountLocator_DistributorInformationLabel", "Distributor Information")</h2>
+        
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.AccountNumber):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.AccountNumber, new { data_bind = "value: searchParams.accountNumber" })
+                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                
+                <div class="center pad5 mb10 UI-lightBg locatorOr"><b>@Html.Term("or").ToUpper()</b></div>
+                
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.FirstName):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.FirstName, new { data_bind = "value: searchParams.firstName" })
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                    </div>
+                    <span class="clr"></span>
+                </div>
+
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.LastName):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.LastName, new { data_bind = "value: searchParams.lastName" })
+                        @Html.ValidationMessageFor(model => model.LastName)
+                    </div>
+                    <span class="clr"></span>
+                </div>
+                @if (Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EnvironmentCountry_Aux"]) == (int)Constants.Country.UnitedStates)
+                { 
+                
+                <div class="center pad5 mb10 UI-lightBg locatorOr"><b>@Html.Term("or").ToUpper()</b></div>
+                 <h2>@Html.Term("YourAddress", "Your Address")</h2>
+        
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.Address1):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.Address1, new { data_bind = "value: searchParams.address1" })
+                        @Html.ValidationMessageFor(model => model.Address1)
+                    </div>
+                    <span class="clr"></span>
+                </div>
+
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.City):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.City, new { data_bind = "value: searchParams.city" })
+                        @Html.ValidationMessageFor(model => model.City)
+                    </div>
+                    <span class="clr"></span>
+                </div>
+
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.PostalCode):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.PostalCode, new { data_bind = "value: searchParams.postalCode" })
+                        @Html.ValidationMessageFor(model => model.PostalCode)
+                    </div>
+                    <span class="clr"></span>
+                </div> 
+                <div class="FRow">
+                    <div class="FLabel">
+                        @Html.LabelFor(model => model.MaximumDistance):
+                    </div>
+                    <div class="FInput">
+                        @Html.TextBoxFor(model => model.MaximumDistance, new { /*type = "number", min = 5, max = 100, step = 5,*/ data_bind = "value: searchParams.maximumDistance" })
+                        @Html.ValidationMessageFor(model => model.MaximumDistance)
+                    </div>
+                </div>
+                }
+
+            <div  id="SearchButtonContainer" class="FormSubmit locatorSearchSubmit"
+                data-click-submit="parent">
+                <a href="javascript:void(0);" class="Button btnContinue btnLocator"><span>@Html.Term("AccountLocator_SearchButtonLabel", "Search Distributors")</span></a>
+            </div>
+             
+            </div>
+            
+            <div  data-bind="visible: showLocationParams" class="FormContainer locatorForm">
+                <div class="FormContainer locatorForm">
+                    <h2>@Html.Term("AccountLocator_SearchByLocationDetails", "If you do not know a sponsor, you can continue the process that Belcorp will appoint one for you")</h2>
+                </div>  
+                <a href="@Url.Resolve("Index", new { sponsorID = 3 })"  class="pad5 UI-linkAlt altProfileLink SelectSponsor">
+                    <span style="font-size: small; padding: 3px"
+                        class="Button btnContinue btnLocator"><span>&nbsp;&nbsp;@Html.Term("Continue", " Continue")&nbsp;&nbsp;</span></span>
+                </a> 
+            </div>
+         
+        }
+        <input type="hidden" value="@enviroment" id="hdnEnviroment" />
+    </div>
+</div>
+
+<div data-bind="fadeVisible: showResults" class="FR splitCol40 OtherProfiles SponsorProfiles">
+    <p class="locatorSearchResultsIntro">
+        @Html.Term("DistributorLocator_SearchResultsText", "Below is a list of distributors that match your search. Please click on the distributor you wish to select.")
+    </p>
+    <div class="UI-darkBg brdrYYNN pad5 otherProfilesHeader locatorSearchResultsList">
+        <h2>@Html.Term("SearchResults", "Search Results")</h2>
+    </div>
+    <div class="brdr brdrNNYY profilesListWrap">
+        <div data-bind="if: results().length === 0" class="center noResults"><p class="pad10">@Html.Term("AccountLocator_NoResults", "No matches found, please try a different search")</p></div>
+        <!-- ko foreach: results -->
+           <div class="Profile">
+            <a data-bind="attr: { href: SelectUrl }" class="pad5 UI-linkAlt altProfileLink SelectSponsor">
+                <span class="FL splitCol90 Sponsor"><span data-bind="html: PhotoHtml" class="FL mr10 sponsorPhoto">
+                </span><span class="FL sponsorInfo"><span data-bind="html: FullName"></span>
+                    <br />
+                    <span data-bind="html: Location"></span>
+                    <br />
+                    <span data-bind="html: PwsUrl"></span>
+                    <br />
+                    <span data-bind="html: PhoneNumber"></span>
+                    <br />
+                    <span data-bind="html: EmailAddress"></span></span><span class="clr"></span>
+                </span><span style="font-size: small; padding: 3px" class="Button btnContinue btnLocator">
+                    <span>&nbsp;&nbsp;@Html.Term("Continue", " Continue")&nbsp;&nbsp;</span></span>
+                <span class="clr"></span></a>
+            <hr />
+        </div>
+        <!-- /ko -->
+        <p id="ShowMoreButtonContainer" class="center mt10">
+            <a data-bind="visible: showMoreButton, click: showMore" href="javascript:void(0);" class="Button"><span>@Html.Term("AccountLocator_ShowMoreButtonLabel", "Show More")</span></a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,575 @@
+
+/********
+you will find these 2 rules in _globals:
+********/
+.m-hid {
+	display:none;
+	visibility:hidden;
+}
+.m-display {
+	display:block;
+	visibility:visible;
+}
+
+
+.Crumbs {
+  margin: em(5 0 10 0);
+}
+.PageTitle {
+	padding:2%;
+    margin:-2% -1% 1em;
+	h1 {
+		font-size: 110%;
+	}
+}
+
+/************************************************************************************
+* Re-used Structural Rules
+************************************************************************************/
+[class*="responsiveTabber"][class*="active"] {
+    @include BorderRadius(all,0);
+    border-style:solid;
+}
+.responsiveTabber-tab {
+    @include responsive-tabber-rules;
+}
+.responsiveTabber-tab.active {
+    @include responsive-tabber-active-rules;
+}
+.responsiveTabber-data.active {
+    border-width:em(2);
+    margin-top:em(-12) !important;
+    @include BoxShadow(3px 3px 4px rgba(0,0,0,.3));
+    input {
+        margin-left:0;
+    }
+    .sectionHeader {
+        @include BorderRadius(all, 0);
+        margin:em(10 5);
+    }
+}
+.menu-trig {
+    @include opacity(.7);
+    @include BorderRadius(custom, em(5 0 0 5));
+    position:absolute;
+    height: em(34);
+    width:16%;
+    max-width: em(55);
+    display:block;
+    right:-80%;
+    margin-right:82%;
+    top:em(152);
+    padding:2px 1% 0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    cursor:pointer;
+    text-align:center;
+    white-space:nowrap;
+    span {
+        font-size:70%;
+        display:block;
+        margin-top:-.5em;
+    }
+    &:before {
+        display:block;
+    }
+    &.NS-respFixed {
+        height:32px;
+        margin-top:3px;
+        padding-top:3px;
+        width:3em;
+        z-index:9999;
+        span {
+            display:none;
+        }
+    }
+}
+.UI-topDockBg {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    display:none;
+    height:40px;
+    z-index:8888;
+    &.NS-respFixed {
+        display:block;
+        @include BoxShadow(0 1px 5px rgba(0,0,0,.3));
+        border-bottom:1px solid rgba(255,255,255,.6);
+    }
+}
+.responsiveNav {
+	ul, a {
+		display:none;
+	}
+	select.responsiveNavDropdown {
+		display: block;
+		width:96%;
+	}
+}
+.Pagination {
+    text-align:center;
+    .Bar {
+        width:100%;
+    }
+}
+.PageSize {
+    float:none;
+    clear:both;
+    padding-top:em(10);
+}
+.GridUtility .UI-icon-container {
+    text-align:center;
+    span {
+        float:none;
+        &:nth-child(2) {
+            font-size:70%;
+            width:6em;
+            @include text-overflow-rules;
+        }
+    }
+}
+.responsiveHover {
+    display:inline-block;
+    width:auto;
+    ul {
+        display:none;
+		li {
+			width:100%;
+		}
+    }
+    &:hover {
+        ul {
+            display:block;
+        }
+    }
+}
+#Follow {
+    position:static !important;
+    width:100% !important;
+}
+.NS-respFixed {
+    position:fixed;
+    top:0;
+    z-index:9000;
+}
+
+/************************************************************************************
+* Global Link & Button Rules
+************************************************************************************/
+#ActiveLinkTerm {
+    display: inline-block;
+}
+#SiteNav li:first-child.current{
+    display:none;
+}
+
+/************************************************************************************
+* Site Logo
+************************************************************************************/
+
+#LogoContain {
+	display:table;
+	width: 97%;
+	border-collapse: collapse;
+    height:em(100);
+	.imagewrapper {
+		display: table-row;
+		a {
+			display: table-cell;
+			width: 100%;
+			vertical-align: middle;
+			text-align :center;
+		}
+	}
+}
+
+/************************************************************************************
+* Containers, Columns, etc
+************************************************************************************/
+.FooterInner {
+	text-align:center;
+}
+
+
+/***********************
+* Action Items
+************************/
+
+.actionItems {	
+	ul {
+		li {
+			vertical-align:top;
+			a {
+				text-align:center;
+				line-height:normal;
+				span {
+					line-height: normal;
+					&.lbl {
+						width:6.5em;
+						display:inline-block;
+                        @include text-overflow-rules;
+                        font-size:80%;
+                        padding-bottom:em(5);
+					}	
+				}
+				.UI-icon {
+					float:none;
+					display:block;
+                    height:3.2em;	
+				}
+			}
+		} 
+	}
+	[class^="icon-"], [class*=" icon-"] {
+		width: auto;
+	}
+    .UI-icon-container {
+        line-height:1em;
+    }
+}
+
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+#UserInfo {
+	text-align:right;
+	ul {
+		background:shade($DarkBg, 30%);
+		padding:5px;
+		position:absolute;
+        z-index:100;
+		right:10px;
+		max-width:50%;
+		@include BorderRadius(custom, 5px 0 5px 5px);
+
+	}
+	.userName {
+		display:none;
+	}
+	a {
+		padding:em(8 5);
+	}
+	&:hover {
+		&:before {
+			@include BorderRadius(top, 5px);
+		}
+	}
+	&:before {
+		display: inline-block;
+		background:shade($DarkBg, 30%);
+		@include BorderRadius(all, 5px);
+		padding:5px;
+	}
+}
+
+
+/************************************************************************************
+* Forms
+************************************************************************************/
+input, select, textarea, input.pad2 {
+	padding:em(5);
+}
+.FLabel.has-wtrmk {
+	display:none;
+}
+input[size="50"] {
+    max-width:94%;
+}
+.FormRow, .FRow {
+	.data, .FInput {
+		input[type="text"] {
+			width:95%;
+            &[id*="DOB"] {
+                width:auto;
+            }
+		}
+		input.Address1, input.Address2, input.Address3, input#HostAddress_Attention {
+			width:95% !important;
+		}
+	}
+ }
+
+/******************************************************************
+* Tables
+******************************************************************/
+.DataGrid.responsive {
+	th {
+		display:none;
+	}
+	td {
+		display:block;
+		padding:em(6);
+		&:first-child[data-label=""]:before {
+			display:none;
+		}
+		&.center {
+			text-align:left;
+		}
+	}
+	.updateRow, #hostTotals tr:first-child {
+		td {
+			text-align:center;
+			&:before {
+				display:none;
+			}
+			&[colspan] {
+				display:none;
+			}
+		}
+		.Update {
+			text-align:center;
+		}
+	}
+	td:before {
+		content:attr(data-label);
+		display:inline-block;
+		width:em(80);
+	}
+	td:first-child[data-label=""] {
+		float:right;
+		border-bottom:0;
+		padding-bottom:0;
+	}
+	.bundlePackItemList {
+		margin: em(-2 5 0 5);
+		td:before {
+			margin-left:em(30);
+		}
+		td:first-child[data-label=""] {
+			float:left;
+			margin-right:em(-30);
+		}
+	}
+	td span {
+		&[class*="bundle"] {
+			float:right;
+		}
+		&[class*="bundle-add"], &[class*="bundle-full"] {
+			padding:em(5 8);
+			margin:em(0 6 -3 0);
+		}
+	}
+	.UI-icon.icon-bundle-arrow:before {
+		line-height:inherit;
+	}
+	.OrderItems .DynamicKit td a {
+		float:none;
+	}
+	.GuestTotal, .GridTotalBar, .orderBalanceDisplay {
+		text-align:right;
+		td:before {
+			display:none;
+			width:0;
+		}
+		td {
+			display:inline-block;
+			padding:0;
+			line-height:em($IconSize);
+		}
+		td:nth-of-type(2){
+			text-align:left;
+			width:em(70);
+		}
+	}
+}
+.DataGrid.responsive.editableGrid {
+	td:nth-of-type(2){
+		line-height:em($IconSize);
+	}
+}
+.customerCartHeader {
+	padding:em(10);
+	margin-top:em(10);
+}
+.OrderItems .loadingWrap img {
+	max-width:em($IconSize);
+	background:#fff;
+	border:1px solid #000;
+	padding:1px;
+}
+body.IE9 {
+	.DataGrid.responsive {
+		td {
+			width:100%;
+			float:left;
+			clear:left;
+		}
+		tr:first-child {
+			position:relative;
+			right:0;
+		}
+		td:first-child[data-label=""] {
+			right:0;
+			width:em($IconSize);
+			position:absolute;
+		}
+		.GuestTotal td {
+			float:left;
+			clear:none;
+			width:50%;
+			display:block;
+		}
+	}
+	.bundlePackItemList {
+		td:first-child[data-label=""] {
+			left:em(16);
+		}
+	}
+
+}
+.GuestForm.ui-accordion {
+	.ui-accordion-content, .ui-accordion-header {
+		padding: 0 2%;
+		width: 96%;
+	}
+	br {
+		display:none;
+	}
+	input[type="text"] {
+		width: 90%;
+		margin:0 0 1em 0;
+	}
+}
+
+/************************************************************************************
+* Dashboard
+************************************************************************************/
+.ResourcePreviewInfo {
+    width:auto;
+    display:inline-block;
+}
+/************************************************************************************
+* Performance
+************************************************************************************/
+.PerfKPIHold .PerfKPI {
+    width:100%;
+    margin-right:0;
+}
+.overviewNameValue {
+    width:94%;
+}
+#RemainingVolume {
+	top:39px;
+    font-size:85%;
+}
+#kpiSV #SalesIndicator .Number {
+    min-height:40px;
+    padding:5px 0;
+    margin:0 -10px;
+}
+/************************************************************************************
+* Misc
+************************************************************************************/
+.profileQuickTools {
+    width:100%;
+}
+.NewsletterStatisticsNav {
+    &.Tabber {
+        height:auto;
+        ul {
+            min-width:auto;
+        }
+        li {
+            width:49.2%;
+            &.first {
+                width:99%;
+            }
+        }
+    }
+}
+.PersonalOrderDetails, .partySection-Host, .partySection-eVites, .partySection-Specifics, .partySection-Location, .partySection-Shipping {
+    [class*="splitCol"] {
+        width:100%;
+    }
+}
+
+.partySection-Location, .partySection-Shipping {
+	input[type="radio"].FL, label.FL {
+		float:none;
+	}
+}
+.AutoshipCart {
+    width:100%;
+}
+#SiteNav .UI-siteNav, #SiteNav.UI-siteNav {
+	padding: 5px 0;
+}
+.UI-siteNav.inner ul {
+    max-width:100%;
+    margin-top:em(5);
+}
+
+.GuestControls .responsiveNav {
+	margin-top:em(-3);
+}
+/************************************************************************************
+* Alerts
+************************************************************************************/
+.UI-Alert {
+	height: em(28);
+	line-height: em(28);
+	margin: em(0 0 5 0);
+}
+
+
+
+/***********************************************************************************
+* Layout Columns!!!!
+***********************************************************************************/
+.DashColumns {
+	min-width: 97%;
+	.contents {
+		#SecondaryRail {
+				float:none;
+				width:97%;
+				clear:both;
+		}
+		#ContentColumn {
+				float:none;
+				width:97%;
+				clear:both;
+                padding:em(10 0)
+		}
+	}
+}
+.menu-full {
+		display:none;
+		visibility:hidden;
+		
+}
+.menu-hidden, .menu-full-on-small-hidden {
+	display:block;
+	.menu-panel {
+		position: fixed;
+        overflow:auto;
+		width: 70%;
+		right: -80%;
+		top: 0;
+		bottom: 0;
+		@include opacity(.7);
+		padding: 6%;
+		z-index:9999;
+		ul, .menu-fade {
+			display:none;
+		}		
+	}
+	.menu-trig {
+		display:block;
+	}	
+}
+
+
+
+.splitGroup {
+	.col {
+		float:none;
+	}
+	&.split-70-30, &.split-30-70, &.split-60-40, &.split-40-60, &.split-80-20, &.split-20-80, &.split-50-50 {
+		.col, .col:nth-child(1), .col:nth-child(2), .col:nth-child(even) {
+			width: 99%;
+			margin:0;
+		}
+	}
+}

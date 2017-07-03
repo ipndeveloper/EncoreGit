@@ -1,0 +1,29 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Title;
+}
+@section head
+{
+    @{
+        var keywords = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Keywords;
+        var description = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Description;
+    }
+    @if (!string.IsNullOrWhiteSpace(keywords))
+    {
+        <meta name="keywords" content="@keywords" />
+    }
+    @if (!string.IsNullOrWhiteSpace(description))
+    {
+        <meta name="description" content="@description" />
+    }
+}
+<div id="TwoColumn" class="TwoColumnContent">
+    <div id="LeftColumn" class="LeftColumn">
+        @Model.HtmlSections.GetBySectionName("TwoColumn_AdSpace").ToDisplay(Model.PageID)
+       
+    </div>
+    <div class="ContentColumn CenterColumn">
+        @Model.HtmlSections.GetBySectionName("TwoColumn_CenterContent").ToDisplay(Model.PageID)
+    </div>
+</div>
+

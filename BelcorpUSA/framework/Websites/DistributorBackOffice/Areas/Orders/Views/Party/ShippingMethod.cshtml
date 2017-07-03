@@ -1,0 +1,178 @@
+﻿@model Party
+@{
+    ViewBag.Title = Html.Term("ShippingMethod", "Shipping Method");
+}
+@section head{
+    <script type="text/javascript">
+        $(function () {
+            $('#btnNext1, #btnNext2').click(function () {
+                var t = $('#btnNext1, #btnNext2'), data = { partyShippingMethod: $('#partyShippingMethod input:checked').val() };
+                showLoading(t);
+                $('#directShipGuests div.shipMethodList').each(function (i) {
+                    data['guests[' + i + '].Key'] = $('.orderCustomerId', this).val();
+                    data['guests[' + i + '].Value'] = $('input.shipMethodRadio:checked', this).val();
+                });
+                $.post('@Href("~/Orders/Party/SetShippingMethod")', data, function (response) {
+                    if (response.result) {
+                        window.location = '@Href("~/Orders/Party/Payments")';
+                    }
+                    else {
+                        hideLoading(t);
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            var lastProduct,
+                static = true,
+				originalTop = $('#Follow').position().top,
+                width = $('#Follow').width();
+            $(window).scroll(function () {
+                if (static && originalTop < $(window).scrollTop()) {
+                    static = false;
+                    $('#Follow').css({ position: 'fixed', top: '0px', width: width + 'px' });
+                } else if (!static && originalTop > $(window).scrollTop()) {
+                    static = true;
+                    $('#Follow').css({ position: 'static', top: '' });
+                }
+            });
+        });
+    </script>
+}
+@section title{
+    @Html.Term("ShippingMethod", "Shipping Method")
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders/Party")">@Html.Term("Party", "Party")</a> &gt; <a href="@Href("~/Orders/Party/Cart")">@Html.Term("Cart")</a>
+    &gt; <a href="@Href("~/Orders/Party/HostRewards")">@Html.Term("HostRewards", "Host Rewards")</a>
+    &gt; @Html.Term("ShippingMethod", "Shipping Method")
+}
+@section rail {
+    <div id="Follow">
+        @Html.Partial("PartySummary")
+        <div class="center pad10">
+            @if (ViewBag.Products == null)
+            {
+                <a href="javascript:void(0);" id="btnNext1" class="Button FormSubmit"><span>@Html.Term("Continue")</span></a>
+            }
+        </div>
+    </div>
+}
+<div class="pad5">
+    <div class="brdrAll">
+        <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+            <span class="FL">@Html.Term("PartyShippingMethod", "Party Shipping Method")</span>
+            <span class="clr"></span>
+        </div>
+        <div id="partyShippingMethod" class="brdrNNYY brdr1 pad5">
+            <div class="brdr brdrAll pad10 shipMethodList">
+                <ul class="inlineNav">
+                    @{
+                        bool first = true;
+                        OrderShipment shipment = Model.Order.GetDefaultShipment();
+                        int? currentShippingMethodID = null;
+                        if (shipment != null)
+                        {
+                            currentShippingMethodID = shipment.ShippingMethodID;
+                            first = false;
+                        }
+                        
+                        if (ViewBag.Products == null)
+                        {
+                            var currentShippingMethodValue = currentShippingMethodID ?? 0;
+                            foreach (ShippingMethodWithRate shippingMethod in ViewBag.ShippingMethods)
+                            {
+                                <li class="pad10 brdrAll">
+                                    <div class="FL shipMethodSelect">
+                                        <input id="shippingMethod-@shippingMethod.ShippingMethodID"
+                                    type="radio" class="shipMethodRadio" name="shippingMethod" value="@shippingMethod.ShippingMethodID"
+                                    @Html.Raw((shippingMethod.ShippingMethodID == currentShippingMethodValue || first) ? "checked=\"checked\"" : "")
+                                    />
+                                    </div>
+                                    <label for="shippingMethod-@shippingMethod.ShippingMethodID" class="FL
+                                    shipMethodLabel">
+                                        <span class="shipMethodDisplayName">@shippingMethod.DisplayName</span> <span class="shipMethodPrice">@(shippingMethod.ShippingAmount.ToString((int)ViewBag.CurrencyID))</span>
+                                    </label>
+                                </li>
+                                first = false;
+                            }
+                        }
+                    }
+                </ul>
+                <span class="clr"></span>
+                <div class="UI-lightBg pad10" id="ProcessingTimeDisclaimer">
+                    <p>@Html.Term("ShippingMethodHighVolumeDisclaimer", "Processing times may increase during periods of high sales volume.")</p>
+                    <p>@Html.Term("ShippingMethodProcessingTimeDisclaimer", "Estimated shipping times do not include processing.")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.DirectShipGuests != null && ((Dictionary<Tuple<string, string>, IEnumerable<ShippingMethodWithRate>>)ViewBag.DirectShipGuests).Count > 0)
+    {
+        <div id="directShipGuests" class="UI-lightBg brdrAll">
+            <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                <span class="FL">@Html.Term("DirectShipGuests", "Direct Ship Guests")</span> <span
+                    class="clr"></span>
+            </div>
+            @foreach (var guest in ((Dictionary<Tuple<string, string>, IEnumerable<ShippingMethodWithRate>>)ViewBag.DirectShipGuests).Where(oc => oc.Value.Count() > 0))
+            {
+                first = true;
+                var customer = Model.Order.OrderCustomers.FirstOrDefault(oc => oc.Guid.ToString("N") == guest.Key.Item1);
+                shipment = customer.OrderShipments.FirstOrDefault();
+                currentShippingMethodID = null;
+                if (shipment != null)
+                {
+                    currentShippingMethodID = shipment.ShippingMethodID;
+                    first = false;
+                }
+                <div class="pad5">
+                    <div class="pad5 headerBar">
+                        @guest.Key.Item2
+                    </div>
+                    <div class="brdr brdrAll pad10 shipMethodList">
+                        <input type="hidden" class="orderCustomerId" value="@guest.Key.Item1" />
+                        <ul class="inlineNav">
+                            @foreach (var shippingMethod in guest.Value)
+                            {
+                                <li class="pad10 brdrAll">
+                                    <div class="FL shipMethodSelect">
+                                        <input id="shippingMethod-@shippingMethod.ShippingMethodID" type="radio" class="shipMethodRadio" name="shippingMethod@(guest.Key.Item1)" value="@shippingMethod.ShippingMethodID" @Html.Raw((currentShippingMethodID.HasValue && shippingMethod.ShippingMethodID == currentShippingMethodID.Value) || first ? "checked=\"checked\"" : "") />
+                                    </div>
+                                    <label for="shippingMethod-@shippingMethod.ShippingMethodID" class="FL shipMethodLabel">
+                                        <span class="shipMethodDisplayName">@shippingMethod.DisplayName</span>
+                                        @{ 
+                                var shippingAmount = shippingMethod.ShippingAmount;
+                                var shippingDiscount = customer.ShippingAdjustmentAmount;
+                                if (shippingAmount != shippingAmount - shippingDiscount)
+                                {
+                                            <span class="shipMethodPrice originalPrice strikethrough">@(shippingAmount.ToString((int)ViewBag.CurrencyID))</span>
+                                            <span class="shipMethodPrice discountPrice">@((shippingAmount - shippingDiscount).ToString((int)ViewBag.CurrencyID))</span>
+                                }
+                                else
+                                {
+                                            <span class="shipMethodPrice">@(shippingAmount.ToString((int)ViewBag.CurrencyID))</span>
+                                }
+                                        }
+                                    </label>
+                                </li>
+                                first = false;
+                            }
+                        </ul>
+                        <span class="clr"></span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@if (ViewBag.Products == null)
+{
+    <div class="clr center PageSaveButtons" style="text-align: center; width: auto;">
+        <a href="javascript:void(0);" id="btnNext2" class="Button FormSubmit" style="float: none;
+            margin: auto;"><span>@Html.Term("Continue")</span> </a><span class="ClearAll">
+        </span>
+    </div>
+}
+else
+{
+    @Html.Partial("_ProductShippingExceptionModal")
+}

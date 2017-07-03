@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="urn:vertexinc:o-series:tps:6:0" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:vertexinc:o-series:tps:6:0" version="6.0" xml:lang="en-us" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>Core components used in the XML interface. Declararion of structures and data types.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:attributeGroup name="isoCurrencyCode">
+    <xsd:annotation>
+      <xsd:documentation>ISO 4217 currency code structure</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="isoCurrencyName" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The ISO 4217 name for the currency unit. Not used for this version of O Series.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="isoCurrencyCodeAlpha" type="Code3Type" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The three-character ISO 4217 alphabetic code for the currency unit.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="isoCurrencyCodeNum" type="CodeType" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>The three-digit ISO 4217 numeric code for the currency unit.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:simpleType name="PercentType">
+    <xsd:restriction base="xsd:decimal">
+      <xsd:minInclusive value="0" />
+      <xsd:maxInclusive value="1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CodeType">
+    <xsd:annotation>
+      <xsd:documentation>Simple type for 3-digit code values, such as the numeric code values used by the ISO 3166 standard</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:positiveInteger">
+      <xsd:minInclusive value="1" />
+      <xsd:maxInclusive value="999" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Code2Type">
+    <xsd:annotation>
+      <xsd:documentation>Simple type for alpha-3 code values comprised of two capital Roman letters, such as the ISO 3166-1 alpha-2 standard.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value="[A-Z]{2}" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Code3Type">
+    <xsd:annotation>
+      <xsd:documentation>Simple type for alpha-3 code values comprised of three capital Roman letters, such as the ISO 3166-1 alpha-3 standard.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value="[A-Z]{3}" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AmountType">
+    <xsd:annotation>
+      <xsd:documentation>A number of monetary units specified in a currency where the unit of currency is explicit or implied.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:decimal">
+        <xsd:attributeGroup ref="isoCurrencyCode" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CurrencyType">
+    <xsd:annotation>
+      <xsd:documentation>The monetary unit to be used in calculations as defined by ISO 4217 standard.</xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup ref="isoCurrencyCode" />
+  </xsd:complexType>
+  <xsd:complexType name="DatePeriodType">
+    <xsd:sequence>
+      <xsd:element name="BeginDate" type="xsd:date" />
+      <xsd:element minOccurs="0" name="EndDate" type="xsd:date" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DateTimePeriodType">
+    <xsd:sequence>
+      <xsd:element name="BeginDateTime" type="xsd:dateTime" />
+      <xsd:element minOccurs="0" name="EndDateTime" type="xsd:dateTime" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PostalAddressType">
+    <xsd:annotation>
+      <xsd:documentation>Postal Address declaration. </xsd:documentation>
+      <xsd:documentation>Copyright Vertex Inc. 2007-2009 All Rights Reserved</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="StreetAddress1">
+        <xsd:annotation>
+          <xsd:documentation>The first line of the street address.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="100" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="StreetAddress2">
+        <xsd:annotation>
+          <xsd:documentation>The second line of the street address.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="100" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="City">
+        <xsd:annotation>
+          <xsd:documentation>The proper name of the city used to determine the Tax Area ID (if none is supplied). Optional (0..1) but recommended for greatest accuracy if no Tax Area ID is supplied.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="60" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="MainDivision">
+        <xsd:annotation>
+          <xsd:documentation>The proper name or the postal abbreviation of the state, province, or territory used to determine the Tax Area ID if none is supplied. Optional (0..1) but is recommended for greatest accuracy if no Tax Area ID is supplied.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="60" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="SubDivision">
+        <xsd:annotation>
+          <xsd:documentation>The name of the county used to determine the Tax Area ID if none is supplied. Optional (0..1) but is recommended for greatest accuracy if no Tax Area ID is supplied.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="60" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="PostalCode">
+        <xsd:annotation>
+          <xsd:documentation>The postal code used to determine the Tax Area ID (if none is supplied). For valid formats, see the Supporting Information section in the XML Integration Guide. Optional (0..1) but recommended for greatest accuracy if no Tax Area ID is supplied.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="15" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="Country">
+        <xsd:annotation>
+          <xsd:documentation>The country used to determine the Tax Area ID (if none is supplied). You can use a Data Extract report to see the valid country values. (Refer to the Vertex Central online help for information on running Data Extract reports.) Defaults to the value of the taxgis.jurisdictionfinder.DefaultCountryCodeForAddress parameter. The default value for this parameter is USA. (For details on this configuration parameter, refer to the Configuration File Parameters Reference Guide.)</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1" />
+            <xsd:maxLength value="60" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TimePeriodType">
+    <xsd:sequence>
+      <xsd:element name="BeginTime" type="xsd:time" />
+      <xsd:element minOccurs="0" name="EndTime" type="xsd:time" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="Amount" type="AmountType" />
+  <xsd:element name="Currency" type="CurrencyType">
+    <xsd:annotation>
+      <xsd:documentation>Default unit of currency for the entire transaction.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="DatePeriod" type="DatePeriodType" />
+  <xsd:element name="DateTimePeriod" type="DateTimePeriodType" />
+  <xsd:element name="PostalAddress" type="PostalAddressType" />
+  <xsd:element name="TimePeriod" type="TimePeriodType" />
+</xsd:schema>

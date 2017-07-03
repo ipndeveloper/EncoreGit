@@ -1,0 +1,359 @@
+﻿
+
+
+
+<script type="text/javascript">
+
+
+     function TitleLookup(data) {
+        var titles = {};
+
+        for (var i = 0; i < data.length; i++) {
+            titles[data[i].key] = data[i].value;
+        }
+
+        this.getTitleCode = function (key) {
+            var title = titles[key];
+            return title ? title.code : '';
+        };
+
+        this.getTitleName = function (key) {
+            var title = titles[key];
+            return title ? title.name : '';
+        };
+        this.getCount = function () {
+            return Object.keys(titles).length;
+        };
+        this.getKey = function (i) {
+            return Object.keys(titles)[i];
+        };
+        return this;
+    }
+
+    var titleLookup = new TitleLookup(@ViewBag.TitleDataJson);
+    var radialChartLabelSettings = {
+            startingAngle: '0', //Modify to help correct positioning of labels
+            displayLabels: '1'   //Set to 0 to hide the labels all together
+        },
+        chartFont = {
+            color: '777777',
+            size: '9',
+            family: '"HelveticaNeueLight","HelveticaNeue-Light","Helvetica Neue Light","HelveticaNeue","Helvetica Neue","TeXGyreHerosRegular","Helvetica","Tahoma","Geneva","Arial",sans-serif'
+        },
+        qualifiers = [
+            '@Html.Term("Performance_TitleProgress_RecognizedAs", "Recognized As")',
+            '@Html.Term("Performance_TitleProgress_PaidAs", "Paid As")'
+        ];
+    function RenderChartTitleBarChart(lvls, qt, clrs) {
+        var recognizedPlotted = parseInt(lvls.recognized - 1) + .5; // this puts the bar right in the middle of the line they've reached
+        var paidPlotted = parseInt(lvls.paid - 1) + .5;
+        var titleBarChartData = {
+            'chart': {
+                'numDivLines': qt,
+                'yAxisMaxValue': qt,
+                'bgAlpha': '50',
+                'canvasBgAlpha': '0',
+                'showYAxisValues': '0',
+                'showValues': '0',
+                'borderThickness': '0',
+                'showPlotBorder': '1',
+                'showAlternateHGridColor': '0',
+                'divLineAlpha': '0',
+                'yAxisMaxValue': qt,
+                'chartTopMargin': '0',
+                'chartBottomMargin': '0',
+                'showLabels': '0',
+                'useRoundEdges': '1'
+            },
+            'data':
+                [
+                    {
+                        'toolText': '@Html.Term("Performance_TitleProgress_CareerTitle", "Career Title")',
+                        'label': qualifiers[0],
+                        'value': recognizedPlotted,
+                        'color': clrs.recognized,
+                        'alpha': '80'
+                    },
+                    {
+                        'toolText': '@Html.Term("Performance_TitleProgress_PaidAs", "Paid As")',
+                        'label': qualifiers[1],
+                        'value': paidPlotted,
+                        'color': clrs.paid,
+                        'alpha': '80'
+                    }
+                ]
+        };
+        if (!FusionCharts("Column2D_1")) {
+            $("#TitleBar_Chart").insertFusionCharts({
+                swfUrl: 'Column2D',
+                renderer: 'JavaScript',
+                width: '100%',
+                height: '100%',
+                id: 'Column2D_1',
+                dataFormat: 'json',
+                dataSource: titleBarChartData
+            });
+        }
+        else {
+            $("#TitleBar_Chart").updateFusionCharts({
+                dataSource: titleBarChartData
+            });
+        }
+    }
+
+    function RenderRecognizedTitleRadChart(lvls, qt, clrs) {
+        var chartData = [],
+            chartData2 = [],
+            colVal = '',
+            colVal2 = '';
+
+        for (i = 0; i < qt; i++) {
+            if (lvls.recognized <= i) {
+                colorVal = 'f3f3f3';
+            }
+            else if (lvls.recognized > i) {
+                colorVal = clrs.recognized;
+            }
+            if (lvls.paid <= i) {
+                colorVal2 = 'f3f3f3';
+            }
+            else if (lvls.paid > i) {
+                colorVal2 = clrs.paid;
+            }
+            chartData[i] = {
+                'label': titleLookup.getTitleCode(titleLookup.getKey(i)),
+                'value': '1',
+                'toolText':  titleLookup.getTitleName(titleLookup.getKey(i)),
+                'color': colorVal,
+                'alpha': '80'
+            };
+            chartData2[i] = {
+                'value': '1',
+                'color': colorVal2,
+                'alpha': '80'
+            };
+        }
+        var titleChartData = {
+            'chart':
+		        {
+		            'bgAlpha': '0',
+		            'canvasBgAlpha': '0',
+		            'showValues': '0',
+		            'showBorder': '0',
+		            'pieRadius': '60',
+		            'doughnutRadius': '45',
+		            'showShadow': '0',
+		            'radius3D': '80',
+		            'startingAngle': radialChartLabelSettings.startingAngle,
+		            'enableSmartLabels': '0',
+		            'smartLineAlpha': '100',
+		            'showLabels': radialChartLabelSettings.displayLabels,
+		            'labelDistance': '2',
+		            'showPercentInToolTip': '0',
+		            'use3DLighting': '1',
+		            'manageLabelOverflow': '0',
+		            'chartLeftMargin': '0',
+		            'chartRightMargin': '0',
+		            'baseFontColor': chartFont.color,
+		            'baseFont': chartFont.family,
+		            'baseFontSize': chartFont.size
+		        },
+
+            'data':
+		        [
+				    chartData
+		        ]
+        },
+        titleChartData2 = {
+                "chart":
+		            {
+		                'bgAlpha': '0',
+		                'showBorder': '0',
+		                'canvasBgAlpha': '0',
+		                'showValues': '0',
+		                'pieRadius': '45',
+		                'doughnutRadius': '30',
+		                'showShadow': '0',
+		                'radius3D': '80',
+		                'startingAngle': radialChartLabelSettings.startingAngle,
+		                'enableSmartLabels': '0',
+		                'smartLineAlpha': '0',
+		                'showLabels': '0',
+		                'showPercentInToolTip': '0',
+		                'use3DLighting': '1',
+                        'chartLeftMargin': '0',
+                        'chartRightMargin': '0'
+		            },
+
+                    "data":
+		            [
+				        chartData2
+		            ]
+            };
+        if (!FusionCharts("Doughnut2D_1")) {
+            $("#TitleRadial_Chart_Recognized").insertFusionCharts({
+                swfUrl: "Doughnut2D",
+                renderer: "JavaScript",
+                width: "176",
+                height: "150",
+                id: "Doughnut2D_1",
+                dataFormat: "json",
+                dataSource: titleChartData
+            });
+        }
+        else {
+            $("#TitleRadial_Chart_Recognized").updateFusionCharts({
+                dataSource: titleChartData
+            });
+        }
+        if (!FusionCharts("Doughnut2D_2")) {
+            $("#TitleRadial_Chart_Paid").insertFusionCharts({
+                swfUrl: "Doughnut2D",
+                renderer: "JavaScript",
+                width: "120",
+                height: "120",
+                id: "Doughnut2D_2",
+                dataFormat: "json",
+                dataSource: titleChartData2
+            });
+        }
+        else {
+            $("#TitleRadial_Chart_Paid").updateFusionCharts({
+                dataSource: titleChartData2
+            });
+        }
+    }
+
+    function RenderPerformanceOverviewChart(vol, pc) {
+        var otherVol = parseInt(vol.group) - parseInt(vol.personal) + '',
+            overviewCaption = '@Html.Term("GV"): ' + vol.group + ' (@Html.Term("PV"): ' + vol.personal + ')',
+            tooltext1 = '@Html.Term("Performance_OverviewChartLabel_PV", "PV"): ' +
+                vol.personal +
+                ' @Html.Term("Performance_OverviewChartLabel_out of", "out of") ' + 
+                vol.group,
+            tooltext2 = '@Html.Term("Performance_OverviewChartLabel_Other", "Other"): ' +
+                otherVol +
+                ' @Html.Term("Performance_OverviewChartLabel_out of", "out of") ' + 
+                vol.group;
+
+        var overviewChartData = {
+            'chart': {
+                'caption': overviewCaption,
+                'showvalues': '1',
+                'numberprefix': '',
+                'plotgradientcolor': '',
+                'bgAlpha': '0',
+                'showBorder': '0',
+                'yAxisMinValue': '0',
+                'yAxisMaxValue': vol.group,
+                'canvasPadding': '0',
+                'chartTopMargin': '0',
+                'chartBottomMargin': '0'
+            },
+            'categories': [{
+                'category': [{
+                    'label': ''
+                }]
+            }],
+            'dataset': [{
+                'data': [{
+                    'value': vol.personal,
+                    'alpha': '95',
+                    'color': pc,
+                    'toolText': tooltext1
+                }]
+            },
+                {
+                    'data': [{
+                        'value': otherVol,
+                        'alpha': '75',
+                        'color': pc,
+                        'toolText': tooltext2
+                    }]
+                }]
+        };
+
+        if (!FusionCharts("StackedBar2D_1")) {
+            $("#OverviewBar_Chart").insertFusionCharts({
+                swfUrl: "StackedBar2D",
+                renderer: "JavaScript",
+                width: "100%",
+                height: "100%",
+                id: "StackedBar2D_1",
+                dataFormat: "json",
+                dataSource: overviewChartData
+            });
+        }
+        else {
+            $("#OverviewBar_Chart").updateFusionCharts({
+                dataSource: overviewChartData
+            });
+        }
+    }
+    function RenderVolumeRadChart(lvl, wclrs) {
+        var lvlAlpha = {
+            good: '35',
+            warn: '35',
+            alert: '35'
+        };
+        switch(lvl)
+        {
+            case "Good":
+                lvlAlpha.alert = '100';
+                lvlAlpha.warn = '100';
+                lvlAlpha.good = '100';
+                break;
+            case "Alert":
+                lvlAlpha.alert = '100';
+                break;
+            default:
+                lvlAlpha.alert = '100';
+                lvlAlpha.warn = '100';
+                break;
+        }
+
+        var salesVolChartData = {
+            "chart":
+	            {
+	                'bgAlpha': '0',
+	                'canvasBgAlpha': '0',
+	                'showValues': '0',
+	                'showBorder': '0',
+	                'pieRadius': '52',
+	                'doughnutRadius': '37',
+	                'showShadow': '0',
+	                'radius3D': '80',
+	                'startingAngle': '-90',
+	                'enableSmartLabels': '0',
+	                'smartLineAlpha': '0',
+	                'labelDistance': '5',
+	                'showPercentInToolTip': '0',
+	                'use3DLighting': '1',
+	                'showToolTip': '0'
+	            },
+            "data":
+	            [
+			        { 'value': '1', 'color': wclrs.good, 'alpha': lvlAlpha.good },
+			        { 'value': '1', 'color': wclrs.warn, 'alpha': lvlAlpha.warn },
+			        { 'value': '1', 'color': wclrs.alert, 'alpha': lvlAlpha.alert }
+	            ]
+        };
+
+        if (!FusionCharts("Doughnut2D_3")) {
+            $("#SalesVolRadial_Chart").insertFusionCharts({
+                swfUrl: 'Doughnut2D',
+                renderer: 'JavaScript',
+                width: '100%',
+                height: '100%',
+                id: 'Doughnut2D_3',
+                dataFormat: 'json',
+                dataSource: salesVolChartData
+            });
+        }
+        else {
+            $("#SalesVolRadial_Chart").updateFusionCharts({
+                dataSource: salesVolChartData
+            });
+        }
+    }
+</script>

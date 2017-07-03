@@ -1,0 +1,75 @@
+@model DistributorBackOffice.Models.Home.WidgetModel
+@{
+    var periods = Model.CurrentAndPastPeriods;
+    var periodsDictionary = periods.ToDictionary(os => os.PeriodId.ToString(), os => os.Description);
+}
+<!-- performance widget -->
+<script type="text/javascript">
+    $(function () {
+        $('#performanceOverviewPeriod').parent().hide();
+        $('#performanceOverviewPeriod').change(function () {
+            var p = $('#performanceOverviewBody');
+            showLoading(p, { height: 'auto' });
+            $.get('@Href("~/Performance/GetPerformanceOverview")', { periodId: $(this).val(), showPerformanceWidgets: true }, function (response) {
+                hideLoading(p);
+                if (response.result) {
+                    p.html(response.data);
+                    p.find('ul.lr li:odd').addClass('Alt');
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        }).one('change', function () {
+            if ($('#performanceOverviewPeriod option').length > 0) {
+                $('#performanceOverviewPeriod').parent().show();
+            }
+        }).triggerHandler('change');
+
+        $('#performanceOverviewPeriodPrev').click(function () {
+            var selected = $('#performanceOverviewPeriod option:selected');
+            if (selected.next().length) {
+                selected.removeAttr('selected');
+                selected.next().attr('selected', 'selected');
+                $('#performanceOverviewPeriod').triggerHandler('change');
+            }
+        });
+
+        $('#performanceOverviewPeriodNext').click(function () {
+            var selected = $('#performanceOverviewPeriod option:selected');
+            if (selected.prev().length) {
+                selected.removeAttr('selected');
+                selected.prev().attr('selected', 'selected');
+                $('#performanceOverviewPeriod').triggerHandler('change');
+            }
+        });
+    });
+</script>
+<div class="WidgetWrap Performance">
+    <div class="Widget">
+        <div class="UI-btn txtShadowDrk WidgetTitle">
+            <span class="Txt UI-btn">
+                @Html.Term("PerformanceOverview", "Performance Overview")</span> <span class="FR WidgetControls">
+                    <a href="javascript:void(0);" onclick="javascript:hideWidget(@Model.Widget.WidgetID);"
+                        title="@Html.Term("RemoveThisWidgetFromYourDashboard", "Remove this widget from your dashboard")">
+                        <span>X</span></a></span>
+        </div>
+        <div class="center UI-lightBg pad5 brdrAll WidgetUtility">
+            <a id="performanceOverviewPeriodPrev" href="javascript:void(0);" class="FL UI-icon-container ImgPrev prev UI-linkAlt" title="@Html.Term("PreviousMonth", "Previous Month")">
+                <span class="UI-icon icon-arrowPrev"></span></a>
+            <select id="performanceOverviewPeriod">
+                @foreach (var key in periodsDictionary.Keys)
+                {
+                    <option value="@key">
+                        @periodsDictionary[key]</option>
+                }
+            </select>
+            <a id="performanceOverviewPeriodNext" href="javascript:void(0);" class="FR UI-icon-container ImgNext next UI-linkAlt"
+                title="@Html.Term("NextMonth", "Next Month")"><span class="UI-icon icon-arrowNext">
+                </span></a>
+        </div>
+        <span class="clr"></span>
+        <div class="WidgetBody flatList" id="performanceOverviewBody">
+        </div>
+    </div>
+</div>
+<!--end widget -->

@@ -1,0 +1,44 @@
+﻿@model PaginatedList<OrderSearchData>
+<div id="previousOrderDiv" class="mContent modalContent overflow">
+    @{
+    var anonOrder = CoreContext.CurrentOrder;
+    if (anonOrder != null)
+    {
+        Model.RemoveAll(osd => osd.OrderID == anonOrder.OrderID);
+    }
+    if (Model.Count > 0)
+    {
+        CoreContext.HasModalBeenShown = true;
+        
+        var previousOrder = Model.First();
+        if (anonOrder != null && anonOrder.OrderCustomers.FirstOrDefault() != null
+            && anonOrder.OrderCustomers[0].OrderItems.Count > 0)
+        {
+        <h2>
+            @Html.Term("Login_Success_Title_OnLogin_Modal", "Login Success")
+        </h2>
+        <label for="party@(previousOrder.OrderID)">
+            <span class="clr pad5 bold">@Html.Term("ContinueToPrevOrderPrompt", "Would you like to load your previous order?")</span>
+            <a href="@Url.Resolve("~/Cart", new { orderID = previousOrder.OrderID })" class="FR Button m5">
+                <span>@Html.Term(" Yes", "Yes")</span> </a>
+        </label>
+        <a id="DoNotReloadPrevious" href="#" class="FL pad5 mt5 jqmClose"><span>@Html.Term("No_Thank_You", "No Thank You")</span></a>
+        }
+        else
+        {
+        <div id="welcomeBackDiv" class="welcomeBack">
+            <h2>@Html.Term("Welcome_Back_Title_On_Login_Modal", "Welcome Back")</h2>
+            <span class="clr pad5 bold">@Html.Term("LastOrderLoadedMessage", "Your last order has been loaded for your convenience.")</span>
+            <a href="#" class="FR Button mt5 jqmClose"><span>@Html.Term("Close")</span></a>
+        </div>
+        }
+        <script type="text/javascript">
+            $(document).ready(function () {
+                if ($('#welcomeBackDiv').length > 0) {
+                    $.post('/Cart/SetOrderGiven', { orderID: '@previousOrder.OrderID' });
+                }
+            });
+        </script>
+    }
+    }
+</div>

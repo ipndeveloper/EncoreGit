@@ -1,0 +1,151 @@
+@using DistributorBackOffice.Models
+@section head {
+  <style type="text/css">
+    #isDeferredSelectFilter {  width: 9em; }
+    #forefitSelectFilter {  width: 9em; }    
+    #idInputFilter {  width: 9em; }  
+    #orderNumberInputFilter {  width: 9em; } 
+    #endDateInputFilter {  width: 9em; } 
+    #expirationDateInputFilter{  width: 9em; } 
+  </style> 
+  
+  <script type="text/javascript">
+      $(function () {
+          $("#idInputFilter").removeClass("TextInput");
+          $("#orderNumberInputFilter").removeClass("TextInput");
+          $("#endDateInputFilter").removeClass("TextInput");
+          $("#expirationDateInputFilter").removeClass("TextInput");
+
+          //Obtener informacion del viewTicket y la exportacion a pdf de las filas seleccionadas
+
+
+
+      });
+
+      function loadBillingInformation(OrderPaymentID) {
+      
+          var url = '@Href("~/Orders/PaymentTickets/ExportarBoletaRepositorio")';          
+          var OrderPaymentIDs = new Array();
+          OrderPaymentIDs.push(OrderPaymentID);
+
+          var odata = JSON.stringify({ OrderPaymentID: OrderPaymentID });
+
+          $.ajax({
+              data: odata,
+              url: url,
+              dataType: "json",
+              type: "POST",
+              contentType: "application/json",
+              success: function (response) {
+                  var response = response;
+                  var html = response.html;
+                  var BankCode = response.BankCode;
+
+                  if (response.result) {
+                      showMessage(response.message, false);
+                  } else {
+                      showMessage(response.message, true);
+                  }
+              },
+              error: function (error) {
+              }
+          });
+      }
+
+      function cargarBillingInformation(OrderPaymentID) {
+          
+          //              var url = '<%= ResolveUrl("~/Orders/PaymentTickets/VerificarTipoCuenta") %>';
+          var url = '@Href("~/Orders/PaymentTickets/VerificarTipoCuenta")';
+          // var data = ObtenerSeleccionados();
+          var OrderPaymentIDs = new Array();
+          OrderPaymentIDs.push(OrderPaymentID);
+
+          var odata = JSON.stringify({ OrderPaymentID: OrderPaymentID });
+
+          $.ajax({
+              data: odata,
+              url: url,
+              dataType: "json",
+              type: "POST",
+              contentType: "application/json",
+              success: function (response) {
+                  var response = response;
+                  var html = response.html;
+//                  var BankName = response.BankName;
+                  var BankName = 'nothing'; // response.BankName;
+                  var BankCode = response.BankCode;
+
+                  if (BankName != "") {
+                      //                          var url = '<%= ResolveUrl("~/Orders/PaymentTickets/ExportarBoleta") %>?';
+                      var url = '@Href("~/Orders/PaymentTickets/ExportarBoleta")?';
+
+                      url = url + "OrderPaymentID=" + OrderPaymentID + "&BankName=" + BankName + "&BankCode=" + BankCode;
+                      $("#frmExportar").attr("src", url);
+                  }
+              },
+              error: function (error) {
+              }
+          });
+      }
+</script>
+}
+@section title {
+    @Html.Term("PaymentTickets", "Payment Tickets")
+}
+@section rail {
+    <div class="SavedReports">
+        <div class="WidgetTitle UI-btn">
+            <span class="Title  UI-btn">
+                @Html.Term("SavedReports", "Saved Reports")</span>
+        </div>
+        <div class="listBody">
+            <ul class="listNav">
+                <li class="NA"><a href="@Href("~/Orders/OrderHistory")">
+                   <span class="FL"> @Html.Term("AllOrders", "All Orders")</span>
+                    <span id="allOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                <li class="Last30Days"><a href="@Href("~/Orders/OrderHistory", new { startDate = DateTime.Now.AddDays(-30).ToShortDateString(), endDate = DateTime.Now.EndOfDay().ToShortDateString() })">
+                    <span class="FL">@Html.Term("Last30Days", "Last 30 Days")</span>
+                    <span id="last30DaysOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                <li class="@Constants.OrderType.OnlineOrder.ToInt().ToString()"><a href="@Href("~/Orders/OrderHistory", new { type = Constants.OrderType.OnlineOrder.ToInt().ToString() })">
+                    <span class="FL">@Html.Term("OnlineOrders", "Online Orders")</span>
+                    <span id="retailOrdersCount" class="FR"></span>
+                    <span class="clr"></span></a></li>
+                @*<li class="@Constants.OrderType.PC.ToInt().ToString()"><a href="@Href("~/Orders/OrderHistory", new { type = Constants.OrderType.PC.ToInt().ToString() })">
+                    <span class="FL">@Html.Term("PCOrders", "PC Orders")</span>
+                    <span id="pcOrdersCount" class="FR"></span></a></li>*@
+                    <li class="@Constants.OrderType.OnlineOrder.ToInt().ToString()"><a href="@Href("~/Orders/PaymentTickets")">
+                    <span class="FL">@Html.Term("PaymentTickets", "Payment Tickets")</span>
+                    <span id="paymentTyckets" class="FR"></span>
+                    <span class="clr"></span></a></li>
+            </ul>
+        </div>
+    </div>
+}
+<div id="History_TabContent" class="ModuleBody TabberBody TabOrdersOverview" style="display: block;">
+@{Html.PaginatedGrid<PaymentTicketsSearchData>("~/Orders/PaymentTickets/GetPaymentTickets")
+        .AutoGenerateColumns()
+        //.AddColumn(Html.Term("Description"), "EntryDescription", false)     
+        .HideClientSpecificColumns_()
+        .AddInputFilter(Html.Term("TicketNumberr", "Ticket Number"), "id")
+        .AddInputFilter(Html.Term("OrderNumber", "Order Number"), "orderNumber")
+        .AddSelectFilter(Html.Term("IsDeferred", "Is Deferred"), "isDeferred",
+                        new Dictionary<string, string>() {
+                                                        { "0", Html.Term("No", "No") },                                   
+                                                        { "1", Html.Term("Yes", "Yes")}                                                           
+                                                         })
+        .AddInputFilter(Html.Term("ExpirationDate", "Expiration Date"), "expirationDate",null,true)
+        .AddInputFilter(Html.Term("To", "To"), "endDate", null, true, true)
+        
+        .AddSelectFilter(Html.Term("Forefit", "Forefit"), "forefit",
+                        new Dictionary<string, string>() {
+                                                            { "0", Html.Term("No", "No") },                                  
+                                                            { "1", Html.Term("Yes", "Yes")}                                                           
+                                                         })                          
+        .ClickEntireRow()
+        .Render();
+ }
+</div>
+   <iframe   name ="frmExportar" id="frmExportar" style="display:none" src="">
+        </iframe>

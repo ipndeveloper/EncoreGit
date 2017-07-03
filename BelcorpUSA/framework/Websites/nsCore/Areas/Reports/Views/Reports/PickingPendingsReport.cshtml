@@ -1,0 +1,37 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        exportE();
+        IsValid();
+    });
+
+    function IsValid() {
+        $('div.GridFilters a.filterButton').text('Refresh');
+        $('#paginatedGridOptions .clearFiltersButton').hide();
+    }
+
+    function exportE() {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/PickingPendingsExport")';
+        });
+    }
+
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetPickingPendingsReport")
+        .AddInputFilter(Html.Term("CUV", "CUV"), "cuv", ViewData["CUV"],false,true,true)
+        .AddColumn(Html.Term("Order Number"), "OrderNumber")
+        .AddColumn(Html.Term("Order Type"), "OrderType")
+        .AddColumn(Html.Term("Order Status"), "OrderStatus")
+        .AddColumn(Html.Term("Account Number"), "AccountNumber")
+        .AddColumn(Html.Term("REP Name"), "REPName")
+        .AddColumn(Html.Term("Order Date"), "OrderDate")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow();
+    grid.Render(); 
+}
+
+

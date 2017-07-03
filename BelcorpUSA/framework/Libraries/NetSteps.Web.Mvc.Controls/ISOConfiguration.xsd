@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.netsteps.com/ISOConfiguration" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="ISOs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" name="ISO">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="PostalCodeLookup">
+								<xs:complexType>
+									<xs:attribute name="Enabled" type="xs:boolean" use="required" />
+									<xs:attribute name="Regex" type="xs:string" use="optional" />
+									<xs:attribute name="PostalCodeFieldName" type="xs:string" use="optional" />
+									<xs:attribute name="LookupURL" type="xs:string" use="optional" />
+								</xs:complexType>
+							</xs:element>
+                            <xs:element name="ProvinceValueToUse">
+                                <xs:complexType>
+                                    <xs:attribute name="UseProvinceName" type="xs:boolean" use="optional" />
+                                </xs:complexType>
+                            </xs:element>
+							<xs:element name="Tags">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="unbounded" name="Tag">
+											<xs:complexType>
+												<xs:sequence minOccurs="0">
+													<xs:element minOccurs="0" name="BeforeTag" type="xs:string" />
+													<xs:element minOccurs="0" name="InTag" type="xs:string" />
+													<xs:element minOccurs="0" name="AfterTag" type="xs:string" />
+												</xs:sequence>
+												<xs:attribute name="Id" type="xs:string" use="required" />
+												<xs:attribute name="TagName" type="xs:string" use="required" />
+												<xs:attribute name="DefaultLabel" type="xs:string" use="required" />
+												<xs:attribute name="LabelTermName" type="xs:string" use="required" />
+												<xs:attribute name="IsRequired" type="xs:boolean" use="required" />
+												<xs:attribute name="DefaultRequiredMessage" type="xs:string" use="optional" />
+												<xs:attribute name="RequiredMessageTermName" type="xs:string" use="optional" />
+												<xs:attribute name="Field" type="xs:string" use="required" />
+												<xs:attribute name="MaxLength" type="xs:integer" use="optional" />
+												<xs:attribute name="Regex" type="xs:string" use="optional" />
+												<xs:attribute name="LiveRegexCheck" type="xs:boolean" use="optional" />
+												<xs:attribute name="DefaultRegexFailMessage" type="xs:string" use="optional" />
+												<xs:attribute name="RegexFailMessageTermName" type="xs:string" use="optional" />
+												<xs:attribute name="Width" type="xs:integer" use="optional" />
+												<xs:attribute name="FocusElementOnFilled" type="xs:string" use="optional" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="Id" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

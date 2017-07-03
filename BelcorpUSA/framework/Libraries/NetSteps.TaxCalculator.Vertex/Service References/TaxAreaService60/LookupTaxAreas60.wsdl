@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:vev="urn:vertexinc:o-series:tps:6:0" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://www.vertexinc.com/oseries/services/LookupTaxAreas60" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://www.vertexinc.com/oseries/services/LookupTaxAreas60" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import schemaLocation="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60?xsd=1" namespace="urn:vertexinc:o-series:tps:6:0" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="lookupTaxAreasRequest">
+    <wsdl:part name="inDoc" element="vev:VertexEnvelope" />
+  </wsdl:message>
+  <wsdl:message name="lookupTaxAreasResponse">
+    <wsdl:part name="VertexEnvelope" element="vev:VertexEnvelope" />
+  </wsdl:message>
+  <wsdl:portType name="LookupTaxAreasWS60">
+    <wsdl:operation name="LookupTaxAreas60">
+      <wsdl:input name="lookupTaxAreasRequest" message="tns1:lookupTaxAreasRequest" />
+      <wsdl:output name="lookupTaxAreasResponse" message="tns1:lookupTaxAreasResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LookupTaxAreas60SoapBinding" type="tns1:LookupTaxAreasWS60">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="LookupTaxAreas60">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="lookupTaxAreasRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lookupTaxAreasResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LookupTaxAreasWSService60">
+    <wsdl:port name="LookupTaxAreas60" binding="tns1:LookupTaxAreas60SoapBinding">
+      <wsdlsoap:address location="https://goldcanyon.ondemand.vertexinc.com:443/vertex-ws/services/LookupTaxAreas60" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,35 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Areas/GeneralLedger/Views/Shared/GeneralLedger.Master" %>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+<%if(Request.Url.LocalPath == "/GeneralLedger"){ %>
+
+	<script type="text/javascript">
+	    $(function () {
+	        $('.SectionLinks a:first').addClass('selected');
+	    });
+	</script>
+<%} %>
+	<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="LeftNav" runat="server">
+	<asp:ContentPlaceHolder ID="LeftNav" runat="server">
+		<div class="SectionNav">
+			<%--<ul class="SectionLinks">
+				<%= Html.SelectedLink("~/Holiday/Index", Html.Term("HolidayCalendarAddNew", "Add New Holiday"), new List<string>() { "~/GeneralLedger/Holiday/Index" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Holiday")%>
+				<%= Html.SelectedLink("~/Holiday/Browse", Html.Term("HolidayCalendarBrowse", "Browse Holidays"), new List<string>() { "~/GeneralLedger/Holiday/Browse", "~/GeneralLedger/Holiday/Browse" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Holiday")%>
+			</ul>--%>
+            <ul class="SectionLinks">
+				<%= Html.SelectedLink("~/GeneralLedger/Holiday/Index", Html.Term("BrowseCatalogs1", "Add New Holiday"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+				<%= Html.SelectedLink("~/GeneralLedger/Holiday/Browse", Html.Term("BrowseCategoryTrees1", "Browse Holidays"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Products")%>
+			</ul>
+		</div>
+	</asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+	<asp:ContentPlaceHolder ID="MainContent" runat="server" />
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="BreadCrumbContent" runat="server">
+	<asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+</asp:Content>

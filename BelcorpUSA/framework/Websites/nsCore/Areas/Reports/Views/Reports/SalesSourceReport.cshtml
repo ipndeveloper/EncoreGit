@@ -1,0 +1,29 @@
+﻿@using NetSteps.Data.Entities.Business
+@using NetSteps.Data.Entities.Cache
+@using System.Linq
+
+<script type="text/javascript">
+    $(function () {
+        $('#exportToExcel').click(function () {
+            window.location = '@Href("~/Reports/Reports/SalesSourceExport")';
+        });
+    });
+</script>
+@{
+    var grid = Html.PaginatedGrid("~/Reports/Reports/GetSalesSourceReport")
+        .AddInputFilter(Html.Term("Month", "Month"), "month", ViewData["Month"])
+
+        .AddInputFilter(Html.Term("ProductSalesIni1", "Product Sales --> Min"), "productSalesIni", ViewData["ProductSalesIni"])
+        .AddInputFilter(Html.Term("ProductSalesFin1", "--> Max"), "productSalesFin", ViewData["ProductSalesFin"])
+
+        .AddInputFilter(Html.Term("StarterKitSalesIni1", "Starter Kit Sales --> Min"), "sarterKitSalesIni", ViewData["StarterKitSalesIni"])
+        .AddInputFilter(Html.Term("StarterKitSalesFin1", "--> Max"), "sarterKitSalesFin", ViewData["StarterKitSalesFin"])
+
+        .AddColumn(Html.Term("Month"), "Month")
+        .AddColumn(Html.Term("NoKit"), "NoKit")
+        .AddColumn(Html.Term("Kit"), "Kit")
+        .AddOption("exportToExcel", Html.Term("ExportToExcel", "Export to Excel"))
+        .ClickEntireRow()
+        ;
+    grid.Render(); 
+}

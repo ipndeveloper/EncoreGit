@@ -1,0 +1,465 @@
+﻿@model Order
+@{
+    ViewBag.Title = Html.Term("Rewards");
+    var customer = Model.OrderCustomers.FirstOrDefault();
+}
+@section head {
+    <link rel="Stylesheet" type="text/css" href="@Url.Content("~/Resource/Content/CSS/jsonSuggest.css")" />
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/jsonSuggest.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Resource/Scripts/numeric.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            function updateCartAndTotals(response) {
+                if (response.orderItems) {
+                    var orderItem, i;
+                    $('#hostOrderItems tr.EmptyCart').hide();
+                    for (i = 0; i < response.orderItems.length; i++) {
+                        orderItem = $('#oi' + response.orderItems[i].orderItemId);
+                        if (orderItem.length) {
+                            orderItem.replaceWith(response.orderItems[i].orderItem);
+                        } else {
+                            $('#hostOrderItems').append(response.orderItems[i].orderItem);
+                        }
+                    }
+                }
+
+                updateRemainingProductDiscounts(response.remainingProductDiscounts);
+
+                if (response.showOutOfStockMessage) {
+                    $('#outOfStockMessage').show();
+                    $('#outOfStockProducts').append('<li>' + lastProduct + '</li>');
+                }
+
+                // refresh the totals
+                updateTotals(response);
+                $('input.quantity').numeric();
+            }
+
+            function updateTotals(response) {
+                $.each(['hostOverage', 'subtotal', 'commissionableTotal', 'taxTotal', 'shippingAndHandlingTotal', 'grandTotal'], function (i, item) {
+                    $('#hostTotals .' + item).text(response.totals[item]);
+                });
+
+                $('#hostCreditRemaining').text(response.totals.hostCreditRemaining);
+            }
+
+            $('input.quantity').numeric();
+            $('input.productLookUp').jsonSuggest('@Url.Resolve("~/Cart/SearchRewardProducts")', {
+                minCharacters: 3,
+                ajaxResults: true,
+                onSelect: function (item) {
+                    var p = $(this).parent();
+                    p.find('input.productId').val(item.id);
+                    p.find('input.quantity').val('1');
+                }
+            });
+
+            function addToCart(url) {
+                var p = $(this).parent(), t = $(this);
+                showLoading(t);
+
+                var hostRewardRuleId = undefined;
+
+                if (t.is('#percentOffAddToCart')) {
+                    hostRewardRuleId = $('.hostRewardRuleId').val();
+                }
+
+                if (t.is('#itemDiscountAddToCart')) {
+                    hostRewardRuleId = $('.itemDiscountHostRewardRuleId').val();
+                }
+
+                if (t.is('#hostCreditAddToCart')) {
+                    hostRewardRuleId = $('.hostCreditRewardRuleId').val();
+                }                
+
+                $.post(url, {
+                    productId: p.find('input.productId').val(),
+                    quantity: p.find('input.quantity').val(),
+                    hostRewardRuleId: hostRewardRuleId
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        lastProduct = p.find('productLookUp').val();
+                        updateCartAndTotals(response);
+                        p.find('input.productLookUp,input.productId').val('').find('input.quantity').val('1');
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            }
+
+            $('#hostCreditAddToCart').click(function () {
+                addToCart.apply(this, ['@Url.Resolve("~/Cart/RedeemHostCredit")']);
+            });
+
+            $('#percentOffAddToCart').click(function () {
+                addToCart.apply(this, ['@Url.Resolve("~/Cart/RedeemPercentOff")']);
+            });
+
+            $('#itemDiscountAddToCart').click(function () {
+                addToCart.apply(this, ['@Href("~/Cart/RedeemItemDiscount")']);
+            });
+
+            $('a.RemoveOrderItem').live('click', function () {
+                var t = $(this);
+                showLoading(t);
+
+                $('.orderItemId', t).val();
+
+                $.post('@Url.Resolve("~/Cart/Remove")', { orderItemGuid: $('.orderItemId', t).val()
+                }, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        var oi = $('#hostessOrderItems');
+                        t.closest('tr').remove();
+                        if (oi.find('tr').length == 1)
+                            oi.find('tr').show();
+                        updateCartAndTotals(response);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+
+            $('#update').click(function () {
+                var data = {}, t = $(this);
+
+                $('#hostOrderItems tr:has(input.quantity)').each(function (i) {
+                    data['orderItems[' + i + '].Key'] = $('.orderItemId', this).val();
+                    data['orderItems[' + i + '].Value'] = $('.quantity', this).val();
+                });
+
+                showLoading(t);
+                $.post('@Url.Resolve("~/Cart/UpdateRewardQuantities")', data, function (response) {
+                    hideLoading(t);
+                    if (response.result) {
+                        updateCartAndTotals(response);
+                    } else {
+                        showMessage(response.message, true);
+                    }
+                });
+            });
+            $('input.productLookUp').watermark('@Html.JavascriptTerm("ProductLookUpInputWatermark", "Enter SKU or product name")');
+
+            var warned = false;
+            $('#btnNext').click(function () {
+                if ((parseFloat($('#hostCreditRemaining').text().replace(/[^\d\.]/g, '')) > 0 || /:\s[1-9]/.test($('#productDiscountChoice').html())) && !warned) {
+                    warned = true;
+                    $(this).before('<div class="UI-Alert pad10">@Html.Term("YouHaveUnclaimedRewards", "You have unclaimed rewards.  Are you sure you would like to continue?")</div>');
+                } else {
+                    $.post('@Href("~/Cart/FinalizeHostessRewards")', function (response) {                        
+                        if (response.result) {
+                            window.location = '@Url.Resolve("~/Checkout/Shipping")';
+                        }
+                        else
+                        {
+                            showMessage(response.message, true);
+                        }
+                    }); 
+                }
+            });
+
+            function updateRemainingProductDiscounts(remainingProductDiscounts) {
+
+                if (remainingProductDiscounts) {
+                    var i, productDiscount;
+                    for (i in remainingProductDiscounts) {
+                        productDiscount = $('#productDiscountChoice *[value="' + i + '"]');
+                        if (productDiscount.is('input')) {
+                            productDiscount.parent().html(productDiscount.parent().html().replace(/:\s\d+/, ': ' + remainingProductDiscounts[i]));
+                        } else {
+                            productDiscount.text(productDiscount.text().replace(/:\s\d+/, ': ' + remainingProductDiscounts[i]));
+                        }
+                    }
+                }
+
+            };
+
+            var remainProducts = @Html.Raw(ViewData["RemainingProductDiscounts"].ToJSON());
+        
+            updateRemainingProductDiscounts(remainProducts);
+        });
+    </script>
+}
+<div class="shoppingCartPane">
+    <div class="shoppingCartInnerPane">
+        <div class="PageTitle">
+            <h1>@Html.Term("Rewards")</h1>
+        </div>
+        @if (ViewBag.Content != null)
+        {
+            @(((HtmlSection)ViewBag.Content).ToDisplay((int)ViewBag.Page.PageID))
+        }
+        <div class="clr brdrAll brdr1 mb10 partySection-Customers">
+            <div class="brdrYYNN sectionHeader">
+                <div class="UI-bg UI-header pad10">@Html.Term("Cart")</div>
+            </div>
+            <div class="pad5">
+                <!-- Rewards UI -->
+                <div class="UI-lightBg @(ViewBag.ProductDiscounts == null ? "" : "FL splitCol ")brdrAll rewardsHostCredit">
+                    <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                        <span class="FL">@Html.Term("PWSHostCredit", "Host Credit")</span>
+                        <div class="FR">
+                            <span class="bold">@Html.Term("PWSHostCreditRemaining", "Remaining"): <span id="hostCreditRemaining">@(Model.GetRemainingHostessRewards().ToString(Model.CurrencyID))</span>
+                            </span>                            
+                            <input type="hidden" class="hostCreditRewardRuleId" value="@(ViewData["HostCreditRewardRuleID"])" />
+                        </div>
+                        <span class="clr"></span>
+                    </div>
+                    <div class="brdrNNYY pad5 CartTools">
+                        <div class="FL mr10" style="width:80%;">
+                            @* <b>@Html.Term("Item")</b>:*@
+                            <input id="hostCreditProductLookup" type="text" value="" class="TextInput productLookUp" title="@Html.Term("Item")" />
+                            <input id="hostCreditProductId" type="hidden" value="" class="productId" />
+                        </div>
+                        <div class="FL mr10">
+                            @* <b>@Html.Term("Quantity")</b>:*@
+                            <input id="hostCreditQuantity" type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" title="@Html.Term("Quantity")" />
+                        </div>
+                        <a id="hostCreditAddToCart" class="FL UI-icon-container addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+                            <span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+                    </div>
+                </div>
+                @if (ViewBag.ProductDiscounts != null && ((IEnumerable<HostessRewardRule>)ViewBag.ProductDiscounts).Count() > 0)
+                {
+                    <div class="UI-lightBg FR splitCol brdrAll rewardsDiscounts">
+                        <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                            <span class="FL">@Html.Term("ProductDiscounts", "Product Discounts")</span>
+                            <div class="FR">@Html.Term("ProductDiscountsEarned", "Product Discounts Earned"): <span
+                                id="productDiscountChoice">
+                                @if (((IEnumerable<HostessRewardRule>)ViewBag.ProductDiscounts).Count() == 1)
+                                {
+                                    var discount = ((IEnumerable<HostessRewardRule>)ViewBag.ProductDiscounts).First();
+                                    var numOfRedeemedItems = customer.OrderItems.Where(oi => oi.OrderItemTypeID == (int)Constants.OrderItemType.PercentOff && oi.DiscountPercent == discount.ProductDiscount).Sum(oi => oi.Quantity);
+                                    @discount.ProductDiscount.ToDecimal().ToString("P")<text>: </text>@(discount.Products - numOfRedeemedItems)
+                                    <input type="hidden" class="hostRewardRuleId" value="@discount.HostessRewardRuleID" />
+                                }
+                                else
+                                {
+                                    <select class="hostessRewardRuleId">
+                                        @foreach (HostessRewardRule discount in ViewBag.ProductDiscounts)
+                                        {
+                                            var numOfRedeemedItems = customer.OrderItems.Where(oi => oi.OrderItemTypeID == (int)Constants.OrderItemType.PercentOff && oi.DiscountPercent == discount.ProductDiscount).Sum(oi => oi.Quantity);
+                                            <option value="@discount.HostessRewardRuleID">@discount.ProductDiscount.ToDecimal().ToString("P"):
+                                                @(discount.Products - numOfRedeemedItems)
+                                            </option>
+                                        }
+                                    </select>
+                                }
+                            </span>
+                            </div>
+                            <span class="clr"></span>
+                        </div>
+                        <div class="brdrNNYY pad5 CartTools">
+                            <div class="FL mr10" style="width:80%;">
+                                @*<b>@Html.Term("Item")</b>:*@
+                                <input id="percentOffProductLookup" type="text" value="" class="TextInput productLookUp"  title="@Html.Term("Item")" />
+                                <input id="percentOffProductId" type="hidden" value="" class="productId" />
+                            </div>
+                            <div class="FL mr10">
+                                @*<b>@Html.Term("Quantity")</b>:*@
+                                <input id="percentOffQuantity" type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" title="@Html.Term("Quantity")" />
+                            </div>
+                            <a id="percentOffAddToCart" class="FL UI-icon-container addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+                                <span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+                        </div>
+                    </div>
+                }
+                
+                @if (ViewBag.ItemDiscounts != null && ((IEnumerable<HostessRewardRule>)ViewBag.ItemDiscounts).Count() > 0)
+                {
+                    <div class="UI-lightBg FR splitCol brdrAll rewardsDiscounts">
+                        <div class="UI-mainBg brdrYYNN bold pad5 headerBar">
+                            <span class="FL">@Html.Term("HostessItemDiscounts", "Product Discounts")</span>
+                            <div class="FR">@Html.Term("HostessItemDiscount", "Product Discount"): <span
+                                id="productDiscountChoice">
+                                @if (((IEnumerable<HostessRewardRule>)ViewBag.ItemDiscounts).Count() == 1)
+                                {
+                                    var discount = ((IEnumerable<HostessRewardRule>)ViewBag.ItemDiscounts).First();
+                                   @discount.ProductDiscount.ToDecimal().ToString("P")
+                                    <input type="hidden" class="itemDiscountHostRewardRuleId" value="@discount.HostessRewardRuleID" />
+                                }
+                                else
+                                {
+                                    <select class="hostessRewardRuleId">
+                                        @foreach (HostessRewardRule discount in ViewBag.ProductDiscounts)
+                                        {   
+                                            <option value="@discount.HostessRewardRuleID">@discount.ProductDiscount.ToDecimal().ToString("P")
+                                            </option>
+                                        }
+                                    </select>
+                                }
+                            </span>
+                            </div>
+                            <span class="clr"></span>
+                        </div>
+                        <div class="brdrNNYY pad5 CartTools">
+                            <div class="FL mr10" style="width:80%;">
+                                @*<b>@Html.Term("Item")</b>:*@
+                                <input id="itemDiscountProductLookup" type="text" value="" class="TextInput productLookUp"  title="@Html.Term("Item")" />
+                                <input id="itemDiscountProductId" type="hidden" value="" class="productId" />
+                            </div>
+                            <div class="FL mr10">
+                                @*<b>@Html.Term("Quantity")</b>:*@
+                                <input id="itemDiscountQuantity" type="text" value="1" maxlength="3" class="TextInput numeric quantity" autocomplete="off" title="@Html.Term("Quantity")" />
+                            </div>
+                            <a id="itemDiscountAddToCart" class="FL UI-icon-container addToCart" href="javascript:void(0);" title="@Html.Term("AddToCart", "Add to cart")">
+                                <span class="UI-icon icon-plus"></span></a><span class="clr"></span>
+                        </div>
+                    </div>
+                }
+
+                <!--/ End Rewards UI -->
+                <table width="100%" cellspacing="0" class="mt10 DataGrid">
+                    <thead class="UI-bg UI-header">
+                        <tr>
+                            <th style="width: 10px;">
+                            </th>
+                            <th style="width: 80px;">@Html.Term("SKU")
+                            </th>
+                            <th style="width: 250px;">@Html.Term("Product")
+                            </th>
+                            <th>@Html.Term("Price")
+                            </th>
+                            <th>@Html.Term("Quantity")
+                            </th>
+                            <th>@Html.Term("Discount")
+                            </th>
+                            <th>@Html.Term("Total")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="hostOrderItems">
+                        <tr class="EmptyCart" style="@(customer.OrderItems.Count > 0 ? "display:none;" : "")">
+                            <td class="Lawyer" colspan="8">
+                                @Html.Term("CartIsCurrentlyEmpty", "Cart is currently empty")
+                            </td>
+                        </tr>
+												@{ var inventory = NetSteps.Encore.Core.IoC.Create.New<InventoryBaseRepository>(); }
+												@foreach (var orderItem in customer.OrderItems.Where(oi => oi.OrderItemTypeID != (int)Constants.OrderItemType.HostCredit && oi.OrderItemTypeID != (int)Constants.OrderItemType.PercentOff))
+                        {
+                            var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+                            <tr id="@("oi" + orderItem.Guid.ToString("N"))">
+                                <td class="icon-24">
+                                </td>
+                                <td>
+                                    <input type="hidden" value="@orderItem.Guid.ToString("N")" class="orderItemId" />
+                                    <input type="hidden" value="@product.ProductID" class="productId" />
+                                    @orderItem.SKU
+                                </td>
+                                <td>
+                                    @product.Translations.Name()
+                                </td>
+                                <td>
+                                    @orderItem.ItemPrice.ToString(Model.CurrencyID)
+                                </td>
+                                <td>
+                                    @orderItem.Quantity
+                                </td>
+                                <td>
+                                    @(0M.ToString(Model.CurrencyID))
+                                </td>
+                                <td>
+                                    @(orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(Model.CurrencyID)
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var orderItem in customer.OrderItems.Where(oi => oi.OrderItemTypeID == (int)Constants.OrderItemType.HostCredit || oi.OrderItemTypeID == (int)Constants.OrderItemType.PercentOff))
+                        {
+                            var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+                            <tr id="@("oi" + orderItem.Guid.ToString("N"))">
+                                <td class="icon-24">
+                                    <a href="javascript:void(0);" class="UI-icon icon-x RemoveOrderItem" title="@Html.Term("RemoveItemFromCart", "Remove item from cart")">
+                                        <input type="hidden" value="@orderItem.Guid.ToString("N")" class="orderItemId" /></a>
+                                    <input type="hidden" value="@product.ProductID" class="productId" />
+                                </td>
+                                <td>
+                                    @orderItem.SKU
+                                </td>
+                                <td>
+                                    @product.Translations.Name()
+                                </td>
+                                <td>
+                                    @orderItem.ItemPrice.ToString(Model.CurrencyID)
+                                </td>
+                                <td>
+                                    <input type="text" class="quantity" value="@orderItem.Quantity" style="width:50px;" />
+                                </td>
+                                <td>
+                                    @if (orderItem.Discount.HasValue)
+                                    {
+                                        @orderItem.Discount.Value.ToString(Model.CurrencyID)
+                                    }
+                                    else if (orderItem.DiscountPercent.HasValue)
+                                    {
+                                        @(((orderItem.ItemPrice * orderItem.Quantity) * orderItem.DiscountPercent).ToString(Model.CurrencyID))@:&nbsp;
+                                @Html.Term("XPercentOff", "({0} off)", orderItem.DiscountPercent.ToDecimal().ToString("P"))
+                                    }
+                                </td>
+                                <td>
+                                    @(orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString(Model.CurrencyID)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tbody id="hostTotals" class="GuestTotals">
+                        <tr>
+                            <td colspan="4">
+                            </td>
+                            <td>
+                                <a id="update" href="javascript:void(0);" class="DTL Update updateCart">
+                                    @Html.Term("Update")</a>
+                            </td>
+                            <td colspan="2">
+                            </td>
+                        </tr>
+                        <tr class="GuestTotal">
+                            <td colspan="6" class="bold right">
+                                <span>@Html.Term("Overage")</span>:
+                            </td>
+                            <td>
+                                <span class="hostOverage Total">@Model.HostessOverage.ToString(Model.CurrencyID)</span>
+                            </td>
+                        </tr>
+                        <tr class="GuestTotal">
+                            <td colspan="6" class="bold right">
+                                <span>@Html.Term("Subtotal")</span>:
+                            </td>
+                            <td>
+                                <span class="subtotal Total">@Model.Subtotal.ToString(Model.CurrencyID)</span>
+                            </td>
+                        </tr>
+                        <tr class="GuestTotal">
+                            <td colspan="6" class="bold right">
+                                <span>@Html.Term("Tax")</span>:
+                            </td>
+                            <td>
+                                <span class="taxTotal Total">@Model.TaxAmountTotal.ToString(Model.CurrencyID)</span>
+                            </td>
+                        </tr>
+                        <tr class="GuestTotal">
+                            <td colspan="6" class="bold right">
+                                <span>@Html.Raw(Html.Term("ShippingAndHandling", "Shipping &amp; Handling")):</span>
+                            </td>
+                            <td>
+                                <span class="shippingAndHandlingTotal Total">@((Model.ShippingTotal + Model.HandlingTotal).ToString(Model.CurrencyID))</span>
+                            </td>
+                        </tr>
+                        <tr class="UI-secBg GuestTotal GuestTotalBalance">
+                            <td colspan="6" class="bold right">
+                                <span>@Html.Term("Total"):</span>
+                            </td>
+                            <td class="bold">
+                                <span class="grandTotal Total">@Model.GrandTotal.ToString(Model.CurrencyID)</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="FormSubmit">
+            <a id="btnNext" href="javascript:void(0);" class="Button"><span>@Html.Term("Continue")</span></a>
+        </p>
+    </div>
+</div>
+@Html.Partial("MessageCenter")

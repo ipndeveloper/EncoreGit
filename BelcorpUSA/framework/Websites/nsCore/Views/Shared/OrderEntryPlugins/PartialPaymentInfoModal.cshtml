@@ -1,0 +1,28 @@
+﻿@model OrderEntryModel
+
+<div id="paymentInfoModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <h3>
+            @Html.Term("BillingInformation", "Billing Information")</h3>
+        <table id="paymentInfo" width="100%">
+        </table>
+        <a href="javascript:void(0);" class="jqmClose">
+            @Html.Term("Close", "Close")</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function ()
+    {
+
+    });
+
+    function showPaymentModal(paymentGuid)
+    {
+        $.get('@Href("~/" + Model.GetPaymentLocation)', { paymentGuid: paymentGuid }, function (payment)
+        {
+            $('#paymentInfoModal #paymentInfo').empty().append(payment);
+            $('#paymentInfoModal').jqm({ modal: false }).jqmShow();
+        });
+    }
+</script>

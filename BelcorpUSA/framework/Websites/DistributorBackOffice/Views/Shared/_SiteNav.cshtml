@@ -1,0 +1,133 @@
+﻿
+ <script type="text/javascript">
+     $(function () {
+
+         $('#UI-siteNav li.Tab').hoverIntent(
+                function () { $(this).addClass('Selected'); $('.DropDown', this).slideDown('slow'); },
+				function () { $('.DropDown', this).fadeOut('slow', function () { $(this).clearQueue(); }); $(this).removeClass('Selected'); }
+            );
+     });
+ </script>
+
+<div id="ActiveLinkTerm" aria-hidden="true" data-icon="&#xe035;">@Html.Term("SiteNav_NavigateTo", "Navigate To...")</div>
+<ul class="FL inlineNav mainNav" id="UI-siteNav" style="font-size: small">
+    @*@Html.Tab("~/", Html.Term("DWS_SiteMenu_Home", "Home"), false, cssClass: "Nav-Dashboard", function: "Workstation-Home")*@
+    @Html.Tab("~/Orders", Html.Term("DWS_SiteMenu_Orders", "Orders"), true, cssClass: "Nav-Orders", function: "Orders")
+     @Html.Tab("~/Performance", Html.Term("DWS_SiteMenu_Performance", "Performance"), false, cssClass: "Nav-Performance", function: "Performance")
+   @* @Html.Tab("~/Security/ExternalToken?section=Home", Html.Term("DWS_SiteMenu_NewsConectados", "Noticias"), false, cssClass: "Nav-Support newsId", function: "News")*@
+
+   <li><a href="/News"  class="Nav-Support newsId"><span class="lbl"> @Html.Term("DWS_SiteMenu_Midia", "L'Bel Na Mídia")</span></a></li>
+
+     @* @Html.DropDownNavigation("Treinamentos", "", new List<NavigationItem>()
+		    {
+			new NavigationItem() { LinkText = "Produtos", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+            
+            new NavigationItem() { LinkText = "NEGÓCIOS", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+          
+			}) *@
+
+            <li class="Tab">
+              <a href="javascript:void(0);" style="cursor:default;"><span>Treinamentos</span></a>
+               <div class="DropDown" style="display: none;">
+                <ul>
+                <li><a href=@Html.Term("DWS_MENU_PRODUCTS_URL", "https://conectados.lbel.com.br/Treinamento?TipoTreinamento=Produtos&chave=5a6e84dd-d56e-4e27-8581-2cf1bc9117af&login=99999") target="_blank"><span>@Html.Term("DWS_MENU_PRODUCTS", "PRODUTOS")</span></a></li>
+                <li><a href=@Html.Term("DWS_MENU_BUSINESS_URL", "https://conectados.lbel.com.br/Treinamento?TipoTreinamento=Negócios&chave=5a6e84dd-d56e-4e27-8581-2cf1bc9117af&login=99999") target="_blank"><span>@Html.Term("DWS_MENU_BUSINESS", "NEGÓCIOS")</span></a></li>
+                <li><a href=@Html.Term("DWS_MENU_MATERIAL_URL", "Documents/?category=217")><span>@Html.Term("DWS_MENU_MATERIALS", "MATERIAL DE Divulgação")</span></a></li>
+                </ul>
+                <span class="ClearAll"></span>
+                </div>
+              </li>
+
+
+    @Html.Tab("~/Documents/?category=95", "Incentivos", false, cssClass: "Nav-News", function: "News")
+
+     @Html.Tab("~/Documents/?category=127", "RECONHECIMENTO", false, cssClass: "Nav-News", function: "News")
+
+     
+
+     @*@Html.Tab("~/News", "EVENTOS", false, cssClass: "Nav-News", function: "News")*@
+    @*@Html.Tab("~/Security/ExternalToken?section=Home", Html.Term("DWS_SiteMenu_TrainingConectados", "Treinamentos"), false, cssClass: "Nav-Support", function: "News")*@
+
+
+   @*  @Html.Tab("~/Communication", Html.Term("DWS_SiteMenu_Communication", "Communication"), true, cssClass: "Nav-Communication", function: "Communications")*@
+
+ 
+ @* @Html.DropDownNavigation("PLANO DE NEGÓCIO", "", new List<NavigationItem>()
+		    {
+			new NavigationItem() { LinkText = "MANUAL DE NEGÓCIO", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+            
+            new NavigationItem() { LinkText = "PLANO DE NEGÓCIO ", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+            
+            new NavigationItem() { LinkText = "CONVIDE À REDE", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+            
+            new NavigationItem() { LinkText = "Materiais Download", 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+          
+			}) *@
+
+
+
+            <li class="Tab">
+	            <a href="javascript:void(0);" style="cursor:default;">
+	            <span>PLANO DE NEGÓCIO</span>
+	            </a>
+            <div class="DropDown" style="display: none;">
+	            <ul>
+	            <li><a  href=@Html.Term("DWS_MANUAL_URL", "/FileUploads/Files/ManualdeNegócios_120716.pdf")><span>MANUAL DE NEGÓCIO</span>
+	            </a></li>
+	            <li><a href=@Html.Term("DWS_MANUAL_PLANO", "/FileUploads/Files/PlanodeNegocio_080716.pdf")><span>PLANO DE NEGÓCIO </span></a></li>
+	            </ul>
+	            <span class="ClearAll"></span>
+	            </div>
+	        </li>
+
+			
+			@*<li class="Tab">
+	            <a href="javascript:void(0);" style="cursor:default;">
+	            <span>CONTATO</span>
+	            </a>
+            <div class="DropDown" style="display: none;">
+	            <ul>
+	            <li><a  href=@Html.Term("DWS_SiteMenu_Contact", "Fale Conosco")><span>Fale Conosco</span>
+	            </a></li>
+	            <li><a href=@Html.Term("DWS_SiteMenu_Questions", "Perguntas")><span>Perguntas </span></a></li>
+	            </ul>
+	            <span class="ClearAll"></span>
+	            </div>
+	        </li>*@
+
+        @*Html.DropDownNavigation(Html.Term("DWS_SiteMenu_Contact", "Contato"), "", new List<NavigationItem>()
+		    {
+			new NavigationItem() { LinkText = Html.Term("DWS_SiteMenu_Conosco", "Fale Conozco"), 
+			Url = "http://www.somosbelcorp.com.br/emkt/nov16/SAC/faleconosco.html", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+            
+            new NavigationItem() { LinkText = Html.Term("DWS_SiteMenu_Questions", "Perguntas"), 
+			Url = "~/Commissions/Sponsor/", MappedUrls = new List<string>(){ "~/Commissions/Sponsor/*" } },
+          
+			}) *@
+
+            
+
+    
+   
+    @*@Html.Tab("~/Contacts", Html.Term("DWS_SiteMenu_Contacts", "Contacts"), false, cssClass: "Nav-Contacts", function: "Contacts")*@
+
+ 
+
+   @* @Html.Tab("~/Security/ExternalToken?section=FaleConozco", Html.Term("DWS_SiteMenu_ContactConectados", "Contact"), false, cssClass: "Nav-Support", function: "News")*@
+    @* @Html.Tab("~/Orders/OrderEntry/NewOrder", Html.Term("StartAPersonalOrder", "StartAPersonalOrder"), true)*@
+   @*@Html.Tab("~/Account", Html.Term("DWS_SiteMenu_Account", "My Account"), true, cssClass: "Nav-Account", function: "Accounts")*@
+    
+   @* @Html.Tab("~/Support?showOpenTickets=true", Html.Term("DWS_SiteMenu_Support", "Support"), false, cssClass: "Nav-Support", function: "Support")*@
+   
+ 
+			
+			
+            
+
+</ul>

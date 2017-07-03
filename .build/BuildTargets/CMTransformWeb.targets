@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file is used only on build machine for copying and transforming Web projects. Using Release build as a pattern, it creates all other
+	configs. TransformXml is called to create Web.config files for all other applicable configs.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+  <Target Name="CMTransformWeb" AfterTargets="Build" Condition="$(CMBuild) != '' and '$(Configuration)' == 'Release' and Exists('$(MSBuildProjectDirectory)\CMTransformWeb.marker')">
+    <MakeDir
+      Directories="$(MSBuildProjectDirectory)\bin\Release"
+    />
+    <MakeDir
+      Directories="$(MSBuildProjectDirectory)\bin\Staging"
+    />
+    <MakeDir
+      Directories="$(MSBuildProjectDirectory)\bin\Testing"
+    />
+    <TransformXml Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Release\Web.config" Transform="Web.Release.config" />
+    <TransformXml Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Staging\Web.config" Transform="Web.Staging.config" />
+    <TransformXml Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Testing\Web.config" Transform="Web.Testing.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Release.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Release\Web.CWS.config" Transform="Web.CWS.Release.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Staging.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Staging\Web.CWS.config" Transform="Web.CWS.Staging.config" />
+    <TransformXml Condition="Exists('$(MSBuildProjectDirectory)\Web.CWS.Testing.config')" Source="Web.config" Destination="$(MSBuildProjectDirectory)\bin\Testing\Web.CWS.config" Transform="Web.CWS.Testing.config" />
+  </Target>
+</Project>

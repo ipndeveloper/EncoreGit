@@ -1,0 +1,316 @@
+﻿@using NetSteps.Web.Mvc.Extensions
+@using NetSteps.Data.Entities.Cache
+@using NetSteps.Data.Entities.Extensions
+@using NetSteps.Web.Mvc.Helpers
+@model NetSteps.Data.Entities.Business.BonusRequirement
+
+@{
+    string headerMessage = string.Empty;
+                
+    if ((bool)ViewData["IsNew"])
+        { headerMessage = Html.Term("AddaNewCommissionRuleDetail", "Add a New Commission Rule Detail"); }
+    else
+        { headerMessage = Html.Term("EditNewCommissionRuleDetail", "Edit Commission Rule Detail"); }
+    }
+<script type ="text/javascript">
+    $(function () {
+
+
+        $('#newBonusRequirement').on('keyup', '.numeric', function(ev){
+  
+                 var cultureInfo = '@CoreContext.CurrentCultureInfo.Name';
+		        // var value = parseFloat($(this).val());
+
+               
+		        var formatDecimal = '$1.$2'; // valores por defaul 
+		        var formatMiles = ",";  // valores por defaul
+
+		        if (cultureInfo === 'en-US') {
+		             formatDecimal = '$1.$2';
+		             formatMiles = ",";
+		        }
+		        else if (cultureInfo === 'es-US') {
+		             formatDecimal = '$1,$2';
+		             formatMiles = ".";
+		        }
+		        else if (cultureInfo === 'pt-BR') {
+                     formatDecimal = '$1,$2';
+		             formatMiles = ".";
+		        }
+
+
+		        //            if (!isNaN(value)) {
+		        if (event.which >= 37 && event.which <= 40) {
+		            event.preventDefault();
+		        }
+
+		        $(this).val(function (index, value) {
+
+
+		            return value.replace(/\D/g, "")
+                                 .replace(/([0-9])([0-9]{2})$/, formatDecimal)
+                                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+		        });
+
+        });
+        $('.numeric').numeric();
+
+        $('#btnSave').click(function () {
+            if(Validate()) {                
+                var t = $("#frmFooter");
+                showLoading(t);
+
+                var url = "/BonusRequirement/Save"; 
+              
+                var data = {
+                BonusTypeId: $("#BonusTypeId").val(),
+                BonusAmount: $("#BonusAmount").val(),
+                BonusMaxAmount: $("#BonusMaxAmount").val(),
+                BonusPercent: $("#BonusPercent").val(),
+                BonusMaxPercent: $("#BonusMaxPercent").val(),
+                MinTitleId: $("#MinTitleId").val(),
+                MaxTitleId: $("#MaxTitleId").val(),
+                BonusMinAmount: $("#BonusMinAmount").val(),
+                PayMonth: $("#PayMonth").val(),
+                BonusRequirementId: $("#BonusRequirementId").val(),
+                isnew: $("#isnew").val(),
+                dateEffective: $("#dateEffective").val(),
+                EffectiveDate:  !/Invalid|NaN/.test(new Date($("#EffectiveDate").val())) ? $("#EffectiveDate").val() : '',
+                };
+
+                $.post('/BonusRequirement/Save', data, function (response) {
+                    if (response.result) {
+                        showMessage($("#SuccessMessage").val());
+                    }
+                    else {
+                        showMessage(response.message, true);
+                    }
+                })
+	            .always(function () {
+	                hideLoading(t);
+	            });
+
+                return false;
+            }
+        });
+
+        $('#BonusTypeId').change(function (event) {       
+            $('#PlanName').hide();
+
+            var data = { bonusTypeId: $('#BonusTypeId').val() };
+            var URL = '/Commissions/BonusRequirement/PlanByBonusType';
+            $.post(URL, data, function (response) {
+                $("#PlanName").val(response)
+                $('#PlanName').show();
+            });
+        });
+    });  
+
+   
+
+    function Validate()
+    {
+        var BonusTypeId = $("#BonusTypeId").val();
+        var BonusAmount = $("#BonusAmount").val();
+        var BonusMaxAmount = $("#BonusMaxAmount").val();
+        var BonusPercent = $("#BonusPercent").val();
+        var BonusMaxPercent = $("#BonusMaxPercent").val();
+        var MinTitleId = $("#MinTitleId").val();
+        var MaxTitleId = $("#MaxTitleId").val();
+        var BonusMinAmount = $("#BonusMinAmount").val();
+        var PayMonth = $("#PayMonth").val();
+        var dateEffective = $("#dateEffective").val();
+        
+        if(BonusTypeId == "")
+          {  showMessage($("#BonusTypeIdRequired").val(), true);
+            return false;
+          }
+
+        if(BonusAmount == "")
+           { showMessage($("#BonusAmountRequired").val(), true);
+            return false;
+          }
+
+        if(BonusMaxAmount == "")
+           { showMessage($("#BonusMaxAmountRequired").val(), true);
+            return false;
+          }
+
+        if(BonusPercent == "")
+           {showMessage($("#BonusPercentRequired").val(), true);
+            return false;
+          }
+
+        if(BonusMaxPercent == "")
+           {showMessage($("#BonusMaxPercentRequired").val(), true);
+            return false;
+          }
+
+        if(MinTitleId == "")
+           {showMessage($("#MinTitleIdRequired").val(), true);
+            return false;
+          }
+
+        if(MaxTitleId == "")
+           {showMessage($("#MaxTitleIdRequired").val(), true);
+            return false;
+          }
+
+        if(BonusMinAmount == "")
+           {showMessage($("#BonusMinAmountRequired").val(), true);
+            return false;
+          }
+
+        if(PayMonth == "")
+        {showMessage($("#PayMonthRequired").val(), true);
+            return false;
+        }
+
+        if(dateEffective == "")
+           {showMessage($("#EffectiveDateRequired").val(), true);
+            return false;
+          }
+
+           return true;
+    }
+</script>
+<input type="hidden" id="SuccessMessage" value="@Html.Term("CommissionRuleSavedSuccessfully", "Commission Rule Saved Successfully")" />
+<div class="SectionHeader">
+		<h2>@headerMessage</h2>
+</div>
+
+<form id="frmBonusRequirement" action="/BonusRequirement/Save" method="post">
+    <table id="newBonusRequirement" class="FormTable Section" width="100%">  
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("bonusType", "Commission Type")):
+		    </td>
+		    <td>              
+                @{ string selectedValue = string.Empty; }
+                <select id="BonusTypeId" name="BonusTypeId" class="required">
+                        @{selectedValue = (bool)ViewData["IsNew"] == true ? "selected" : string.Empty; }
+                        <option value=""  @selectedValue >
+                            @Html.Term("SelectaPlan", "Select a Plan...")
+                        </option>
+					@foreach (var bonusType in SmallCollectionCache.Instance.BonusTypes)
+                    {
+                        selectedValue = Model.BonusTypeId == bonusType.BonusTypeId ? "selected" : string.Empty; 
+					    <option value="@bonusType.BonusTypeId"  @selectedValue >
+                            @bonusType.GetTerm()
+                        </option>
+                    }
+				</select>
+                @Html.Hidden("BonusTypeIdRequired", Html.Term("BonusTypeIdRequired", "Commission type is required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("PlanName", "Plan Name")):
+		    </td>
+		    <td>
+                @Html.TextBoxFor(m => m.PlanName, new { @readonly = "true" })                
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("BonusAmount", "Amount")):
+		    </td>
+		    <td>
+                @Html.TextBoxFor(m => m.BonusAmount, new { @class = "numeric" })
+                @System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol
+                @Html.Hidden("BonusAmountRequired", Html.Term("BonusAmountRequired", "Bonus Amount is required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("BonusMaxAmount", "Bonus MaxAmount")):
+		    </td>
+		    <td>
+			   @Html.TextBoxFor(m => m.BonusMaxAmount, new { @class = "numeric" })
+               @System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol
+               @Html.Hidden("BonusMaxAmountRequired", Html.Term("BonusMaxAmountRequired", "Bonus Max Amount Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("BonusPercent", "Percent")):
+		    </td>
+		    <td>
+			    @Html.TextBoxFor(m => m.BonusPercent, new { @class = "numeric" })
+                 @Html.Hidden("BonusPercentRequired", Html.Term("BonusPercentRequired", "Bonus Percent Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("BonusMaxPercent", "Bonus MaxPercent")):
+		    </td>
+		    <td>
+			   @Html.TextBoxFor(m => m.BonusMaxPercent, new { @class = "numeric" })
+                @Html.Hidden("BonusMaxPercentRequired", Html.Term("BonusMaxPercentRequired", "Bonus Max Percent Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("MinTitleId", "Min Title Id")):
+		    </td>
+		    <td>
+			    @Html.TextBoxFor(m => m.MinTitleId, new {@data_inputfilter="\\d" })
+                  @Html.Hidden("MinTitleIdRequired", Html.Term("MinTitleIdRequired", "Min Title Id Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("MaxTitleId", "Max Title Id")):
+		    </td>
+		    <td>
+			     @Html.TextBoxFor(m => m.MaxTitleId, new { @data_inputfilter = "\\d" })
+                   @Html.Hidden("MaxTitleIdRequired", Html.Term("MaxTitleIdRequired", "Max Title Id Required"))
+		    </td>
+	    </tr>
+         <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("BonusMinAmountLabel", "Bonus Min Amount")):
+		    </td>
+		    <td>
+			     @Html.TextBoxFor(m => m.BonusMinAmount, new { @data_inputfilter = "\\d" })
+                   @Html.Hidden("BonusMinAmountRequired", Html.Term("BonusMinAmountRequired", "Bonus Min Amount Is Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("PayMonthLabel", "Pay Month")):
+		    </td>
+		    <td>
+			     @Html.TextBoxFor(m => m.PayMonth, new { @data_inputfilter = "\\d" })
+                   @Html.Hidden("PayMonthRequired", Html.Term("PayMonthRequired", "Pay Month Is Required"))
+		    </td>
+	    </tr>
+        <tr>
+		    <td class="FLabel">
+			    @Html.Label(Html.Term("EffectiveDate", "Effective Date")):
+		    </td>
+		    <td>
+             <input type="text" id ="dateEffective" name="dateEffective" value="@Model.EffectiveDate.ToShortDateString()" class="DatePicker TextInput" />
+              @* <input type="text" id ="dateEffective" name="dateEffective" value="@Model.EffectiveDate.ToString("MM/dd/yyyy")" class="DatePicker TextInput" />*@
+                 @Html.Hidden("EffectiveDateRequired", Html.Term("EffectiveDateRequired", "Effective Date Required"))
+		    </td>
+	    </tr>
+    </table>
+<div>
+    @Html.HiddenFor(m => m.BonusRequirementId)
+    @Html.Hidden("isnew", ViewData["IsNew"])
+</div>
+    <div id="frmFooter">
+    <table class="FormTable" width="100%">
+		<tr>
+			<td class="FLabel" style="width: 200px;">
+				&nbsp;
+			</td>
+			<td>
+                 <input type="button" id="btnSave" value = "@Html.Term("save", "Save")" class="Button BigBlue"/>
+			</td>
+		</tr>
+	</table>
+    </div>
+</form>
+

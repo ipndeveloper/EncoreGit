@@ -1,0 +1,30 @@
+﻿@model NetSteps.Data.Entities.Page
+@{
+    ViewBag.Title = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Title;
+}
+@section head
+{
+    @{
+        var keywords = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Keywords;
+        var description = Model.Translations.GetByLanguageIdOrDefaultForDisplay().Description;
+    }
+    @if (!string.IsNullOrWhiteSpace(keywords))
+    {
+        <meta name="keywords" content="@keywords" />
+    }
+    @if (!string.IsNullOrWhiteSpace(description))
+    {
+        <meta name="description" content="@description" />
+    }
+}
+<div class="OneColumnContent">
+    @if (@Model.HtmlSections.GetBySectionName("Workstation_One_Column_Content").IsNotNull())
+    {
+        @Model.HtmlSections.GetBySectionName("Workstation_One_Column_Content").ToDisplay(Model.PageID)
+    }
+
+    @if (@Model.HtmlSections.GetBySectionName("OneColumn_Content").IsNotNull())
+    {
+        @Model.HtmlSections.GetBySectionName("OneColumn_Content").ToDisplay(Model.PageID)
+    }
+</div>

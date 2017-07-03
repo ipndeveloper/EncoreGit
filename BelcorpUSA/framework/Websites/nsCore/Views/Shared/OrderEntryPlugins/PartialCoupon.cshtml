@@ -1,0 +1,43 @@
+﻿@model OrderEntryModel
+
+<table class="FormTable Section" width="100%" id="uxCouponCodeSection" style="display: none">
+    <tr>
+        <td class="FLabel">
+            @Html.Term("CouponCode", "Coupon code"):
+        </td>
+        <td>
+            <input id="couponCode" type="text" style="width: 250px;" />
+            <a href="javascript:void(0);" style="cursor: pointer" id="uxApplyCouponCode">
+                @Html.Term("Apply", "Apply")</a>
+        </td>
+    </tr>
+</table>
+
+
+<script type="text/javascript" >
+
+    $(function ()
+    {
+        $('#uxApplyCouponCode').click(function ()
+        {
+            var isComplete = $('#uxCouponCodeSection').checkRequiredFields();
+
+            var data = {
+                couponCode: $('#couponCode').val()
+            };
+
+            // TODO: Finish this functionality - JHE
+            $.post('@Href("~/" + Model.ApplyCouponCodeLocation)', data, function (results)
+            {
+                if (results.result)
+                {
+                }
+                else
+                {
+                    showMessage(results.message, true);
+                }
+            });
+        });
+    });
+
+</script>

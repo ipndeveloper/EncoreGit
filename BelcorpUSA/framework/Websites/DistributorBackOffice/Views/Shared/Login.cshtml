@@ -1,0 +1,532 @@
+@using NetSteps.Web.Mvc.Controls.Analytics
+@{
+    Layout = null;
+}
+@{var page = DistributorBackOffice.Controllers.BaseController.GetCurrentPage(); var modelIsPage = page != null;}
+@model ILoginModel
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+	@Html.Partial("ServerInfo")
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"  />
+    <meta content="" name="description" />
+    <meta charset="utf-8" />
+	<meta content="" name="author" />
+    <title>@Html.Term("WorkstationLoginPageTitle", "ENCORE Distributor Workstation - Please Sign In")</title>
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/usa/images/favicon.ico")" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+	<link href="@Url.Content("~/FileUploads/assets/plugins/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/FileUploads/assets/plugins/bootstrap/css/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css"/>
+	<link href="@Url.Content("~/FileUploads/assets/plugins/font-awesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css"/>
+	<link href="@Url.Content("~/FileUploads/assets/css/style-metro.css")" rel="stylesheet" type="text/css"/>
+	<link href="@Url.Content("~/FileUploads/assets/css/style.css")" rel="stylesheet" type="text/css"/>
+	<link href="@Url.Content("~/FileUploads/assets/css/style-responsive.css")" rel="stylesheet" type="text/css"/>
+	<link href="@Url.Content("~/FileUploads/assets/css/themes/default.css")" rel="stylesheet" type="text/css" id="style_color"/>
+	@*<link href="@Url.Content("~/FileUploads/assets/plugins/uniform/css/uniform.default.css")" rel="stylesheet" type="text/css"/>*@
+	<link rel="stylesheet" type="text/css" href="@Url.Content("~/FileUploads/assets/plugins/select2/select2_metro.css")" />
+	<!-- END GLOBAL MANDATORY STYLES -->
+	<!-- BEGIN PAGE LEVEL STYLES -->
+	<link href="@Url.Content("~/FileUploads/assets/css/pages/login-soft.css")" rel="stylesheet" type="text/css"/>
+	<!-- END PAGE LEVEL STYLES -->
+     
+     <style>
+         a:focus, a:hover
+         {
+             color: #005580;
+         }
+     </style>
+	
+	
+    @*@Html.Partial("MasterPageIncludes")
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes()*@
+  @*  @(((HtmlSection)ViewBag.SiteDesignContent).ToDisplay(modelIsPage ? page.PageID : (int?)null))*@
+</head>
+
+@*<body id="DWS_Login" class="login">
+    <div class="logo">
+		<!-- PUT YOUR LOGO HERE -->
+		<a  href="#" 
+		title="L'Bel"  >L'BEL
+		</a>
+	</div>*@
+   
+
+<body id="DWS_Login" class="login">
+	<!-- BEGIN LOGO -->
+	<div class="logo">
+		<!-- PUT YOUR LOGO HERE -->
+		<a  href="#" 
+		title="L'Bel"  >L'BEL
+		</a>
+	</div>
+	<!-- END LOGO -->
+    <div class="container ">
+        <nav class="navbar navbar-fixed-top navbar-light bg-faded" style="left: 790px; margin-top: -10px;">
+        <ul class="nav navbar-nav">
+            <li >
+              <a class="navbar-brand" href='@Html.Term("DWS_ENROLL_URL", "http://meunegocio.lbel.com.br/enroll")' style="color: #75447A;">Quero ser consultor(a)</a>
+            </li>
+           <li style="border-left: thin solid #75447A;"  >
+              <a class="navbar-brand" href='@Html.Term("DWS_LBEL_URL", "http://www.lbel.com.br/")' style="color: #75447A;">Site L'Bel Brasil</a>
+            </li>
+            <li style="border-left: thin solid #75447A;"  >
+              <a class="navbar-brand" href='@Html.Term("DWS_ESIKA_URL", "http://esika.com.br/")' style="color: #75447A;">Site Ésika Brasil</a>
+            </li>
+          </ul>
+         
+        </nav>
+</div>
+
+	<!-- BEGIN LOGIN -->
+	<div class="content" >
+               @{
+                   string message = "";
+                   if (ViewData["InvalidLogin"] != null && (bool)ViewData["InvalidLogin"])
+                   {
+                       if (NetSteps.Web.WebContext.IsLocalHost && ViewData["ErrorMessage"] != null)
+                       {
+                           message = ViewData["ErrorMessage"].ToString();
+                       }
+                       else
+                       {
+                           message = Html.Term("InvalidLogin", "Invalid login.  Please try again.");
+                       }
+                   }
+                   if (ViewData["SessionExpired"] != null && (bool)ViewData["SessionExpired"])
+                   {
+                       message = Html.Term("YourSessionExpired", "Your session expired. Please login again.");
+                   }
+                }
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <div class="error_message_block">
+                        <div class="error_message">
+                            <img src="@Href("~/Resource/Content/Images/Icons/exclamation.png")" alt="Error:"
+                                 align="top" />
+                            @message</div>
+                    </div>
+                }  
+
+        <!-- BEGIN LOGIN FORM -->
+   
+		<form  id="LoginForm" class="form-vertical login-form" action="@Href("~/Login")" method="post">
+			<h3 class="form-title">Seja bem-vindo(a), <br> consultor (a) L'Bel</h3>
+			<div class="alert alert-error hide">
+				<button class="close" data-dismiss="alert"></button>
+				<span>Entre com sua código e senha.</span>
+			</div>
+			
+			<div class="create-account">
+				<p>
+	               Este é o canal<strong> L'Bel & Você </strong>exclusivo para a força de <br>
+	               vendas. Aqui você pode fazer seus pedidos<br>
+	               acompanhar e organizar suas vendas, conhecer as<br>
+	               novidades, participar de promoções, baixar<br>
+	               materiais de capacitação e muito mais!<br>
+		<br>
+	<br>
+</p> 
+			</div>
+			
+            
+              <div class="control-group">
+				<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+				<label class="control-label visible-ie8 visible-ie9">Username</label>
+				<div class="controls">
+					<div class="input-icon left">
+						<i class="icon-user"></i>
+						<input id="username" name="username" class="m-wrap placeholder-no-fix" type="text" autocomplete="off" placeholder="Seu Código"
+                       value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Username : "")" 
+                        required   />
+					</div>
+                </div>
+			</div>
+			<div class="control-group">
+				<label class="control-label visible-ie8 visible-ie9">Password</label>
+				<div class="controls">
+					<div class="input-icon left">
+						<i class="icon-lock"></i>
+						<input id="password" class="m-wrap placeholder-no-fix" type="password" autocomplete="off" 
+                        placeholder="Sua Senha" name="password"
+                       value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Password : "")"
+                         required />
+					</div>
+                </div>
+			</div>
+			<div class="form-actions" >
+			    @*<button type="submit" id="btnLogin"   class=""
+				<span>@Html.Term("Login", "Login")</span> <i class="m-icon-swapright m-icon-white"></i>
+				</button> *@
+                <button type="submit" id="btnLogin" class="btn blue pull-right" <span>@Html.Term("Login", "Login")</span><i class="m-icon-swapright m-icon-white"></i>
+                </button>
+               @* <a id="btnLogin" class="btn blue pull-right" href="javascript:void(0);"><span>@Html.Term("Login", "Login")</span></a>*@
+				
+                @if (Model.EnableForgotPassword)
+                {
+                <h4> <a href="@Href("~/ForgotPassword")"  id="btnForgotPassword"> <span>@Html.Term("ForgotPassword", "Forgot your password?") </span></a></h4>
+                }
+				<!--<label class="checkbox">
+				<input type="checkbox" name="remember" value="1"/> Remember me
+				</label>-->
+				          
+			</div>
+			 <p>
+           <img id="loading" src="@Href("~/Resource/Content/Images/loader_36x36.gif")"
+            alt="@Html.Term("loading...")" style="display: none;" />                 
+             </p>
+			
+		</form>
+        
+		<!-- END LOGIN FORM -->      
+        
+     @*    <div id="Content">
+        <div class="Inner">
+            <div class="Login">
+                <h1>@Html.Term("LoginWelcome", "Welcome to NetSteps BackOffice")</h1>
+                <h2>@Html.Term("PleaseSignIn", "Please Sign In:")</h2>
+              
+                <div id="LoginForm" >
+                     <div class="Fields">
+                        <form action="@Href("~/Login")" method="post" class="form-vertical login-form">
+                        <h3 class="form-title">Seja bem-vindo(a), <br> consultor (a) L'Bel</h3>
+			                <div class="create-account">
+				                <p>
+					                Esté e o canal <strong>L'Bel & Vocé </strong> exclusivo para a forca de<br>
+					                vendas.Aqui vocé pode fazer seus pedidos<br>
+					                acompanhar e organizar  suas vendas, conhecer as<br>
+					                novidades, participar  de promocoes, baixar materiais<br>
+					                de capacitacao e muito mas!!<br>
+					                     <br>
+				                </p> 
+			                </div>
+                            <p>
+                                <input id="username" name="@Model.UsernameErrorText" type="text" value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Username : "")"
+                                       class="TextInput required" />
+                            </p>
+                            <p>
+                                <input id="password" name="@Html.Term("PasswordIsRequired", "Password is required.")" type="password" class="TextInput required"
+                                       value="@(Request.IsLocal ? NetSteps.Data.Entities.ApplicationContext.Instance.DevelopmentDistributorHelperLogin.Password : "")" />
+                            </p>
+                        </form>
+                        <p>
+                            <img id="loading" src="@Href("~/Resource/Content/Images/loader_36x36.gif")"
+                                 alt="@Html.Term("loading...")" style="display: none;" />
+                        </p>
+                    </div>
+                    <p class="overflow">
+						@if (Model.EnableForgotPassword)
+						{
+                        <a id="btnForgotPassword" class="FR" href="@Href("~/ForgotPassword")"><span>@Html.Term("ForgotPassword", "Forgot your password?")</span></a>
+						}
+                        <a id="btnLogin" class="Button BtnLogin" href="javascript:void(0);"><span>@Html.Term("Login", "Login")</span></a>
+                    </p>
+                </div>
+            </div>
+           <div class="Info">
+                <ul>
+                    <li>@Html.Term("WorkstationLoginBullets_Bullet1", "Manage your business.")</li>
+                    <li>@Html.Term("WorkstationLoginBullets_Bullet2", "Get company news, send/receive communication, download resources, monitor performance, and more!")</li>
+                    <li>@Html.Term("WorkstationLoginBullets_Bullet3", "Place retail orders, set up parties, and more.")</li>
+                </ul>
+            </div>
+            <span class="clr"></span>
+		</div>
+	</div>*@
+    @{Html.RenderPartial("_GoogleAnalytics", new AnalyticsModel(this.Request));}  
+		
+	</div>
+
+     
+        <nav class="navbar navbar-fixed-bottom navbar-light bg-faded contentBottom">
+        
+          <ul class="nav navbar-nav" style="margin-left: 160px;">
+            <li >
+              <a class="navbar-brand" href="#" style="color:  #696969;">L'Bel Brasil 2016. Todos os direitos reservados.</a>
+            </li>
+           
+          </ul>
+        
+        <ul class="nav navbar-nav" style="margin-left: 260px;">
+            <li >
+              <a class="navbar-brand" href='@Html.Term("DWS_MANUAL_URL","#")' style="color: #696969;">Manual de Negócio</a>
+            </li>
+           <li style="border-left: thin solid #696969;"  >
+              <a class="navbar-brand" href='@Html.Term("DWS_MANUAL_PLANO","#")' style="color: #696969;">Plano de Negócio</a>
+            </li>
+            <li style="border-left: thin solid #696969;"  >
+              <a class="navbar-brand" data-target="#myModal" href="#" data-toggle="modal" style="color: #696969;">Termos e Condições</a>
+            </li>
+          </ul>
+
+          
+         
+        </nav>
+
+                <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog" style="left:65%;top:20%">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" data-dismiss="modal" style="float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .2;">&times;</button>
+                <h4 class="modal-title" style="color: #6A177F;font-size: 15px; margin: 5px 0 1px 1px;    text-align: left;    text-transform: uppercase;    font-weight: bold;">
+                Termos e condições</h4>
+              </div>
+              <div class="modal-body">
+               <div class="item-page">
+               <div id="termoCondicoes" style="padding: 20px;">
+<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<p style="text-align: left;">Leia cuidadosamente estes termos, políticas e condições de uso antes de usar este website. A página www.somosbelcorp.com.br (de agora em diante, "página Web") é administrada e é propriedade da Belcorp do Brasil Distribuição de Cosméticos Ltda.<br> <br> O acesso à página Web significa que você aceita que seu acesso e uso estejam sujeitos aos termos, políticas e condições aqui descritas, e às legislações nacional e internacional aplicáveis. Através de seu à página Web, você aceita os presentes termos, políticas e condições de uso e as conseqüências que estes podem implicar. Estes termos, políticas e condições de uso poderão ser alterados a qualquer momento, sendo que tais alterações serão atualizadas periodicamente na página atual de "Termos, Políticas e Condições de Uso" da página Web.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Informação Confidencial</strong></p>
+<p style="text-align: left;">Foram adotados os níveis de segurança necessários para a proteção dos dados pessoais requeridos, e todos os meios e medidas técnicas ao alcance foram instalados para evitar a perda, uso indevido, alteração, acesso não autorizado e roubo dos dados pessoais informados. Não obstante, você deve estar consciente de que as medidas de segurança na Internet não são inexpugnáveis em casos como acesso de hackers, crackers ou vírus ao sistema. Em virtude do anterior, a Belcorp do Brasil Distribuição de Cosméticos Ltda. não é responsável pela perda, alteração, acesso não autorizado e/ou roubo dos dados pessoais informados, assim como dos danos causados pelo uso indevido da página Web ou vírus na rede.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Informação fornecida pela usuária</strong></p>
+<p style="text-align: left;">Qualquer informação, material, sugestão, idéia ou comentário enviados à Belcorp do Brasil Distribuição de Cosméticos Ltda., através da página Web, serão considerados como não confidenciais e, ao enviá-los, outorgam à Belcorp do Brasil Distribuição de Cosméticos Ltda. Autorização irrevogável e irrestrita de uso, cópia, modificação, reprodução, transmissão, exibição e distribuição de tais materiais. Porém, a Belcorp do Brasil Distribuição de Cosméticos Ltda. declara que não usará seu nome em nenhum caso, a menos que se obtenha autorização prévia, como requerido por lei.<br> <br> Você, ao ter acesso à página Web, concorda em receber "cookies" transmitidos pelos servidores. "Cookie" significa um arquivo de dados que é armazenado no disco rígido do computador de uma usuária que acesse a página Web. Os "cookies" podem conter informações como a identificação fornecida pela usuária ou informações para rastrear as páginas que a usuária visitou.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Isenção e alcance de responsabilidade</strong></p>
+<p style="text-align: left;">Com a aceitação dos presentes Termos, Políticas e Condições de Uso, você reconhece e aprova manter a Belcorp do Brasil Distribuição de Cosméticos Ltda. isenta de toda a responsabilidade e por qualquer reclamação ou demanda apresentada por qualquer terceiro como resultado do uso indevido do site.<br> <br> Sempre que o serviço não dependa da Belcorp do Brasil Distribuição de Cosméticos Ltda., isso não garante o acesso imediato à página Web, nem o serviço sem interrupções da página Web ou do serviço de Internet. Assim mesmo, a Belcorp do Brasil Distribuição de Cosméticos Ltda. não se responsabiliza por danos ou dificuldades técnicas que você possa sofrer como conseqüência das falhas do sistema da página Web ou, de alguma maneira, relacionadas com a mesma. Tampouco será responsável por qualquer vírus que possa acessar seu equipamento como conseqüência do seu acesso à página Web.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Endereço</strong></p>
+<p style="text-align: left;">Belcorp do Brasil Distribuição de Cosméticos Ltda. entende que seu endereço para receber qualquer comunicado será o endereço que você nos informe. Neste sentido, qualquer mudança de endereço deve ser comunicada com antecipação mínima de quinze (15) dias úteis. Portanto, você aceita que, se não nos informar dentro do prazo indicado, os comunicados enviados ao endereço anterior serão considerados válidos e hábeis. Ainda assim, qualquer desacordo ou disputa que possa surgir por ocasião dos serviços prestados na página Web será resolvido através dos tribunais da cidade de São Paulo, a cuja jurisdição as partes declaram se submeter.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Comunicados via Internet</strong></p>
+<p style="text-align: left;">Ao nos informar seu endereço de email, você está consentindo e autorizando todos os comunicados que enviamos via Internet, não existindo lugar para reclamações ou ações por este conceito. Porém, no momento em que não queira receber mais estes comunicados, você deverá utiliza a opção incluída em nossas próprias mensagens para bloquear envios posteriores.</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;"><strong>Dados da Empresa</strong></p>
+<p style="text-align: left;"><strong>Razão social:</strong> Belcorp do Brasil Distribuidora de Cosméticos Ltda.<br><strong>CNPJ:</strong> 12.342.436/0001-48.<br><strong>Endereço físico:</strong> Avenida das Nações Unidas 12.901, Conj. 201 E 202, 2º andar da Torre Norte do Centro Empresarial Nações Unidas, Brooklin Paulista, São Paulo/SP - Brasil. CEP 04578-910<br><strong>Endereço eletrônico:</strong> <a href="http://www.somosbelcorp.com.br" target="_blank" title="Somos Belcorp">http://www.somosbelcorp.com.br</a>&nbsp; Corporativo: <a href="http://www.belcorp.biz" target="_blank" title="Belcorp">http://www.belcorp.biz</a>.</p>
+<p style="text-align: left;">&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+	
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+ </div>
+
+</body>
+
+<!-- END LOGIN -->
+	<!-- BEGIN COPYRIGHT -->
+	<!--<div class="copyright">
+		2014 &copy; <a href="http://www.justukfreebies.co.uk/">Just UK Freebies</a> Login Form
+	</div>-->
+	<!-- END COPYRIGHT -->
+	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+    
+    
+     @Scripts.Render("~/scriptbundles/jquery")
+   
+	<!-- BEGIN CORE PLUGINS -->  
+    <script src="@Url.Content("~/FileUploads/assets/plugins/jquery-1.10.1.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery-migrate-1.2.1.min.js")" type="text/javascript"></script>
+    <!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js")" type="text/javascript"></script>      
+	<script src="@Url.Content("~/FileUploads/assets/plugins/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+	@*<script src="@Url.Content("~/FileUploads/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js")" type="text/javascript" ></script>*@
+	<!--[if lt IE 9]>
+	<script src="assets/plugins/excanvas.min.js"></script>
+	<script src="assets/plugins/respond.min.js"></script>  
+	<![endif]-->   
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery.blockui.min.js")" type="text/javascript"></script>  
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery.cookie.min.js")" type="text/javascript"></script>
+	@*<script src="@Url.Content("~/FileUploads/assets/plugins/uniform/jquery.uniform.min.js")" type="text/javascript" ></script>*@
+	<!-- END CORE PLUGINS -->
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<script src="@Url.Content("~/FileUploads/assets/plugins/jquery-validation/dist/jquery.validate.min.js")" type="text/javascript"></script>
+    
+	<script src="@Url.Content("~/FileUploads/assets/plugins/backstretch/jquery.backstretch.min.js")" type="text/javascript"></script>
+	<script type="text/javascript" src="@Url.Content("~/FileUploads/assets/plugins/select2/select2.min.js")"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+     
+	<script src="@Url.Content("~/FileUploads/assets/scripts/app.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/FileUploads/assets/scripts/login-soft.js")" type="text/javascript"></script>
+	<!-- END PAGE LEVEL SCRIPTS --> 
+	<script type="text/javascript">
+	    jQuery(document).ready(function () {
+	        App.init();
+	        Login.init();
+	        // $('#username').watermark('@Model.UsernameLabelText');
+	        //$('#password').watermark('password');
+
+
+
+	        $('#LoginForm input').keypress(function (e) {
+	            if (e.which == 13) {
+	                $('#btnLogin').click();
+	            }
+	        });
+	    });
+	</script>
+  
+	@Scripts.Render("~/scriptbundles/utilities")
+     @{
+         string miURL = Url.Action("ValidPWS", "IntPWS").ToString();
+        }
+     <script type="text/javascript">
+         $(function () {
+
+             // setup async exception handling
+             $(document).ajaxComplete(function (e, request, settings) {
+                 var isErrorPage = /<input *type *= *"hidden" *value *= *"ErrorPage" *\/>/i.test(request.responseText);
+                 if (isErrorPage) {
+                     window.location = '/Error/';
+                 }
+             });
+
+
+             //             $('#LoginForm').validate({
+
+             //                 errorElement: 'label', //default input error message container
+             //                 errorClass: 'help-inline', // default input error message class
+             //                 focusInvalid: false, // do not focus the last invalid input
+             //                 rules: {
+             //                     username: {
+             //                         required: true
+             //                     },
+             //                     password: {
+             //                         required: true
+             //                     }
+             //                 },
+
+             //                 messages: {
+             //                     username: {
+             //                         required: "Username is required1."
+             //                     },
+             //                     password: {
+             //                         required: "Password is required2."
+             //                     }
+             //                 },
+
+             //                 invalidHandler: function (event, validator) { //display error alert on form submit   
+             //                     $('.alert-error', $('.login-form')).show();
+             //                 },
+
+             //                 highlight: function (element) { // hightlight error inputs
+             //                     $(element)
+             //	                    .closest('.control-group').addClass('error'); // set error class to the control group
+             //                 },
+
+             //                 success: function (label) {
+             //                     label.closest('.control-group').removeClass('error');
+             //                     label.remove();
+             //                 },
+
+             //                 errorPlacement: function (error, element) {
+             //                     error.addClass('help-small no-left-padding').insertAfter(element.closest('.input-icon'));
+             //                 },
+
+             //                 submitHandler: function (form) {
+             //                     form.submit();
+             //                 }
+             //             });
+
+             //$('#LoginForm').setupRequiredFields();
+
+
+
+
+
+
+
+             //             $('input').keyup(function (e) {
+             //                 if (e.keyCode == 13)
+             //                     $('#btnLogin').click();
+             //             });
+
+
+
+
+
+             $('#btnLogin').click(function () {
+                 if (!$('#LoginForm').validate().form()) {
+                     return false;
+
+                 }
+                 //                 if (!$('#LoginForm').checkRequiredFields()) {
+                 //                    
+                 //                 }
+
+                 var t = $(this);
+                 showLoading(t);
+
+                 var objData = { username: $('#username').val(),
+                     password: $('#password').val()
+
+                 };
+
+
+                 $.ajax({
+                     url: '/IntPWS/ValidPWS',
+                     data: objData,
+                     type: 'POST',
+                     async: false,
+                     dataType: "json",
+                     success: function (resultado) {
+                         if (resultado.result) {
+                             window.location = resultado.ruta + '?username=' + objData.username + '&password=' + resultado.password;
+                         } else {
+                             $('form').submit();
+                             var t = $(this);
+                             showLoading(t);
+                         }
+                     }
+
+                 });
+
+             });
+
+
+             if (/^true$/i.test('@ViewData["InvalidLogin"]')) {
+                 $('#password').focus();
+             } else {
+                 $('#username').focus();
+             }
+         });
+
+
+
+         function showLoading(element, css) {
+             if (!element.jquery)
+                 element = $(element);
+             var loading = $('<img src="@Href("~/Resource/Content/Images/loader_36x36.gif")" alt="loading..." />');
+             if (css) {
+                 loading.css(css);
+             }
+             else if (element.height()) {
+                 loading.css('height', element.height() + 'px');
+             }
+             element.after(loading).hide();
+         }
+
+         function hideLoading(element) {
+             if (!element.jquery)
+                 element = $(element);
+             element.show().next().remove();
+         }
+
+    </script>
+</html>

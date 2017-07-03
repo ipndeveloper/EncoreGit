@@ -1,0 +1,139 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" MasterPageFile="~/Views/Shared/Site.Master" %>
+<%@ Import Namespace="nsCore.Areas.Accounts.Models.Shared" %>
+<%@ Import Namespace="nsCore.Areas.Enrollment.Models.Shared" %>
+
+<%--@01 20150805 BR-MLM-007 CSTI JMO: Added EditSponsor Tab--%>
+
+<asp:Content ContentPlaceHolderID="HeadContent" runat="server">
+
+ <script src="<%: Url.Content("~/Areas/Accounts/Scripts/Shared/Autoships.js") %>" type="text/javascript"></script>
+ <script type="text/javascript">
+
+     $(document).ready(function () {
+
+         $('input[monedaidioma=CultureIPN]').keyup(function (event) {
+
+             var cultureInfo = '<%= CoreContext.CurrentCultureInfo.Name%>';
+             // var value = parseFloat($(this).val());
+
+
+             var formatDecimal = '$1.$2'; // valores por defaul 
+             var formatMiles = ",";  // valores por defaul
+
+             if (cultureInfo === 'en-US') {
+                 formatDecimal = '$1.$2';
+                 formatMiles = ",";
+             }
+             else if (cultureInfo === 'es-US') {
+                 formatDecimal = '$1,$2';
+                 formatMiles = ".";
+             }
+             else if (cultureInfo === 'pt-BR') {
+                 formatDecimal = '$1,$2';
+                 formatMiles = ".";
+             }
+
+
+             //            if (!isNaN(value)) {
+             if (event.which >= 37 && event.which <= 40) {
+                 event.preventDefault();
+             }
+
+             $(this).val(function (index, value) {
+
+
+                 return value.replace(/\D/g, "")
+                                 .replace(/([0-9])([0-9]{2})$/, formatDecimal)
+                                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, formatMiles);
+             });
+
+             //            }
+
+         });
+     
+     });
+  
+ 
+ </script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="SubNavigation">
+
+    <%= Html.SubTab("~/Accounts/Browse", Html.Term("BrowseAccounts", "Browse Accounts"), function: string.Empty) %>
+    <li class="pipe">&nbsp;</li>
+    <% Html.RenderPartial("~/Areas/Enrollment/Views/Shared/_EnrollMenuOptions.cshtml", new EnrollMenuOptionsModel()); %>
+    <% if (ViewContext.RouteData.Values["controller"].ToString() != "Landing")
+       {%>
+    <li class="pipe">&nbsp;</li>
+    <li class="TabSearch">
+        <% Html.RenderPartial("~/Areas/Accounts/Views/Shared/Find.ascx"); %>
+    </li>
+    <%} %>
+</asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="MainContent">
+    <table class="CoreColumns" width="100%" cellspacing="0">
+        <tr>
+            <td class="CoreLeftNav">
+                <asp:ContentPlaceHolder ID="LeftNav" runat="server">
+                    <%--<% Html.RenderPartial("~/Areas/Accounts/Views/Shared/YellowWidget.ascx"); %>--%>
+
+
+                    <%if(ViewData["EditAccount"]!=null){ %>
+
+                    <%} %>
+
+                        <%if (ViewData["ExcludeAccountStatuses"] != null)
+                        { %>
+                              <% Html.RenderPartial("YellowWidget", new YellowWidgetModel(ConfigurationManager.AppSettings["ExcludeAccountStatuses"].Split(','))); %>
+                        <%}
+                        else { %>
+                             <% Html.RenderPartial("YellowWidget", new YellowWidgetModel()); %>
+                        <%}%>
+
+
+                        <% ViewData["ExcludeAccountStatuses"] = null;%>
+                    <div class="SectionNav">
+                        <ul class="SectionLinks">
+                            <%= Html.SelectedLink("~/Accounts/Overview", Html.Term("Overview"), new List<string>() { "~/Accounts/Overview/PoliciesChangeHistory", "~/Accounts/Overview/StatusHistory", "~/Accounts/Overview/AuditHistory" }, LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts")%>
+                            <%= Html.SelectedLink("~/Accounts/Edit", Html.Term("EditAccount", "Edit Account"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Create and Edit Account") %>
+                            <%= Html.SelectedLink("~/Accounts/EditCoApplicant", Html.Term("EditCoApplicant", "Edit CoApplicant"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Create and Edit Account") %>
+                            <%--@01 A01--%>
+                            <%= Html.SelectedLink("~/Accounts/EditSponsor", Html.Term("EditSponsor", "Edit Sponsor"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Create and Edit Account") %><!--, "Accounts-Edit Sponsor")%>-->
+                            <%--@01 A01--%>
+                            <%--<%= Html.SelectedLink("~/Accounts/SiteSubscriptions", "Site Subscriptions", LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Site Subscriptions") %>--%>
+                            <%= Html.SelectedLink("~/Accounts/BillingShippingProfiles", Html.Term("Billing&ShippingProfiles", "Billing & Shipping Profiles"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Billing and Shipping Profiles") %>
+                            <%= Html.SelectedLink("~/Accounts/Ledger", Html.Term("Ledger"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Ledger") %>
+                            <%= Html.SelectedLink("~/Accounts/DisbursementProfiles", Html.Term("DisbursementProfiles", "Disbursement Profiles"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Disbursement Profiles") %>
+                            <%= Html.SelectedLink("~/Accounts/OrderHistory", Html.Term("OrderHistory", "Order History"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts") %>
+                            <%= Html.SelectedLink("~/Accounts/CalculationOverrides", Html.Term("CalculationOverrides", "Calculation Overrides"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Calculation Overrides")%>
+                            <%= Html.SelectedLink("~/Accounts/AccountTitleOverrides", Html.Term("TitleOverrides", "Title Overrides"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Title Overrides")%>
+                            <%= Html.SelectedLink("~/Accounts/DisbursementHolds", Html.Term("PaymentDisbursementHolds", "Payment Disbursement Holds"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Disbursement Holds")%>
+                            <%= Html.SelectedLink("~/Accounts/DocumentsControl", Html.Term("AccountsDocuments", "Documents Control"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Disbursement Holds")%>
+                            <%= Html.SelectedLink("~/Accounts/AccountBlocking", Html.Term("AccountBlocking", "Account Blocking"), LinkSelectionType.ActualPageWithPossibleID, CoreContext.CurrentUser, "Accounts-Disbursement Holds")%>
+                        
+
+                        </ul>
+                    </div>
+                </asp:ContentPlaceHolder>
+            </td>
+            <td class="CoreContent">
+                <div class="BreadCrumb">
+                    <asp:ContentPlaceHolder ID="BreadCrumbContent" runat="server" />
+                </div>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </td>
+            <asp:ContentPlaceHolder ID="RightContent" runat="server">
+                <% if (CoreContext.CurrentUser.HasFunction("Accounts-Notes"))
+                   { %>
+                <td class="CoreRightColumn">
+                    <% 
+                        ViewData["ParentIdentity"] = CoreContext.CurrentAccount.AccountNumber;
+                        Html.RenderPartial("Notes");
+                    %>
+                </td>
+                <% } %>
+            </asp:ContentPlaceHolder>
+        </tr>
+    </table>
+</asp:Content>

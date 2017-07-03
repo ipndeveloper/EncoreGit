@@ -1,0 +1,991 @@
+@using DistributorBackOffice.Areas.Orders.Models.Shared
+@using NetSteps.Data.Entities.Business.HelperObjects.OrderPackages
+@using NetSteps.Data.Common.Services
+@using NetSteps.Encore.Core.IoC
+@using NetSteps.Data.Entities.Business.HelperObjects.SearchData
+@using NetSteps.Data.Entities
+@using NetSteps.Data.Entities.Extensions
+@model DistributorBackOffice.Areas.Orders.Models.Shared.IndexModel
+@{
+    Layout = "~/Views/Shared/_ContentLayout.cshtml";
+    bool isPartyOrderClient = NetSteps.Common.Configuration.OrdersSection.Instance != null &&
+        NetSteps.Common.Configuration.OrdersSection.Instance.IsPartyOrderClient;
+    bool isFundraiserClient = NetSteps.Common.Configuration.OrdersSection.Instance != null &&
+        NetSteps.Common.Configuration.OrdersSection.Instance.FundraisersEnabled;
+    bool showFundraiserLink = isFundraiserClient;
+}
+@section head {
+    <script type="text/javascript">
+        $(function () {
+
+            if (window.location.search.length) {
+                var qsVariables = window.location.search.substring(1).split('&'), i;
+                for (i = 0; i < qsVariables.length; i++) {
+                    var qsVariable = qsVariables[i].split('=');
+                    if (qsVariable[0] == 'message') {
+                        //var messageCenter = $('#messageCenter').messageCenter('#385E0F', '#CAFF70', '/Content/Images/accept-trans.png', '1000', null, '3000', '1000', null);
+                        showMessage(qsVariable[1].replace(/_/g, ' '), false);
+                        //messageCenter.addMessage(qsVariable[1].replace(/_/g, ' '));
+                        break;
+                    }
+                }
+            }
+
+            /*CS:18ABR2016:Modificado*/
+            if ('@Session["Edit"]' != null) {
+                if ('@Session["Edit"]' != "") {
+                    if ('@Session["Edit"]' != '3') {
+                        $.post('@Href("~/Orders/Details/ValidateSendEmailBoleto/")', { orderNumber: '@Model.Order.OrderNumber' }, function (results) {
+                            if (results.result) {
+                                var url = '@Href("~/Orders/OrderEntry/ExportarBoleta")?';
+                                url = url + "OrderPaymentID=" + results.OrderPaymentID + "&BankName=" + results.BankName + "&BankCode=" + results.BankCode;
+                                $("#frmExportar").attr("src", url);
+                            }
+                        });
+                    }
+                }
+            }
+
+            if ($('#customers .OrderCustomer').length > 1) {
+                $('#customers').accordion();
+            }
+
+            $('a.ViewKitContents').live('click', function () {
+                var t = $(this);
+                if (t.hasClass('Minimize')) {
+                    t.text('@Html.Term("ViewKitContents", "View Kit Contents")').removeClass('Minimize').next().slideUp('fast');
+                } else {
+                    t.text('@Html.Term("Close")').addClass('Minimize').next().slideDown('fast');
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '@Href("~/Orders/OrderEntry/ListWarehouseMaterialLacks")',
+                asyn: false,
+                success: function (data) {
+                    if (data.result == true) {
+                        for (var i = 0; i < data.listWarehouseMaterialLacks.length; i++) {
+                            $("#productLacks > tbody:first").append('<tr><td>' + data.listWarehouseMaterialLacks[i].ProductId + '</td>' +
+                                                                    '<td>' + data.listWarehouseMaterialLacks[i].NameProduct + '</td>' +
+                                                                    '<td>' + data.listWarehouseMaterialLacks[i].Quantity + '</td>' +
+                                                                    '<td>' + data.listWarehouseMaterialLacks[i].Motive + '</td>' + '</tr>');
+                        }
+                    }
+                }
+            });
+        });
+
+        function showPaymentModal(id) {
+            $.get('@Href("~/Orders/Details/GetPayment")', { paymentId: id }, function (response) {
+                if (response.result === undefined || response.result) {
+                    $('#paymentInfo').empty().append(response.paymentHTML);
+                    $('#paymentInfoModal').jqm({ modal: false }).jqmShow();
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+        }
+    </script>
+}
+@section breadcrumb {
+    <a href="@Href("~/Orders")">
+        @Html.Term("Orders")</a>
+}
+@section title {
+    @Html.Term("Order#", "Order#:") @Model.Order.OrderNumber
+}
+@section ActionItems {
+    @if (!(Model.Order.OrderStatusID == (short)Constants.OrderStatus.Pending || Model.Order.OrderStatusID == (short)Constants.OrderStatus.PendingError || Model.Order.OrderStatusID == (short)Constants.OrderStatus.Cancelled))
+    {
+        @Html.ActionItem(Url.Content("~/Orders/Details/PrintInvoicePDF" + "?orderNumber=" + Model.Order.OrderNumber), Html.Term("OrderSummary", "Order Summary"), "icon-actionPersonalOrder")
+        @Html.ActionItem(Url.Content("~/Orders/Details/Tracking" + "?orderNumber=" + Model.Order.OrderNumber), Html.Term("Tracking", "Tracking"), "icon-actionPersonalOrder")
+        @Html.ActionItem(Url.Content("~/Orders/Details/Invoices" + "?orderNumber=" + Model.Order.OrderNumber), Html.Term("Invoices", "Invoices"), "icon-actionPersonalOrder")
+    }
+    else if (Model.Order.OrderStatusID == (short)Constants.OrderStatus.Pending)
+    {
+        @Html.ActionItem(Url.Content("~/Orders/OrderEntry/Edit" + "?orderNumber=" + Model.Order.OrderNumber), Html.Term("EditOrder", "Edit Order"), "icon-actionPersonalOrder")
+     @*   @Html.ActionItem(Url.Content("~/Orders/OrderEntry/Cancel" + "?orderNumber=" + Model.Order.OrderNumber), Html.Term("CancelOrder", "Cancel Order"), "icon-actionPersonalOrder")*@
+    }
+}
+@if (TempData["ReturnError"] != null)
+{
+    <div style="-moz-background-clip: border; -moz-background-inline-policy: continuous;
+        -moz-background-origin: padding; background: #FEE9E9 none repeat scroll 0 0;
+        border: 1px solid #FF0000; display: block; font-size: 14px; font-weight: bold;
+        margin-bottom: 10px; padding: 7px;">
+        <div style="color: #FF0000; display: block;">
+            <img alt="" src="@Href("~/Resource/Content/Images/exclamation.png")" />&nbsp;@Html.Term("ReturnError", "This return could not be processed for the following reason:")
+            + "&nbsp;" + TempData["ReturnError"].ToString()</div>
+    </div>
+}
+<table class="FormTable Section" width="100%">
+    <tr>
+        <td>
+            <div>
+                <b>
+                    @Html.Term("OrderType", "Order Type"):</b>
+                @SmallCollectionCache.Instance.OrderTypes.GetById(Model.Order.OrderTypeID).GetTerm()
+                @if (Model.Order.OrderTypeID == Constants.OrderType.ReturnOrder.ToInt() && Model.Order.ParentOrderID.ToInt() != 0)
+                {
+                    // TODO: Make this into an Order.LoadSlim - DES
+                    Order parentOrder = Order.Load(Model.Order.ParentOrderID.ToInt());
+                    <a href="@Href("~/Orders/Details/Index", parentOrder.OrderNumber)">(@Html.Term("Parent")
+                        @Html.Term("Order"): @parentOrder.OrderNumber)</a>
+                }
+                <br />
+                <b>
+                    @Html.Term("Status", "Status"):</b>
+                @SmallCollectionCache.Instance.OrderStatuses.GetById(Model.Order.OrderStatusID).GetTerm()
+                <br />
+                @*<b>Consultant:</b> <span class="consultant">
+						@Model.ConsultantInfo.FullName</a></span>&nbsp;&nbsp;
+					<br />*@ <b>
+                        @Html.Term("CommissionDate", "Commission Date"):</b>
+                @Model.Order.CommissionDate.ToStringDisplay(CoreContext.CurrentCultureInfo)
+                @*<br />
+					@Html.Term("Market", "Market"): USA*@
+            </div>
+        </td>
+    </tr>
+</table>
+<div id="customers">
+    @{
+     
+        //Currency currency = SmallCollectionCache.Instance.Currencies.GetById(Model.Order.CurrencyID);
+
+        var  currency = CoreContext.CurrentCultureInfo;
+        bool isReturnOrder = Model.Order.OrderTypeID == Constants.OrderType.ReturnOrder.ToInt();
+
+        int quantity_Sum = 0;
+        decimal qvTotal_Sum = 0;
+        decimal subtotalNew_Sum = 0;
+        //decimal preAjustedCommissionableTotal_Sum = 0;
+        decimal adjustedCommissionableTotal_Sum = 0;
+    }
+    @foreach (OrderCustomer customer in Model.Order.OrderCustomers)
+    {
+
+        if (Model.Order.OrderCustomers.Count > 1)
+        {
+        <h3>
+            <a href="#">
+                @customer.FullName</a></h3>
+        } @*<table class="FormTable Section OrderCustomer" width="100%">
+		<tr>
+			<td class="FLabel">
+				Customer
+			</td>
+			<td>
+				<div class="CustomerLabel">
+					<a href="@Href("~/Account/Overview/Index") + customer.AccountNumber">
+						@customer.FullName
+						(#@customer.AccountNumber)</a>
+				</div>
+			</td>
+		</tr>
+	</table>*@
+	   
+		   
+        <!-- Products In Order -->
+        <div class="brdr1 brdrAll mb10 partySection-Customers">
+            <div class="UI-secBg brdrYYNN sectionHeader">
+                <div class="UI-header pad10">
+                    @Html.Term("ProductsInThisOrder", "Products In This Order")
+                </div>
+            </div>
+            @Html.Partial("_AppliedPromotionsHeader", Model.Order)
+            <table width="100%" class="DataGrid responsive">
+                <tr class="GridColHead UI-bg UI-header">
+                    <th>
+                        @Html.Term("SKU", "SKU")
+                    </th>
+                    <th>
+                        @Html.Term("Product", "Product")
+                    </th>
+                    <th>
+                        @Html.Term("RetailPerItem", "Retail Per Item")
+                    </th>
+                    <th>
+                        @Html.Term("PricePerItem", "Price Per Item")
+                    </th>
+                    <th>
+                        @Html.Term("Quantity", "Quantity")
+                    </th>
+                    @*CGI(CMR)-28/10/2014-Inicio*@
+                    <th>
+                        @Html.Term("QV", "QV")
+                    </th>
+                    <th>
+                        @Html.Term("Subtotal", "Subtotal")
+                    </th>
+                    @*CGI(CMR)-28/10/2014-Fin*@
+
+                    @*CS.05MAY2016.Inicio.Muestra CV*@
+                            @{ 
+        string valorSCV = OrderExtensions.GeneralParameterVal(CoreContext.CurrentMarketId, "SCV");
+        if (valorSCV == "S")
+        {
+                    <th>
+                        @Html.Term("CommissionablePrice", "Commissionable Price")
+                    </th>
+        }
+                                }
+                                @*CS.05MAY2016.Fin.Muestra CV*@
+
+
+                    <th>
+                        @Html.Term("Price", "Price")
+                    </th>
+                    @if (isReturnOrder)
+                    {
+                        <th>
+                            @Html.Term("ReturnReason", "Return Reason")
+                        </th>
+                    }
+                </tr>
+                <tbody>
+                    @{ var inventory = NetSteps.Encore.Core.IoC.Create.New<NetSteps.Data.Entities.Cache.InventoryBaseRepository>();
+                       var nonPromotionallyAddedProducts = customer.ParentOrderItems.Except(customer.GetPromotionallyAddedOrderItems());
+                       // wv: 20160606 Validacion si tiene o no dispatch para ser visualizado
+                       List<int> getListDispatchOrder = new List<int>();
+                       var numeroOrden = Convert.ToInt32(Model.Order.OrderNumber);
+                       getListDispatchOrder = OrderExtensions.getListDispatchOrderItems(numeroOrden);// wv:20160606 Se incluye lista de Dispatch x orderitemsID
+                    }
+                    @foreach (OrderItem orderItem in nonPromotionallyAddedProducts)
+                    {
+                        // wv: 20160606 valida los productos que son Dispatch y los saca de la visualizacion normal de items
+                        if (getListDispatchOrder.Exists(x => x.Equals(orderItem.OrderItemID)))
+                        {
+                            continue;
+                        }
+                        OrderItemReturn itemReturn = null;
+                        if (Model.Order.OrderTypeID == Constants.OrderType.ReturnOrder.ToInt())
+                        {
+                            itemReturn = orderItem.OrderItemReturns.FirstOrDefault();
+                            if (itemReturn == null)
+                            {
+                                itemReturn = OrderItemReturn.LoadByOrderItemID(orderItem.OrderItemID);
+                            }
+                        }
+@*CGI(CMR)-28/10/2014-Inicio*@
+                        decimal qvTotal = 0;
+                        decimal subtotalNew = 0;
+                        decimal preAdjustedItemPrice = 0;
+
+
+                        decimal? priceDiscuont = 0;
+                        decimal? priceWithDiscuont = 0;
+                        decimal? priceRetail = 0;
+                        
+                        var orderItemPrices = orderItem.OrderItemPrices;
+                        OrderItemPrice qvPrice = new OrderItemPrice();
+                        foreach (var q in orderItemPrices)
+                        {
+                            if (q.ProductPriceTypeID == orderItem.ProductPriceTypeID)
+                            {
+                                priceDiscuont = q.OriginalUnitPrice;
+                                priceWithDiscuont = q.UnitPrice;
+                            }
+                            
+                            var pType = ProductPriceType.Load(q.ProductPriceTypeID);
+                            if (pType.Name.Equals("QV")) { qvPrice = q; }
+
+
+                            if (q.ProductPriceTypeID == 1)
+                            {
+                                priceRetail = q.UnitPrice;
+                            }
+                        }
+
+                        quantity_Sum += orderItem.Quantity;
+                        qvTotal = qvPrice.UnitPrice * orderItem.Quantity;
+                        qvTotal_Sum += qvTotal;
+
+                        var priceTypeService = Create.New<IPriceTypeService>();
+                        var currencyPriceTypeID = orderItem.ProductPriceTypeID.HasValue ? orderItem.ProductPriceTypeID.Value : priceTypeService.GetPriceType(orderItem.OrderCustomer.AccountTypeID, (int)Constants.PriceRelationshipType.Products, ApplicationContext.Instance.StoreFrontID).PriceTypeID;
+                        preAdjustedItemPrice = orderItem.GetPreAdjustmentPrice(currencyPriceTypeID);
+
+                        subtotalNew = preAdjustedItemPrice * orderItem.Quantity;
+                        subtotalNew_Sum += subtotalNew;
+@*CGI(CMR)-28/10/2014-Fin*@
+
+                        decimal commissionableTotal = orderItem.CommissionableTotalOverride ?? 0;
+                        var product = inventory.GetProduct(orderItem.ProductID.ToInt());
+                        <tr>
+                            <td data-label="@Html.Term("SKU", "SKU")">
+                                @orderItem.SKU
+                            </td>
+                            <td data-label="@Html.Term("Product", "Product")">
+                                @product.Translations.Name()
+                                <div>
+                                    @{ OrderItemDetailModel message = Model.OrderItemDetails.FirstOrDefault(f => f.OrderItem == orderItem); }
+                                    @if (message != null)
+                                    {
+                                        foreach (var customText in message.Messages)
+                                        {
+                                        <span>@customText</span>
+                                        }
+                                    }
+                                </div>
+                                <div class="lawyer lineItemPromoList">
+                                    @foreach (var description in orderItem.OrderAdjustmentOrderLineModifications.GroupBy(a => a.OrderAdjustmentID).Select(g => g.First().OrderAdjustment.Description))
+                                    {			
+                                        <span class="block promoName">@description</span>
+                                    }
+                                </div>
+                                @if (Model.Order.OrderStatusID != (int)Constants.OrderStatus.Pending && Model.Order.OrderStatusID != (int)Constants.OrderStatus.PendingError
+                                   && orderItem.GiftCards != null && orderItem.GiftCards.Any())
+                                {
+
+                                    foreach (var gc in orderItem.GiftCards)
+                                    {
+                                    @:<br />&nbsp;&nbsp;&nbsp;@gc.Code
+                                                                                                                                									}
+                                }
+                                @if (orderItem.WasBackordered && Model.Order.OrderStatusID != Constants.OrderStatus.Shipped.ToInt())
+                                {
+                                    @Html.Term("WasBackordered", "(Backordered)")
+                                }
+                                @if (product.IsStaticKit() || product.IsDynamicKit())
+                                {
+                                    <span class="ClearAll"></span><a class="ViewKitContents TextLink Add" href="javascript:void(0);">
+                                        @Html.Term("ViewKitContents", "View Kit Contents")</a>
+                                    <div class="KitContents" style="display: none;">
+                                        <table width="100%" cellspacing="0">
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        @Html.Term("MaterialCode")
+                                                    </th>
+                                                    <th>
+                                                        @Html.Term("Description")
+                                                    </th>
+                                                    <th>
+                                                        @Html.Term("Quantity", "Quantity")
+                                                    </th>
+                                                </tr> 
+                                                @foreach (var objE in Order.GetProductDetails(Model.Order.OrderID).Where(x => x.ProductId == product.ProductID))
+                                                {
+                                                     <tr>
+                                                            <td data-label="@Html.Term("SKU")" class="KitSKU">
+                                                                @objE.SKU
+                                                            </td>
+                                                            <td data-label="@Html.Term("Product")">
+                                                            @objE.Name 
+                                                            </td>
+                                                            <td data-label="@Html.Term("Quantity", "Quantity")"> 
+                                                            @objE.Quantity
+                                                 </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </td>
+                            <td data-label="@Html.Term("RetailPerItem", "RetailPerItem")">
+                                
+                               @* @{
+                        priceRetail.ToString(currency);
+                                        
+                                    //var orderItemPriceRetail = orderItem.OrderItemPrices.Where(op => op.ProductPriceTypeID == Constants.ProductPriceType.Retail.ToInt()).FirstOrDefault();
+                                    //decimal unitPriceRetail = 0m;
+
+                                    //if (orderItemPriceRetail != null){
+                                    //    unitPriceRetail = orderItemPriceRetail.UnitPrice;  
+                                    //}
+                                }
+                                @unitPriceRetail.ToString(currency)*@
+
+                                @priceRetail.ToString(currency)
+                            </td>
+                            <td data-label="@Html.Term("PricePerItem", "Price Per Item")">
+                                
+                                @if (NetSteps.Common.Extensions.StringExtensions.EqualsIgnoreCase(orderItem.SKU, ViewBag.RestockingFeeSku))
+                                {
+                                    <span class="price originalPrice">@((orderItem.GetAdjustedPrice()).ToString("C" ,currency))</span>
+                                }
+                                else if ((priceWithDiscuont * orderItem.Quantity) != (priceDiscuont * orderItem.Quantity))
+                                {
+                                    <span class="block price originalPrice strikethrough">@((priceDiscuont).ToString(currency))</span> 
+                                    <span class="block price discountPrice">@((priceWithDiscuont).ToString(currency))</span>
+                                }
+                                else
+                                {
+                                    <span class="price originalPrice">@((priceDiscuont).ToString(currency))</span> 
+                                }
+
+                            </td>
+                            <td data-label="@Html.Term("Quantity", "Quantity")">
+                                @Math.Abs(orderItem.Quantity)
+                            </td>
+                            @*CGI(CMR)-28/10/2014-Inicio*@
+                            <td data-label="@Html.Term("QV", "QV")">
+                                @*@qvTotal.ToString(currency)*@ @*EL QV NO DEBE TENER SIGNO $*@
+								@Convert.ToInt32(qvTotal)
+                            </td>
+                            <td data-label="@Html.Term("Subtotal", "Subtotal")">
+                                @subtotalNew.ToString("C", currency)
+                            </td>
+
+                             @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{ 
+                                if (valorSCV == "S")
+                                {
+                                    @*CGI(CMR)-28/10/2014-Fin*@
+                                    <td data-label="@Html.Term("CommissionablePrice", "Commissionable Price")">
+                                        @{
+                                    //var preAjustedCommissionableTotal = orderItem.GetPreAdjustmentPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+                                    var adjustedCommissionableTotal = commissionableTotal; //orderItem.GetAdjustedPrice(orderItem.OrderCustomer.CommissionablePriceTypeID);
+                                    //CGI(CMR)-28/10/2014-Inicio
+                                    //preAjustedCommissionableTotal_Sum += preAjustedCommissionableTotal;
+                                    adjustedCommissionableTotal_Sum += adjustedCommissionableTotal;
+
+                                    //CGI(CMR)-28/10/2014-Fin
+                                        }
+                                
+                                        @*@if (adjustedCommissionableTotal != preAjustedCommissionableTotal)
+                                        {
+                                            <span class="block price originalPrice strikethrough">@preAjustedCommissionableTotal.ToString(currency)</span> 
+                                            <span class="block price discountPrice">@adjustedCommissionableTotal.ToString(currency)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="price originalPrice">@adjustedCommissionableTotal.ToString(currency)</span> 
+                                        }*@
+                                        <span class="price originalPrice">@adjustedCommissionableTotal.ToString("C", currency)</span> 
+                                    </td>
+                                }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                            <td data-label="@Html.Term("Price", "Price")">
+                                @if (NetSteps.Common.Extensions.StringExtensions.EqualsIgnoreCase(orderItem.SKU, ViewBag.RestockingFeeSku))
+                                {
+                                    <span class="price originalPrice">@((orderItem.GetAdjustedPrice() * orderItem.Quantity).ToString("C" ,currency))</span>
+                                }
+                                else if ((priceWithDiscuont * orderItem.Quantity) != (priceDiscuont * orderItem.Quantity))
+                                {
+                                    <span class="block price originalPrice strikethrough">@((priceDiscuont * orderItem.Quantity).ToString(currency))</span> 
+                                    <span class="block price discountPrice">@((priceWithDiscuont * orderItem.Quantity).ToString(currency))</span>
+                                }
+                                else
+                                {
+                                    <span class="price originalPrice">@((priceDiscuont * orderItem.Quantity).ToString(currency))</span> 
+                                }
+                            </td>
+                            @if (itemReturn != null)
+                            {
+                                <td data-label="@Html.Term("ReturnReason", "Return Reason")">
+                                    @SmallCollectionCache.Instance.ReturnReasons.GetById(itemReturn.ReturnReasonID).GetTerm()
+                                </td>
+                            }
+                        </tr>
+                    }
+
+                    @{
+                        List<getDispatchByOrder> loadDispatchProcessOrder = new List<getDispatchByOrder>();
+                        loadDispatchProcessOrder = OrderExtensions.GetDispatchByOrder(numeroOrden);
+                        var listG = loadDispatchProcessOrder.GroupBy(x => new { x.DispatchID, x.Ddescripcion }).Select(y => new GrupoDispatchByOrder()
+                            {
+                                DispatchID = y.Key.DispatchID,
+                                Ddescripcion = y.Key.Ddescripcion
+                            }).ToList();
+
+                        foreach (var itemG in listG)
+                        {
+                            var listaCarga = loadDispatchProcessOrder.Where(donde => donde.DispatchID == itemG.DispatchID);
+                            //var dd = listaCarga.ElementAt(0).OrderItemID
+                            var nonPromotionallyAddedProducts2 = customer.ParentOrderItems.Except(customer.GetPromotionallyAddedOrderItems());
+
+                            List<OrderItem> listaOrdenItem = new List<OrderItem>();
+                            foreach (var item in nonPromotionallyAddedProducts2)
+                            {
+                                if (listaCarga.Where(donde => donde.OrderItemID.ToString().Contains(item.OrderItemID.ToString())).Count() > 0)
+                                {
+                                    listaOrdenItem.Add(item);
+                                }
+                            }
+                            <tr>
+                              <td>
+                              </td>
+                               <td colspan = "7">
+                               <b>@itemG.Ddescripcion</b>
+                              </td>
+                            </tr>
+                            foreach (var item in listaOrdenItem)
+                            {
+                             <tr>
+                              <td data-label="@Html.Term("SKU", "SKU")">
+                                @item.SKU
+                              </td>
+                              <td data-label="@Html.Term("Product", "Product")">
+                                @item.ProductName
+                              </td>
+                              <td>
+                              </td>
+                              <td>
+                                <@Html.Term("Cart_FREE", "FREE")
+                              </td>
+                              <td colspan = "4">
+                              </td>
+                              
+                             </tr>
+                            
+                            }
+                            //var ver = nonPromotionallyAddedProducts2.Where(d=>d.OrderItemID)
+                            //var union = from nom in nonPromotionallyAddedProducts2
+                            //            join carga in listaCarga on nom equals carga.OrderItemID
+                            //            select new { nomnew = nom.OrderItemID };
+
+
+                        }
+                     }
+
+                    @{
+                    int operationKind = (int)NetSteps.OrderAdjustments.Common.Model.OrderAdjustmentOrderLineOperationKind.AddedItem;
+                    var groupedPromoItems = customer.GetPromotionallyAddedOrderItems().GroupBy(x => x.OrderAdjustmentOrderLineModifications.First(y => y.ModificationOperationID == operationKind).OrderAdjustment);			
+                    }
+                    @foreach (var group in groupedPromoItems)
+                    {
+                        <tr class="UI-lightBg specialPromotionItem bold autoGift">
+                            <td>
+                            </td>
+                            <td>
+                                <span class="promoHeader">@Html.Term(group.Key.Description)</span>
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                $0.00
+                            </td>
+                        </tr>
+                        foreach (var product in group)
+                        {
+                        <tr>
+                            <td>
+                                <span class="FL UI-icon icon-bundle-arrow"></span><span class="FL pad5 promoItemSku">@product.SKU</span>
+                            </td>
+                            <td class="promoItemName">
+                                @product.ProductName<br />
+                            </td>
+                            <td>
+                                <span class="freeItemPrice">@Html.Term("Cart_FreeItemPrice", "FREE")</span>
+                            </td>
+                            <td>
+                                @product.Quantity
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+                <tbody>
+                    <tr class="GridTotalBar">
+                        <td colspan="4">
+                            &nbsp;
+                        </td>
+                        <td>
+                            @quantity_Sum
+                        </td>
+                        @*CGI(CMR)-28/10/2014-Inicio*@
+                        <td>
+                            <b><span class="customerSubtotal">
+                                @*@qvTotal_Sum.ToString(currency)*@ @*EL QV NO DEBE TENER SIGNO $*@
+								@Convert.ToInt32(qvTotal_Sum)
+                            </span></b>
+                        </td>
+                        <td>
+                            <b><span class="customerSubtotal">
+                                @subtotalNew_Sum.ToString("C", currency)
+                            </span></b>
+                        </td>
+
+                         @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                    if (valorSCV == "S")
+                    {
+								
+                        <td>
+                            <b><span class="customerSubtotal">
+                                @adjustedCommissionableTotal_Sum.ToString("C", currency)
+                            </span></b>
+                        </td>
+                    }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                        @*CGI(CMR)-28/10/2014-Fin*@
+                        <td>
+                            <b><span class="customerSubtotal">
+                                @{
+                    var subtotal = Model.Order.OrderCustomers[0].AdjustedSubTotal;
+                    var preAdjustedSubtotal = Model.Order.OrderCustomers[0].Subtotal;
+                                }
+                                @if (preAdjustedSubtotal != subtotal)
+                                {
+                                    <span class="originalPrice strikethrough">
+                                        @(preAdjustedSubtotal.ToString(currency))
+                                    </span>
+                                    <span class="discountPrice">
+                                        @( subtotal.ToString("C", currency))
+                                    </span>                                    
+                                }
+                                else
+                                {
+                                    @preAdjustedSubtotal.ToString(currency)                                
+                                }
+                            </span>(@Html.Term("Subtotal", "Subtotal")) </b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--/ end products in order -->
+	   
+		<div class="brdr1 brdrAll mb10 partySection-Customers">
+            <div class="UI-secBg brdrYYNN sectionHeader">
+                <div class="UI-header pad10">
+                    @Html.Term("ViewProductsLacks", "View Products Lacks")
+                </div>
+            </div>
+            <div class="pad10">
+                <table id="productLacks" width="100%" class="DataGrid">
+                    <thead>
+                        <tr class="GridColHead">
+                            <th> @Html.Term("SKU", "SKU")</th>
+                            <th> @Html.Term("Product", "Product")</th>
+                            <th style="width: 9.091em;"> @Html.Term("Quantity", "Quantity")</th>
+                            <th> @Html.Term("Motive", "Motive")</th>
+                        </tr>
+                    </thead>
+                    <tbody id="first">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+		
+        <!-- Order shipped to -->
+        <div class="brdr1 brdrAll mb10 partySection-Customers">
+            <div class="UI-secBg brdrYYNN sectionHeader">
+                <div class="UI-header pad10">
+                    @Html.Term("ShippedTo", "Shipped To")
+                </div>
+            </div>
+            <div class="pad10">
+                <div class="FL mr10 bold" style="width: 50px;">@Html.Term("Attn"):</div>
+                <div class="FL">
+                    @* @{OrderShipment shipment = Model.GetDefaultShipment();}*@
+                    @foreach (var shipment in Model.Order.OrderShipments)
+                    {
+                        if (shipment != null)
+                        {
+                        @Html.Raw(shipment.ToDisplay())
+                        }
+                        else if (Model.Order.OrderCustomers.Count > 1)
+                        {
+                        @Html.Term("ShippingToParty", "Shipping to party")
+                        }
+                    }
+                </div>
+                <div class="clr pad5">
+                    <hr />
+                </div>
+                <div class="FL mr10 bold" style="width: 50px;">@Html.Term("DataPrevista", "Data Prevista"):</div>
+                <div class="FL">
+                    @if (Model.Order.OrderShipments != null)
+                    {
+                        foreach (var item in Order.GetOrderShipment(customer.OrderCustomerID))
+                        {
+                        @*@item.Name*@
+                        @Html.Term("SeraEntregue", "O seu pedido será entregue:")
+
+                        <br />
+                        
+                            if (CoreContext.CurrentLanguageID != 5)
+                            {
+                                <span>@Html.Term("ShippedOn", "Shipped On"): @item.DateStimate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span>
+                            }
+                            else
+                            {
+                                <span>@item.DateStimate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo)</span>
+                            }
+
+                        <hr />
+                        }
+                    }
+                    else if (Model.Order.OrderCustomers.Count > 1)
+                    {
+                        @Html.Term("ShippingToParty", "Shipping to party")
+                    }
+                </div>
+                <span class="clr"></span>
+            </div>
+        </div>
+        <!-- Order payments -->
+        <div class="brdr1 brdrAll mb10 partySection-Customers">
+            <div class="UI-secBg brdrYYNN sectionHeader">
+                <div class="UI-header pad10">
+                    @Html.Term("PaymentsAppliedToThisOrder", "Payments Applied This Order")
+                </div>
+            </div>
+            <table class="FormTable Section" width="100%">
+                <tr>
+                    <td style="text-align: left;">
+                        <table class="DataGrid responsive" width="100%">
+                            <tr class="GridColHead">
+                                <th>
+                                    @Html.Term("Payment", "Payment")
+                                </th>
+                                <th>
+                                    @Html.Term("Amount", "Amount")
+                                </th>
+                            </tr>
+                            <tbody>
+                                @if (customer.OrderPayments.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="3">
+                                            @Html.Term("NoPaymentsApplied", "No payments applied")
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var orderPayment in customer.OrderPayments)
+                                    {
+                                        var descrip = PaymentMethods.GetTDescPaymentConfiguationByOrderPayment(orderPayment.OrderPaymentID);
+                                        descrip = (descrip == "PREVIOS BALANCE") ? "Product Credit" : descrip;
+                                        decimal amountCredit = (Session["ProductCredit"] != null ? decimal.Parse(Session["ProductCredit"].ToString()) : 0);
+                                        decimal orderPaymentShow = 0;
+                                        decimal GrandTotal = Model.Order.GrandTotal.ToDecimal();
+                                        orderPaymentShow = (amountCredit > GrandTotal) ? GrandTotal : orderPayment.Amount;
+                                        
+                                    <tr>
+                                        <td data-label="@Html.Term("Payment", "Payment")">
+                                            <a href="javascript:void(0);" title="@Html.Term("ViewPaymentDetails", "View payment details")" onclick="showPaymentModal(@orderPayment.OrderPaymentID);">
+                                                @descrip</a>&nbsp;(@(SmallCollectionCache.Instance.OrderPaymentStatuses.GetById(orderPayment.OrderPaymentStatusID).GetTerm()))
+                                        </td>
+                                        <td data-label="@Html.Term("Amount", "Amount")">
+                                            @orderPaymentShow.ToString("N",currency) @*orderPayment.Amount*@
+                                        </td>
+                                    </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tr class="GridTotalBar">
+                                <td colspan="1" style="text-align: right;">
+                                    @Html.Term("DWS_Orders_Details_OrderSubtotalLabel", "Subtotal"):<br />
+
+                                    @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                if (valorSCV == "S")
+                                {
+                                    @Html.Term("DWS_Orders_Details_CommissionableTotalLabel", "Commissionable Total")@:<br />
+                                                                                                                      }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                                    @Html.Term("DWS_Orders_Details_TaxLabel", "Tax"):<br />
+                                    @Html.Term("DWS_Orders_Details_ShippingLabel", "Shipping"):<br />
+                                    @Html.Term("DWS_Orders_Details_HandlingLabel", "Handling"):<br />
+                                    @Html.Term("DWS_Orders_Details_OrderTotalLabel", "Order Total"):<br />
+                                </td>
+                                <td>
+                                    @{decimal handlingTotal = Model.Order.HandlingTotal.HasValue ? Model.Order.HandlingTotal.Value : 0;
+                                      decimal shippingTotal = (Model.Order.ShippingTotalOverride != null)
+                                     ? Model.Order.ShippingTotalOverride.ToDecimal()
+                                     : Model.Order.ShippingTotal.ToDecimal();
+                                    }
+                                    @Model.Order.Subtotal.ToDecimal().ToString("C",currency)<br />
+
+                                    @*CS.03MAY2016.Inicio.Muestra CV*@
+                            @{
+                                      if (valorSCV == "S")
+                                      {
+                                    @Model.Order.CommissionableTotal.ToDecimal().ToString("C",currency)<br />
+                                      }
+                                }
+                                @*CS.03MAY2016.Fin.Muestra CV*@
+
+
+                                    @((Model.Order.TaxAmountTotalOverride != null) ? Model.Order.TaxAmountTotalOverride.ToDecimal().ToString(currency) : Model.Order.TaxAmountTotal.ToDecimal().ToString("C", currency))<br />
+                                    @(shippingTotal.ToString("C",currency))<br />
+                                    @(handlingTotal.ToString("C",currency))<br />
+                                    <b>
+                                        @Model.Order.GrandTotal.ToDecimal().ToString("C",currency)</b><br />
+                                </td>
+                            </tr>
+                            @{decimal paymentsMade02 = customer.OrderPayments.Where(p => p.OrderPaymentStatusID == Constants.OrderPaymentStatus.Completed.ToShort()).Sum(p => p.Amount);}
+                            @{decimal balance = Order.GetProductCreditByAccount(Model.Order.ConsultantID);}
+                            @{
+                                //decimal paymentsMade =   customer.OrderPayments.Where(y=> !y.PaymentTypeID.Equals(6)).Sum(x=>x.Amount);
+                                decimal paymentsMade = customer.OrderPayments.Where(y => y.Amount > 0).Sum(x => x.Amount);
+
+                                var paymentsMadeN = customer.OrderPayments.Where(y => y.Amount < 0).Sum(x => x.Amount);
+                                paymentsMadeN = paymentsMadeN * (-1);
+                                var total = Model.Order.GrandTotal.ToDecimal();
+                                paymentsMade = paymentsMadeN + total;
+                                
+                                }
+                                  
+                            @{decimal balanceDue = 0;
+                              if (Model.Order.OrderTypeID == (int)Constants.OrderType.ReturnOrder)
+                              {
+                                  balanceDue = Math.Abs(Model.Order.GrandTotal.ToDecimal()) - paymentsMade;
+                              }
+                              else
+                              {
+                                  balanceDue = 0;// (Model.Order.GrandTotal.ToDecimal() - paymentsMade);
+                              }
+                              
+                              
+                            }
+                            <tr class="UI-lightBg orderBalanceDisplay @(balanceDue > 0 ? "balanceOwed" : "balancePayed")">
+                                <td colspan="1" class="right">
+                                    @Html.Term("PaymentsApplied", "Payments Applied"):<br />
+                                    @Html.Term("BalanceDue", "Balance Due"):
+                                </td>
+                                <td>
+                                    <b>
+                                        @paymentsMade.ToString("C", currency)</b><br />
+                                    <b class="grandTotalNumber"><span>
+                                        @balanceDue.ToString("C", currency)</span></b>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+	   
+    }
+</div>
+@if (Model.Order.OrderCustomers.Count > 1)
+{
+    <table class="FormTable Section" width="100%">
+        <tr>
+            <td class="FLabel">
+                @Html.Term("PartyAddress", "Party Address")
+            </td>
+            <td>
+                @* @{OrderShipment shipment = Model.GetDefaultShipment();}*@
+                @foreach (var shipment in Model.Order.OrderShipments)
+                {
+                    if (shipment != null)
+                    {
+                    @Html.Raw(shipment.ToDisplay())
+                    }
+                }
+            </td>
+        </tr>
+    </table>
+    <table class="FormTable Section" width="100%">
+        <tr>
+            <td class="FLabel">
+                @Html.Term("PartyTotals", "Party Totals")
+            </td>
+            <td style="text-align: left;">
+                <table class="DataGrid" width="100%">
+                    <tr class="GridTotalBar">
+                        <td colspan="1" style="text-align: right;">
+                            @Html.Term("Subtotal", "Subtotal"):<br />
+                            @Html.Term("CommissionableTotal", "Commissionable Total"):<br />
+                            @Html.Term("Tax", "Tax"):<br />
+                            @Html.Raw(Html.Term("S&H", "S&amp;H")):<br />
+                            @Html.Term("OrderTotal", "Order Total"):<br />
+                        </td>
+                        <td>
+                            @(currency == null ? Model.Order.Subtotal.ToDecimal().ToString("C", currency) : Model.Order.Subtotal.ToDecimal().ToString("C", currency))<br />
+                            @(currency == null ? Model.Order.CommissionableTotal.ToDecimal().ToString("C", currency) : Model.Order.CommissionableTotal.ToDecimal().ToString("C", currency))<br />
+                            @(currency == null ? Model.Order.TaxAmountTotal.ToDecimal().ToString("C", currency) : Model.Order.TaxAmountTotal.ToDecimal().ToString("C", currency))<br />
+                            @(currency == null ? Model.Order.ShippingTotal.ToDecimal().ToString("C", currency) : Model.Order.ShippingTotal.ToDecimal().ToString("C", currency))<br />
+                            <b>
+                                @(currency == null ? Model.Order.GrandTotal.ToDecimal().ToString("C", currency) : Model.Order.GrandTotal.ToDecimal().ToString("C" ,currency))</b><br />
+                        </td>
+                    </tr>
+                    <tr class="UI-lightBg">
+                        <td colspan="1" style="text-align: right">
+                            @Html.Term("PaymentsApplied", "Payments Applied"):<br />
+                            @Html.Term("BalanceDue", "Balance Due"):
+                        </td>
+                        <td>
+                            <b>
+                                @{
+                                    decimal paymentsMade = Model.Order.OrderCustomers.SelectMany(oc => oc.OrderPayments).Where(p => p.OrderPaymentStatusID != Constants.OrderPaymentStatus.Cancelled.ToShort()).Sum(p => p.Amount);}
+                                @(
+                                currency == null ? paymentsMade.ToString("C",currency) : paymentsMade.ToString("C",currency))</b><br />
+                            @{
+                                decimal balanceDue = 0;
+                              if (Model.Order.OrderTypeID == (int)Constants.OrderType.ReturnOrder)
+                              {
+                                  balanceDue = Math.Abs(Model.Order.GrandTotal.ToDecimal()) - paymentsMade;
+
+                              }
+                              else
+                              {
+                                  balanceDue = (Model.Order.GrandTotal.ToDecimal() - paymentsMade);
+                              }
+                            }
+                            <b><span style="color: @(balanceDue > 0 ? "Red" : "Green");">
+                                @(currency == null ? balanceDue.ToString("C", currency) : balanceDue.ToString("C",currency))</span></b>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+}
+@if (!Model.Order.InvoiceNotes.IsNullOrEmpty())
+{
+    <table class="FormTable Section" width="100%">
+        <tr>
+            <td class="FLabel">
+                @Html.Term("InvoiceNotes", "Invoice Notes")
+            </td>
+            <td>
+                @(Model.Order.InvoiceNotes != null ? Model.Order.InvoiceNotes : "")
+            </td>
+        </tr>
+    </table>
+}
+@if (Model.Order.OrderTypeID == 9)
+{
+    <table class="FormTable Section" width="100%">
+        <tr>
+            <td class="FLabel">
+                @Html.Term("REASONCODES", "REASON CODES")
+            </td>
+            <td>
+                @Html.Term("ReturnType", "Return Type"):
+                @if (Model.Order.ReturnTypeID.ToInt() > 0)
+                {
+                    @SmallCollectionCache.Instance.ReturnTypes.GetById(Model.Order.ReturnTypeID.ToInt()).GetTerm()<br />
+                }
+            </td>
+        </tr>
+    </table>
+}
+<div id="paymentInfoModal" class="LModal jqmWindow">
+    <div class="mContent">
+        <h3>
+            @Html.Term("BillingInformation", "Billing Information")</h3>
+        <table id="paymentInfo" width="100%">
+        </table>
+        <a href="javascript:void(0);" class="jqmClose">
+            @Html.Term("Close", "Close")</a>
+    </div>
+</div>
+
+<iframe   name ="frmExportar" id="frmExportar" style="display:none" src="">
+</iframe>

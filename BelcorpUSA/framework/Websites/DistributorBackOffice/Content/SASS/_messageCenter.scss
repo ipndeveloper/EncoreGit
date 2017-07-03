@@ -1,0 +1,28 @@
+﻿#messageCenterModal {
+	background:$NuetralMessage;
+	@include opacity(.98);
+	color:$SuccessMessage;
+	font-weight:bold;
+	font-size:1.25em;
+	position:fixed;
+	z-index:99999;
+	top:0;
+	left:0;
+	width:100%;
+	text-align:center;
+	display: none;
+
+	#messageCenter {
+		div {
+			padding:em(10);
+		}
+	}
+	&.thisIsNowAnErrorMessage, div.thisIsNowAnErrorMessage {
+		background:$NuetralMessage;
+		color:$WarningMessage;
+	}
+	&.thisIsNowANotificationMessage, div.thisIsNowANotificationMessage {
+		background:$NuetralMessage;
+		color:$copy;
+	}
+}

@@ -1,0 +1,20 @@
+@model dynamic
+@{
+    ViewBag.Title = Html.Term("AnErrorHasOccurred", "An error has occurred");
+}
+<h2>
+    @ViewBag.Title
+</h2>
+<p>
+    @Html.Term("ErrorText", "We apologize, but we are unable to handle your request at this time. Please try your request again later.")
+    @if (ViewBag.ErrorLogID != null)
+    {
+        <br />
+        @Html.Term("ErrorLogText", "We have saved the error in our system with a log id of {0}", (int?)ViewBag.ErrorLogID)
+    }
+</p>
+<p>
+    <a href="@Url.Content("~/")">
+        @Html.Term("ReturnToHomePage", "Return to Home page")
+    </a>
+</p>

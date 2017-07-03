@@ -1,0 +1,952 @@
+/******************************************************************************************************************************************
+* QUICK REFERENCE GUIDE
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* Shared CSS3 Transitions     * Standard Tags          * Re-used Color Rules            * Containers, Columns, etc     * Icons
+* Buttons/Stylized Links      * Logo                   * Site Search/User Info          * SiteNav                      * Tabber
+* Forms                       * Tables                 * Grid Filters, Pagination...    * Resources                    * Docked Info Card...
+* Widgets                     * Downline Tree          * Bundle Pack Creation           * Bookings Calendar Theme      * Tooltip plugin
+* Alerts                      * Modals                 * Page Headers                   * Dashboard                    * Contacts Tab
+* Performance Tab KPIs        * News Tab               * Documents Tab                  * Orders/Parties Tab           * My Account Tab
+* Communication Tab           * Support Tab            * Misc Rules
+* -----------------------------------------------------------------------------------------------------------------------------------------
+* END QUICK REFERENCE GUIDE
+*******************************************************************************************************************************************/
+/************************************************************************************
+* Shared CSS3 Transitions
+************************************************************************************/
+a, .Toggle span { @include transition-property(all); }
+
+
+/************************************************************************************
+* Standard Tags
+************************************************************************************/
+body {
+	@include site-body;
+	@include site-typography;
+}
+h1 { font-size:em(18); }
+h2 { font-size:em(16); } 
+h3 { font-size:em(14); }
+h4 { font-size:em(12); }
+a {
+	text-decoration:none;
+	outline:none;
+	color: $BodyLink;
+	@include transition-duration($transition_time);
+	&.current {
+		font-weight:bold;
+	}
+	&:hover {
+		color: $BodyLinkHover;
+	}
+	&.UI-linkAlt {
+		color: #333;
+	}
+}
+p {
+	margin-bottom:em(6);
+}
+
+/************************************************************************************
+* Re-used Color Rules
+************************************************************************************/
+.UI-darkBg, .tooltip, .UI-header {@include section-rules($Dark);}
+.UI-mainBg {@include section-rules($Main);}
+.UI-secBg, .resourceInfoText {@include section-rules($Sec);}
+.UI-lightBg, .DataGrid tr.hover, .collapsedCart {@include section-rules($Light);}
+.UI-whiteBg {background-color: $WhiteBg;}
+.Alt {background: tint($LightBg, 45%);}
+.Block {background-color: #fff;}
+.NotActive {background-color: $LightBg;}
+.active, .available {border-color: $SuccessMessage !important; }
+.requiredMarker, .unavailable {color: $WarningMessage;}
+.brdr, .brdr1 {border-color:$BorderColor;}
+
+/************************************************************************************
+* Containers, Columns, etc
+************************************************************************************/
+#Container {
+	background-color: $PageBg;
+	padding: em(5);
+}
+#TopPane {
+	background:$PageBg;
+}
+body.DashboardHome #PageContain {
+	width: em(960);
+}
+#FooterPane .FooterInner {
+	font-size: em(9);
+	padding: em(5 0, 9);
+	color: tint($copy, 50%);
+}
+
+/************************************************************************************
+* Icons
+************************************************************************************/
+
+/************************************************************************************
+* Buttons/Stylized Links
+************************************************************************************/
+.Button {
+	@include main-button-style;
+	&:hover {
+		@include main-button-hover;
+	}
+	&.MoreOptions {
+		@include secondary-button-style;
+		&:hover {
+			@include secondary-button-hover;
+		}
+	}
+}
+.Cancel {
+	@include base-button-rules;
+}
+.UI-linkAlt, a.UI-linkAlt, .DataGrid {
+	a {
+		color: shade($BodyLink, 40%);
+		&:hover {
+			color:$BodyLink;
+		}
+	}
+}
+.listNav a {
+	&:hover, &.current {
+		background-color: tint($LightBg, 20%);
+	}
+}
+.UI-secBg .changeViewIcon {
+	&:before {
+		background-color:shade($SecBg, 8%);
+		border:1px solid shade($SecBg, 14%);
+	}
+	&:hover:before, &.active:before {
+		background-color:$LightBg;
+		color: shade($SecBgLink, 30%)
+	}
+}
+
+/************************************************************************************
+* Logo
+************************************************************************************/
+#LogoContain {
+	padding: em(15 20);
+}
+
+/************************************************************************************
+* Site Search/User Info
+************************************************************************************/
+.userInfo {
+	cursor: pointer;
+	margin: em(0 20 0 0);
+	.name {
+		line-height: em($IconSize);
+		color: #fff;
+	}
+	.UserID {
+		padding-right: em(3);
+	}
+	li {
+		list-style-type: none;
+		float: none;
+		clear: both;
+		margin: em(1);
+	}
+	.dropDown {
+		clear: both;
+		z-index: 88788;
+		padding: em(1);
+		min-width:em(85);
+	}
+	a {
+		display: block;
+		padding: em(2 10);
+		&:hover {
+			background-color: tint($MainBg, 30%);
+			color: shade($MainBgLink, 10%);
+		}
+	}
+}
+
+/************************************************************************************
+* SiteNav
+************************************************************************************/
+.UI-siteNav {
+	background:tint($DarkBg, 40%);
+	padding-left:em(5);
+	.inner {
+		overflow: hidden;
+	}
+	.FR {
+		margin-top:em(9);
+	}
+	a {
+		color:#fff;
+	}
+}
+
+ul.mainNav li a {
+	&:hover {
+		background:tint($DarkBg, 50%);
+	}
+	span {
+		@include nav-link-style;
+	}
+}
+.globalSearchBar {
+	@include BorderRadius;
+}
+.globalSearch {
+	.iconText {
+		display: none;
+		padding: 0;
+	}
+}
+
+/************************************************************************************
+* Tabber
+************************************************************************************/
+.Tabber {
+	border-bottom: em(1) solid $BorderColor;
+	li {
+		border: em(1) solid $BorderColor;
+		border-bottom: none;
+		&.current a {
+			background: $PageBg;
+			font-weight: bold;
+		}
+	}
+}
+.TabberBody {
+	border: solid $BorderColor;
+	border-width:em(0 1 1 1);
+}
+
+/************************************************************************************
+* Forms
+************************************************************************************/
+input, textarea, select {
+	font-family:$FontFamily;
+	font-size:em($input_font_size);
+}
+
+/************************************************************************************
+* Tables
+************************************************************************************/
+tr.UI-header {
+	line-height: em(14);
+}
+.DataGrid {
+	th {
+		background: tint($DarkBg, 20%);
+		color: #fff;
+		a {
+			color: #fff;
+		}
+	}
+}
+.IE7 .DataGrid {
+	th, td {
+		border-right: em(1) solid $PageBg;
+	}
+}
+.IconCol {
+	width: em(24);
+	text-align: center;
+}
+table.Itemized {
+	td {
+		@include DottedLine;
+	}
+	th {
+		border-bottom: 1px solid #333;
+		text-align: left;
+	}
+}
+
+/************************************************************************************
+* Grid Filters, Pagination etc.
+************************************************************************************/
+.GridFilters {
+	.Button {
+		line-height:em(25);
+	}
+}
+//Pagination//
+.Pagination {
+	margin-left: em(1);
+	padding: em(5);
+	line-height: em(28);
+	.Bar {
+		margin: 0 auto;
+		text-align: center;
+		width: em(200);
+		float: left;
+		height: em(28);
+		@include section-rules($Light);
+    }
+	a {
+		display: block;
+		width: em(28);
+		height: em(28);
+		line-height: em(40);
+		overflow: hidden;
+		@include ButtonGradient(shade($LightBg,12%),shade($LightBg,22%));
+		span {
+			display: block;
+		} 
+	} 
+}
+
+/************************************************************************************
+* Resources
+************************************************************************************/
+.Rwrapper {
+	background: #fff;
+}
+.Rtitle {
+	font-weight: bold;
+}
+.Resource .Updated {
+	background: #000;
+	color: #fff;
+}
+
+/************************************************************************************
+* Docked Info Card (Media Bundle, Tree View, Graphical Viewer)
+************************************************************************************/
+.infoCardWindow {
+	@include opacity(.9);
+}
+
+/************************************************************************************
+* Widgets
+************************************************************************************/
+.WidgetTitle {
+	@include BoxShadow(em(0 0 3) rgba(0,0,0,.3));
+	border: em(2) solid $PageBg;
+	margin: em(2 2 7);
+	@include BorderRadius;
+}
+.WidgetBody, .WidgetUtility, .widgetDrillLinks, .listBody {
+	margin: em(0 5 5);
+}
+.widgetTabs {
+	font-size: em(9);
+	height: em(24, 9);
+	li, span, .current a {
+		line-height: em(24, 9);
+	}
+	&.current a {
+		font-weight: normal;
+	}
+}
+
+/************************************************************************************
+* Downline Tree
+************************************************************************************/
+.FlatTree {
+	#treeContainer {
+		background: $PageBg;
+	}
+}
+#DownlineKeys {
+	.widgetTabs {
+		margin: em(0 5, 9);
+	}
+	.listBody {
+		margin: em(0 5);
+	}
+}
+
+/************************************************************************************
+* Bundle Pack Creation
+************************************************************************************/
+#BundlePackItems {
+	h2 {
+		@include DottedLine;
+		&.UI-Warning span {
+			color: $WarningMessage;
+		}
+		&.UI-Complete span {
+			color: $SuccessMessage;
+		}
+	}
+	.removeProduct span {
+		@include DottedLine;
+	}
+}
+.BundleOption {
+	background-color: tint($SuccessMessage, 50%);
+	color: $copy;
+	.optionText a {
+		color: $copy;
+		text-decoration: underline;
+		&:hover {
+			text-decoration: none;
+		}
+	}
+	.icon-bundle-option {
+		background-position: 0 bottom;
+		color: White;
+		text-transform: uppercase;
+	}
+}
+
+/************************************************************************************
+* Bookings Calendar Theme
+************************************************************************************/
+.fc-event-skin {
+	background: $SuccessMessage;
+	color: #fff;
+}
+.fc-widget-header .fc-agenda-divider-inner {
+	background: $LightBg;
+	color: #000;
+}
+.fc-event-vert .fc-event-bg {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: $WhiteBg;
+	@include opacity(.3);
+}
+.fc-widget-header, .fc-widget-content {
+	border: em(1) solid $BorderColor;
+}
+.fc-state-highlight {
+	background: $NuetralMessage;
+}
+.fc-cell-overlay {
+	//semi-transparent rectangle while dragging//
+	background: tint($SecBg, 30%);
+	@include opacity(.2);
+}
+.fc-state-default {
+	.fc-button-effect span {
+		border-width: 100px 0 0 1px;
+		border-style: solid;
+		border-color: $WhiteBg;
+		background: $DarkBg;
+		@include opacity(.09);
+	}
+	border-style: solid;
+	border-color: $BorderColor shade($BorderColor, 10%) shade($BorderColor, 20%);
+	background: tint($LightBg, 20%);
+	color: $copy;
+	.fc-button-inner {
+		border-style: solid;
+		border-color: $BorderColor shade($BorderColor, 10%) shade($BorderColor, 20%);
+		background: tint($LightBg, 20%);
+		color: $copy;
+	}
+}
+.fc-state-hover {
+	border-color: shade($BorderColor, 35%);
+	.fc-button-inner {
+		border-color: shade($BorderColor, 35%);
+	}
+}
+.fc-state-down {
+	border-color: shade($BorderColor, 50%);
+	background: #777;
+	.fc-button-inner {
+		border-color: shade($BorderColor, 50%);
+		background: #777;
+	}
+}
+.fc-state-active {
+	border-color: shade($BorderColor, 50%);
+	background: #777;
+	color: #fff;
+	.fc-button-inner {
+		border-color: shade($BorderColor, 50%);
+		background: #777;
+		color: #fff;
+	}
+}
+.fc-state-disabled {
+	color: #999;
+	border-color: tint($BorderColor, 10%);
+	.fc-button-inner {
+		color: #999;
+		border-color: tint($BorderColor, 10%);
+	}
+}
+
+.listShopping {
+	position: relative;
+	.productQty .errorMessageBubble {
+		left: 328px !important;
+		top: 40px !important;
+	}
+}
+
+/************************************************************************************
+* Tooltip plugin
+************************************************************************************/
+
+/************************************************************************************
+* Alerts
+************************************************************************************/
+.UI-Alert {
+	background: $WarningMessage url("../Images/alertsquare1.png") no-repeat scroll left top;
+	font-size: em(14);
+	font-weight: bold;
+	height: em(41);
+	line-height: em(41);
+	margin: em(0 0 5 0);
+	text-transform: uppercase;
+	text-align: center;
+	color: #fff;
+}
+.errorMessageBubble {
+	background: tint($WarningMessage, 80%);
+	border: em(1) solid $WarningMessage;
+	display: none;
+	font-size: em(12);
+	font-weight: bold;
+	margin-bottom: em(10, 12);
+	padding: em(2 5 3 3, 12);
+	color: $WarningMessage;
+	position: absolute;
+	height: em(14, 12);
+}
+//Enroll Autoship//
+#ReturnSuccessMessage {
+	background: tint($SuccessMessage, 60%);
+	display: block;
+	font-weight: bold;
+	margin-bottom: em(10);
+	padding: em(7);
+	#SuccessMessage {
+		color: $SuccessMessage;
+		display: block;
+	}
+}
+
+/************************************************************************************
+* Modals
+************************************************************************************/
+.LModal {
+	background: rgba(0, 0, 0, 0.6);
+	.mContent {
+		background:$WhiteBg;
+	}
+}
+.IE7, .IE8 {
+	.LModal {
+		background:#555;
+	}
+}
+//Bundle Modal//
+.BundleOption .bundleModal {
+	line-height: 1.5em;
+}
+.bundleModal {
+	position: fixed !important;
+	min-width: 250px;
+	max-width: 450px;
+	.bundleOption a {
+		font-size: em(12);
+		margin: em(4 0, 12);
+	}
+}
+
+/************************************************************************************
+* Page Headers
+************************************************************************************/
+.PageTitle {
+	font-size: em(20);
+	margin:em(-5 -5 20, 20);
+	padding:em(10 10 20, 20);
+	background:tint($LightBg, 50%);
+	.Crumbs {
+		font-size:em(11, 20);
+	}
+}
+
+/************************************************************************************
+* Dashboard/Home
+************************************************************************************/
+.WidgetTitle {
+	background:$SecBg;
+	color:$WhiteBg;
+}
+.welcomeFlag {
+  background-color: $LightBg;
+}
+.Resources {
+	.ImgWrapper {
+		background-color:$WhiteBg;
+	}
+	.scrollable .items {
+		border-left:0;
+	}
+}
+#documentScroller {
+	line-height:normal;
+}
+//Breaking News Ticker//
+#BreakingNews {
+	text-align:center;
+	border: 1px dotted $BorderColor;
+	h1 {
+		span {
+			display:block;
+			overflow:hidden;
+			line-height:1.15em;
+		}
+	}
+}
+//Evite Stats//
+.partyStatsList {
+	.custName {
+		font-weight: bold;
+	}
+}
+
+/************************************************************************************
+* Contacts Tab
+************************************************************************************/
+
+/************************************************************************************
+* Performance Tab KPIs
+************************************************************************************/
+.PerfKPIHold {
+	margin-top: em(20);
+}
+.PerfKPI {
+	margin-right: 10px;
+	min-width: 280px;
+	width: 48%;
+
+	.UI-secBg span {
+		line-height:2em;
+	}
+}
+.PerfKPIHold {
+	.last {
+		margin-right: 0;
+	}
+}
+.kpiVolumeCompare .body {
+	height: em(210);
+	overflow: auto;
+}
+.PSLIV {
+	a.Button {
+		position: absolute;
+		margin: -32px 0 0 33px;
+	}
+	.Inner {
+		margin: 0 5px 0 5px;
+		border-top: none;
+	}
+	#visualization {
+		margin: 0 0 0 25px;
+	}
+	.Lawyer {
+		padding: 0 5px 0 5px;
+	}
+}
+//Title Progress//
+.DonorGoalDisplays {
+	color: #125379;
+	margin: 40px 0px 0px 0px;
+	width: 130px;
+	font-weight: bold;
+}
+.PerfKPI .WidgetTitle {
+	width: 226px;
+}
+//Seg = Segment of the graph. Background position is for an image that represents the goal//
+//LV = actual current progress//
+.Seg1 { background-position: 0 146px; }  .LV1 .GoalProgress { height: 86%; }
+.Seg2 { background-position: 0 116px; }  .LV2 .GoalProgress { height: 72%; }
+.Seg3 { background-position: 0 93px;  }  .LV3 .GoalProgress { height: 57%; }
+.Seg4 { background-position: 0 70px;  }  .LV4 .GoalProgress { height: 43%; }
+.Seg5 { background-position: 0 47px;  }  .LV5 .GoalProgress { height: 29%; }
+.Seg6 { background-position: 0 24px;  }  .LV6 .GoalProgress { height: 16%; }
+.Seg7 { background-position: 0 0;     }  .LV7 .GoalProgress { height: 0%;  }
+//Position your indicator graphic based on the level/graphical style//
+.LV1 .ProgressIndicator { margin-top: 138px; }
+.LV2 .ProgressIndicator { margin-top: 115px; }
+.LV3 .ProgressIndicator { margin-top: 92px;  }
+.LV4 .ProgressIndicator { margin-top: 69px;  }
+.LV5 .ProgressIndicator { margin-top: 46px;  }
+.LV6 .ProgressIndicator { margin-top: 23px;  }
+.LV7 .ProgressIndicator { margin-top: 0px;   }
+
+.kpiNameValue {
+	width: 100%;
+	margin: 1em 0;
+	.WidgetUtility, .WidgetBody {
+		margin: 2px;
+	}
+	li {
+		padding: 5px;
+		@include DottedLine;
+		a {
+			display: inline-block;
+			padding: 0;
+		}
+		span {
+			&.bold {
+				width: 70px;
+			}
+			&.FR {
+				width: 100px;
+			}
+		}
+	}
+}
+
+/************************************************************************************
+* News Tab
+************************************************************************************/
+#News {
+	.news {
+		@include DottedLine;
+		.newsDate {
+			border:em(1) solid $BorderColor;
+			@include BoxShadow(em(0 0 2) rgba(0,0,0,.2));
+			text-align:center;
+			width:em(48);
+			margin-right:em(5);
+			span {
+				&.newsMonth {
+					background:tint($LightBg, 35%);
+					padding:em(2);
+				}
+				&.newsDay {
+					font-size:em(16);
+					padding:em(5 0 2, 16);
+				}
+				&.newsYear {
+					font-size:em(9);
+				}
+			}
+		}
+	}
+	a:hover {
+		background-color: tint($LightBg, 35%);
+	}
+}
+
+/************************************************************************************
+* Documents Tab
+************************************************************************************/
+
+/************************************************************************************
+* Orders/Parties Tab
+************************************************************************************/
+.paymentTypeList label {
+	cursor: pointer;
+}
+.partyAppliedHeader {
+	border-right: em(1) solid $BorderColor;
+}
+.custAppliedHeader {
+	border-left: em(1) solid tint($BorderColor, 10%);
+}
+.partyPaymentsColumn {
+	border-right: em(1) solid $BorderColor;
+}
+.customerCartHeader {
+	line-height: em(22);
+	height: em(24);
+	.guestName span {
+		padding-right: em(5);
+	}
+}
+.collapsedCart {
+	@include BorderRadius;
+	margin: em(5 0);
+}
+#ParySumGuestWrap {
+	max-height: em(200);
+	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+body.IE7 span.Total {
+	padding-right: em(20);
+}
+
+/************************************************************************************
+* My Account
+************************************************************************************/
+
+/************************************************************************************
+* Communication Tab
+************************************************************************************/
+#EmailForm {
+	input {
+		padding:em(5);
+		margin: em(0 0 5 0)
+	}
+	.qq-upload-button {
+		margin:em(0 9 5 0);
+	}
+}
+.emailToFullContainer {
+	background: $PageBg;
+	border: em(1) soild #CBCBCB;
+}
+.emailEntry {
+	background: #F3F7FD;
+	border: em(1) #BBD8FB solid;
+}
+#emailsContainer .titlecontent {
+	background-color: #F5FFEF;
+}
+//Newsletter Management & Stats//
+.NewsletterStatisticsNav {
+	margin: em(20 0 0 0);
+	padding: em(0);
+	height: em(60);
+	ul {
+		display: block;
+		width: 100%;
+		margin: em(0);
+		padding: em(0);
+		min-width: em(600);
+	}
+	li {
+		display: block;
+		float: left;
+		width: em(95);
+		background: $PageBg;
+		font-weight: normal;
+		line-height: normal;
+		a, &.current a {
+			line-height: normal;
+		}
+	}
+	a {
+		display: block;
+		padding: em(2);
+		height: em(60);
+	}
+	.current {
+		font-weight:bold;
+		a:hover {
+			cursor: default;
+		}
+	}
+	span {
+		display: block;
+	}
+	.label {
+		width: em(50);
+	}
+	.statValue {
+		font-size:em(16);
+	}
+	a.NewsletterStatisticsTabNotClickable, li.current a.NewsletterStatisticsTabNotClickable {
+		background-color: tint($LightBg, 20%);
+		color: tint($LightBgText, 40%);
+		cursor: text;
+	}
+}
+.personalPhoto {
+	background: url(../Images/Encore/newsletterImgBlank.png) no-repeat;
+}
+
+.newsLetterPreview {
+	background: url(../Images/Encore/newsletterPreview.png) no-repeat;
+}
+
+/*******************************************************************************
+* Party Guest List
+*******************************************************************************/
+
+.invitedGuestListHoverDetails {
+	.Total {
+		color: #3b3;
+		border: 1px solid lightgreen;
+		padding: 1px 5px;
+		background-color: #cfc;
+		cursor: help !important;
+		}
+	}
+
+/************************************************************************************
+* Support Tab
+************************************************************************************/
+
+/************************************************************************************
+* Misc Rules
+************************************************************************************/
+.UI-header {
+	padding:em(3 5);
+}
+.FauxTable, .FormTable, .FormContainer, .GridFilters, #siteWidgets li {
+	label {
+		font-weight: bold;
+	}
+}
+.defaultProfile, .emailRowUnread {
+	font-weight: bold;
+}
+.listNav li, .brdrBottom, #siteWidgets li {
+	@include DottedLine;
+}
+.PerfKPI .UI-secBg.brdrAll, .brdrAll .UI-header {
+    @include BorderRadius(top);
+}
+.flatList .current {
+	background:tint($MainBg, 14%);
+	@include BorderRadius;
+}
+.BalanceCovered {
+	background: $SuccessMessage !important;
+}
+.qq-upload-button {
+	background-color: tint($MainButton,85%);
+	font-size: em(14);
+	padding: em(10, 14);
+	font-weight: bold;
+	cursor: pointer;
+	display: block;
+}
+.qq-upload-button-hover {
+	background-color: $MainButton;
+	color: #fff;
+	cursor: pointer;
+}
+.jqmWindow h1 {
+	text-align: left;
+	color: #fff;
+	padding: em(3, 18);
+}
+.listBody {
+	margin-bottom: em(15);
+}
+
+.errorBody {
+	line-height: 2.5em;
+}
+//A fix for elements inside a mainBg element inside a lightBg
+.UI-lightBg .UI-mainBg a {
+	color:$MainBgLink;
+	&:hover {
+		color:shade($DarkBgLink, 30%);
+	}
+}
+
+#ActiveLinkTerm {
+    display:none;
+    padding:em(3);
+    margin:em(0 5);
+}
+#ActiveLinkTerm {
+    display:none;
+    padding:em(3);
+    margin:em(0 5);
+}

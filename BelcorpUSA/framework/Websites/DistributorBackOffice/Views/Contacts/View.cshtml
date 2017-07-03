@@ -1,0 +1,314 @@
+@*@model NetSteps.Data.Entities.Account*@
+@using NetSteps.Common.Globalization
+@model DistributorBackOffice.Models.Contacts.ViewContactModel
+@section head {
+	<script type="text/javascript" src="@Href("~/Resource/Scripts/cookie.js")"></script>
+	<script type="text/javascript">
+		$(function () {
+			$('.DataGrid tbody tr:even').addClass("Alt");
+			$('ul.lr li:odd').addClass("Alt");
+
+			$('#btnDeleteContact').click(function () {
+				if (confirm('@Html.Term("AreYouSureYouWantToDeleteThis", "Are you sure you want to delete this?")')) {
+					$.post('@Href("~/Contacts/Delete")', { accountId: '@Model.Account.AccountID' }, function (response) {
+						if (response.result) {
+							window.location = '@Href("~/Contacts")';
+						}
+						else {
+							showMessage(response.message, true);
+							return false;
+						}
+					});
+				}
+			});
+
+			var close = function (hash) {
+				hash.w.fadeOut(function () {
+					hash.o.remove();
+					$('#parentNoteID,#newNoteSubject,#newNoteText').val('');
+				});
+			};
+
+			$('#noteModal').jqm({ modal: false,
+				//trigger: '#btnAddNewNote',
+				onShow: function (h) {
+					h.w.css({
+						top: Math.floor(parseInt($(window).height() / 2)) - Math.floor(parseInt(h.w.height() / 2)) + 'px',
+						left: Math.floor(parseInt($(window).width() / 2)) + 'px'
+					}).fadeIn();
+				},
+				onHide: close
+			});
+
+
+			/** Display the note modal window **/
+			$('#btnAddNewNote').click(function () {
+				$.get('@Href("~/Account/Notes/GetSpecifiedNote")', { accountID: '@Model.Account.AccountID' }, function (result) {
+					$('#noteModal').html(result).jqmShow();
+				});
+			});
+
+
+			$("#btnSaveGroups").click(function () {
+				var data = { accountID: '@Model.Account.AccountID' };
+				var t = $(this);
+
+				$('.groupCheckBox').each(function (i) {
+					data['newValues[' + i + '].Key'] = $(this).attr('id');
+					data['newValues[' + i + '].Value'] = $(this).is(':checked');
+				});
+
+				showLoading(t);
+				$.post('@Href("~/Communication/Groups/SaveContacts")', data, function (response) {
+					hideLoading(t);
+					showMessage(response.message || '@Html.Term("GroupSaved", "Groups saved!")', !response.result);
+				});
+			});
+
+			$('#TabContact li').click(function () {
+				$.cookie('contactsSelectedTab', $(this).attr('rel'));
+			});
+
+			if ($('#li_Notes_TabContent').attr('rel') == $.cookie('contactsSelectedTab')) {
+				$('#li_Notes_TabContent').click();
+			}
+
+
+			/** Display the selected note in disabled mode **/
+			$('#paginatedGridNotesGrid').delegate('tr .notes', 'click', function () {
+				var noteID = $(this).attr('data-id');
+
+				$.get('@Href("~/Account/Notes/GetSpecifiedNote")', { noteID: noteID, disabled: true }, function (result) {
+					$('#noteModal').html(result).jqmShow();
+				});
+
+			});
+		});
+	</script>
+}
+@section breadcrumb{
+	<a href="@Href("~/Contacts")">
+		@Html.Term("Contacts")</a>
+}
+@section title {
+	@Model.Account.FullName
+}
+<table class="100%">
+	<tr>
+		<td class="ContactInfoColumn">
+			@*<h5>
+					@Html.Term("ContactInformation", "Contact Information")</h5>*@
+			@if (Model.isProspect)
+   {
+				<div class="UI-mainBg brdrAll GridUtility contactProfileUtility">
+					<a href="@Href("~/Contacts/Edit", Model.Account.AccountNumber)" class="UI-icon-container EditContact"><span class="UI-icon icon-editPerson"></span><span>
+						@Html.Term("EditContact", "Edit Contact")</span></a> <a href="javascript:void(0);" id="btnDeleteContact" class="UI-icon-container Delete"><span class="UI-icon icon-x"></span><span>
+							@Html.Term("RemoveContact", "Remove Contact")</span></a> <span class="clr"></span>
+				</div>
+   }
+			<ul class="listNav flatList infoList">
+				<li>
+					<label class="bold">
+						@Html.Term("Name"):</label>
+					<div>
+						@Model.Account.FullName</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("Type"):</label>
+					<div>
+						@SmallCollectionCache.Instance.AccountTypes.GetById(Model.Account.AccountTypeID).GetTerm()</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("Last Purchase"):</label>
+					<div>
+						@if (Model.MostRecentOrder.OrderID > 0)
+	  {
+							@string.Format("{0} ({1})", Model.MostRecentOrder.CompleteDate.ToShortDateStringDisplay(CoreContext.CurrentCultureInfo), Model.MostRecentOrder.CustomerTotal.ToMoneyString(CoreContext.CurrentCultureInfo))
+	  }
+	  else
+	  {
+							@Html.Term("N/A")
+	  }
+					</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("MobilePhone", "Mobile Phone"):</label>
+					<div>
+						@(Model.Account.IsOptedOut ? string.Empty : Model.Account.CellPhone.FormatPhone(CoreContext.CurrentCultureInfo))</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("HomePhone", "Home Phone"):</label>
+					<div>
+						@(Model.Account.IsOptedOut ? string.Empty : Model.Account.HomePhone.FormatPhone(CoreContext.CurrentCultureInfo))<br />
+					</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("WorkPhone", "Work Phone"):</label>
+					<div>
+						@(Model.Account.IsOptedOut ? string.Empty : Model.Account.WorkPhone.FormatPhone(CoreContext.CurrentCultureInfo))<br />
+					</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("MainPhone", "Main Phone"):</label>
+					<div>
+						@(Model.Account.IsOptedOut ? string.Empty : Model.Account.MainPhone.FormatPhone(CoreContext.CurrentCultureInfo))<br />
+					</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("Email"):</label>
+					<div>
+						@(Model.Account.IsOptedOut ? string.Empty : Model.Account.EmailAddress)</div>
+					<br />
+				</li>
+				<li>
+					<label class="bold">
+						@Html.Term("Address"):</label>
+					<div>
+						@if (Model.Account.IsOptedOut)
+	  {
+							@Translation.GetTerm("AccountHasOptedOut", "Account has opted-out")
+	  }
+	  else
+	  {
+							@Html.Raw(Model.MainAddress != null ? Model.MainAddress.ToDisplay() : "")
+	  }
+					</div>
+					<br />
+				</li>
+			</ul>
+		</td>
+		<td class="ContactActivityColumn">
+			<h5>
+				@Html.Term("Correspondence")</h5>
+			<div class="UI-mainBg brdrAll GridUtility contactHistoryUtility">
+				@if (NetSteps.Data.Entities.ApplicationContext.Instance.SupportEmailFunctionality)
+	{
+		if (!Model.AccountEmailAddress.IsNullOrEmpty())
+		{
+					<a href="@Href("~/Communication/Email/Compose?emailAction=BlankEmail&toAddress=")@Model.AccountEmailAddress" class="UI-icon-container Email overlay" rel="#EmailWindow"><span class="UI-icon icon-email"></span><span>
+						@Html.Term("SendAnEmail", "Send an Email")</span></a>
+		}
+	}
+				<a href="javascript:void(0)" id="btnAddNewNote" class="UI-icon-container Add Note"><span class="UI-icon icon-pageAdd"></span><span>
+					@Html.Term("AddaNote", "Add a Note")</span></a> <span class="clr"></span>
+			</div>
+			<!-- Tabbed Controls -->
+			<div class="Tabber">
+				<ul id="TabContact" class="inlineNav">
+					@if (Model.isDistributor)
+	 {
+						<li id="li_Emails_TabContent" rel="Emails_TabContent" class="UI-lightBg current"><a href="javascript:void(0);"><span>
+							@Html.Term("Emails")</span></a></li>
+	 }
+					@if (!Model.isProspect)
+	 {
+		 var isCurrent = @Model.isDistributor ? "" : "current";
+						<li id="li_Purcheses_TabContent" rel="Purchases_TabContent" class="UI-lightBg @isCurrent"><a href="javascript:void(0);"><span>
+							@Html.Term("Purchases")</span></a></li>
+	 }
+					<li id="li_Notes_TabContent" rel="Notes_TabContent" class="UI-lightBg"><a href="javascript:void(0);"><span>
+						@Html.Term("Notes")</span></a></li>
+					<li id="li_Groups_TabContent" rel="Groups_TabContent" class="UI-lightBg"><a href="javascript:void(0);"><span>
+						@Html.Term("Groups")</span></a></li>
+				</ul>
+			</div>
+			<div class="ModuleBody TabberBody TabContact" id="Notes_TabContent" style="display: none;">
+				@{
+					Html.PaginatedGrid("~/Account/Notes/GetForGrid", "NotesGrid")
+						   .AddColumn(Html.Term("Date"), "DateCreatedUTC", true)
+						   .AddColumn(Html.Term("Title"), "Title", true)
+						   .AddColumn(Html.Term("Subject"), "Subject", true)
+						   .AddInputFilter(Html.Term("Search"), "SearchText", string.Empty)
+						   .AddInputFilter(Html.Term("DateRange", "Date Range"), "startDate", DateTime.Now.AddMonths(-3).ToShortDateString(), true)
+						   .AddInputFilter(Html.Term("To", "To"), "endDate", DateTime.Now.ToShortDateString(), true)
+						   .AddData("AccountID", Model.Account.AccountID)
+						   .SetDefaultSort("DateCreatedUTC", NetSteps.Common.Constants.SortDirection.Descending)
+						   .ClickEntireRow()
+						   .Render();   
+				}
+			</div>
+			<!--/ End notes -->
+			@if (Model.isDistributor)
+   {
+				<!-- messages -->
+				<div class="ModuleBody TabberBody TabContact" id="Emails_TabContent">
+					@{
+						
+	   MailAccount mailAccount = Model.Account.MailAccounts.FirstOrDefault();
+
+	   Html.PaginatedGrid("~/Communication/Email/GetMail", "MailGrid")
+		   .AddData("accountId", CoreContext.CurrentAccount.AccountID)
+		   .AddColumn(Html.Term("SubjectMessagePreview", "Subject / Message Preview"), "Subject", true)
+		   .AddColumn(Html.Term("Sent"), "DateAddedUTC", true)
+		   .SetDefaultSort("DateAddedUTC", NetSteps.Common.Constants.SortDirection.Descending)
+		   .ClearPageSizeOptions()
+		   .AddPageSizeOption(10, "10")
+		   .AddPageSizeOption(15, "15")
+		   .AddPageSizeOption(25, "25")
+		   .AddPageSizeOption(50, "50")
+		   .AddData("startDate", null)
+		   .AddData("endDate", null)
+		   .AddData("folder", null)
+		   .AddData("includeCheckbox", false)
+		   .AddData("length", 100)
+		   .AddData("mailAccountID", (mailAccount != null) ? mailAccount.MailAccountID : (int?)null)
+		   .Render();   
+					}
+				</div>
+   }
+			<!--/ end message history -->
+			<!-- groups -->
+			@if (Model.DistributionLists.Count > 0)
+   { 
+				<div class="ModuleBody TabberBody TabContact" id="Groups_TabContent" style="display: none;">
+					<!-- This will be a colleciton of groups for this contact -->
+					@foreach (DistributionList group in Model.DistributionLists)
+	 {
+		 var checkedValue = Model.Account.DistributionSubscribers.Any(d => d.DistributionListID == group.DistributionListID && d.Active)
+							 ? "checked=\"true\"" : "";
+						<div>
+							<input type="checkbox" class="groupCheckBox" rel="@group.DistributionListID" @checkedValue id="@group.DistributionListID" value="@group.DistributionListID" />
+							<label>
+								@group.Name</label>
+						</div>
+	 }
+					<div class="centerSaveButtons">
+						<a href="javascript:void(0);" id="btnSaveGroups" class="Button FormSubmit FL"><span>
+							@Html.Term("Save", "Save")</span></a>
+					</div>
+					<span class="clr"></span>
+				</div>
+   }
+			@{
+				var isVisible = @Model.isDistributor ? "display:none;" : "";
+			}
+			<div class="ModuleBody TabberBody TabContact" id="Purchases_TabContent" style="@isVisible">
+				@{
+					Html.PaginatedGrid("~/Contacts/GetPurchases")
+					  .AddColumn(Html.Term("Date"), "CompleteDateUTC", true, true, NetSteps.Common.Constants.SortDirection.Descending)
+					  .AddColumn(Html.Term("Type"), "OrderType.TermName", true)
+					  .AddColumn(Html.Term("Total"), "Total", true)
+					  .AddData("accountId", Model.Account.AccountID)
+					  .Render();   
+				}
+			</div>
+		</td>
+	</tr>
+</table>
+<div id="noteModal" class="jqmWindow LModal">
+	<!-- PartialView injected through jQuery above -->
+</div>

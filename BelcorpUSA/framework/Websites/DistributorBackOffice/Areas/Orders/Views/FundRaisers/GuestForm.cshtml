@@ -1,0 +1,246 @@
+﻿@model IEnumerable<AccountSlimSearchData>
+
+<script type="text/javascript">
+	//<![CDATA[
+    $(function () {
+        $('.FirstName').watermark('@Html.JavascriptTerm("FirstName", "First Name")');
+        $('.LastName').watermark('@Html.JavascriptTerm("LastName", "Last Name")');
+        $('.Email').watermark('@Html.JavascriptTerm("Email", "Email")');
+
+        $('.FirstName').jsonSuggest('@Href("~/Orders/Fundraisers/SearchAccounts")',
+        { onSelect: function (item) {
+            $('#accountId').val(item.id);
+            var guestFormDiv = $(this).closest('div');
+            var guid = guestFormDiv.attr('data-id');
+            var guestFormContainer = guestFormDiv.parents('.FormContainer');
+            $.get('@Href("~/Orders/Fundraisers/GetAccount")', { accountId: item.id }, function (response) {
+                if (response.result) {
+                    guestFormContainer.find('#txtFirstName' + guid).val(response.firstName);
+                    guestFormContainer.find('#txtLastName' + guid).val(response.lastName);
+                    guestFormContainer.find('#txtEmail' + guid).val(response.email);
+
+                    var address = "#address" + guid;
+
+                    var country = address + 'Country';
+                    $(country).val(response.Country);
+                    if (!$(country).find('option:selected').length) {
+                        $(country + ' option:first').attr('selected', 'selected');
+                    }
+
+                    $(address + 'Address1').val(response.address1);
+                    $(address + 'Address2').val(response.address2);
+                    $(address + 'Address3').val(response.address3);
+
+                    window['hostAddressPostalCodeLookupComplete'] = function () {
+                        $(address + 'City').val(response.city);
+                        $(address + 'County').val(response.county);
+                        $(address + 'State').val(response.state);
+                        window['hostAddressPostalCodeLookupComplete'] = undefined;
+                    };
+
+                    var addressContainer = '#hostAddressContainer' + guid;
+                    var postalCodeControls = $(addressContainer + ' .PostalCode');
+
+                    if (postalCodeControls.length == 1) {
+                        postalCodeControls.val(response.postalCode).triggerHandler('keyup');
+                    }
+                    else {
+                        var zip = (response.postalCode) ? response.postalCode : '';
+                        var position = 0;
+                        postalCodeControls.each(function () {
+                            var length = $(this).attr('maxlength');
+                            $(this).val(zip.substr(position, length));
+                            position += length;
+                        }).filter(':last').triggerHandler('keyup');
+                    }
+
+                    $(address + 'City').val(response.city);
+                    $(address + 'County').val(response.county);
+                    $(address + 'State').val(response.state);
+                } else {
+                    showMessage(response.message, true);
+                }
+            });
+
+        }, minCharacters: 3, ajaxResults: true, maxResults: 50, showMore: true, width: $('.FirstName').outerWidth(true) + $('.LastName').outerWidth()
+        });
+    });
+    //]]>
+</script>
+
+
+
+@if (Model != null)
+{
+    foreach (var account in Model)
+    {
+    <div class="GuestForm ui-accordion ui-widget ui-helper-reset ui-accordion-icons"
+        style="width: auto; margin: 10px;">
+        <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-state-active ui-corner-top ui-corner-bottom">
+            <span class="collapse ui-icon ui-icon-triangle-1-e"></span><a href="javascript:void(0);"
+                class="GuestFormHeader" style="display: inline-block; width: 100%;"><span class="GuestName">@account.FullName
+                </span><span class="FR UI-icon icon-x DeleteGuest"></span></a>
+        </h3>
+        <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+            style="padding-top: 0px; display: none;">
+            <div class="FormContainer">
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtFirstName@(account.AccountID)">@Html.Term("Name"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtFirstName@(account.AccountID)" class="required FirstName" name="@Html.Term("FirstNameRequired", "First Name is required.")" value="@account.FirstName" />
+                        <input type="text" id="txtLastName@(account.AccountID)" class="required LastName" name="@Html.Term("LastNameRequired", "Last Name is required.")" value="@account.LastName" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtEmail@(account.AccountID)">@Html.Term("Email"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtEmail@(account.AccountID)" class="required Email" name="@Html.Term("EmailRequired", "Email is required.")" value="@account.EmailAddress" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow" style="display: none;">
+                    <div class="FLabel">
+                        <label for="chkDirectShip@(account.AccountID)">@Html.Term("Direct Ship"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="checkbox" id="chkDirectShip@(account.AccountID)" class="directShip"  />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="DirectShipAddress" style="display: none;">
+                @Html.Partial("Address", new AddressModel()
+           {
+               Address = null,
+               LanguageID = CoreContext.CurrentLanguageID,
+               ShowCountrySelect = true,
+               ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+               ExcludeFields = new List<string>() { "ProfileName", "Name" },
+               Prefix = "address" + account.AccountID
+           })
+            </div>
+        </div>
+    </div>
+    }
+}
+else if (ViewBag.Guest != null)
+{
+    PartyGuest guest = ViewBag.Guest;
+    var guid = Guid.NewGuid().ToString("N");
+    <div class="GuestForm ui-accordion ui-widget ui-helper-reset ui-accordion-icons"
+        style="width: auto; margin: 10px;">
+        <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-state-active ui-corner-top ui-corner-bottom">
+            <span class="collapse ui-icon ui-icon-triangle-1-e"></span><a href="javascript:void(0);"
+                class="GuestFormHeader" style="display: inline-block; width: 100%;"><span class="GuestName">@NetSteps.Data.Entities.Account.ToFullName(guest.FirstName, string.Empty, guest.LastName, CoreContext.CurrentCultureInfo.Name)
+                </span><span class="FR UI-icon icon-x DeleteGuest">
+                    <input type="hidden" class="guestId" value="@guest.PartyGuestID" /></span></a>
+        </h3>
+        <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+            style="padding-top: 0px; display: none;">
+            <div class="FormContainer">
+               
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtFirstName@(guid)">@Html.Term("Name"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtFirstName@(guid)" class="FirstName required" name="@Html.Term("FirstNameRequired", "First Name is required.")" value="@guest.FirstName" />
+                        <input type="text" id="txtLastName@(guid)" class="LastName required" name="@Html.Term("LastNameRequired", "Last Name is required.")" value="@guest.LastName" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtEmail@(guid)">@Html.Term("Email"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtEmail@(guid)" class="Email required" name="@Html.Term("EmailRequired", "Email is required.")" value="@guest.EmailAddress" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow" style="display: none;">
+                    <div class="FLabel">
+                        <label for="chkDirectShip@(guid)">@Html.Term("Direct Ship"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="checkbox" id="chkDirectShip@(guid)" class="directShip" />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="DirectShipAddress" style="display: none;">
+                @Html.Partial("Address", new AddressModel()
+           {
+               Address = null,
+               LanguageID = CoreContext.CurrentLanguageID,
+               ShowCountrySelect = true,
+               ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+               ExcludeFields = new List<string>() { "ProfileName", "Name" },
+               Prefix = "address" + guid
+           })
+            </div>
+        </div>
+    </div>
+}
+@for (var i = 0; i < ViewBag.GuestCount; i++)
+{
+    var guid = Guid.NewGuid().ToString("N");
+    <div class="GuestForm ui-accordion ui-widget ui-helper-reset ui-accordion-icons"
+        style="width: auto; margin: 10px;">
+        <h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-state-active ui-corner-top">
+            <span class="collapse ui-icon ui-icon-triangle-1-s"></span><a href="javascript:void(0);"
+                class="GuestFormHeader" style="display: inline-block; width: 100%;"><span class="GuestName">
+                    Guest Form</span><span class="FR UI-icon icon-x DeleteGuest"></span></a>
+        </h3>
+        <div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+            style="padding-top: 0px;">
+            <div class="FormContainer">
+            
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtFirstName@(guid)">@Html.Term("Name"):</label>
+                    </div>
+                    <div class="FInput" data-id="@guid">
+                        <input type="text" id="txtFirstName@(guid)" class="FirstName required" />
+                        <input type="text" id="txtLastName@(guid)" class="LastName required" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow">
+                    <div class="FLabel has-wtrmk">
+                        <label for="txtEmail@(guid)">@Html.Term("Email"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="text" id="txtEmail@(guid)" class="Email required" />
+                    </div>
+                    <br />
+                </div>
+                <div class="FRow" style="display: none;">
+                    <div class="FLabel">
+                        <label for="chkDirectShip@(guid)">@Html.Term("Direct Ship"):</label>
+                    </div>
+                    <div class="FInput">
+                        <input type="checkbox" id="chkDirectShip@(guid)" class="directShip" />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="DirectShipAddress"  id="hostAddressContainer@(guid)"  style="display: none;">
+                @Html.Partial("Address", new AddressModel()
+                   {
+                       Address = null,
+                       LanguageID = CoreContext.CurrentLanguageID,
+                       ShowCountrySelect = true,
+                       ChangeCountryURL = "~/Account/BillingShippingProfiles/GetAddressControl",
+                       ExcludeFields = new List<string>() { "ProfileName", "Name" },
+                       Prefix = "address" + guid
+                   })
+            </div>
+        </div>
+    </div>
+}

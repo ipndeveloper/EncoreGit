@@ -1,0 +1,1142 @@
+﻿<#@ template language="C#" debug="true" hostspecific="true"#>
+<#@ import namespace="System.Diagnostics" #>
+<#@ include file="EF.Utility.CS.ttinclude" #>
+<#@ output extension=".cs" #>
+<#
+List<EntityModelInfo> allPaths = new List<EntityModelInfo>();
+allPaths.Add(new EntityModelInfo() { Path = @"../../EntityModels/Main/NetStepsDB.edmx", NameSpace = "NetSteps.Data.Entities" });
+
+CodeGenerationTools code = new CodeGenerationTools(this); 
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this, 1);
+MetadataTools ef = new MetadataTools(this);
+
+EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this); 
+
+
+List<string> smallCollectionClasses = GetSmallCollectionClasses("../../"); 
+List<string> auditedClasses = GetClasses("../../", "AuditedEntities.txt");
+List<string> ValidationExceptions = GetClasses("../../", "ValidationRulesExceptions.txt");
+	
+WriteHeader(fileManager);
+
+foreach (EntityModelInfo path in allPaths)
+{
+	
+string inputFile = path.Path;
+MetadataWorkspace metadataWorkspace = null;
+bool allMetadataLoaded = loader.TryLoadAllMetadata(inputFile, out metadataWorkspace);
+EdmItemCollection ItemCollection = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+OriginalValueMembers originalValueMembers = new OriginalValueMembers(allMetadataLoaded, metadataWorkspace, ef);
+//string namespaceName = code.VsNamespaceSuggestion();
+string namespaceName = path.NameSpace;
+
+
+// Write out support code to primary template output file
+///BeginNamespace(namespaceName, code);
+//WriteObjectChangeTracker();
+//WriteIObjectWithChangeTracker();
+//WriteCustomObservableCollection();
+//WriteINotifyComplexPropertyChanging();
+//WriteEqualityComparer();
+//EndNamespace(namespaceName);
+
+// Emit Entity Type
+//foreach (EntityType entity in ItemCollection.GetItems<EntityType>().Where(e => e.Name == "Account").OrderBy(e => e.Name))
+foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e => e.Name))
+{
+	fileManager.StartNewFile(entity.Name + ".cs");
+	BeginNamespace(namespaceName, code);
+	WriteEntityTypeSerializationInfo(entity, ItemCollection, code, ef);
+
+	//string primaryKeyTypeName = string.Empty;
+	string primaryKeyInstanceName = string.Empty;
+	string primaryKeyTypeName = "int";
+	var primaryKeyType = GetEntityKey(metadataWorkspace, entity.Name);
+	if(primaryKeyType != null)
+	{
+		primaryKeyTypeName = primaryKeyType.TypeUsage.EdmType.Name;	
+		primaryKeyInstanceName = string.Format("{0}{1}", primaryKeyType.Name.Substring(0, 1).ToLower(), primaryKeyType.Name.Substring(1, primaryKeyType.Name.Length - 1));
+	}
+		
+	string entitySetName = GetEntitySetName(metadataWorkspace, entity.Name);
+	string pluralInstanceName = string.Format("{0}{1}", entitySetName.Substring(0, 1).ToLower(), entitySetName.Substring(1, entitySetName.Length - 1));
+	string instanceName = string.Format("{0}{1}", entity.Name.Substring(0, 1).ToLower(), entity.Name.Substring(1, entity.Name.Length - 1));
+	
+	if(instanceName == pluralInstanceName)
+		instanceName = "obj";
+	
+	bool containsModifiedByUserID = false;
+	bool containsCreatedByUserID = false;
+	bool containsSortIndex = false;
+	bool containsTermName = false;
+	bool containsName = false;
+	bool containsLanguageID = false;
+	bool containsIsEditable = false;
+	bool containsActive = false;
+	
+	bool containsStartDate = false;
+	bool containsEndDate = false;
+	bool containsStartDateUTC = false;
+	bool containsEndDateUTC = false;
+	
+	bool containsDateCreated = false;
+	bool containsDateLastModified = false;
+	bool containsDateLastModifiedNullable = false;
+	
+	bool containsDataVersion = false;
+	bool containsCode = false;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+	{
+		if(code.Escape(edmProperty).ToUpper() == "ModifiedByUserID".ToUpper())
+			containsModifiedByUserID = true;
+		if(code.Escape(edmProperty).ToUpper() == "CreatedByUserID".ToUpper())
+			containsCreatedByUserID = true;
+		if(code.Escape(edmProperty).ToUpper() == "SortIndex".ToUpper() && !edmProperty.Nullable && code.Escape(edmProperty.TypeUsage) == "int")
+			containsSortIndex = true;
+		if(code.Escape(edmProperty).ToUpper() == "TermName".ToUpper())
+			containsTermName = true;
+		if(code.Escape(edmProperty).ToUpper() == "Name".ToUpper())
+			containsName = true;
+		if(code.Escape(edmProperty).ToUpper() == "LanguageID".ToUpper() && !edmProperty.Nullable)
+			containsLanguageID = true;
+		if(code.Escape(edmProperty).ToUpper() == "Editable".ToUpper() && !edmProperty.Nullable)
+			containsIsEditable = true;
+		if(code.Escape(edmProperty).ToUpper() == "DateCreatedUTC".ToUpper() && !edmProperty.Nullable)
+			containsDateCreated = true;
+		if(code.Escape(edmProperty).ToUpper() == "DateLastModifiedUTC".ToUpper())
+		{
+			if(!edmProperty.Nullable)
+				containsDateLastModified = true;
+			else
+				containsDateLastModifiedNullable = true;
+		}
+		if(code.Escape(edmProperty).ToUpper() == "DataVersion".ToUpper() && !edmProperty.Nullable)
+			containsDataVersion = true;
+		if(code.Escape(edmProperty).ToUpper() == "Active".ToUpper() && !edmProperty.Nullable && code.Escape(edmProperty.TypeUsage) == "bool")
+			containsActive = true;
+		if(code.Escape(edmProperty).ToUpper() == "StartDateUTC".ToUpper() && edmProperty.Nullable)
+			containsStartDateUTC = true;
+		if(code.Escape(edmProperty).ToUpper() == "EndDateUTC".ToUpper() && edmProperty.Nullable)
+			containsEndDateUTC = true;
+		if(code.Escape(edmProperty).ToUpper() == "StartDate".ToUpper())
+			containsStartDate = true;
+		if(code.Escape(edmProperty).ToUpper() == "EndDate".ToUpper())
+			containsEndDate = true;
+		if(code.Escape(edmProperty).Equals("Code", StringComparison.OrdinalIgnoreCase))
+			containsCode = true;
+	}
+	
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=code.Escape(entity)#> : EntityBusinessBase<<#=code.Escape(entity)#>, <#=primaryKeyTypeName#>, I<#=code.Escape(entity)#>Repository, I<#=code.Escape(entity)#>BusinessLogic>, IDatabaseValidationRules<# if(containsModifiedByUserID) { #>, IModifiedByUserID<# } #><# if(containsCreatedByUserID) { #>, ICreatedByUserID<# } #><# if(containsSortIndex) { #>, ISortIndex<# } #><# if(containsTermName && containsName) { #>, ITermName<# } #><# if(containsLanguageID) { #>, ILanguageID<# } #><# if(containsIsEditable) { #>, IEditable<# } #><# if(containsActive) { #>, IActive<# } #><# if(containsDateCreated) { #>, IDateCreated<# } #><# if(containsDateLastModified) { #>, IDateLastModified<# } #><# if(containsDateLastModifiedNullable) { #>, IDateLastModifiedNullable<# } #><# if(containsDataVersion) { #>, IDataVersion<# } #><# if((containsStartDateUTC && containsEndDateUTC) && !containsStartDate && !containsEndDate ) { #>, IDateRange<# } #><# if(containsCode) { #>, ICode<# } #>
+
+{
+	#region Primitive Properties
+
+	protected TimeZoneInfo _currentTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Greenwich Standard Time");
+	public virtual TimeZoneInfo CurrentTimeZoneInfo
+	{
+		get { return _currentTimeZoneInfo; }
+		set { _currentTimeZoneInfo = value; }
+	}
+<#
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+	{
+#>
+<#
+		if(code.Escape(edmProperty).Contains("UTC") && !((code.Escape(edmProperty) == "StartDateUTC" || code.Escape(edmProperty) == "EndDateUTC") && entity.Properties.Any(p => p.Name == "StartDate" || p.Name == "EndDate")))
+		{
+	#>
+
+	public <#=code.Escape(edmProperty.TypeUsage)#> <#=code.Escape(edmProperty).Replace("UTC", "")#>
+	{
+		get { return <#=code.Escape(edmProperty)#>.UTCToLocal(CurrentTimeZoneInfo); }
+		set { <#=code.Escape(edmProperty)#> = value.LocalToUTC(CurrentTimeZoneInfo); }
+	}
+	<#
+		}
+	}
+#>
+
+	#endregion
+
+	#region Constructors
+	public <#=code.Escape(entity)#>() : this(default(I<#=code.Escape(entity)#>Repository), default(I<#=code.Escape(entity)#>BusinessLogic))
+	{
+	}
+	public <#=code.Escape(entity)#>(I<#=code.Escape(entity)#>Repository repo) : this(repo, default(I<#=code.Escape(entity)#>BusinessLogic))
+	{
+	}
+	public <#=code.Escape(entity)#>(I<#=code.Escape(entity)#>Repository repo, I<#=code.Escape(entity)#>BusinessLogic logic)
+		: base(repo, logic)
+	{
+		InitializeEntity();
+	}
+	#endregion
+	
+	#region Methods
+	public virtual void AddDatabaseValidationRules()
+	{ 
+<# 
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+	{
+		string typeName = code.Escape(edmProperty.TypeUsage);
+
+		int? maxLength = GetMaxLength(metadataWorkspace, entity.Name, edmProperty.Name);
+		if(maxLength != null && maxLength != 0)
+		{
+#>
+		this.ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("<#=code.Escape(edmProperty.Name)#>", <#=maxLength.ToString()#>));
+<#
+		}
+
+		if((typeName == "string") && !edmProperty.Nullable)
+		{
+		#>
+		this.ValidationRules.AddRule(CommonRules.NotNull, new ValidationRuleArgs("<#=code.Escape(edmProperty.Name)#>"));
+<#
+		}
+
+		if((typeName == "int" || typeName == "short") && entity.NavigationProperties.Where(np=>np.GetDependentProperties().Contains(edmProperty)).Any())
+		{
+			var rule = string.Format("{0}-{1}", entity.Name, edmProperty);
+			if (!ValidationExceptions.Contains(rule)){
+		#>
+		this.ValidationRules.AddRule(CommonRules.GreaterThanValue<<#=typeName#>>, new CommonRules.CompareValueRuleArgs<<#=typeName#>>("<#=code.Escape(edmProperty.Name)#>", 0));
+<#			}
+		}
+
+		if(edmProperty.Name.ToUpper() == "Email".ToUpper() || edmProperty.Name.ToUpper() == "EmailAddress".ToUpper())
+		{
+		#>
+		this.ValidationRules.AddRule(CommonRules.RegexIsMatch, new CommonRules.RegexRuleArgs("<#=code.Escape(edmProperty.Name)#>", RegularExpressions.EmailOrEmpty, Translation.GetTerm("InvalidEmailErrorMessage", CustomValidationMessages.Email), true));
+<#
+		}
+
+		if(edmProperty.Name.ToUpper() == "DecryptedAccountNumber".ToUpper())
+		{
+		#>
+		this.ValidationRules.AddRule(CommonRules.RegexIsMatch, new CommonRules.RegexRuleArgs("<#=code.Escape(edmProperty.Name)#>", RegularExpressions.NumericCharactersAndEmptyStrings, CustomValidationMessages.NumericCharactersAndEmptyStrings));
+<#
+		}
+
+		if(typeName.Contains("DateTime"))
+		{
+		#>
+		this.ValidationRules.AddRule(CommonRules.GreaterThanValue<<#=typeName#>>, new CommonRules.CompareValueRuleArgs<<#=typeName#>>("<#=code.Escape(edmProperty.Name)#>", new DateTime(1753, 1, 1), Translation.GetTerm("InvalidDateTimeMinErrorMessageWithValue", CustomValidationMessages.DateTimeMinWithValue)));
+<#
+		}
+	}
+	
+	if(containsStartDateUTC && containsEndDateUTC)
+		{
+		#>
+		this.ValidationRules.AddRule(CommonRules.ValidDateRange, new ValidationRuleArgs("StartDateUTC"));
+<#
+		}
+	
+	#>
+	}
+<#
+if(smallCollectionClasses.Contains(entity.Name))
+{
+	#>
+	// Generated for the "small collection" tables. - JHE
+	public static List<<#=code.Escape(entity)#>> LoadAll()
+	{
+		try
+		{
+			return BusinessLogic.LoadAll(Repository);
+		}
+		catch (Exception ex)
+		{
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException);
+		}
+	}
+	
+	// Generated for the "small collection" tables. - JHE
+	public static List<<#=code.Escape(entity)#>> LoadAllFull()
+	{
+		try
+		{
+			return BusinessLogic.LoadAllFull(Repository);
+		}
+		catch (Exception ex)
+		{
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException);
+		}
+	}	
+
+	public static SqlUpdatableList<<#=code.Escape(entity)#>> LoadAllFullWithSqlDependency()
+	{
+		try
+		{
+			var <#=pluralInstanceName#> = Repository.LoadAllFullWithSqlDependency();
+			foreach (var <#=instanceName#> in <#=pluralInstanceName#>)
+			{
+				<#=instanceName#>.StartTracking();
+				<#=instanceName#>.IsLazyLoadingEnabled = true;
+			}
+			return <#=pluralInstanceName#>;
+		}
+		catch (Exception ex)
+		{
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException);
+		}
+	}
+<#}#>
+<#
+if(auditedClasses.Contains(entity.Name))
+{
+	#>
+	
+	public static PaginatedList<AuditLogRow> GetAuditLog(int <#=primaryKeyInstanceName#>, AuditLogSearchParameters param)
+	{
+		try
+		{
+			return BusinessLogic.GetAuditLog(Repository, <#=primaryKeyInstanceName#>, param);
+		}
+		catch (Exception ex)
+		{
+<# if(entity.Name == "Account") { #>
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException, null, <#=primaryKeyInstanceName#>);
+<# } else if(entity.Name == "Order") { #>
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException, <#=primaryKeyInstanceName#>, null);
+<# } else { #>
+			throw EntityExceptionHelper.GetAndLogNetStepsException(ex, Constants.NetStepsExceptionType.NetStepsBusinessException, null, null);
+<# } #>
+		}
+	}
+<#
+}
+#>
+	#endregion
+}
+<#
+	EndNamespace(namespaceName);
+}
+
+if (!VerifyTypesAreCaseInsensitiveUnique(ItemCollection))
+{
+	return "";
+}
+}
+fileManager.Process();
+
+
+#>
+<#+
+void WriteHeader(EntityFrameworkTemplateFileManager fileManager, params string[] extraUsings)
+{
+	fileManager.StartHeader();
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated from a template.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using NetSteps.Common;
+using NetSteps.Common.Base;
+using NetSteps.Common.Extensions;
+using NetSteps.Common.Validation.NetTiers;
+using NetSteps.Data.Entities.Base;
+using NetSteps.Data.Entities.Business.Logic.Interfaces;
+using NetSteps.Data.Entities.Interfaces;
+using NetSteps.Data.Entities.Repositories;
+using NetSteps.Data.Entities.Exceptions;
+using NetSteps.Data.Entities.Business.Interfaces;
+using NetSteps.Common.Interfaces;
+using NetSteps.Data.Entities.Cache;
+using NetSteps.Common.Globalization;
+using NetSteps.Data.Entities.Business;
+<#=String.Join(String.Empty, extraUsings.Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+	fileManager.EndBlock();
+}
+
+void BeginNamespace(string namespaceName, CodeGenerationTools code)
+{
+	CodeRegion region = new CodeRegion(this);
+	if (!String.IsNullOrEmpty(namespaceName))
+	{
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#+
+		PushIndent(CodeRegion.GetIndent(1));
+	}
+}
+
+void EndNamespace(string namespaceName)
+{
+	if (!String.IsNullOrEmpty(namespaceName))
+	{
+		PopIndent();
+#>
+}
+<#+
+	}
+}
+
+bool IsReadWriteAccessibleProperty(EdmMember member)
+{
+	string setter = Accessibility.ForWriteOnlyProperty(member);
+	string getter = Accessibility.ForReadOnlyProperty(member);
+
+	return getter != "private" && getter != "protected" && setter != "private" && setter != "protected";
+}
+
+string InitializedTrackingField(EdmProperty property, CodeGenerationTools code)
+{
+	string namePart = property.Name + "Initialized";
+	if (code.CamelCaseFields)
+	{
+		namePart = code.CamelCase(namePart);
+	}
+	return "_" + namePart;
+}
+
+void WriteEntityTypeSerializationInfo(EntityType type, ItemCollection itemCollection, CodeGenerationTools code, MetadataTools tools)
+{
+}
+
+bool IsSaveReference(MetadataTools tools, NavigationProperty navProperty)
+{
+	return !IsForeignKeyOrIdentifyingRelationship(tools, navProperty) &&
+		   navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many &&         // Target is a reference
+		   navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.One;          // Source is nullable (i.e. not a PK)
+}
+
+string CreateFixupMethodName(RelationshipEndMember endMember)
+{
+	return String.Format(CultureInfo.InvariantCulture, "Fixup{0}_{1}_{2}Keys", endMember.DeclaringType.NamespaceName, endMember.DeclaringType.Name, endMember.Name);
+}
+
+string CreateKeyNameVariable(string keyName)
+{
+	return String.Format(CultureInfo.InvariantCulture, "{0}KeyName", keyName);
+}
+
+string CreateReferenceValueLookupKey(AssociationEndMember endMember, string keyName)
+{
+	return String.Format(CultureInfo.InvariantCulture, "Navigate({0}.{1}).{2}", endMember.DeclaringType.FullName, endMember.Name, keyName);
+}
+
+string CreateReferenceValueLookupKey(NavigationProperty navProp, string keyName)
+{
+	return String.Format(CultureInfo.InvariantCulture, "{0}.{1}", navProp.Name, keyName);
+}
+
+void WriteCustomObservableCollection()
+{
+#>
+
+// An System.Collections.ObjectModel.ObservableCollection that raises
+// individual item removal notifications on clear and prevents adding duplicates.
+public class TrackableCollection<T> : ObservableCollection<T>
+{
+	protected override void ClearItems()
+	{
+		new List<T>(this).ForEach(t => Remove(t));
+	}
+
+	protected override void InsertItem(int index, T item)
+	{
+		if (!this.Contains(item))
+		{
+			base.InsertItem(index, item);
+		}
+	}
+}
+<#+
+}
+
+
+int? GetMaxLength(MetadataWorkspace metadataWorkspace, string entityTypeName, string propertyName)
+{
+	int? result = null;
+
+	var context = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace)
+					   .Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
+			from p in (meta as EntityType).Properties
+			   .Where(p => p.DeclaringType.Name == entityTypeName
+				   && p.Name == propertyName
+				   && p.TypeUsage.EdmType.Name == "String")
+			select p;
+
+	var queryResult = (from meta in metadataWorkspace.GetItems(DataSpace.CSpace)
+					   .Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
+					  from p in (meta as EntityType).Properties
+						 .Where(p => p.DeclaringType.Name == entityTypeName
+							 && p.Name == propertyName
+							 && p.TypeUsage.EdmType.Name == "String")
+					  select p.TypeUsage.Facets["MaxLength"].Value).FirstOrDefault();
+
+	int maxLength = 0;
+	if (queryResult != null)
+	{
+		//maxLength = (int)Convert.ChangeType(queryResult.First(), typeof(int));
+		//maxLength = (int)queryResult.First();
+		//maxLength = Convert.ToInt32(queryResult);
+		//WriteObject(entityTypeName + " " + propertyName);
+		//WriteObject(queryResult);
+		if(queryResult.ToString().ToLower() == "Max".ToLower())
+			return null;
+		else
+			return ToInt32(queryResult.ToString());
+	}
+
+	return result;
+}
+
+
+// http://www.eggheadcafe.com/software/aspnet/29563956/-converttoint320.aspx
+Int32 ToInt32(string theValue)
+{
+	Int32 retVal = 0;
+	for (int n = theValue.Length, m = 0; n > 0; n--, m++)
+	{
+	retVal += (Int32 )Math.Pow(10, m) * ((Int32 )Convert.ChangeType(theValue[n - 1], TypeCode.Int32) - 48);
+	}
+	return retVal;
+}
+
+
+void WriteObject(object obj)
+{
+#>
+<#=obj.ToString()#>
+<#+
+}
+
+
+string GetEntitySetName(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	string entitySetName = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.Name).FirstOrDefault();
+
+	return entitySetName;
+}
+
+
+EdmMember GetEntityKey(MetadataWorkspace metadataWorkspace, string entityTypeName)
+{
+	var context = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+	//var container = metadataWorkspace.GetEntityContainer(context.DefaultContainerName, DataSpace.CSpace);
+	var container = metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace).FirstOrDefault();
+
+	var keyMembers = (from meta in container.BaseEntitySets
+							where meta.ElementType.Name == entityTypeName
+							select meta.ElementType.KeyMembers).FirstOrDefault();
+
+	if(keyMembers != null)
+		return keyMembers.FirstOrDefault();
+	else
+		return null;
+}
+
+
+
+	
+	private List<string> GetSmallCollectionClasses(string basePath) 
+	{
+		string absolutePath = Host.ResolvePath(basePath + "ConstantsGeneratedEnums.cs"); 
+		string fileContents = GetFileContents(absolutePath);
+		
+		var matches = new System.Text.RegularExpressions.Regex("public enum .+\n").Matches(fileContents);
+		List<string> results = new List<string>();
+		foreach (System.Text.RegularExpressions.Match item in matches)
+		{
+			string name = item.Value.Replace("public enum ", string.Empty);
+			if (name.IndexOf(':') > 0)
+				name = name.Substring(0, name.IndexOf(':'));
+			results.Add(name.Trim());
+		}
+		
+		absolutePath = Host.ResolvePath(basePath + "SmallCollectionCacheEntities.txt");
+		fileContents = GetFileContents(absolutePath);
+		List<string> additionalResults = new List<string>();
+		foreach (string item in fileContents.Split(','))
+		{
+			//WriteObject(item);
+			if(!results.Contains(item.Trim()))
+				results.Add(item.Trim());
+		}
+		
+		results.Sort();
+		return results;
+	}
+	
+	private List<string> GetClasses(string basePath, string fileName) 
+	{
+		List<string> results = new List<string>();
+		string absolutePath = Host.ResolvePath(basePath + fileName);
+		string fileContents = GetFileContents(absolutePath);
+		List<string> additionalResults = new List<string>();
+		foreach (string item in fileContents.Split(','))
+		{
+			//WriteObject(item);
+			if(!results.Contains(item.Trim()))
+				results.Add(item.Trim());
+		}
+		
+		results.Sort();
+		return results;
+	}
+	
+	public static string GetFileContents(string fileName)
+	{
+		System.IO.StreamReader streamReader = null;
+		try
+		{
+			if (!System.IO.File.Exists(fileName))
+				return string.Empty;
+			bool opened = false;
+			while (!opened)
+			{
+				try
+				{
+					streamReader = System.IO.File.OpenText(fileName);
+					opened = true;
+				}
+				catch (System.IO.IOException e)
+				{
+					throw e;
+				}
+			}
+			string contents = streamReader.ReadToEnd();
+			streamReader.Close();
+			return contents;
+		}
+		catch
+		{
+			return string.Empty;
+		}
+		finally
+		{
+			if (streamReader != null)
+				streamReader.Close();
+		}
+	}
+	
+void WriteObjectChangeTracker()
+{
+#>
+// Helper class that captures most of the change tracking work that needs to be done
+// for self tracking entities.
+public class ObjectChangeTracker
+{
+	#region  Fields
+
+	private bool _isDeserializing;
+	private ObjectState _objectState = ObjectState.Added;
+	private bool _changeTrackingEnabled;
+	private OriginalValuesDictionary _originalValues;
+	private ExtendedPropertiesDictionary _extendedProperties;
+	private ObjectsAddedToCollectionProperties _objectsAddedToCollections = new ObjectsAddedToCollectionProperties();
+	private ObjectsRemovedFromCollectionProperties _objectsRemovedFromCollections = new ObjectsRemovedFromCollectionProperties();
+
+	#endregion
+
+	#region Events
+
+	public event EventHandler<ObjectStateChangingEventArgs> ObjectStateChanging;
+
+	#endregion
+
+	protected virtual void OnObjectStateChanging(ObjectState newState)
+	{
+		if (ObjectStateChanging != null)
+		{
+			ObjectStateChanging(this, new ObjectStateChangingEventArgs(){ NewState = newState });
+		}
+	}
+
+	public ObjectState State
+	{
+		get { return _objectState; }
+		set
+		{
+			if (_isDeserializing || _changeTrackingEnabled)
+			{
+				OnObjectStateChanging(value);
+				_objectState = value;
+			}
+		}
+	}
+
+	public bool ChangeTrackingEnabled
+	{
+		get { return _changeTrackingEnabled; }
+		set { _changeTrackingEnabled = value; }
+	}
+
+	// Returns the removed objects to collection valued properties that were changed.
+	public ObjectsRemovedFromCollectionProperties ObjectsRemovedFromCollectionProperties
+	{
+		get
+		{
+			if (_objectsRemovedFromCollections == null)
+			{
+				_objectsRemovedFromCollections = new ObjectsRemovedFromCollectionProperties();
+			}
+			return _objectsRemovedFromCollections;
+		}
+	}
+
+	// Returns the original values for properties that were changed.
+	public OriginalValuesDictionary OriginalValues
+	{
+		get
+		{
+			if (_originalValues == null)
+			{
+				_originalValues = new OriginalValuesDictionary();
+			}
+			return _originalValues;
+		}
+	}
+
+	// Returns the extended property values.
+	// This includes key values for independent associations that are needed for the
+	// concurrency model in the Entity Framework
+	public ExtendedPropertiesDictionary ExtendedProperties
+	{
+		get
+		{
+			if (_extendedProperties == null)
+			{
+				_extendedProperties = new ExtendedPropertiesDictionary();
+			}
+			return _extendedProperties;
+		}
+	}
+
+	// Returns the added objects to collection valued properties that were changed.
+	public ObjectsAddedToCollectionProperties ObjectsAddedToCollectionProperties
+	{
+		get
+		{
+			if (_objectsAddedToCollections == null)
+			{
+				_objectsAddedToCollections = new ObjectsAddedToCollectionProperties();
+			}
+			return _objectsAddedToCollections;
+		}
+	}
+
+	#region MethodsForChangeTrackingOnClient
+
+	[OnDeserializing]
+	public void OnDeserializingMethod(StreamingContext context)
+	{
+		_isDeserializing = true;
+	}
+
+	[OnDeserialized]
+	public void OnDeserializedMethod(StreamingContext context)
+	{
+		_isDeserializing = false;
+	}
+
+	// Resets the ObjectChangeTracker to the Unchanged state and
+	// clears the original values as well as the record of changes
+	// to collection properties
+	public void AcceptChanges()
+	{
+		OnObjectStateChanging(ObjectState.Unchanged);
+		OriginalValues.Clear();
+		ObjectsAddedToCollectionProperties.Clear();
+		ObjectsRemovedFromCollectionProperties.Clear();
+		ChangeTrackingEnabled = true;
+		_objectState = ObjectState.Unchanged;
+	}
+
+	// Captures the original value for a property that is changing.
+	internal void RecordOriginalValue(string propertyName, object value)
+	{
+		if (_changeTrackingEnabled && _objectState != ObjectState.Added)
+		{
+			if (!OriginalValues.ContainsKey(propertyName))
+			{
+				OriginalValues[propertyName] = value;
+			}
+		}
+	}
+
+	// Records an addition to collection valued properties on SelfTracking Entities.
+	internal void RecordAdditionToCollectionProperties(string propertyName, object value)
+	{
+		if (_changeTrackingEnabled)
+		{
+			// Add the entity back after deleting it, we should do nothing here then
+			if (ObjectsRemovedFromCollectionProperties.ContainsKey(propertyName)
+				&& ObjectsRemovedFromCollectionProperties[propertyName].Contains(value))
+			{
+				ObjectsRemovedFromCollectionProperties[propertyName].Remove(value);
+				if (ObjectsRemovedFromCollectionProperties[propertyName].Count == 0)
+				{
+					ObjectsRemovedFromCollectionProperties.Remove(propertyName);
+				}
+				return;
+			}
+
+			if (!ObjectsAddedToCollectionProperties.ContainsKey(propertyName))
+			{
+				ObjectsAddedToCollectionProperties[propertyName] = new ObjectList();
+				ObjectsAddedToCollectionProperties[propertyName].Add(value);
+			}
+			else
+			{
+				ObjectsAddedToCollectionProperties[propertyName].Add(value);
+			}
+		}
+	}
+
+	// Records a removal to collection valued properties on SelfTracking Entities.
+	internal void RecordRemovalFromCollectionProperties(string propertyName, object value)
+	{
+		if (_changeTrackingEnabled)
+		{
+			// Delete the entity back after adding it, we should do nothing here then
+			if (ObjectsAddedToCollectionProperties.ContainsKey(propertyName)
+				&& ObjectsAddedToCollectionProperties[propertyName].Contains(value))
+			{
+				ObjectsAddedToCollectionProperties[propertyName].Remove(value);
+				if (ObjectsAddedToCollectionProperties[propertyName].Count == 0)
+				{
+					ObjectsAddedToCollectionProperties.Remove(propertyName);
+				}
+				return;
+			}
+
+			if (!ObjectsRemovedFromCollectionProperties.ContainsKey(propertyName))
+			{
+				ObjectsRemovedFromCollectionProperties[propertyName] = new ObjectList();
+				ObjectsRemovedFromCollectionProperties[propertyName].Add(value);
+			}
+			else
+			{
+				if (!ObjectsRemovedFromCollectionProperties[propertyName].Contains(value))
+				{
+					ObjectsRemovedFromCollectionProperties[propertyName].Add(value);
+				}
+			}
+		}
+	}
+	#endregion
+}
+
+#region EnumForObjectState
+[Flags]
+public enum ObjectState
+{
+	Unchanged = 0x1,
+	Added = 0x2,
+	Modified = 0x4,
+	Deleted = 0x8
+}
+#endregion
+
+public class ObjectsAddedToCollectionProperties : Dictionary<string, ObjectList> { }
+
+public class ObjectsRemovedFromCollectionProperties : Dictionary<string, ObjectList> { }
+
+public class OriginalValuesDictionary : Dictionary<string, Object> { }
+
+public class ExtendedPropertiesDictionary : Dictionary<string, Object> { }
+
+public class ObjectList : List<object> { }
+<#+
+}
+
+void WriteINotifyComplexPropertyChanging()
+{
+#>
+
+// An interface that provides an event that fires when complex properties change.
+// Changes can be the replacement of a complex property with a new complex type instance or
+// a change to a scalar property within a complex type instance.
+public interface INotifyComplexPropertyChanging
+{
+	event EventHandler ComplexPropertyChanging;
+}
+<#+
+}
+
+void WriteIObjectWithChangeTracker()
+{
+#>
+// The interface is implemented by the self tracking entities that EF will generate.
+// We will have an Adapter that converts this interface to the interface that the EF expects.
+// The Adapter will live on the server side.
+public interface IObjectWithChangeTracker
+{
+	// Has all the change tracking information for the subgraph of a given object.
+	ObjectChangeTracker ChangeTracker { get; }
+}
+
+public class ObjectStateChangingEventArgs : EventArgs
+{
+	public ObjectState NewState { get; set; }
+}
+
+public static class ObjectWithChangeTrackerExtensions
+{
+	public static T MarkAsDeleted<T>(this T trackingItem) where T : IObjectWithChangeTracker
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = true;
+		trackingItem.ChangeTracker.State = ObjectState.Deleted;
+		return trackingItem;
+	}
+
+	public static T MarkAsAdded<T>(this T trackingItem) where T : IObjectWithChangeTracker
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = true;
+		trackingItem.ChangeTracker.State = ObjectState.Added;
+		return trackingItem;
+	}
+
+	public static T MarkAsModified<T>(this T trackingItem) where T : IObjectWithChangeTracker
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = true;
+		trackingItem.ChangeTracker.State = ObjectState.Modified;
+		return trackingItem;
+	}
+
+	public static T MarkAsUnchanged<T>(this T trackingItem) where T : IObjectWithChangeTracker
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = true;
+		trackingItem.ChangeTracker.State = ObjectState.Unchanged;
+		return trackingItem;
+	}
+
+	public static void StartTracking(this IObjectWithChangeTracker trackingItem)
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = true;
+	}
+
+	public static void StopTracking(this IObjectWithChangeTracker trackingItem)
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.ChangeTrackingEnabled = false;
+	}
+
+	public static void AcceptChanges(this IObjectWithChangeTracker trackingItem)
+	{
+		if (trackingItem == null)
+		{
+			throw new ArgumentNullException("trackingItem");
+		}
+
+		trackingItem.ChangeTracker.AcceptChanges();
+	}
+}
+<#+
+}
+
+void WriteEqualityComparer()
+{
+#>
+
+public static class EqualityComparer
+{
+	// Helper method to determine if two byte arrays are the same value even if they are different object references
+	public static bool BinaryEquals(object binaryValue1, object binaryValue2)
+	{
+		if (Object.ReferenceEquals(binaryValue1, binaryValue2))
+		{
+			return true;
+		}
+
+		byte[] array1 = binaryValue1 as byte[];
+		byte[] array2 = binaryValue2 as byte[];
+
+		if (array1 != null && array2 != null)
+		{
+			if (array1.Length != array2.Length)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < array1.Length; i++)
+			{
+				if (array1[i] != array2[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+}
+<#+
+}
+
+bool VerifyTypesAreCaseInsensitiveUnique(EdmItemCollection itemCollection)
+{
+	Dictionary<string, bool> alreadySeen = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+	foreach(StructuralType type in itemCollection.GetItems<StructuralType>())
+	{
+		if (!(type is EntityType || type is ComplexType))
+		{
+			continue;
+		}
+
+		if (alreadySeen.ContainsKey(type.FullName))
+		{
+			Error(String.Format(CultureInfo.CurrentCulture, "This template does not support types that differ only by case, the types {0} are not supported", type.FullName));
+			return false;
+		}
+		else
+		{
+			alreadySeen.Add(type.FullName, true);
+		}
+
+	}
+
+	return true;
+}
+
+// True if the association for the specified navigation property is an identifying relationship or a foreign key relationship.
+private bool IsForeignKeyOrIdentifyingRelationship(MetadataTools tools, NavigationProperty navProperty)
+{
+	if (tools == null)
+	{
+		throw new ArgumentNullException("tools");
+	}
+
+	if (navProperty == null)
+	{
+		throw new ArgumentNullException("navProperty");
+	}
+
+	return IsForeignKeyOrIdentifyingRelationship(tools, (AssociationType)navProperty.RelationshipType);
+}
+
+// True if the specified association is an identifying relationship or a foreign key relationship.
+private bool IsForeignKeyOrIdentifyingRelationship(MetadataTools tools, AssociationType association)
+{
+	if (tools == null)
+	{
+		throw new ArgumentNullException("tools");
+	}
+
+	if (association == null)
+	{
+		throw new ArgumentNullException("association");
+	}
+
+	return association.IsForeignKey || tools.IsIdentifyingRelationship(association);
+}
+
+// Set recordRequiredOriginalValuesOnly to false in the OriginalValueMembers constructor in order to always record all original values
+public class OriginalValueMembers
+{
+	private readonly HashSet<EdmProperty> _concurrencyMembers;
+
+	public OriginalValueMembers(bool recordRequiredOriginalValuesOnly, MetadataWorkspace metadataWorkspace, MetadataTools metadataTools)
+	{
+		if (recordRequiredOriginalValuesOnly)
+		{
+			try
+			{
+				_concurrencyMembers = new HashSet<EdmProperty>();
+				foreach (EntityContainer container in metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace))
+				{
+					ILookup<EntityType, EntityType> directSubTypeLookup = metadataWorkspace.GetItems<EntityType>(DataSpace.CSpace).ToLookup(e => (EntityType)e.BaseType);
+					foreach (EntitySetBase eSet in container.BaseEntitySets.Where(es => es.BuiltInTypeKind == BuiltInTypeKind.EntitySet))
+					{
+						List<EntityType> subTypes = new List<EntityType>();
+						GetSubtypes(directSubTypeLookup, (EntityType)eSet.ElementType, subTypes);
+						foreach (EntityType eType in subTypes)
+						{
+							foreach (EdmProperty member in metadataWorkspace.GetRequiredOriginalValueMembers(eSet, eType))
+							{
+								_concurrencyMembers.Add(member);
+							}
+						}
+					}
+				}
+
+				// GetRequiredOriginalValueMembers will not always return foreign key properties, but they are required
+				foreach (AssociationType assoc in metadataWorkspace.GetItems<AssociationType>(DataSpace.CSpace).Where(a => a.IsForeignKey))
+				{
+					foreach (EdmProperty toProperty in assoc.ReferentialConstraints[0].ToProperties)
+					{
+						_concurrencyMembers.Add(toProperty);
+					}
+				}
+			}
+			catch (Exception)
+			{
+				// If any exceptions occur, fall back to always recording original values for all properties
+				_concurrencyMembers = null;
+			}
+		}
+	}
+
+	public bool IsOriginalValueMember(EdmProperty edmProperty)
+	{
+		return _concurrencyMembers == null || _concurrencyMembers.Contains(edmProperty);
+	}
+
+	private static void GetSubtypes(ILookup<EntityType, EntityType> lookup, EntityType eType, List<EntityType> subTypes)
+	{
+		subTypes.Add(eType);
+		foreach (EntityType subType in lookup[eType])
+		{
+			GetSubtypes(lookup, subType, subTypes);
+		}
+	}
+}
+
+public class EntityModelInfo
+{
+	public string Path { get; set; }
+	public string NameSpace { get; set; }
+}
+#>

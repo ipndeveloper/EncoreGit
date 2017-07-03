@@ -1,0 +1,50 @@
+﻿@model DistributorBackOffice.Areas.Orders.Models.Shared.IOrderEntryModel
+@{
+		var orderShipment = Model.Order.OrderShipments.FirstOrDefault();
+		var outOfStockProductIds = Product.GetOutOfStockProductIDs(orderShipment);
+}
+
+<div class="UI-lightBg brdrAll GridFilters">
+            <div class="FL FilterSet QuickAdd listShopping">
+                <div class="FL productList">
+                    <label>
+                        @Html.Term("SKUOrName", "SKU or Name"):</label>
+                    <select id="gvProductSelect" class="productPickerDropDown">
+                        @foreach (var item in (List<Product>)ViewData["Products"])
+						{
+							try
+							{
+								string confirm = (outOfStockProductIds.Contains(item.ProductID)
+									&& item.ProductBackOrderBehaviorID == (short)NetSteps.Data.Entities.Constants.ProductBackOrderBehavior.AllowBackorderInformCustomer).ToString();
+                
+                            <option quickaddconfirmation="@confirm" productid="@item.ProductID" data-isdynamickit="@item.IsDynamicKit()" data-customizationtype="@item.CustomizationType()">@Html.Raw(string.Format("{0} - {1}", item.SKU, item.Name))</option> 
+                
+							}
+							catch (Exception)
+							{
+
+							}
+						}
+                    </select>
+                    <input id="hQuickAddProductId" type="hidden" />
+                    <input id="hQuickAddNeedsBackOrderConfirmation" type="hidden" />
+                </div>
+                <div class="FL productQty">
+                    <label>
+                        @Html.Term("Quantity", "Quantity"):</label>
+                    <input id="txtQuickAddQuantity" type="text" class="Short quantity required qty" 
+                    name="@Html.Term("QuantityErrorLabel", "Quantity is required")" />
+                </div>
+                <div class="FL RunFilter">
+                    <a id="btnQuickAdd" href="javascript:void(0);" class="UI-icon-container" title="@Html.Term("AddProductToOrder", "AddProductToOrder")">
+                        <div style="padding-top:5px">
+                            <span class="add"></span>
+                            <span class="addtext">@Html.Term("AddProductToOrder", "AddProductToOrder")</span>
+                        </div>
+                    </a>
+                </div>
+                @Html.Partial("_ProductCredit", Model.Order)
+                <span class="clr"></span>
+            </div>
+            <span class="clr"></span>
+        </div>

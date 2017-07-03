@@ -1,0 +1,67 @@
+﻿<div ng-controller="TestCtrl">
+	<section class="container">
+		<div class="row">
+			<div ng-view></div>
+		</div>
+	</section>
+	<a href="javascript:void(0);" style="position: absolute; bottom: 0px; right: 0px;" class="btn btn-margin" ng-hide="visible" ng-click="toggle()">Show tests</a>
+	<nav class="navbar navbar-fixed-bottom" ng-show="visible">
+		<div class="navbar-inner">
+			<a class="brand" href="https://github.com/flitbit/oops">&emsp;{{counts.tests}} Tests</a>
+			<ul class="nav">
+				<li class="divider-vertical"></li>
+				<li><span ng-show="counts.scheduled" class="label">{{counts.scheduled}} scheduled</span></li>
+				<li><span ng-show="counts.running" class="label label-info">{{counts.running}} running</span></li>
+				<li><span ng-show="counts.passed" class="label label-success">{{counts.passed}} passed</span></li>
+				<li><span ng-show="counts.failed" class="label label-important">{{counts.failed}} failed</span></li>
+			</ul>
+			<a class="btn btn-margin pull-right" ng-click="toggle()">Hide tests</a>
+			<a class="btn btn-margin btn-primary pull-right" ng-click="performTests()">Run now</a>
+			<a class="btn btn-margin pull-right" ng-click="resetTests()">Reset</a>
+		</div>
+	</nav>
+	<script type="text/ng-template" id="home.html">
+	<div class="dimBackground" ng-show="visible" ng-click="toggle()">
+	</div>
+	<div class="container dimForeground" ng-show="visible">
+		<table class="table table-hover table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Test</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="test in tests">
+					<td>
+						<div>
+							<p>{{test.test}}</p>
+							<pre class="prettyprint lang-js linenums">{{test.script}}</pre>
+						</div>
+					</td>
+					<td class="span2">
+						<div ng-switch="test.status">
+							<p ng-switch-when="success"><span class="label label-success">passed</span></p>
+							<p ng-switch-when="error"><span class="label label-important">failed</span></p>
+							<p ng-switch-default><span class="label">{{test.status}}</span></p>
+						</div>
+						<div>{{test.message}}</div>
+					</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+	</script>
+</div>
+<script type="text/javascript">
+	"use strict";
+	(function (document) {
+		var html = document.getElementsByTagName("html")[0];
+		var ngAttr = document.createAttribute("ng-app");
+		ngAttr.nodeValue = "testApp";
+		html.attributes.setNamedItem(ngAttr);
+	} (document));
+</script>
+<script src="/Scripts/WebTestingModule/assert.js" type="text/javascript"></script>
+<script src="/Scripts/WebTestingModule/WebTestingModule.js" type="text/javascript"></script>
+

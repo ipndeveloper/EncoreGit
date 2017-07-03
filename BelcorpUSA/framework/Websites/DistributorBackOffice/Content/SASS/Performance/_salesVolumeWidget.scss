@@ -1,0 +1,110 @@
+﻿#kpiSV {
+	.Indicator {
+		margin: 20px 0px;
+		.Number {
+			font-size:28px;
+			line-height: 56px;
+			color: #fff;
+			display: block;
+		}
+		.qmark_trigger {
+			font-size:em(12, 28);
+			color:#fff;
+			right:-5px;
+			line-height:1.35em;
+			.qmark {
+				font-size:em(11, 12);
+			}
+			.qmark_close {
+				font-size:em(18);
+				right:em(-8, 18);
+				top:em(-7, 18);
+			}
+		}
+		&.Good {
+			background: $SuccessMessage;
+		}
+		&.Warn {
+			background: $StandardWarning;
+		}
+		&.Alert {
+			background: $WarningMessage;
+		}
+	}
+}
+#RemainingVolume {
+	position: absolute;
+	text-align: center;
+	left:28px;
+	top:43px;
+	width:68px;
+	span {
+		display:block;
+		color:#aaaaaa;
+	}
+}
+.chart .highcharts-container {
+	background:transparent !important;
+}
+#SalesVolRadial_View.circularChartWrap {
+	position: relative;
+	float:right;
+}
+#SalesVolRadial_Chart {
+	height:115px;
+	width:105px;
+}
+.salesVolumeRadial {
+	background: #ffffff;
+	border-radius: 55px 0 0 55px;
+	padding: 0 10px;
+}
+#SalesIndicator.salesRadialIndicator {
+	margin-top:14px;    
+}
+
+#SalesVolBar_View {
+	position:relative;
+	overflow:hidden;
+	background:$SuccessMessage;
+	border:1px solid #000;
+}
+.PerfKPIHold .kpiVolume #SalesVolBar_View .Indicator {
+	display:block;
+	margin:0;
+	height:24px;
+	line-height:24px;
+	color:rgba(255,255,255,.6);
+}
+.PerfKPIHold .kpiVolume .Indicator.salesVolLevel {
+	float:left;
+	width:32.5%;
+}
+.PerfKPIHold .kpiVolume .Indicator.salesVolSlider {
+	position:absolute;
+	left:0;
+	width:100%;
+	background:#000;
+	opacity:.5;
+	filter:alpha(opacity=55);
+}
+.salesVolLevel.Warn {
+	border:solid #000;
+	border-width:0 1px;
+}
+.salesVolSlider:before {
+	position:absolute;
+	top:-4px;
+	left:-14px;
+	font-size:32px;
+	color:#000;
+}
+.Indicator.Alert {
+	@include BoxShadow(0 0 20px shade($WarningMessage, 30%) inset);
+}
+.Indicator.Warn {
+	@include BoxShadow(0 0 20px shade($StandardWarning, 30%) inset);
+}
+.Indicator.Good, #SalesVolBar_View {
+	@include BoxShadow(0 0 20px shade($SuccessMessage, 30%) inset);
+}
